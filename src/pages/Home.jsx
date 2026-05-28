@@ -271,7 +271,7 @@ export default function Home() {
               <div className="max-w-5xl">
               <div className="mb-7 inline-flex items-center gap-3 rounded-md border border-primary/25 bg-white/88 px-4 py-2 text-primary shadow-[0_14px_30px_-24px_rgba(15,48,68,0.45)]">
                 <Award className="h-4 w-4" />
-                <span className="font-display text-sm uppercase tracking-[0.24em]">Chester based • Richmond metro • real job photos</span>
+                <span className="font-display text-sm uppercase tracking-[0.24em]">LIVE UPDATE CHECK • Chester based • Richmond metro • real job photos</span>
               </div>
               <h1 className="font-display text-5xl font-black uppercase leading-[0.88] tracking-normal text-foreground sm:text-6xl md:text-8xl lg:text-9xl">
                 Premium Asphalt<br />
