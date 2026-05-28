@@ -1,6 +1,6 @@
 [build]
   base    = "."
-  command = "npx puppeteer browsers install chrome && npm run ai:authority && npm run build && npm run gate:deploy-premium"
+  command = "npx puppeteer browsers install chrome && npm run build && npm run gate:deploy-premium"
   publish = "dist"
 
 [build.environment]
