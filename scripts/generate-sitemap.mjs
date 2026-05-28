@@ -122,6 +122,7 @@ let WORDEN_ACTIVE_STATES = [];
 let STATE_MAP = {};
 let LANDING_PAGES = [];
 let BLOG_POSTS = [];
+let RICHMOND_ZIP_PAGES = {};
 let stateSlug = (s) => s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 try {
@@ -152,6 +153,12 @@ try {
   BLOG_POSTS = blogsMod.default || [];
 } catch (e) {
   console.warn('[sitemap] could not load src/data/blogPosts.js:', e.message);
+}
+try {
+  const zipMod = await importDataModule('src/data/richmondZipPages.js');
+  RICHMOND_ZIP_PAGES = zipMod.RICHMOND_ZIP_PAGES || {};
+} catch (e) {
+  console.warn('[sitemap] could not load src/data/richmondZipPages.js:', e.message);
 }
 
 // ── 3. Build URL list ─────────────────────────────────────────────────────────
@@ -199,6 +206,15 @@ for (const bp of BLOG_POSTS) {
     lastmod: bp.date || today,
     changefreq: 'monthly',
     priority: '0.75',
+  });
+}
+
+for (const zip of Object.keys(RICHMOND_ZIP_PAGES)) {
+  urls.push({
+    loc: `${SITE}/locations/richmond-va/${zip}`,
+    lastmod: today,
+    changefreq: 'monthly',
+    priority: '0.88',
   });
 }
 
@@ -254,5 +270,5 @@ writeFileSync(
 console.log(
   `[sitemap] wrote ${deduped.length} URLs ` +
     `(${STATIC_ROUTES.length} static, ${LOCATIONS.length} locations, ` +
-    `${SERVICE_AREAS.length} service-areas, ${LANDING_PAGES.length} landing pages, ${BLOG_POSTS.length} blogs, ${stateCodesForSitemap.length} states, mode=${INCLUDE_ALL_STATES ? 'all_51' : 'active_only'})`
+    `${SERVICE_AREAS.length} service-areas, ${LANDING_PAGES.length} landing pages, ${BLOG_POSTS.length} blogs, ${Object.keys(RICHMOND_ZIP_PAGES).length} zip-pages, ${stateCodesForSitemap.length} states, mode=${INCLUDE_ALL_STATES ? 'all_51' : 'active_only'})`
 );
