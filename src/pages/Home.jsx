@@ -21,8 +21,8 @@ const QSR_IMAGE = '/work/kfc/kfc-job-032.jpg';
 const serviceCards = [
   {
     label: 'Residential',
-    title: 'Residential driveway paving and resurfacing.',
-    body: 'Driveways, circular layouts, private lanes, widening, resurfacing, and full replacement with clean edges, proper pitch, and a smooth finish around the home.',
+    title: 'Private driveway paving with estate-grade finish standards.',
+    body: 'Driveways, circular layouts, private lanes, widening, resurfacing, and full replacement executed with clean edges, controlled slope, and finish quality that complements the property.',
     href: '/residential',
     cta: 'View Residential Work',
     image: RESIDENTIAL_PROOF_IMAGE,
@@ -31,8 +31,8 @@ const serviceCards = [
   },
   {
     label: 'Commercial',
-    title: 'Commercial parking lot paving, resurfacing, and repairs.',
-    body: 'Parking lots, restaurant drive-thru lanes, retail access lanes, patching, milling, sealcoating, ADA striping, and phased work for active properties.',
+    title: 'Commercial paving built for active properties and tenant continuity.',
+    body: 'Parking lots, drive-thru lanes, retail access lanes, patching, milling, sealcoating, ADA striping, and phased execution designed to keep businesses operating.',
     href: '/parking-lots',
     cta: 'View Commercial Proof',
     image: COMMERCIAL_PROOF_IMAGE,
@@ -274,11 +274,11 @@ export default function Home() {
                 <span className="font-display text-sm uppercase tracking-[0.24em]">Chester based • Richmond metro • real job photos</span>
               </div>
               <h1 className="font-display text-5xl font-black uppercase leading-[0.88] tracking-normal text-foreground sm:text-6xl md:text-8xl lg:text-9xl">
-                Asphalt Work<br />
-                <span className="text-primary">Done Right.</span>
+                Premium Asphalt<br />
+                <span className="text-primary">Built To Last.</span>
               </h1>
               <p className="mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-2xl">
-                Driveways, private lanes, parking lots, sealcoating, and asphalt repair across Chester, Richmond, Chesterfield, Henrico, and Central Virginia. Send your address or a few photos and we will tell you whether the job needs repair, resurfacing, replacement, or maintenance.
+                Residential and commercial asphalt work across Chester, Richmond, Chesterfield, Henrico, and Central Virginia. Share your address or project photos and we will provide a clear recommendation on repair, resurfacing, replacement, or preservation.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <a
@@ -323,7 +323,7 @@ export default function Home() {
                 <p className="mt-4 font-display text-xs uppercase tracking-[0.2em] text-primary">Commercial paving</p>
                 <h2 className="mt-2 font-display text-3xl uppercase leading-none text-foreground">Restaurant lots, drive-thru lanes, and local commercial work.</h2>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Restaurant and retail lots need clean scheduling, safe access, durable drive-thru lanes, and a finish that is ready for customers.
+                  High-traffic commercial pavement requires disciplined scheduling, protected access, durable drive-thru lanes, and finish quality ready for immediate use.
                 </p>
               </div>
             </div>

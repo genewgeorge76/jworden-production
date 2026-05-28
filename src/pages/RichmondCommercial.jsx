@@ -90,12 +90,12 @@ export default function RichmondCommercial() {
             <div>
               <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Richmond Commercial Division</p>
               <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
-                Richmond Commercial Asphalt Backed By Restaurant And Retail Proof
+                Richmond Commercial Asphalt With Documented Multi-Site Proof
               </h1>
               <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
                 We handle the work commercial owners actually need: parking lots, access lanes, drive-thru lanes,
-                patching, milling, resurfacing, sealcoating, ADA layout, and striping. The same discipline used on
-                KFC, Taco Bell, Arby's, and retail-style projects belongs on Richmond-area lots.
+                patching, milling, resurfacing, sealcoating, ADA layout, and striping. The same project discipline used on
+                KFC, Taco Bell, Arby's, and regional retail portfolios is applied to Richmond-area properties.
               </p>
 
               <div className="flex flex-wrap gap-3 mt-8">
@@ -156,7 +156,7 @@ export default function RichmondCommercial() {
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">
                 We support restaurants, retail centers, medical offices, churches, schools, HOAs, logistics yards,
-                and multi-tenant properties with practical scheduling and long-life asphalt planning tuned to Richmond traffic and weather.
+                and multi-tenant properties with phased scheduling and long-life asphalt planning tuned to Richmond traffic and weather.
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="w-3.5 h-3.5 text-primary" />

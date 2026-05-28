@@ -145,11 +145,11 @@ export default function ResidentialAsphalt() {
             <div>
               <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Residential Driveway Division</p>
               <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
-                Driveways Built For Homes Where The Finish Matters
+                Luxury Driveways Built With Structural Discipline
               </h1>
               <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
-                A driveway is part of the house. We look at drainage, base condition, garage tie-ins, edges, turnarounds,
-                landscaping, and daily parking before we recommend repair, resurfacing, or replacement.
+                Your driveway is part of your property value. We evaluate drainage, base condition, tie-ins, edges, turnarounds,
+                and daily traffic before recommending repair, resurfacing, or full-depth replacement.
               </p>
 
               <div className="flex flex-wrap gap-3 mt-8">
@@ -260,7 +260,7 @@ export default function ResidentialAsphalt() {
                 </div>
                 <div className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                  <p className="text-sm text-foreground/90 leading-relaxed">Clear scope, realistic scheduling, and no low-bid shortcut work that fails after a season.</p>
+                  <p className="text-sm text-foreground/90 leading-relaxed">Clear scope, disciplined execution, and no shortcut workmanship that fails after one weather cycle.</p>
                 </div>
               </div>
             </div>
