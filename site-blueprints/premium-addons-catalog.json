@@ -1,0 +1,77 @@
+{
+  "currency": "USD",
+  "addons": [
+    {
+      "key": "ai-chat-assistant",
+      "name": "AI Sales Chat Assistant",
+      "category": "Conversion",
+      "setupFee": 1200,
+      "monthlyFee": 299,
+      "deliverables": [
+        "Conversion-focused AI chat widget",
+        "Lead routing to CRM/email",
+        "FAQ and objection handling prompts"
+      ]
+    },
+    {
+      "key": "gbp-automation",
+      "name": "GBP Automation Suite",
+      "category": "Local SEO",
+      "setupFee": 900,
+      "monthlyFee": 249,
+      "deliverables": [
+        "Google Business Profile optimization",
+        "Weekly post pipeline",
+        "Q&A and service coverage updates"
+      ]
+    },
+    {
+      "key": "keyword-blog-engine",
+      "name": "Keyword Blog Engine",
+      "category": "Content",
+      "setupFee": 1500,
+      "monthlyFee": 399,
+      "deliverables": [
+        "Keyword-cluster driven blog generation",
+        "Schema and internal linking",
+        "Publishing calendar and content refresh"
+      ]
+    },
+    {
+      "key": "backlink-authority-engine",
+      "name": "Backlink Authority Engine",
+      "category": "Authority",
+      "setupFee": 1800,
+      "monthlyFee": 549,
+      "deliverables": [
+        "Outreach pipeline and target list",
+        "Digital PR pitch assets",
+        "Link acquisition tracking"
+      ]
+    },
+    {
+      "key": "review-revenue-accelerator",
+      "name": "Review Revenue Accelerator",
+      "category": "Reputation",
+      "setupFee": 700,
+      "monthlyFee": 199,
+      "deliverables": [
+        "SMS/email review request workflows",
+        "NPS and review KPI dashboard",
+        "Escalation flow for low-rating responses"
+      ]
+    },
+    {
+      "key": "local-rank-intelligence",
+      "name": "Local Rank Intelligence Dashboard",
+      "category": "Analytics",
+      "setupFee": 1300,
+      "monthlyFee": 329,
+      "deliverables": [
+        "Keyword rank tracking by geo",
+        "Competitor movement alerts",
+        "Weekly executive report"
+      ]
+    }
+  ]
+}

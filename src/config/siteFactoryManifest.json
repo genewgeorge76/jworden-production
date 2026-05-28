@@ -1,0 +1,56 @@
+{
+  "profiles": [
+    {
+      "key": "jworden",
+      "label": "J. Worden Asphalt Paving",
+      "canonicalUrl": "https://www.jwordenasphaltpaving.com",
+      "primaryColor": "#13283a",
+      "accentColor": "#f0b429",
+      "routeMode": "full-site",
+      "enableChatWidget": true
+    },
+    {
+      "key": "minnesota",
+      "label": "Minnesota Asphalt Paving",
+      "canonicalUrl": "https://www.minnesotaasphaltpaving.com",
+      "primaryColor": "#0b2239",
+      "accentColor": "#fb923c",
+      "routeMode": "market-landing",
+      "enableChatWidget": false,
+      "market": {
+        "marketName": "Minnesota Asphalt Paving",
+        "primaryRegion": "Minnesota",
+        "primaryMetro": "Minneapolis-Saint Paul Metro",
+        "heroKicker": "Verified Job Photos",
+        "heroHeadline": "Minnesota Asphalt Paving Built For Freeze-Thaw Cycles",
+        "heroBody": "Commercial lots, retail pads, and private drives with documented prep, clear scope, and production discipline carried over from multi-state QSR programs.",
+        "ctaLabel": "Call For Minnesota Estimate",
+        "phoneDisplay": "804-446-1296",
+        "proofHeadline": "Recent Verified Work",
+        "geo": {
+          "region": "US-MN",
+          "placename": "Minneapolis, Minnesota",
+          "position": "44.9778;-93.2650",
+          "icbm": "44.9778, -93.2650"
+        }
+      }
+    },
+    {
+      "key": "wordenstandard",
+      "label": "The Worden Standard",
+      "canonicalUrl": "https://www.thewordenstandard.com",
+      "primaryColor": "#0f172a",
+      "accentColor": "#f59e0b",
+      "routeMode": "operations",
+      "enableChatWidget": false
+    }
+  ],
+  "hostnames": {
+    "www.jwordenasphaltpaving.com": "jworden",
+    "jwordenasphaltpaving.com": "jworden",
+    "www.minnesotaasphaltpaving.com": "minnesota",
+    "minnesotaasphaltpaving.com": "minnesota",
+    "www.thewordenstandard.com": "wordenstandard",
+    "thewordenstandard.com": "wordenstandard"
+  }
+}

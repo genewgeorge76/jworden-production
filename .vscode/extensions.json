@@ -1,0 +1,39 @@
+{
+  "// note": "Recommended extensions for the J. Worden paving stack. VS Code will prompt to install these when the workspace opens. Curated for React+Vite frontend, FastAPI+SQLAlchemy backend, Netlify deploy, Playwright E2E, and GitHub Actions CI.",
+  "recommendations": [
+    "github.copilot",
+    "github.copilot-chat",
+    "github.vscode-pull-request-github",
+    "github.vscode-github-actions",
+    "eamodio.gitlens",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+    "charliermarsh.ruff",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "dsznajder.es7-react-js-snippets",
+    "ms-playwright.playwright",
+    "humao.rest-client",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "gruntfuggly.todo-tree",
+    "editorconfig.editorconfig",
+    "christian-kohler.path-intellisense",
+    "wayou.vscode-todo-highlight",
+    "ms-azuretools.vscode-docker",
+    "redhat.vscode-xml"
+  ],
+  "unwantedRecommendations": [
+    "codeium.codeium",
+    "tabnine.tabnine-vscode",
+    "continue.continue",
+    "ritwickdey.liveserver",
+    "ms-vscode.live-server"
+  ]
+}

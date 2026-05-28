@@ -1,0 +1,48 @@
+{
+  "enabled": true,
+  "slug": "ai-website-builder",
+  "domain": "https://www.jwordenai.com",
+  "brandName": "J.Worden AI Web Syndicate",
+  "market": "Programmatic SEO and automated B2B website building",
+  "positioning": "The world's fastest auto-ranking AI website builder outperforming traditional human-heavy web agencies",
+  "primaryAudience": "Contractors, local service businesses, and ambitious growth companies",
+  "coreOffer": "Lightning-fast, AI-generated, perfectly optimized programmatic SEO websites deployed instantly",
+  "tone": "disruptive, authoritative, cutting-edge, confident",
+  "visualDirection": "high-tech aggressive dark mode",
+  "regions": [
+    "Nationwide",
+    "United States"
+  ],
+  "proofStack": [
+    "100/100 Google Lighthouse Core Web Vitals",
+    "Zero-bloat headless SSG architecture",
+    "Automated thousands-page programmatic keyword domination"
+  ],
+  "contentPillars": [
+    "Replacing slow traditional web agencies",
+    "Programmatic SEO deployment strategy",
+    "AI-driven local market domination at scale"
+  ],
+  "targetKeywords": [
+    "AI website builder for contractors",
+    "programmatic SEO web agency",
+    "automated contractor marketing syndicate",
+    "outrank traditional web development companies",
+    "fastest static website generator for local business"
+  ],
+  "colorSystem": {
+    "background": "#030712",
+    "foreground": "#f8fafc",
+    "primary": "#10b981",
+    "accent": "#6366f1"
+  },
+  "typography": {
+    "display": "'Oswald', sans-serif",
+    "body": "'Inter', sans-serif"
+  },
+  "conversionModel": {
+    "primaryCTA": "Launch Your AI Site Now",
+    "secondaryCTA": "View Our Tech Stack",
+    "leadMagnet": "The Agency-Killer Web Blueprint"
+  }
+}

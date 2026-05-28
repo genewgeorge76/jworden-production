@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "slug": "/hiring-onboarding",
+  "public": true,
+  "includeInSitemap": true,
+  "title": "Employee Hiring & Onboarding Protocols | The Worden Standard",
+  "description": "The mandatory Worden Standard procedures for recruiting, interviewing, vetting, and onboarding new personnel legally and efficiently.",
+  "h1": "Hiring & Onboarding Protocols",
+  "intro": "Every hire is an investment in our legacy. We adhere to a strict, standardized process for recruiting and onboarding to ensure full legal compliance, safety, and cultural alignment from day one.",
+  "ctaText": "Candidate Portal",
+  "ctaHref": "/careers",
+  "changefreq": "monthly",
+  "priority": 0.85,
+  "sections": [
+    {
+      "heading": "Recruitment & Equal Opportunity",
+      "body": "All recruitment efforts strictly follow EEOC guidelines. We evaluate candidates based solely on merit, experience, and capability. Job descriptions accurately reflect the physical, technical, and licensing demands of the role to ensure complete operational transparency."
+    },
+    {
+      "heading": "The Vetting & Interview Process",
+      "body": "Candidates undergo standardized interviews to assess both skill and character. Pre-employment requirements are absolute: comprehensive background checks, mandatory drug screening, and—for all heavy equipment and commercial drivers—a strict review of a VDOT-approved Motor Vehicle Record (MVR)."
+    },
+    {
+      "heading": "I-9, E-Verify & Onboarding Documentation",
+      "body": "Legal authorization compliance starts on minute one. Federal Form I-9 must be fully completed with verified identification within three days of hire. All employees are processed through the federal E-Verify system to confirm employment eligibility. Payroll documentation (W-4, VA-4) must be secured before any fieldwork begins."
+    },
+    {
+      "heading": "Safety, PPE, & Cultural Orientation",
+      "body": "Before touching a piece of machinery or stepping onto a job site, every new hire undergoes the Worden Standard Safety Orientation. This covers OSHA/VOSH baselines, hazard communication, the formal issuance of Personal Protective Equipment (PPE), and an introduction to the uncompromising work ethic that governs our standard."
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+name: Legal Advisory Monitor
+
+on:
+  schedule:
+    - cron: "23 */12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legal-advisory-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  advisory:
+    name: Legal Advisory Delta + Impact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore advisory baseline from cache
+        id: advisory-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: docs/legal-advisory/baseline.json
+          key: legal-advisory-baseline-${{ github.run_id }}
+          restore-keys: |
+            legal-advisory-baseline-
+
+      - name: Run legal advisory monitor
+        run: npm run ops:legal-advisory:update-baseline
+
+      - name: Save advisory baseline to cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: docs/legal-advisory/baseline.json
+          key: legal-advisory-baseline-${{ github.run_id }}
+
+      - name: Publish advisory report to workflow summary
+        if: always()
+        run: cat docs/legal-advisory/latest-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload advisory artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legal-advisory-monitor
+          path: |
+            docs/legal-advisory/latest-report.md
+            docs/legal-advisory/latest.json
+            docs/legal-advisory/current-snapshot.json
+            docs/legal-advisory/baseline.json
+            docs/legal-advisory/history/
+          retention-days: 21

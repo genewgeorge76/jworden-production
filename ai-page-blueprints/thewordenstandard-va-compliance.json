@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "slug": "/va-compliance",
+  "public": true,
+  "includeInSitemap": true,
+  "title": "Virginia Hiring & Compliance Regulations | The Worden Standard",
+  "description": "Complete guide to Virginia hiring requirements, regulatory rules, OSHA compliance, and best operating practices for the Worden paving standard.",
+  "h1": "Virginia HR & Compliance Hub",
+  "intro": "The absolute source of truth for hiring, safety, and operational legality in the Commonwealth of Virginia. We adhere strictly to VOSH standards, CDL mandates, and equitable hiring practices.",
+  "ctaText": "Begin Training Module",
+  "ctaHref": "/training-hub",
+  "changefreq": "monthly",
+  "priority": 0.9,
+  "sections": [
+    {
+      "heading": "Virginia Hiring Requirements",
+      "body": "All employees onboarded in the Commonwealth of Virginia must pass complete background checks, E-Verify validation, and a structured panel interview adhering strictly to the Worden standard. For commercial drivers, a VDOT-approved Motor Vehicle Record (MVR) pull and drug screening are mandatory before keys are handed over."
+    },
+    {
+      "heading": "Operational Legality & Best Practices",
+      "body": "We operate exclusively 'in the light'. Every job requires Miss Utility (811) checks mapped 48 hours prior to excavation, correct pulling of right-of-way permits, and strict compliance with the Virginia Department of Transportation (VDOT) work-zone safety standards."
+    },
+    {
+      "heading": "VOSH & Environmental Safety",
+      "body": "Virginia Occupational Safety and Health (VOSH) guidelines are our baseline, not our ceiling. Daily Toolbox Talks, weekly equipment audits, and strict environmental impact management related to asphalt runoff and stormwater management are absolute minimums for every site."
+    },
+    {
+      "heading": "Standardized Driver Process (CDL)",
+      "body": "All commercial heavy equipment operators operating under our US DOT #2568168 undergo annual recertification and DOT physicals. We maintain zero tolerance for moving violations, ensuring our fleet serves the public and our customers with undisputed safety and professionalism."
+    }
+  ]
+}

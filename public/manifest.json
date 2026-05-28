@@ -1,0 +1,22 @@
+{
+  "name": "J. Worden & Sons Asphalt Paving",
+  "short_name": "J. Worden & Sons",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#FFBF00",
+  "description": "Virginia asphalt paving contractor serving residential and commercial projects.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

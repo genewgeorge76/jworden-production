@@ -1,0 +1,148 @@
+{
+  "generatedAt": "2026-05-27T01:42:44.594Z",
+  "sources": [
+    {
+      "sourceId": "openai-news",
+      "sourceName": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 80,
+      "durationMs": 756,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.028Z"
+    },
+    {
+      "sourceId": "google-ai-blog",
+      "sourceName": "Google AI Blog",
+      "url": "https://blog.google/innovation-and-ai/technology/ai/rss/",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 20,
+      "durationMs": 346,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.097Z"
+    },
+    {
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "Google Cloud AI Blog",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/rss/",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 0,
+      "durationMs": 1628,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.099Z"
+    },
+    {
+      "sourceId": "google-search-central",
+      "sourceName": "Google Search Central Blog (HTML fallback)",
+      "url": "https://developers.google.com/search/blog",
+      "mode": "html-links",
+      "status": "ok",
+      "itemCount": 80,
+      "durationMs": 1496,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.100Z"
+    },
+    {
+      "sourceId": "cloudflare-ai-blog",
+      "sourceName": "Cloudflare AI Blog",
+      "url": "https://blog.cloudflare.com/tag/ai/rss/",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 20,
+      "durationMs": 782,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.101Z"
+    },
+    {
+      "sourceId": "microsoft-ai-blog",
+      "sourceName": "Microsoft AI Blog",
+      "url": "https://blogs.microsoft.com/blog/tag/ai/feed/",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 10,
+      "durationMs": 537,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.102Z"
+    },
+    {
+      "sourceId": "anthropic-news",
+      "sourceName": "Anthropic News (HTML fallback)",
+      "url": "https://www.anthropic.com/news",
+      "mode": "html-links",
+      "status": "ok",
+      "itemCount": 13,
+      "durationMs": 4475,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.102Z"
+    },
+    {
+      "sourceId": "deepmind-blog",
+      "sourceName": "Google DeepMind Blog (HTML fallback)",
+      "url": "https://deepmind.google/discover/blog/",
+      "mode": "html-links",
+      "status": "ok",
+      "itemCount": 0,
+      "durationMs": 1082,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.103Z"
+    },
+    {
+      "sourceId": "hugging-face-blog",
+      "sourceName": "Hugging Face Blog",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 80,
+      "durationMs": 531,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.104Z"
+    },
+    {
+      "sourceId": "github-copilot-changelog",
+      "sourceName": "GitHub Copilot Changelog (HTML fallback)",
+      "url": "https://github.blog/changelog/label/copilot/",
+      "mode": "html-links",
+      "status": "ok",
+      "itemCount": 34,
+      "durationMs": 787,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.105Z"
+    },
+    {
+      "sourceId": "vercel-changelog",
+      "sourceName": "Vercel Changelog (HTML fallback)",
+      "url": "https://vercel.com/changelog",
+      "mode": "html-links",
+      "status": "ok",
+      "itemCount": 9,
+      "durationMs": 738,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.106Z"
+    },
+    {
+      "sourceId": "arxiv-cs-ai",
+      "sourceName": "arXiv cs.AI (Preprint Signals)",
+      "url": "https://rss.arxiv.org/rss/cs.AI",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 120,
+      "durationMs": 1077,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.106Z"
+    },
+    {
+      "sourceId": "arxiv-cs-cv",
+      "sourceName": "arXiv cs.CV (Preprint Signals)",
+      "url": "https://rss.arxiv.org/rss/cs.CV",
+      "mode": "rss",
+      "status": "ok",
+      "itemCount": 120,
+      "durationMs": 645,
+      "error": null,
+      "fetchedAt": "2026-05-27T01:42:40.107Z"
+    }
+  ]
+}

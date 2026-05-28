@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "slug": "/background-checks",
+  "public": true,
+  "includeInSitemap": true,
+  "title": "Compliant Background Checks | The Worden Standard",
+  "description": "Strict compliance protocols for employee background checks, adhering to the FCRA, Virginia state laws, and DOT MVR requirements.",
+  "h1": "Compliant Background Check Protocols",
+  "intro": "Protecting our workforce and our clients begins before day one. All background screening procedures strictly adhere to the Fair Credit Reporting Act (FCRA) and Federal/State employment laws to ensure fair, secure, and legally sound hiring.",
+  "ctaText": "View HR Dashboard",
+  "ctaHref": "/hr-dashboard",
+  "changefreq": "monthly",
+  "priority": 0.8,
+  "sections": [
+    {
+      "heading": "FCRA Compliance & Explicit Consent",
+      "body": "Before any background check is initiated, candidate consent is legally mandatory. In strict adherence to the Fair Credit Reporting Act (FCRA), candidates must be provided with a standalone, clear, and conspicuous disclosure stating that a background check will be conducted. Written authorization must be legally obtained and securely archived prior to running any report."
+    },
+    {
+      "heading": "Virginia State Laws & Criminal History Assessment",
+      "body": "We abide by Virginia laws regarding criminal history inquiries. We do not apply blanket denials. Any criminal history returned on a candidate is evaluated using an 'individualized assessment,' taking into account the nature and gravity of the offense, the time elapsed, and the specific duties of the job they are applying for."
+    },
+    {
+      "heading": "MVR & DOT Compliance for Fleet Drivers",
+      "body": "For any employee operating company vehicles or heavy machinery, a Motor Vehicle Record (MVR) pull is absolute. For CDL drivers, this includes mandatory queries through the FMCSA Drug and Alcohol Clearinghouse and DOT-mandated employment history verifications to guarantee our fleet's absolute safety on public roadways."
+    },
+    {
+      "heading": "The Adverse Action Process",
+      "body": "If a background check returns information that may lead to the revoking of an employment offer, we follow the strict FCRA Adverse Action process. Candidates are first provided a 'Pre-Adverse Action' notice containing a copy of the report and a Summary of Your Rights Under the FCRA. After a legally required waiting period allowing the candidate to dispute inaccuracies, a 'Final Adverse Action' notice is legally issued if the decision stands."
+    }
+  ]
+}

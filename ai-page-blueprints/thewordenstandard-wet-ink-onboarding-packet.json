@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "slug": "/wet-ink-onboarding-packet",
+  "public": false,
+  "includeInSitemap": true,
+  "title": "Wet-Ink Onboarding & Legal Paperwork Packet",
+  "description": "Printable, legally binding document suite requiring physical ink signatures for HR record keeping and audit compliance.",
+  "h1": "Physical Document Onboarding Packet",
+  "intro": "While we operate a digital-first engine, Federal and State law still requires physical 'wet-ink' signatures for specific compliance, tax, and consent forms. This system collates all required paperwork into a single, printable onboarding package.",
+  "ctaText": "Generate Printable New Hire Packet",
+  "ctaHref": "?generate_pdf=true",
+  "changefreq": "monthly",
+  "priority": 0.85,
+  "sections": [
+    {
+      "heading": "Federal Tax & Verification Forms (I-9 / W-4)",
+      "body": "Mandatory Federal employment verification. Includes the USCIS Form I-9 (requiring physical ID verification) and the IRS W-4. Real signatures are strictly required for our corporate tax and accounting records."
+    },
+    {
+      "heading": "Virginia State Tax & Documentation",
+      "body": "Includes the Virginia Form VA-4 (Personal Exemption Worksheet) and mandated state-level labor disclosures. Must be signed and filed in the candidate's physical HR folder before their first payroll cycle."
+    },
+    {
+      "heading": "Physical FMCSA & MVR Consent Agreements",
+      "body": "In addition to digital Tenstreet intake, hard-copy signatures for the Federal Motor Carrier Safety Administration (FMCSA) Clearinghouse and DMV Motor Vehicle Record pulls are required. These protect the organization in the event of an external DOT audit."
+    },
+    {
+      "heading": "Handbook Acknowledgment Signature Page",
+      "body": "The final page of the packet. The employee signs recognizing they have received the printed Employee Handbook, watched the required Safety Training videos, and understand the terms of their employment under The Worden Standard."
+    }
+  ]
+}

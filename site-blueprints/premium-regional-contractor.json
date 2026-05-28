@@ -1,0 +1,50 @@
+{
+  "enabled": false,
+  "slug": "premium-regional-contractor",
+  "domain": "https://www.jwordenasphaltpaving.com",
+  "brandName": "J. Worden & Sons",
+  "market": "Virginia paving and surface infrastructure",
+  "positioning": "Precision-first asphalt partner for high-accountability owners",
+  "primaryAudience": "Commercial property owners, facility managers, and municipalities",
+  "coreOffer": "Lifecycle-focused paving plans that reduce repeat failure and protect site uptime",
+  "tone": "confident, technical, transparent",
+  "visualDirection": "industrial-premium editorial",
+  "regions": [
+    "Richmond Metro",
+    "Henrico",
+    "Chesterfield",
+    "Fredericksburg"
+  ],
+  "proofStack": [
+    "40+ years in operation",
+    "high-traffic commercial portfolio",
+    "phased execution with documented QA checkpoints"
+  ],
+  "contentPillars": [
+    "pavement lifecycle strategy",
+    "drainage and failure diagnostics",
+    "capital planning and phased execution"
+  ],
+  "targetKeywords": [
+    "commercial asphalt paving",
+    "industrial parking lot repair",
+    "asphalt milling and resurfacing",
+    "heavy duty concrete flatwork",
+    "ADA compliance paving"
+  ],
+  "colorSystem": {
+    "background": "#0e1116",
+    "foreground": "#f5f7fb",
+    "primary": "#f97316",
+    "accent": "#38bdf8"
+  },
+  "typography": {
+    "display": "'Oswald', 'Bebas Neue', sans-serif",
+    "body": "'Source Sans 3', 'IBM Plex Sans', sans-serif"
+  },
+  "conversionModel": {
+    "primaryCTA": "Book Site Assessment",
+    "secondaryCTA": "Download Lifecycle Checklist",
+    "leadMagnet": "Commercial Pavement Lifecycle Planning Checklist"
+  }
+}

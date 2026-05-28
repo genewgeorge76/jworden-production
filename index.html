@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Font display swap — prevents FOIT (invisible text while fonts load) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+
+    <!-- Preload Bebas Neue woff2 (used by H1 on homepage) so it arrives
+         before LCP and prevents the layout shift when display-swap kicks in. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.woff2" />
+
+    <!-- Google Fonts CSS in <head> so the browser discovers font URLs
+         immediately instead of waiting for our app CSS to parse @import. -->
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" />
+
+    <!-- LCP preload: homepage hero image (used by SmartImage on / route).
+         Responsive AVIF: phones get 800w (~55KB), desktop gets 1600w (~84KB).
+         Older browsers fall back to <picture> WebP/JPG inside SmartImage. -->
+    <link rel="preload" as="image" type="image/avif" fetchpriority="high"
+      href="/work/portfolio/portfolio-010.avif"
+      imagesrcset="/work/portfolio/portfolio-010-mobile.avif 800w, /work/portfolio/portfolio-010.avif 1600w"
+      imagesizes="(max-width: 768px) 100vw, 1600px" />
+
+    <!-- Google tag (gtag.js) — Google Ads + GA4
+         Loaded on requestIdleCallback so it doesn't block LCP. The dataLayer
+         + gtag stub is set up immediately so any early gtag() calls queue
+         correctly and are flushed once gtag.js downloads. Conversion labels:
+           VITE_GADS_LABEL_LEAD_FORM, VITE_GADS_LABEL_PHONE_CLICK -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'AW-1410045668');
+      gtag('set', 'allow_enhanced_conversions', true);
+      (function(){
+        var load = function(){
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-1410045668';
+          document.head.appendChild(s);
+        };
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(load, { timeout: 4000 });
+        } else {
+          window.addEventListener('load', function(){ setTimeout(load, 1500); });
+        }
+      })();
+    </script>
+
+    <!-- Primary SEO -->
+    <title>Virginia Asphalt Paving Contractor | J. Worden & Sons</title>
+    <link rel="canonical" href="https://www.jwordenasphaltpaving.com/" />
+    <meta name="description" content="Virginia's family-owned asphalt paving contractor — 40+ years. Driveways, parking lots, sealcoating & repair across Richmond, VA Beach, Roanoke. Licensed & insured." />
+    <meta name="keywords" content="asphalt paving Virginia, driveway paving Virginia, commercial paving Virginia, asphalt contractor Virginia, Virginia paving company, Richmond VA paving, Virginia Beach paving, Roanoke VA paving, Fredericksburg VA paving, J Worden Sons paving" />
+    <meta name="author" content="J. Worden & Sons Paving LLC" />
+    <meta id="robots-meta" name="robots" content="index, follow" />
+    <script>
+      /**
+       * SEO PROTECTION:
+       * If this app loads on the internal operations domain, instantly block crawlers
+       * to prevent duplicate content penalties against the main consumer site.
+       */
+      if (window.location.hostname.includes("thewordenstandard.com")) {
+        document.getElementById("robots-meta").setAttribute("content", "noindex, nofollow, noarchive");
+      }
+    </script>
+    <meta name="facebook-domain-verification" content="ah60peuc3mh9h0r6kp64mf9l9vajbr" />
+
+    <!-- Geo / Local SEO -->
+    <meta name="geo.region" content="US-VA" />
+    <meta name="geo.placename" content="Chester, Virginia" />
+    <meta name="geo.position" content="37.3563;-77.4411" />
+    <meta name="ICBM" content="37.3563, -77.4411" />
+
+    <!-- Open Graph (Facebook, LinkedIn, Messenger) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="J. Worden & Sons Paving LLC" />
+    <meta property="og:title" content="J. Worden & Sons Paving LLC | Virginia" />
+    <meta property="og:description" content="40+ years paving Virginia. Residential driveways, commercial lots, and industrial paving engineered to last decades. Licensed · Bonded · Insured. Serving all of Virginia." />
+    <meta property="og:url" content="https://www.jwordenasphaltpaving.com/" />
+    <meta property="og:image" content="/og-default.jpg" />
+    <meta property="og:image:alt" content="Heavy asphalt paving machine laying fresh hot-mix asphalt at golden hour" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="J. Worden & Sons Paving LLC | Virginia" />
+    <meta name="twitter:description" content="40+ years of precision asphalt paving across Virginia. Driveways, parking lots, industrial surfaces. Licensed & insured." />
+    <meta name="twitter:image" content="/og-default.jpg" />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#FFBF00" />
+
+    <!-- LocalBusiness Structured Data (Google Rich Results) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["PavingContractor", "LocalBusiness"],
+      "name": "J. Worden & Sons Paving LLC",
+      "image": "/og-default.jpg",
+      "url": "https://www.jwordenasphaltpaving.com/",
+      "telephone": "+1-804-446-1296",
+      "email": "j.wordenandsonspaving@gmail.com",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "1601 Ware Bottom Spring Rd, Suite 214",
+        "addressLocality": "Chester",
+        "addressRegion": "VA",
+        "postalCode": "23836",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 37.3563,
+        "longitude": -77.4411
+      },
+      "areaServed": [
+        { "@type": "State", "name": "Virginia" },
+        { "@type": "City", "name": "Chester" },
+        { "@type": "City", "name": "Richmond" },
+        { "@type": "City", "name": "Midlothian" },
+        { "@type": "City", "name": "Short Pump" },
+        { "@type": "City", "name": "Glen Allen" },
+        { "@type": "City", "name": "Henrico" },
+        { "@type": "City", "name": "Williamsburg" },
+        { "@type": "City", "name": "Virginia Beach" },
+        { "@type": "City", "name": "Chesapeake" },
+        { "@type": "City", "name": "Roanoke" },
+        { "@type": "City", "name": "Harrisonburg" },
+        { "@type": "City", "name": "Winchester" },
+        { "@type": "City", "name": "Fredericksburg" },
+        { "@type": "City", "name": "Stafford" }
+      ],
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "07:00",
+        "closes": "18:00"
+      }],
+      "sameAs": [
+        "https://www.jwordenasphaltpaving.com",
+        "https://www.facebook.com/jwordenpaving/",
+        "https://www.tiktok.com/@jwordenandsonspaving",
+        "https://www.instagram.com/jwordensons",
+        "https://www.youtube.com/@JWordenSons",
+        "https://www.linkedin.com/showcase/j.-worden-%26-sons-paving-l.l.c./",
+        "https://www.yelp.com/biz/j-worden-and-sons-paving-chester",
+        "https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484",
+        "https://www.bbb.org/us/va/chester/profile/paving-contractors/j-worden-sons-asphalt-paving-0603-9003773",
+        "https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-paving-reviews-7601083.htm"
+      ],
+      "foundingDate": "1984",
+      "award": [
+        "Best of Houzz Service 2014, 2015, 2016, 2023",
+        "2020 Best Asphalt Paving Company",
+        "2018 Pavement Magazine Top Contractor"
+      ],
+      "hasCredential": [
+        { "@type": "EducationalOccupationalCredential", "name": "Virginia Class A Contractor License" }
+      ],
+      "description": "Virginia's family-owned asphalt paving contractor for over 40 years. Serving all of Virginia — from Richmond and Chester to Virginia Beach, Roanoke, Fredericksburg, and Winchester. Specializing in residential driveways, commercial parking lots, industrial paving, sealcoating, and crack repair."
+    }
+    </script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GeneralContractor",
+  "name": "J. Worden & Sons Asphalt Paving",
+  "legalName": "J. Worden & Sons Asphalt Paving",
+  "url": "https://www.jwordenasphaltpaving.com",
+  "foundingDate": "1984",
+  "founder": [
+    { "@type": "Person", "name": "Gene Worden George" },
+    { "@type": "Person", "name": "Chase George" }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "1601 Ware Bottom Spring Rd, Suite 214",
+    "addressLocality": "Chester",
+    "addressRegion": "VA",
+    "postalCode": "23836",
+    "addressCountry": "US"
+  },
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sunday Paving" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Weekend Diligence" } }
+  ]
+}
+</script>
+
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!--
+      Netlify Forms registration: hidden form so Netlify's build-time
+      crawler detects "lead-fallback" and routes any POST to that form
+      name into the dashboard + email notifications. NEVER displayed.
+      Used by netlify/functions/lead-fallback-notify.js as a guaranteed
+      delivery path even when SendGrid is misconfigured.
+    -->
+    <form name="lead-fallback" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="bot-field" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="text" name="address" />
+      <input type="text" name="service" />
+      <textarea name="message"></textarea>
+      <input type="text" name="source" />
+      <input type="text" name="timestamp" />
+    </form>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

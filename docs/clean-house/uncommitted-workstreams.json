@@ -1,0 +1,342 @@
+[
+  {
+    "status": "M",
+    "path": ".github/workflows/ci.yml",
+    "category": "ci-workflows"
+  },
+  {
+    "status": "M",
+    "path": ".github/workflows/vector-reindex.yml",
+    "category": "ci-workflows"
+  },
+  {
+    "status": "M",
+    "path": ".gitignore",
+    "category": "root-config-docs"
+  },
+  {
+    "status": "M",
+    "path": "DOMAINS_INVENTORY.md",
+    "category": "root-config-docs"
+  },
+  {
+    "status": "M",
+    "path": "app/database.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/main.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/admin.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/admin_integrations.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/advisor.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/jarvis_router.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/leads.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/metrics.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/routers/tts.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/services/jarvis.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/services/llm_client.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/services/runtime_config.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/services/tts_service.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "app/tasks/email_tasks.py",
+    "category": "backend"
+  },
+  {
+    "status": "M",
+    "path": "public/sitemap.txt",
+    "category": "public-generated"
+  },
+  {
+    "status": "M",
+    "path": "public/sitemap.xml",
+    "category": "public-generated"
+  },
+  {
+    "status": "M",
+    "path": "requirements.txt",
+    "category": "root-config-docs"
+  },
+  {
+    "status": "M",
+    "path": "scripts/generate-sitemap.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "M",
+    "path": "scripts/set-operational-secrets.ps1",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "M",
+    "path": "src/App.jsx",
+    "category": "frontend"
+  },
+  {
+    "status": "M",
+    "path": "src/components/SEO.jsx",
+    "category": "frontend"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/buildingPermits.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/constructionLicensing.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/environmentalPermits.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/mechanicsLienLaws.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/prevailingWage.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/promptPaymentLaws.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/roadsAndPavingRegulations.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/states.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/utilityDepthClearances.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/data/legal/workersSafety.js",
+    "category": "legal-datasets"
+  },
+  {
+    "status": "M",
+    "path": "src/lib/ElevenLabsService.js",
+    "category": "frontend"
+  },
+  {
+    "status": "M",
+    "path": "src/main.jsx",
+    "category": "frontend"
+  },
+  {
+    "status": "M",
+    "path": "src/pages/CommandCenter.jsx",
+    "category": "frontend"
+  },
+  {
+    "status": "M",
+    "path": "tests/e2e/public-pages-smoke.spec.js",
+    "category": "tests"
+  },
+  {
+    "status": "??",
+    "path": ".github/workflows/legal-advisory-monitor.yml",
+    "category": "ci-workflows"
+  },
+  {
+    "status": "??",
+    "path": "WEBSITE_FACTORY_BRAIN.md",
+    "category": "root-config-docs"
+  },
+  {
+    "status": "??",
+    "path": "app/services/jarvis_access.py",
+    "category": "backend"
+  },
+  {
+    "status": "??",
+    "path": "app/services/jarvis_observability.py",
+    "category": "backend"
+  },
+  {
+    "status": "??",
+    "path": "docs/CLEAN_HOUSE_PHASE2.md",
+    "category": "docs"
+  },
+  {
+    "status": "??",
+    "path": "docs/LEGAL_ADVISORY_LAUNCH.md",
+    "category": "docs"
+  },
+  {
+    "status": "??",
+    "path": "docs/WEBSITE_BUILDER_WORLD_CLASS_ROADMAP.md",
+    "category": "docs"
+  },
+  {
+    "status": "??",
+    "path": "docs/legal-advisory/",
+    "category": "docs"
+  },
+  {
+    "status": "??",
+    "path": "docs/logic-preservation/",
+    "category": "docs"
+  },
+  {
+    "status": "??",
+    "path": "scripts/add-site-to-factory.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/calc-builder-pricing.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/clean-house-report.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/create-seo-growth-kit.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/factory-blog-writer.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/factory-launch-pack.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/legal-advisory-change-report.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/logic-preserve-snapshot.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/state-reach-report.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/verify-public-core-boundary.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/verify-seo-readiness.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/verify-site-isolation.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "scripts/watch-ci.mjs",
+    "category": "scripts-tooling"
+  },
+  {
+    "status": "??",
+    "path": "site-blueprints/premium-addons-catalog.json",
+    "category": "site-blueprints"
+  },
+  {
+    "status": "??",
+    "path": "src/config/",
+    "category": "frontend"
+  },
+  {
+    "status": "??",
+    "path": "src/lib/siteProfiles.js",
+    "category": "frontend"
+  },
+  {
+    "status": "??",
+    "path": "src/pages/MarketLanding.jsx",
+    "category": "frontend"
+  },
+  {
+    "status": "??",
+    "path": "tests/backend/test_jarvis_access_control.py",
+    "category": "tests"
+  },
+  {
+    "status": "??",
+    "path": "tests/backend/test_public_core_boundary.py",
+    "category": "tests"
+  },
+  {
+    "status": "??",
+    "path": "tests/backend/test_tts_streaming.py",
+    "category": "tests"
+  }
+]

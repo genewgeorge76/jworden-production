@@ -1,0 +1,35 @@
+#!/bin/sh
+# .githooks/pre-commit
+# Auto-runs on `git commit`. Catches lint errors and secrets BEFORE they go in history.
+# Enable once: git config core.hooksPath .githooks   (or run scripts/enable-githooks.ps1)
+
+set -e
+
+echo "[pre-commit] running ESLint on staged JS/JSX/TS/TSX..."
+
+# Get list of staged JS/JSX/TS/TSX files
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|jsx|ts|tsx|mjs|cjs)$' || true)
+
+if [ -z "$STAGED" ]; then
+  echo "[pre-commit] no JS/TS files staged. skip lint."
+else
+  # Run eslint only on staged files (fast)
+  npx eslint --quiet $STAGED || {
+    echo ""
+    echo "[pre-commit] ESLint FAILED. Fix errors above (or run: npm run lint:fix) then re-stage."
+    exit 1
+  }
+fi
+
+# Secret scan — block obvious API keys
+echo "[pre-commit] scanning staged diff for secrets..."
+if git diff --cached | grep -E 'sk-[a-zA-Z0-9]{20,}|AIza[0-9A-Za-z_-]{30,}|xoxb-[a-zA-Z0-9-]+|ghp_[a-zA-Z0-9]{30,}|-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----' > /dev/null; then
+  echo ""
+  echo "[pre-commit] POTENTIAL SECRET DETECTED in staged changes."
+  echo "[pre-commit] Review with:  git diff --cached"
+  echo "[pre-commit] If false positive, bypass with:  git commit --no-verify"
+  exit 1
+fi
+
+echo "[pre-commit] OK"
+exit 0

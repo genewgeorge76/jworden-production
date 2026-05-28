@@ -1,0 +1,708 @@
+{
+  "mode": "diff",
+  "generatedAt": "2026-05-26T00:18:15.546Z",
+  "durationMs": 51,
+  "baselineGeneratedAt": "2026-05-08T22:48:22.965Z",
+  "currentGeneratedAt": "2026-05-26T00:18:15.546Z",
+  "summary": {
+    "tableCount": 12,
+    "changedTables": 0,
+    "highImpactChanges": 0,
+    "coverageRegressions": 0,
+    "severityCounts": {
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "areaCounts": {}
+  },
+  "coverage": [
+    {
+      "file": "buildingPermits.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "constructionLicensing.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "contractLaw.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "environmentalPermits.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "mechanicsLienLaws.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "prevailingWage.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "promptPaymentLaws.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "roadsAndPavingRegulations.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "states.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "utilitiesOneCall.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "utilityDepthClearances.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    },
+    {
+      "file": "workersSafety.js",
+      "rowCount": 51,
+      "uniqueAbbrCount": 51,
+      "missingCount": 0,
+      "missingJurisdictions": [],
+      "duplicateAbbrs": []
+    }
+  ],
+  "jurisdictionCapability": {
+    "summary": {
+      "jurisdictionCount": 51,
+      "tableCount": 12,
+      "averageCapabilityScore": 98.33,
+      "tierCounts": {
+        "high": 51,
+        "medium": 0,
+        "baseline": 0
+      },
+      "weakestJurisdictions": [
+        {
+          "abbr": "AK",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "AL",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "AR",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "AZ",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "CA",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "CO",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "CT",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "DC",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "DE",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        },
+        {
+          "abbr": "FL",
+          "capabilityScore": 98.33,
+          "tier": "high",
+          "missingRows": 0
+        }
+      ]
+    },
+    "byJurisdiction": [
+      {
+        "abbr": "AK",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "AL",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "AR",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "AZ",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "CA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "CO",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "CT",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "DC",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "DE",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "FL",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "GA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "HI",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "IA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "ID",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "IL",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "IN",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "KS",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "KY",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "LA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MD",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "ME",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MI",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MN",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MO",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MS",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "MT",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NC",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "ND",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NE",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NH",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NJ",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NM",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NV",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "NY",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "OH",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "OK",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "OR",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "PA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "RI",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "SC",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "SD",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "TN",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "TX",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "UT",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "VA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "VT",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "WA",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "WI",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "WV",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      },
+      {
+        "abbr": "WY",
+        "presentRows": 12,
+        "missingRows": 0,
+        "coveragePct": 100,
+        "criticalSignalPct": 91.67,
+        "capabilityScore": 98.33,
+        "tier": "high",
+        "missingTables": []
+      }
+    ]
+  },
+  "tableChanges": [],
+  "recommendations": [
+    "No legal advisory changes detected compared to baseline.",
+    "Treat this report as advisory operations intelligence, not legal advice."
+  ]
+}

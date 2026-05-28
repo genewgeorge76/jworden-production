@@ -1,0 +1,82 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'Edit' if block else 'New' }} Content Block{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ 'Edit Block: ' + block.key if block else 'New Content Block' }}</h1>
+  <p>
+    {% if block %}
+      Changes are reflected immediately on the public API.
+    {% else %}
+      Create a new dynamic content block for the customer-facing website.
+    {% endif %}
+  </p>
+</div>
+
+<div class="card" style="max-width:760px;">
+  <form method="post">
+    <div class="form-group">
+      <label for="key">Key <span style="color:#dc2626;">*</span></label>
+      <input
+        type="text"
+        id="key"
+        name="key"
+        value="{{ block.key if block else '' }}"
+        {% if block %}readonly style="background:#f3f4f6;cursor:not-allowed;"{% endif %}
+        placeholder="e.g. hero, services_intro, about_tagline"
+        required
+        maxlength="100"
+        pattern="[a-z0-9_\-]+"
+        title="Lowercase letters, numbers, underscores, and hyphens only"
+      />
+      <small style="color:#6b7280;">Used in the API URL: <code>/api/v1/content/{key}</code>. Lowercase, no spaces.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="title">Title <span style="color:#dc2626;">*</span></label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="{{ block.title if block else '' }}"
+        placeholder="Human-readable label for this block"
+        required
+        maxlength="200"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="body">Body</label>
+      <textarea
+        id="body"
+        name="body"
+        placeholder="Content text or HTML…"
+        rows="8"
+      >{{ block.body if block else '' }}</textarea>
+      <small style="color:#6b7280;">Plain text or HTML. Displayed to customers via the frontend when this block is fetched.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="meta_json">Meta JSON <span style="color:#9ca3af;">(optional)</span></label>
+      <textarea
+        id="meta_json"
+        name="meta_json"
+        placeholder='{"cta_text": "Get a Free Quote", "cta_href": "/quote", "background": "#1a1a2e"}'
+        rows="4"
+      >{{ block.meta_json if block else '' }}</textarea>
+      <small style="color:#6b7280;">Optional structured data as a valid JSON object. Useful for colours, CTA links, image URLs, etc.</small>
+    </div>
+
+    <div style="display:flex;gap:.75rem;align-items:center;">
+      <button type="submit" class="btn btn-primary">💾 Save Block</button>
+      <a href="/admin/content" class="btn btn-ghost">Cancel</a>
+      {% if block %}
+      <span style="margin-left:auto;font-size:.8rem;color:#9ca3af;">
+        Created {{ block.created_at.strftime('%b %d %Y') if block.created_at else '—' }} ·
+        Updated {{ block.updated_at.strftime('%b %d %Y, %H:%M UTC') if block.updated_at else '—' }}
+      </span>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

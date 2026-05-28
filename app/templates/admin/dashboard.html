@@ -1,0 +1,123 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>Lead pipeline overview — real-time ranking and status.</p>
+</div>
+
+<div class="card-grid">
+  <div class="card stat-card">
+    <div class="value">{{ stats.total_leads }}</div>
+    <div class="label">Total Leads</div>
+  </div>
+  <div class="card stat-card">
+    <div class="value" style="color:#dc2626;">{{ stats.hot }}</div>
+    <div class="label">🔥 HOT (call now)</div>
+  </div>
+  <div class="card stat-card">
+    <div class="value" style="color:#d97706;">{{ stats.warm }}</div>
+    <div class="label">🟡 WARM</div>
+  </div>
+  <div class="card stat-card">
+    <div class="value" style="color:#2563eb;">{{ stats.cool }}</div>
+    <div class="label">🔵 COOL</div>
+  </div>
+  <div class="card stat-card">
+    <div class="value" style="color:#dc2626;">{{ stats.overdue }}</div>
+    <div class="label">⏰ Overdue SLA</div>
+  </div>
+  <div class="card stat-card">
+    <div class="value">{{ stats.total_contacts }}</div>
+    <div class="label">Contact Messages</div>
+  </div>
+  <div class="card stat-card">
+    <div class="value">{{ stats.content_blocks }}</div>
+    <div class="label">Content Blocks</div>
+  </div>
+</div>
+
+<!-- Top ranked leads -->
+<div class="card" style="margin-bottom:1.5rem;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+    <h2 style="font-size:1rem;font-weight:700;">Top Ranked Leads</h2>
+    <a href="/admin/leads" class="btn btn-ghost" style="font-size:.8rem;padding:.35rem .9rem;">View all →</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Service</th>
+          <th>Rank</th>
+          <th>Score</th>
+          <th>SLA</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in top_leads %}
+        <tr>
+          <td>{{ item.rank_position }}</td>
+          <td>
+            <strong>{{ item.lead.name }}</strong><br>
+            <small style="color:#6b7280;">{{ item.lead.email }}</small>
+          </td>
+          <td>{{ item.lead.service_type | replace('_', ' ') | title }}</td>
+          <td><span class="badge {{ item.rank_badge }}">{{ item.rank_label }}</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar" style="width:{{ [item.rank_score, 200] | min / 2 }}%;background:{% if item.rank_label == 'HOT' %}#dc2626{% elif item.rank_label == 'WARM' %}#d97706{% else %}#2563eb{% endif %};"></div>
+            </div>
+            {{ item.rank_score }}
+          </td>
+          <td>
+            {% if item.sla_status == 'within_sla' %}
+              <span class="badge badge-sla-ok">OK</span>
+            {% else %}
+              <span class="badge badge-sla-over">{{ item.sla_status }}</span>
+            {% endif %}
+          </td>
+          <td style="white-space:nowrap;font-size:.8rem;color:#6b7280;">{{ item.lead.created_at.strftime('%b %d, %H:%M') if item.lead.created_at else '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" style="text-align:center;color:#6b7280;padding:1.5rem;">No leads yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Recent contacts -->
+<div class="card">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+    <h2 style="font-size:1rem;font-weight:700;">Recent Contact Messages</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Message</th>
+          <th>Received</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in recent_contacts %}
+        <tr>
+          <td><strong>{{ msg.name }}</strong></td>
+          <td>{{ msg.email }}</td>
+          <td style="max-width:320px;">{{ msg.message[:120] }}{% if msg.message|length > 120 %}…{% endif %}</td>
+          <td style="white-space:nowrap;font-size:.8rem;color:#6b7280;">{{ msg.created_at.strftime('%b %d, %H:%M') if msg.created_at else '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="text-align:center;color:#6b7280;padding:1.5rem;">No messages yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+#env
+.env
+.env.*
+!.env.example
+!.env.media.example
+
+# Logs
+/logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Playwright
+test-results/
+playwright-report/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.env
+.vite
+
+# Local Netlify folder
+.netlify
+
+# Diagnostic / scratch outputs
+openapi.json
+staging-compare.txt
+
+__pycache__/
+*.pyc
+.venv/
+
+# media URL mapping artifact
+.media-url-map.json
+
+# Stray local build/test artifacts
+build_*.txt
+build.log
+lint.log
+staging-compare.txt
+smoke-results.txt
+c.txt
+q.txt
+resp.txt
+*.tmp
+.DS_Store
+
+# Local runtime/state artifacts
+.runtime/
+.cc_head.txt
+jworden_leads.db
+
+# Local mirror/fork repos used for deployment experiments and sync operations
+external-repos/
+
+# Generated local report artifacts
+docs/clean-house/latest-report.md
+docs/clean-house/latest.json
+docs/reliability/latest-synthetic.md
+docs/reliability/latest-synthetic.json
+
+# Local archive of untracked May-10 handoff files
+_archive/
+
+
+
+# Lighthouse audit dumps + temp logs
+lh-*.json
+live-api-routes.txt
+playwright-fix-check.txt
+build_check.txt
+staging-compare.txt
+temp_view.txt

@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "slug": "/",
+  "public": true,
+  "includeInSitemap": true,
+  "title": "The Worden Standard | Truth, Vision & Operational Excellence",
+  "description": "The foundation, regulatory hub, and operational truth of J. Worden & Sons. Guiding generational wealth, HR applications, driver compliance, and customer standards.",
+  "h1": "The Worden Standard",
+  "intro": "More than a heritage — this is the regulatory core, training hub, and absolute Source of Truth for every employee, driver, and customer. We don't bend on our standard, whether processing a client review or verifying a CDL.",
+  "ctaText": "Access Training Portals",
+  "ctaHref": "/training-hub",
+  "changefreq": "daily",
+  "priority": 1.0,
+  "sections": [
+    {
+      "heading": "Who We Are & Our Generational Vision",
+      "body": "Built on the unyielding principles of John H. Worden, we are a family-driven enterprise targeting the 22nd century. Our ultimate goal isn't just revenue—it's cultivating generational wealth and teaching these exact same standards of absolute work ethic and discipline to our entire team."
+    },
+    {
+      "heading": "The Source of Truth (Guardian of the Standard)",
+      "body": "This platform serves as the ultimate arbiter for our business. It processes all customer feedback, resolves complaints, and ensures every single paving, GC project, and internal action adheres strictly to the Worden standard. It is the uncompromising baseline for existing and future customers."
+    },
+    {
+      "heading": "Employee Training & HR Hub",
+      "body": "The go-to site and single point of entry for all corporate learning and hiring. New applicants can submit their information, staff can run thorough CDL driver history verifications, and crew members can access a massive library of training videos."
+    },
+    {
+      "heading": "Regulatory & Operations Center",
+      "body": "Every piece of business we do flows through this regulatory framework. From OSHA compliance and equipment dispatch check-ins to customer conflict resolution, if an operation doesn't pass the Standard, it doesn't move forward."
+    }
+  ]
+}

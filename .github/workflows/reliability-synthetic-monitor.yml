@@ -1,0 +1,50 @@
+name: Reliability Synthetic Monitor
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reliability-synthetic-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  synthetic:
+    name: Synthetic Uptime and Latency Probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run synthetic reliability monitor
+        env:
+          RELIABILITY_BASE_URL: ${{ secrets.RELIABILITY_BASE_URL }}
+          RELIABILITY_ADMIN_TOKEN: ${{ secrets.RELIABILITY_ADMIN_TOKEN }}
+        run: npm run ops:reliability-synthetic -- --allow-skip --require-base-url
+
+      - name: Publish synthetic report to workflow summary
+        if: always()
+        run: cat docs/reliability/latest-synthetic.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload synthetic reliability artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reliability-synthetic-monitor
+          path: |
+            docs/reliability/latest-synthetic.md
+            docs/reliability/latest-synthetic.json
+          retention-days: 21

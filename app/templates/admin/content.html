@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% block title %}Webpage Maker{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+  <div>
+    <h1>Webpage Maker</h1>
+    <p>Manage dynamic content blocks served to the customer-facing website. Changes are live immediately via the public <code>/api/v1/content</code> endpoint.</p>
+  </div>
+  <a href="/admin/content/new" class="btn btn-primary">+ New Block</a>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Title</th>
+          <th>Body (preview)</th>
+          <th>Last Updated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for block in blocks %}
+        <tr>
+          <td><code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:.8rem;">{{ block.key }}</code></td>
+          <td><strong>{{ block.title }}</strong></td>
+          <td style="max-width:300px;color:#6b7280;font-size:.85rem;">{{ block.body[:100] }}{% if block.body|length > 100 %}…{% endif %}</td>
+          <td style="white-space:nowrap;font-size:.8rem;color:#6b7280;">{{ block.updated_at.strftime('%b %d %Y, %H:%M') if block.updated_at else '—' }}</td>
+          <td style="white-space:nowrap;">
+            <a href="/admin/content/{{ block.key }}/edit" class="btn btn-ghost" style="font-size:.8rem;padding:.3rem .75rem;">Edit</a>
+            <form method="post" action="/admin/content/{{ block.key }}/delete" style="display:inline;" onsubmit="return confirm('Delete this block?');">
+              <button type="submit" class="btn btn-danger" style="font-size:.8rem;padding:.3rem .75rem;">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="text-align:center;color:#6b7280;padding:2rem;">
+            No content blocks yet. <a href="/admin/content/new" style="color:#2563eb;">Create your first block →</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:1.5rem;">
+  <h2 style="font-size:.95rem;font-weight:700;margin-bottom:.75rem;">How it works</h2>
+  <ul style="font-size:.875rem;color:#4b5563;line-height:1.7;padding-left:1.25rem;">
+    <li>Each content block has a unique <strong>key</strong> (e.g. <code>hero</code>, <code>services_intro</code>).</li>
+    <li>The <strong>body</strong> can be plain text or HTML — your choice.</li>
+    <li>The <strong>meta JSON</strong> field accepts optional structured data (colours, CTA links, image URLs).</li>
+    <li>Blocks are served to the frontend via <code>GET /api/v1/content/{key}</code> — a lightweight, cached endpoint.</li>
+    <li>The frontend falls back gracefully to hardcoded defaults if a block is missing.</li>
+    <li>No admin logic, credentials, or ranking data ever appears in the customer bundle.</li>
+  </ul>
+</div>
+{% endblock %}

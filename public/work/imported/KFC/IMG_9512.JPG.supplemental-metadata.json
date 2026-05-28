@@ -1,0 +1,33 @@
+{
+  "title": "IMG_9512.JPG",
+  "description": "",
+  "imageViews": "1",
+  "creationTime": {
+    "timestamp": "1773104688",
+    "formatted": "Mar 10, 2026, 1:04:48 AM UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1457557553",
+    "formatted": "Mar 9, 2016, 9:05:53 PM UTC"
+  },
+  "geoData": {
+    "latitude": 33.8889417,
+    "longitude": -84.4738917,
+    "altitude": 311.3203883495146,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 33.8889417,
+    "longitude": -84.4738917,
+    "altitude": 311.3203883495146,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://photos.google.com/photo/AF1QipOt6A7GMmVW5se4ua6IKMmos7YOKI6U0M0pVsI-",
+  "googlePhotosOrigin": {
+    "mobileUpload": {
+      "deviceType": "IOS_PHONE"
+    }
+  }
+}

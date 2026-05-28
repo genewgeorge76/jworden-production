@@ -1,0 +1,21 @@
+#!/bin/sh
+# .githooks/pre-push
+# Auto-runs on `git push`. Full preflight: lint + build.
+# Skip in emergency with:  git push --no-verify
+
+set -e
+
+echo "[pre-push] running full lint..."
+npm run lint || {
+  echo "[pre-push] LINT FAILED. Fix or run: npm run lint:fix"
+  exit 1
+}
+
+echo "[pre-push] running build..."
+npm run build || {
+  echo "[pre-push] BUILD FAILED. Do not push broken builds to CI."
+  exit 1
+}
+
+echo "[pre-push] OK — safe to push"
+exit 0

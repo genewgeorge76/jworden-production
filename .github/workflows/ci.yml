@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend — Lint & Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env from .env.example
+        run: cp .env.example .env.local
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Guard public/core route boundary
+        run: npm run guard:public-core
+
+      - name: Guard multi-site isolation
+        run: npm run guard:site-isolation
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://placeholder.railway.app
+          VITE_GA4_ID: G-XXXXXXXXXX
+          # CI placeholder — production deploys use the VITE_SITE_URL secret
+          VITE_SITE_URL: https://www.jwordenasphaltpaving.com
+
+      - name: Guard SEO readiness
+        run: npm run guard:seo-readiness
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  backend:
+    name: Backend — Imports, Migrations & Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check imports (fast smoke test)
+        run: python -c "from app.main import app; print('FastAPI app loaded OK')"
+        env:
+          JWORDEN_MASTER_KEY: ci-test-key
+          JWT_SECRET_KEY: ci-test-secret
+
+      - name: Validate Alembic migrations (upgrade to head on SQLite)
+        run: python -m alembic upgrade head
+        env:
+          DATABASE_URL: sqlite:///./ci_migration_check.db
+          JWORDEN_MASTER_KEY: ci-test-key
+          JWT_SECRET_KEY: ci-test-secret
+
+      - name: Backend API tests
+        run: pytest -q
+        env:
+          JWORDEN_MASTER_KEY: test-master-key
+          JWT_SECRET_KEY: test-jwt-secret
+          AUTO_CREATE_TABLES: "true"
+
+  docker:
+    name: Docker — Build Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate docker-compose config
+        run: docker compose config --quiet
+
+      - name: Build Docker image (builder stage)
+        run: docker build --target builder -t jworden-api:ci .
+
+  tests:
+    name: Tests — Frontend Unit & E2E Smoke
+    runs-on: ubuntu-latest
+    needs: [frontend, backend]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Frontend unit tests
+        run: npm run test:unit --if-present
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E smoke tests
+        run: npm run test:e2e --if-present
+        env:
+          VITE_API_BASE_URL: http://127.0.0.1:9999
+          VITE_CC_PASSWORD: e2e-pin

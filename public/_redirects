@@ -1,0 +1,113 @@
+# J. Worden & Sons — Netlify domain consolidation
+# All vanity domains 301 → primary domain (www.jwordenasphaltpaving.com)
+# Generated: Architecture B migration
+
+# ============================================================
+# STATIC FILE ESCAPE HATCHES (must come BEFORE SPA fallback)
+# Force Netlify to serve these static files directly, bypassing
+# the /* /index.html 200 SPA fallback that would otherwise return
+# React HTML instead of the actual robots.txt / sitemap files.
+# ============================================================
+/robots.txt    /robots.txt    200!
+/sitemap.xml   /sitemap.xml   200!
+/sitemap.txt   /sitemap.txt   200!
+/image-sitemap.xml   /image-sitemap.xml   200!
+/api/*         https://codexbuildfreeofbase44-production.up.railway.app/api/:splat    200!
+
+# Force canonical host
+https://jwordenasphaltpaving.com/*      https://www.jwordenasphaltpaving.com/:splat      301!
+http://jwordenasphaltpaving.com/*       https://www.jwordenasphaltpaving.com/:splat      301!
+http://www.jwordenasphaltpaving.com/*   https://www.jwordenasphaltpaving.com/:splat      301!
+
+# ============================================================
+# VIRGINIA BRAND ALIASES → root domain
+# ============================================================
+https://jwordensons.com/*       https://www.jwordenasphaltpaving.com/:splat       301!
+https://www.jwordensons.com/*   https://www.jwordenasphaltpaving.com/:splat       301!
+https://jwordenpaving.com/*     https://www.jwordenasphaltpaving.com/:splat       301!
+https://www.jwordenpaving.com/* https://www.jwordenasphaltpaving.com/:splat       301!
+
+# Added: jwordenandsonspaving.com canonicalization
+https://jwordenandsonspaving.com/*       https://www.jwordenasphaltpaving.com/:splat       301!
+https://www.jwordenandsonspaving.com/*   https://www.jwordenasphaltpaving.com/:splat       301!
+http://jwordenandsonspaving.com/*        https://www.jwordenasphaltpaving.com/:splat       301!
+http://www.jwordenandsonspaving.com/*    https://www.jwordenasphaltpaving.com/:splat       301!
+
+# ============================================================
+# VIRGINIA GEO DOMAINS → specific location pages
+# ============================================================
+https://richmondvapaving.com/*       https://www.jwordenasphaltpaving.com/locations/richmond-va       301!
+https://www.richmondvapaving.com/*   https://www.jwordenasphaltpaving.com/locations/richmond-va       301!
+https://chestervapaving.com/*        https://www.jwordenasphaltpaving.com/locations/chester-va        301!
+https://www.chestervapaving.com/*    https://www.jwordenasphaltpaving.com/locations/chester-va        301!
+https://midlothianpaving.com/*       https://www.jwordenasphaltpaving.com/locations/midlothian-va     301!
+https://www.midlothianpaving.com/*   https://www.jwordenasphaltpaving.com/locations/midlothian-va     301!
+https://mechanicsvillepaving.com/*   https://www.jwordenasphaltpaving.com/locations/mechanicsville-va 301!
+https://www.mechanicsvillepaving.com/* https://www.jwordenasphaltpaving.com/locations/mechanicsville-va 301!
+
+# ============================================================
+# GEORGIA GEO DOMAINS
+# ============================================================
+https://savannahpaving.com/*         https://www.jwordenasphaltpaving.com/locations/savannah-ga       301!
+https://www.savannahpaving.com/*     https://www.jwordenasphaltpaving.com/locations/savannah-ga       301!
+https://atlantapavingpros.com/*      https://www.jwordenasphaltpaving.com/locations/atlanta-ga        301!
+https://www.atlantapavingpros.com/*  https://www.jwordenasphaltpaving.com/locations/atlanta-ga        301!
+https://augustapaving.com/*          https://www.jwordenasphaltpaving.com/locations/augusta-ga        301!
+https://www.augustapaving.com/*      https://www.jwordenasphaltpaving.com/locations/augusta-ga        301!
+
+# ============================================================
+# NORTH CAROLINA GEO DOMAINS
+# ============================================================
+https://charlottepavingpros.com/*    https://www.jwordenasphaltpaving.com/locations/charlotte-nc      301!
+https://www.charlottepavingpros.com/* https://www.jwordenasphaltpaving.com/locations/charlotte-nc     301!
+https://raleighpavingpros.com/*      https://www.jwordenasphaltpaving.com/locations/raleigh-nc        301!
+https://www.raleighpavingpros.com/*  https://www.jwordenasphaltpaving.com/locations/raleigh-nc        301!
+https://greensboropaving.com/*       https://www.jwordenasphaltpaving.com/locations/greensboro-nc     301!
+https://www.greensboropaving.com/*   https://www.jwordenasphaltpaving.com/locations/greensboro-nc     301!
+
+# ============================================================
+# SOUTH CAROLINA GEO DOMAINS
+# ============================================================
+https://charlestonpavingpros.com/*   https://www.jwordenasphaltpaving.com/locations/charleston-sc     301!
+https://www.charlestonpavingpros.com/* https://www.jwordenasphaltpaving.com/locations/charleston-sc   301!
+https://columbiapavingpros.com/*     https://www.jwordenasphaltpaving.com/locations/columbia-sc       301!
+https://www.columbiapavingpros.com/* https://www.jwordenasphaltpaving.com/locations/columbia-sc       301!
+
+# ============================================================
+# MISSOURI GEO DOMAIN
+# ============================================================
+https://kansascitypavingpros.com/*   https://www.jwordenasphaltpaving.com/locations/kansas-city-mo    301!
+https://www.kansascitypavingpros.com/* https://www.jwordenasphaltpaving.com/locations/kansas-city-mo  301!
+
+# ============================================================
+# PATH-LEVEL REDIRECTS (legacy URLs → current structure)
+# ============================================================
+# NOTE: /contact MUST resolve to the SPA Contact page (used by Google Ads).
+# Do NOT add a redirect here for /contact.
+/fredericksburg-va-paving   /locations  301!
+
+# ============================================================
+# AD LANDING ALIASES — common Google Ads URL variants that
+# previously rendered React's PageNotFound (soft 404). Route
+# them to the right destination so paid clicks always convert.
+# ============================================================
+/free-estimate         /contact        301!
+/get-quote             /quote          301!
+/get-a-quote           /quote          301!
+/estimate              /contact        301!
+/free-quote            /quote          301!
+/request-estimate      /contact        301!
+/request-a-quote       /quote          301!
+/asphalt-paving        /paving         301!
+/asphalt               /paving         301!
+/driveway              /residential    301!
+/driveways             /residential    301!
+/parking-lot           /parking-lots   301!
+/seal-coating          /sealcoating    301!
+/sealing               /sealcoating    301!
+
+# ============================================================
+# SPA FALLBACK (must be LAST)
+# Any unmatched path serves the React app's index.html
+# ============================================================
+/*    /index.html    200

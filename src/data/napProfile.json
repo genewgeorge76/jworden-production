@@ -1,0 +1,27 @@
+{
+  "businessName": "J. Worden & Sons Paving LLC",
+  "address": {
+    "street": "123 Paving Way",
+    "city": "Chester",
+    "state": "VA",
+    "zipCode": "23831",
+    "country": "US"
+  },
+  "phone": "+1-804-555-0199",
+  "website": "https://www.jwordenasphaltpaving.com",
+  "description": "Premier commercial and residential asphalt paving serving Richmond, Chesterfield, and the greater Virginia area since 1999.",
+  "categories": [
+    "Paving Contractor",
+    "Asphalt Contractor",
+    "Concrete Contractor"
+  ],
+  "hours": {
+    "Monday": "07:00-18:00",
+    "Tuesday": "07:00-18:00",
+    "Wednesday": "07:00-18:00",
+    "Thursday": "07:00-18:00",
+    "Friday": "07:00-18:00",
+    "Saturday": "08:00-14:00",
+    "Sunday": "Closed"
+  }
+}

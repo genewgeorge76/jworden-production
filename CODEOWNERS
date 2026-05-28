@@ -1,0 +1,18 @@
+# CODEOWNERS — required reviewers for any change to these paths.
+# Currently a single-owner repo. As the team grows, add more owners here.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything.
+*                       @jwordenaii
+
+# Critical infrastructure — extra-careful path.
+/netlify.toml           @jwordenaii
+/.github/               @jwordenaii
+/scripts/               @jwordenaii
+/app/main.py            @jwordenaii
+/app/services/jarvis.py @jwordenaii
+/app/services/autonomy_state.py @jwordenaii
+
+# AI feature work — isolated under src/ai/ for clean ownership.
+/src/ai/                @jwordenaii
+/src/lib/featureFlags.js @jwordenaii

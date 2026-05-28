@@ -1,0 +1,25 @@
+name: Pinecone Reindex On Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  reindex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Pinecone Reindex
+        env:
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          JWORDEN_API_BASE_URL: ${{ secrets.JWORDEN_API_BASE_URL }}
+          JWORDEN_MASTER_KEY: ${{ secrets.JWORDEN_MASTER_KEY }}
+        run: |
+          if [ -z "$PINECONE_API_KEY" ] || [ -z "$JWORDEN_API_BASE_URL" ] || [ -z "$JWORDEN_MASTER_KEY" ]; then
+            echo "Skipping Pinecone reindex: required secrets are not configured."
+            exit 0
+          fi
+
+          curl -s -X POST "$JWORDEN_API_BASE_URL/api/v1/admin/search/vector-reindex" \
+            -H "Authorization: Bearer $JWORDEN_MASTER_KEY" \
+            -H "Content-Type: application/json" -d '{}' -o /tmp/reindex.out || true
+          echo "Response:" && cat /tmp/reindex.out

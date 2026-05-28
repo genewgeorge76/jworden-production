@@ -1,0 +1,33 @@
+{
+  "title": "IMG_8717.JPG",
+  "description": "",
+  "imageViews": "1",
+  "creationTime": {
+    "timestamp": "1777791407",
+    "formatted": "May 3, 2026, 6:56:47 AM UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1452802501",
+    "formatted": "Jan 14, 2016, 8:15:01 PM UTC"
+  },
+  "geoData": {
+    "latitude": 37.498619399999995,
+    "longitude": -77.5394972,
+    "altitude": 66.43085106382979,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 37.498619399999995,
+    "longitude": -77.5394972,
+    "altitude": 66.43085106382979,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://photos.google.com/photo/AF1QipPmmXEZXP7VqZFFRYPqqZz68qo51ssIckBYkh8_",
+  "googlePhotosOrigin": {
+    "mobileUpload": {
+      "deviceType": "IOS_PHONE"
+    }
+  }
+}

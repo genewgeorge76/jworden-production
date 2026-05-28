@@ -1,0 +1,28 @@
+{
+  "enabled": true,
+  "slug": "/employee-handbook",
+  "public": false,
+  "includeInSitemap": true,
+  "title": "The Worden Standard Employee Handbook",
+  "description": "Comprehensive digital and printable employee handbook detailing company policies, payroll, and code of conduct.",
+  "h1": "Official Employee Handbook",
+  "intro": "This document outlines the expectations, rights, and regulatory obligations of every employee. It is designed to be dynamically updated with Supreme Court and 51-state legal precedents, and can be printed in full for physical distribution.",
+  "ctaText": "Print Official Handbook (PDF)",
+  "ctaHref": "?print=true",
+  "changefreq": "monthly",
+  "priority": 0.9,
+  "sections": [
+    {
+      "heading": "Code of Conduct & The Worden Standard",
+      "body": "We operate transparently, safely, and relentlessly. This section covers attendance, zero-tolerance drug policies, and our commitment to EEOC anti-discrimination laws. Every employee represents the Worden brand to the public."
+    },
+    {
+      "heading": "Payroll, Prevailing Wage & Overtime",
+      "body": "Detailed explanations of how overtime is calculated, the mandatory use of the time-tracking app, and adherence to FLSA and Davis-Bacon prevailing wage requirements for government/municipal contracts."
+    },
+    {
+      "heading": "Safety Violations & Disciplinary Action",
+      "body": "Safety is absolute. Outlines the progressive disciplinary steps for failing to utilize PPE, skipping pre-trip ELD inspections, or violating 811 Miss Utility guidelines. Gross negligence results in immediate termination."
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+name: AI Tech Radar
+
+on:
+  schedule:
+    - cron: "11 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-tech-radar-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  radar:
+    name: Fetch + Diff AI Tech Signals
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore previous radar snapshot from cache
+        id: radar-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: docs/tech-radar/snapshot.json
+          key: ai-tech-radar-snapshot-${{ github.run_id }}
+          restore-keys: |
+            ai-tech-radar-snapshot-
+
+      - name: Run AI tech radar
+        run: npm run ops:tech-radar
+
+      - name: Import radar signals into system intelligence payload
+        run: npm run ops:tech-radar:import
+
+      - name: Send urgent tech-radar email alerts
+        run: npm run ops:tech-radar:email-alert
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: JWordenAI Tech Radar
+          TECH_RADAR_ALERT_TO_EMAIL: J.WORDENANDSONSPAVING@GMAIL.COM
+
+      - name: Send daily tech-radar digest email
+        run: npm run ops:tech-radar:email-alert:daily
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: JWordenAI Tech Radar
+          TECH_RADAR_ALERT_TO_EMAIL: J.WORDENANDSONSPAVING@GMAIL.COM
+
+      - name: Save updated radar snapshot to cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: docs/tech-radar/snapshot.json
+          key: ai-tech-radar-snapshot-${{ github.run_id }}
+
+      - name: Publish radar report to workflow summary
+        if: always()
+        run: cat docs/tech-radar/latest-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload radar artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-tech-radar
+          path: |
+            docs/tech-radar/latest-report.md
+            docs/tech-radar/latest.json
+            docs/tech-radar/source-health.json
+            docs/tech-radar/snapshot.json
+            docs/tech-radar/intelligence/latest-report.md
+            docs/tech-radar/intelligence/latest.json
+            docs/tech-radar/intelligence/email-alert-state.json
+            app/data/tech-intelligence/latest.json
+          retention-days: 21

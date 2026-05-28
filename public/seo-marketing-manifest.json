@@ -1,0 +1,364 @@
+{
+  "generated_at": "2026-05-03T20:13:40.735Z",
+  "primary_domain": "https://www.jwordenasphaltpaving.com",
+  "ad_campaign_structures": [
+    {
+      "name": "[GEO] Residential Paving",
+      "targeting": "Richmond + 50mi, VA Beach, NOVA",
+      "landing_pages": [
+        {
+          "city": "Chester",
+          "url": "https://www.jwordenasphaltpaving.com/locations/chester-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Richmond",
+          "url": "https://www.jwordenasphaltpaving.com/locations/richmond-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Midlothian",
+          "url": "https://www.jwordenasphaltpaving.com/locations/midlothian-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Short Pump",
+          "url": "https://www.jwordenasphaltpaving.com/locations/short-pump-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Henrico",
+          "url": "https://www.jwordenasphaltpaving.com/locations/henrico-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Chesapeake",
+          "url": "https://www.jwordenasphaltpaving.com/locations/chesapeake-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Williamsburg",
+          "url": "https://www.jwordenasphaltpaving.com/locations/williamsburg-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "New Kent County",
+          "url": "https://www.jwordenasphaltpaving.com/locations/new-kent-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Roanoke",
+          "url": "https://www.jwordenasphaltpaving.com/locations/roanoke-va",
+          "priority": "Normal",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Harrisonburg",
+          "url": "https://www.jwordenasphaltpaving.com/locations/harrisonburg-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Winchester",
+          "url": "https://www.jwordenasphaltpaving.com/locations/winchester-va",
+          "priority": "Normal",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Virginia Beach",
+          "url": "https://www.jwordenasphaltpaving.com/locations/virginia-beach-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Fredericksburg",
+          "url": "https://www.jwordenasphaltpaving.com/locations/fredericksburg-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Dinwiddie",
+          "url": "https://www.jwordenasphaltpaving.com/locations/dinwiddie-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Fairfax",
+          "url": "https://www.jwordenasphaltpaving.com/locations/fairfax-va",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        },
+        {
+          "city": "Outer Banks",
+          "url": "https://www.jwordenasphaltpaving.com/locations/outer-banks-nc",
+          "priority": "High (Corridor)",
+          "intent": "Residential Driveway / Private Lane"
+        }
+      ]
+    },
+    {
+      "name": "[TECH] AI/Smart Estimation",
+      "targeting": "National / State-wide Early Stage Searchers",
+      "landing_pages": [
+        {
+          "name": "Driveway AI Scan",
+          "url": "https://www.jwordenasphaltpaving.com/driveway-ai"
+        },
+        {
+          "name": "Visualizer",
+          "url": "https://www.jwordenasphaltpaving.com/visualizer"
+        }
+      ]
+    }
+  ],
+  "organic_seo_targets": [
+    {
+      "page": "Chester, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/chester-va",
+      "keywords": [
+        "asphalt paving Chester va",
+        "driveway repair Chester va",
+        "sealcoating Chester va",
+        "commercial paving Chester va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Richmond, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/richmond-va",
+      "keywords": [
+        "asphalt paving Richmond va",
+        "driveway repair Richmond va",
+        "sealcoating Richmond va",
+        "commercial paving Richmond va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Midlothian, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/midlothian-va",
+      "keywords": [
+        "asphalt paving Midlothian va",
+        "driveway repair Midlothian va",
+        "sealcoating Midlothian va",
+        "commercial paving Midlothian va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Short Pump, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/short-pump-va",
+      "keywords": [
+        "asphalt paving Short Pump va",
+        "driveway repair Short Pump va",
+        "sealcoating Short Pump va",
+        "commercial paving Short Pump va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Henrico, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/henrico-va",
+      "keywords": [
+        "asphalt paving Henrico va",
+        "driveway repair Henrico va",
+        "sealcoating Henrico va",
+        "commercial paving Henrico va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Chesapeake, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/chesapeake-va",
+      "keywords": [
+        "asphalt paving Chesapeake va",
+        "driveway repair Chesapeake va",
+        "sealcoating Chesapeake va",
+        "commercial paving Chesapeake va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Williamsburg, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/williamsburg-va",
+      "keywords": [
+        "asphalt paving Williamsburg va",
+        "driveway repair Williamsburg va",
+        "sealcoating Williamsburg va",
+        "commercial paving Williamsburg va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "New Kent County, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/new-kent-va",
+      "keywords": [
+        "asphalt paving New Kent County va",
+        "driveway repair New Kent County va",
+        "sealcoating New Kent County va",
+        "commercial paving New Kent County va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Roanoke, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/roanoke-va",
+      "keywords": [
+        "asphalt paving Roanoke va",
+        "driveway repair Roanoke va",
+        "sealcoating Roanoke va",
+        "commercial paving Roanoke va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Harrisonburg, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/harrisonburg-va",
+      "keywords": [
+        "asphalt paving Harrisonburg va",
+        "driveway repair Harrisonburg va",
+        "sealcoating Harrisonburg va",
+        "commercial paving Harrisonburg va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Winchester, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/winchester-va",
+      "keywords": [
+        "asphalt paving Winchester va",
+        "driveway repair Winchester va",
+        "sealcoating Winchester va",
+        "commercial paving Winchester va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Virginia Beach, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/virginia-beach-va",
+      "keywords": [
+        "asphalt paving Virginia Beach va",
+        "driveway repair Virginia Beach va",
+        "sealcoating Virginia Beach va",
+        "commercial paving Virginia Beach va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Fredericksburg, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/fredericksburg-va",
+      "keywords": [
+        "asphalt paving Fredericksburg va",
+        "driveway repair Fredericksburg va",
+        "sealcoating Fredericksburg va",
+        "commercial paving Fredericksburg va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Dinwiddie, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/dinwiddie-va",
+      "keywords": [
+        "asphalt paving Dinwiddie va",
+        "driveway repair Dinwiddie va",
+        "sealcoating Dinwiddie va",
+        "commercial paving Dinwiddie va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Fairfax, VA",
+      "url": "https://www.jwordenasphaltpaving.com/locations/fairfax-va",
+      "keywords": [
+        "asphalt paving Fairfax va",
+        "driveway repair Fairfax va",
+        "sealcoating Fairfax va",
+        "commercial paving Fairfax va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    },
+    {
+      "page": "Outer Banks, NC",
+      "url": "https://www.jwordenasphaltpaving.com/locations/outer-banks-nc",
+      "keywords": [
+        "asphalt paving Outer Banks va",
+        "driveway repair Outer Banks va",
+        "sealcoating Outer Banks va",
+        "commercial paving Outer Banks va"
+      ],
+      "schema_types": [
+        "LocalBusiness",
+        "FAQPage",
+        "PostalAddress"
+      ]
+    }
+  ]
+}

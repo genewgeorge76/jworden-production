@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+{% block title %}Leads{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Lead Ranking Board</h1>
+  <p>All quote requests, sorted by live ranking score (highest urgency first). Scores include time-decay — overdue leads drop in rank.</p>
+</div>
+
+<div class="card" style="margin-bottom:1rem;padding:.75rem 1rem;">
+  <form method="get" style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+    <label style="margin:0;font-size:.85rem;font-weight:600;">Filter:</label>
+    <select name="label" onchange="this.form.submit()" style="width:auto;padding:.4rem .75rem;font-size:.85rem;">
+      <option value="" {% if not filter_label %}selected{% endif %}>All labels</option>
+      <option value="HOT"  {% if filter_label == 'HOT'  %}selected{% endif %}>🔥 HOT</option>
+      <option value="WARM" {% if filter_label == 'WARM' %}selected{% endif %}>🟡 WARM</option>
+      <option value="COOL" {% if filter_label == 'COOL' %}selected{% endif %}>🔵 COOL</option>
+    </select>
+    <select name="sla" onchange="this.form.submit()" style="width:auto;padding:.4rem .75rem;font-size:.85rem;">
+      <option value="" {% if not filter_sla %}selected{% endif %}>All SLA status</option>
+      <option value="overdue" {% if filter_sla == 'overdue' %}selected{% endif %}>⏰ Overdue only</option>
+    </select>
+    <span style="margin-left:auto;font-size:.8rem;color:#6b7280;">{{ total }} lead{{ 's' if total != 1 else '' }}</span>
+  </form>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name / Contact</th>
+          <th>Service</th>
+          <th>Size (sqft)</th>
+          <th>Urgency</th>
+          <th>Label</th>
+          <th>Score</th>
+          <th>SLA</th>
+          <th>Address</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in ranked_leads %}
+        <tr>
+          <td style="font-weight:700;color:#6b7280;">{{ item.rank_position }}</td>
+          <td>
+            <strong>{{ item.lead.name }}</strong><br>
+            <a href="mailto:{{ item.lead.email }}" style="color:#2563eb;font-size:.8rem;">{{ item.lead.email }}</a><br>
+            <a href="tel:{{ item.lead.phone }}" style="color:#2563eb;font-size:.8rem;">{{ item.lead.phone }}</a>
+          </td>
+          <td>{{ item.lead.service_type | replace('_', ' ') | title }}<br>
+            <small style="color:#6b7280;">{{ item.lead.property_type | title }}</small>
+          </td>
+          <td>{{ '{:,.0f}'.format(item.lead.project_size_sqft) if item.lead.project_size_sqft else '—' }}</td>
+          <td>{{ item.lead.urgency | replace('_', ' ') | title }}</td>
+          <td>
+            <span class="badge {{ item.rank_badge }}">{{ item.rank_label }}</span>
+            <br>
+            <small style="color:#9ca3af;font-size:.7rem;">stored: {{ item.lead.score_label or '—' }}</small>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar" style="width:{{ [item.rank_score, 200] | min / 2 }}%;background:{% if item.rank_label == 'HOT' %}#dc2626{% elif item.rank_label == 'WARM' %}#d97706{% else %}#2563eb{% endif %};"></div>
+            </div>
+            <span style="font-size:.8rem;">{{ item.rank_score }}</span>
+          </td>
+          <td>
+            {% if item.sla_status == 'within_sla' %}
+              <span class="badge badge-sla-ok">Within SLA</span>
+            {% else %}
+              <span class="badge badge-sla-over">{{ item.sla_status | replace('_', ' ') }}</span>
+            {% endif %}
+          </td>
+          <td style="font-size:.8rem;color:#6b7280;max-width:160px;">{{ item.lead.address or '—' }}</td>
+          <td style="white-space:nowrap;font-size:.8rem;color:#6b7280;">
+            {{ item.lead.created_at.strftime('%b %d %Y<br>%H:%M UTC') | safe if item.lead.created_at else '—' }}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="10" style="text-align:center;color:#6b7280;padding:2rem;">No leads match the current filter.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

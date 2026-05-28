@@ -1,0 +1,33 @@
+{
+  "title": "IMG_8733.JPG",
+  "description": "",
+  "imageViews": "1",
+  "creationTime": {
+    "timestamp": "1777791407",
+    "formatted": "May 3, 2026, 6:56:47 AM UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1452809605",
+    "formatted": "Jan 14, 2016, 10:13:25 PM UTC"
+  },
+  "geoData": {
+    "latitude": 37.4981083,
+    "longitude": -77.5389028,
+    "altitude": 85.82622950819672,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 37.4981083,
+    "longitude": -77.5389028,
+    "altitude": 85.82622950819672,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://photos.google.com/photo/AF1QipPsU9NC6SjHeXRg2CqY4AldLH4eu91AaUJKTiRl",
+  "googlePhotosOrigin": {
+    "mobileUpload": {
+      "deviceType": "IOS_PHONE"
+    }
+  }
+}

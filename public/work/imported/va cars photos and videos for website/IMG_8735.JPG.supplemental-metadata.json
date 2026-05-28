@@ -1,0 +1,33 @@
+{
+  "title": "IMG_8735.JPG",
+  "description": "",
+  "imageViews": "1",
+  "creationTime": {
+    "timestamp": "1777791407",
+    "formatted": "May 3, 2026, 6:56:47 AM UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1452809612",
+    "formatted": "Jan 14, 2016, 10:13:32 PM UTC"
+  },
+  "geoData": {
+    "latitude": 37.4981083,
+    "longitude": -77.5389028,
+    "altitude": 85.49163179916317,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 37.4981083,
+    "longitude": -77.5389028,
+    "altitude": 85.49163179916317,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://photos.google.com/photo/AF1QipPKEE_GO7iKGbGUfmU01IVQ8bosRWchBL1v3-Ra",
+  "googlePhotosOrigin": {
+    "mobileUpload": {
+      "deviceType": "IOS_PHONE"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "title": "IMG_9515.MOV",
+  "description": "",
+  "imageViews": "0",
+  "creationTime": {
+    "timestamp": "1773104688",
+    "formatted": "Mar 10, 2026, 1:04:48 AM UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1457558382",
+    "formatted": "Mar 9, 2016, 9:19:42 PM UTC"
+  },
+  "geoData": {
+    "latitude": 33.8891,
+    "longitude": -84.47409999999999,
+    "altitude": 623.0,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 33.8891,
+    "longitude": -84.47409999999999,
+    "altitude": 623.0,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://photos.google.com/photo/AF1QipMFHdQgORpSc02GsHVVmCW4QVPKiWDY8fIIFw2x",
+  "googlePhotosOrigin": {
+    "mobileUpload": {
+      "deviceType": "IOS_PHONE"
+    }
+  }
+}

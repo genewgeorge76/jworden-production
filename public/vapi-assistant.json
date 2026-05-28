@@ -1,0 +1,121 @@
+{
+  "name": "J. Worden & Sons Receptionist",
+  "firstMessage": "Thanks for calling J. Worden and Sons Asphalt Paving, this is the virtual assistant. Are you calling for a new quote, an existing project, or something else?",
+  "model": {
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "maxTokens": 300,
+    "temperature": 0.5,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are the virtual receptionist for J. Worden & Sons Asphalt Paving, a family-owned paving company based in Chester, Virginia, serving Virginia, the Carolinas, Georgia, and Missouri since 1984.\n\nPRIMARY GOALS (in order):\n1. Qualify the caller: new quote, existing customer, scheduling, or complaint.\n2. For new quote requests: collect name, phone, property address, surface type (driveway / parking lot / commercial), approximate size, and timeline. Then offer to BOOK a free on-site visit using the book_site_visit tool.\n3. For existing customers: take a message — name, phone, project address, reason for call. Tell them Jim or the foreman will call back within one business day.\n4. For urgent issues (pothole injury, property damage): escalate immediately — tell them someone will call back within 2 hours and confirm their callback number.\n\nTOOLS YOU CAN USE:\n- check_calendar_availability: Check when the team has open visit slots. Use before proposing a date.\n- book_site_visit: Book a free on-site measurement. Requires name, phone, address, preferred_date, preferred_time.\n- create_lead: Log the caller as a new lead if they won't commit to a time but want follow-up.\n\nCOMMUNICATION STYLE:\n- Warm, confident, Southern-professional. Say 'yes sir' / 'yes ma'am' naturally.\n- Short replies (1-2 sentences). Never lecture.\n- Mention the 40+ year family history ONCE if relevant, not repeatedly.\n- Never quote prices — say 'Our estimator confirms pricing on-site. It's free and takes about 20 minutes.'\n\nHARD RULES:\n- Never promise a specific price.\n- Never promise a specific start date without checking the calendar tool first.\n- If you can't understand the caller after 2 tries, offer to take a message and have Jim call back.\n- If asked about services we don't offer (concrete, roofing, etc.), politely say 'We specialize in asphalt paving only — let me get you a referral.' and take a message.\n\nCLOSING:\n- Confirm next step clearly: 'So I've got you down for Tuesday at 10am at 123 Main Street. You'll get a text confirmation. Anything else?'\n- Thank them and end warmly."
+      }
+    ]
+  },
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "burt",
+    "stability": 0.6,
+    "similarityBoost": 0.75,
+    "model": "eleven_turbo_v2_5"
+  },
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-2-phonecall",
+    "language": "en-US",
+    "smartFormat": true
+  },
+  "serverUrl": "REPLACE_WITH_YOUR_VAPI_WEBHOOK_URL",
+  "serverUrlSecret": "bd612f12-2ca6-4a5e-a849-63ee7a50b210",
+  "endCallFunctionEnabled": true,
+  "recordingEnabled": true,
+  "silenceTimeoutSeconds": 20,
+  "maxDurationSeconds": 600,
+  "backgroundSound": "office",
+  "numWordsToInterruptAssistant": 3,
+  "analysisPlan": {
+    "summaryPrompt": "Summarize in 2-3 sentences: why they called, what was agreed, and any follow-up needed.",
+    "structuredDataSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "enum": ["new_quote", "existing_customer", "scheduling", "complaint", "general_inquiry", "voicemail", "other"]
+        },
+        "booked_site_visit": { "type": "boolean" },
+        "lead_id": { "type": "string" },
+        "caller_name": { "type": "string" },
+        "callback_number": { "type": "string" },
+        "urgency": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    }
+  },
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "check_calendar_availability",
+        "description": "Check the team's Google Calendar for open site-visit slots in the next 7 days. Call this BEFORE proposing a specific time to the caller.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "preferred_date": {
+              "type": "string",
+              "description": "The caller's preferred date in YYYY-MM-DD format. Optional."
+            }
+          }
+        }
+      },
+      "server": { "url": "REPLACE_WITH_YOUR_VAPI_WEBHOOK_URL" }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "book_site_visit",
+        "description": "Book a free on-site measurement visit. Creates a Google Calendar event and a Lead record. Only call AFTER confirming the date/time with the caller.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "phone": { "type": "string" },
+            "email": { "type": "string" },
+            "address": { "type": "string", "description": "Full property address" },
+            "preferred_date": { "type": "string", "description": "YYYY-MM-DD" },
+            "preferred_time": { "type": "string", "description": "e.g. '10:00 AM'" },
+            "surface_type": {
+              "type": "string",
+              "enum": ["driveway", "parking_lot", "walkway", "patio", "commercial", "industrial"]
+            },
+            "sqft": { "type": "number" },
+            "notes": { "type": "string" }
+          },
+          "required": ["name", "phone", "address", "preferred_date", "preferred_time"]
+        }
+      },
+      "server": { "url": "REPLACE_WITH_YOUR_VAPI_WEBHOOK_URL" }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_lead",
+        "description": "Log a new lead when the caller won't commit to a booking but wants a follow-up call.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "phone": { "type": "string" },
+            "email": { "type": "string" },
+            "address": { "type": "string" },
+            "surface_type": { "type": "string" },
+            "sqft": { "type": "number" },
+            "urgency": { "type": "string", "enum": ["flexible", "standard", "urgent"] },
+            "notes": { "type": "string" }
+          },
+          "required": ["name", "phone"]
+        }
+      },
+      "server": { "url": "REPLACE_WITH_YOUR_VAPI_WEBHOOK_URL" }
+    }
+  ]
+}

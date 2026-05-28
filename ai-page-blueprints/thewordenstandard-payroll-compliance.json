@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "slug": "/payroll-compliance",
+  "public": true,
+  "includeInSitemap": true,
+  "title": "Payroll & Timekeeping Compliance | The Worden Standard",
+  "description": "Federal and Virginia state guidelines for payroll, accurate timekeeping, overtime, and labor compliance required by law.",
+  "h1": "Payroll & Timekeeping Compliance",
+  "intro": "Strict adherence to the Fair Labor Standards Act (FLSA) and Virginia Department of Labor and Industry (DOLI) regulations. Exacting standards for compensation, hours worked, and proper recordkeeping.",
+  "ctaText": "Access Employee Portal",
+  "ctaHref": "/employee-portal",
+  "changefreq": "monthly",
+  "priority": 0.8,
+  "sections": [
+    {
+      "heading": "FLSA & Virginia Wage Laws",
+      "body": "Every employee is guaranteed compensation in strict accordance with the Fair Labor Standards Act and the Virginia Overtime Wage Act. Minimum wage compliance, correct employee classification (exempt vs. non-exempt), and mandatory break regulations form the absolute baseline. Off-the-clock work is strictly prohibited."
+    },
+    {
+      "heading": "Accurate Timekeeping & Verification",
+      "body": "Timekeeping is not a suggestion—it is a legal mandate. All field and office personnel must track time meticulously using our centralized electronic timekeeping system. Falsification of time records, whether adding unworked hours or omitting worked time, is grounds for immediate termination."
+    },
+    {
+      "heading": "Overtime & Prevailing Wage Rules",
+      "body": "For government and state contracts, prevailing wage (Davis-Bacon Act) tracking is mapped per project and strictly monitored. Overtime for non-exempt employees is paid at one and one-half times the regular rate for all hours worked over 40 in a workweek, and must be approved by a site supervisor prior to execution."
+    },
+    {
+      "heading": "Payroll Processing & Record Retention",
+      "body": "We maintain uncompromising payroll accuracy. Pay stubs detailing hourly rates, overtime, gross wages, and deductions are provided electronically. By law and our internal Standard, we retain all payroll, tax, and employment records for a minimum of three years (and often longer) to ensure audit readiness at any hour."
+    }
+  ]
+}

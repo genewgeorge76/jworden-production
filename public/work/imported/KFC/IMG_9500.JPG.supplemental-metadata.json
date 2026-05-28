@@ -1,0 +1,33 @@
+{
+  "title": "IMG_9500.JPG",
+  "description": "",
+  "imageViews": "1",
+  "creationTime": {
+    "timestamp": "1773104688",
+    "formatted": "Mar 10, 2026, 1:04:48 AM UTC"
+  },
+  "photoTakenTime": {
+    "timestamp": "1457547155",
+    "formatted": "Mar 9, 2016, 6:12:35 PM UTC"
+  },
+  "geoData": {
+    "latitude": 34.087161099999996,
+    "longitude": -84.5757611,
+    "altitude": 350.76184032476317,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "geoDataExif": {
+    "latitude": 34.087161099999996,
+    "longitude": -84.5757611,
+    "altitude": 350.76184032476317,
+    "latitudeSpan": 0.0,
+    "longitudeSpan": 0.0
+  },
+  "url": "https://photos.google.com/photo/AF1QipNCK82-xhiIF5e_nUjvCv7f3jnCg8txJvimYdlA",
+  "googlePhotosOrigin": {
+    "mobileUpload": {
+      "deviceType": "IOS_PHONE"
+    }
+  }
+}

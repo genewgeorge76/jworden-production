@@ -1,0 +1,28 @@
+{
+  "enabled": true,
+  "slug": "/training-videos",
+  "public": false,
+  "includeInSitemap": true,
+  "title": "Mandatory Safety & Compliance Training Videos | The Worden Standard",
+  "description": "Interactive training hub for OSHA compliance, equipment certification, and hazard recognition.",
+  "h1": "Worden Certified Training Engine",
+  "intro": "All new hires and active crews must complete mandatory video modules and pass the associated certification quizzes to remain compliant with State, Federal, and Worden Standard regulations.",
+  "ctaText": "Begin Final Certification Quiz",
+  "ctaHref": "/certification-testing",
+  "changefreq": "monthly",
+  "priority": 0.8,
+  "sections": [
+    {
+      "heading": "OSHA 10 & 30 Compliance Overviews",
+      "body": "Mandatory foundational safety videos covering trenching, excavation, fall protection, and site hazard recognition. Crews cannot step foot on a job site without passing the baseline OSHA awareness modules."
+    },
+    {
+      "heading": "Hazardous Materials & Silica Dust",
+      "body": "Specialized video modules detailing the legal requirements for handling hot asphalt emulsions, tack coat, and concrete silica dust. Includes proper usage of P100 respirators and immediate exposure reporting."
+    },
+    {
+      "heading": "Heavy Equipment & Blind Spot Training",
+      "body": "Required viewings for all CDL Class A/B drivers and equipment operators. Modules cover loader/paver blind spots, VDOT work-zone traffic control, and FMCSA commercial fleet pre-trip inspection standards."
+    }
+  ]
+}
