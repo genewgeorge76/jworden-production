@@ -93,8 +93,9 @@ function cityRankingSignals(area) {
 }
 
 export default function CityPage() {
-  const { citySlug } = useParams()
-  const area = getServiceArea(citySlug)
+  const { slug, citySlug } = useParams()
+  const resolvedSlug = slug || citySlug
+  const area = getServiceArea(resolvedSlug)
 
   if (!area) return <NotFound />
 

@@ -21,6 +21,10 @@ export default function LocationPage() {
   if (!loc) return <PageNotFound />;
 
   const authorityEntry = getAuthorityFor(loc.slug);
+  const fallbackHeadline = `Asphalt Paving & Sealcoating In ${loc.city}, ${loc.stateAbbr}`;
+  const resolvedHeadline = loc.headline && loc.headline.trim().length > 0 ? loc.headline : fallbackHeadline;
+  const fallbackIntro = `J. Worden & Sons delivers premium asphalt paving, resurfacing, and maintenance for property owners in ${loc.city}. We plan each scope around traffic load, drainage, and long-term lifecycle value so your surface performs and presents at a high standard.`;
+  const resolvedIntro = loc.intro && loc.intro.trim().length > 0 ? loc.intro : fallbackIntro;
 
   const canonicalPath = `/locations/${loc.slug}`;
   const title = `Asphalt Paving in ${loc.city}, ${loc.stateAbbr} | J. Worden & Sons`;
@@ -28,7 +32,7 @@ export default function LocationPage() {
 
   // LocalBusiness + FAQPage JSON-LD combined
   const businessSchema = {
-    '@type': 'GeneralContractor',
+    '@type': 'LocalBusiness',
     '@id': `${PRIMARY_DOMAIN}${canonicalPath}#business`,
     name: loc.localGbpName || `J. Worden & Sons Paving LLC — ${loc.city}`,
       image: loc.gallery && loc.gallery.length > 0 
@@ -51,7 +55,7 @@ export default function LocationPage() {
       latitude: loc.geo.lat,
       longitude: loc.geo.lng,
     },
-    description: loc.intro,
+    description: resolvedIntro,
   };
 
   if (typeof loc.rating === 'number' && typeof loc.reviews === 'number') {
@@ -144,10 +148,46 @@ export default function LocationPage() {
         city={loc.city}
         state={loc.state}
         region={loc.region}
-        headline={loc.headline}
-        intro={loc.intro}
+        headline={resolvedHeadline}
+        intro={resolvedIntro}
       />
               <div id="market-content">
+          <section className="bg-background border-b border-border py-12 md:py-16">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+                <div className="lg:col-span-8">
+                  <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight">
+                    High-Intent Paving Solutions For {loc.city} Property Owners
+                  </h2>
+                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                    We build scopes for real performance, not generic estimates. Each project starts with on-site evaluation of
+                    base condition, water movement, and traffic demand, then we match the right repair or replacement strategy
+                    to protect your budget and curb appeal.
+                  </p>
+                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                    Whether you manage a commercial lot, HOA roads, church parking areas, or a residential driveway, our crews
+                    execute with production discipline, clean jobsite standards, and clear communication from estimate to final
+                    walkthrough.
+                  </p>
+                </div>
+                <div className="lg:col-span-4 premium-panel rounded-xl p-5 md:p-6">
+                  <p className="font-display text-primary text-xs tracking-[0.22em] uppercase mb-3">Popular Services</p>
+                  <ul className="space-y-2 text-sm text-foreground">
+                    <li>Asphalt Paving & Reconstruction</li>
+                    <li>Mill & Overlay Resurfacing</li>
+                    <li>Sealcoating & Crack Repair</li>
+                    <li>Parking Lot Maintenance Programs</li>
+                  </ul>
+                  <a
+                    href="/quote"
+                    className="premium-cta mt-5 inline-flex px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase text-primary-foreground"
+                  >
+                    Request Local Estimate
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
           {loc.gallery && loc.gallery.length > 0 && (
             <section className="bg-muted/30 border-b border-border py-12 md:py-16">
               <div className="max-w-7xl mx-auto px-6 lg:px-8">
