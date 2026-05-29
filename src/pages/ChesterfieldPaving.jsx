@@ -99,7 +99,7 @@ export default function ChesterfieldPaving() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Chesterfield's<br /><span className="text-brand-amber">Home Court</span><br />Paving Crew.
+                Asphalt Paving<br /><span className="text-brand-amber">in Chesterfield,</span><br />Virginia.
               </h1>
               <p className="text-white/70 text-xl max-w-xl">
                 We're not from out of town. We're from Chester. We pave the roads, driveways, and commercial lots of the county where we live — Midlothian to Matoaca, Brandermill to the Route 1 corridor. 40 years of local knowledge you can't fake.

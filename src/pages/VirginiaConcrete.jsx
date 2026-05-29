@@ -52,7 +52,7 @@ export default function VirginiaConcrete() {
                 Masonry & Concrete Division
               </span>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight">
-                Virginia's <span className="text-brand-amber text-outline-amber">Concrete</span> Authority.
+                <span className="text-brand-amber text-outline-amber">Concrete</span> Contractor in Central Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
                 From reinforced industrial slabs to high-traffic commercial sidewalks, we deliver the structural integrity your business depends on. Vertical integration ensures we control the supply chain from aggregate to finish.

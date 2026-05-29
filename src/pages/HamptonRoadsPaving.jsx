@@ -143,7 +143,7 @@ export default function HamptonRoadsPaving() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Hampton Roads'<br /><span className="text-brand-amber">Commercial</span><br />Paving Experts.
+                Asphalt Paving<br /><span className="text-brand-amber">in Hampton</span><br />Roads, VA.
               </h1>
               <p className="text-white/70 text-xl max-w-2xl">
                 Virginia Beach hotel lots. Military Highway retail strips. Naval Station Norfolk. Joint Base Langley-Eustis. We have paved the commercial corridors of Hampton Roads for decades — and we know coastal asphalt spec better than anyone in Virginia.

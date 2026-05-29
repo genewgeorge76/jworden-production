@@ -182,9 +182,9 @@ export default function VirginiaSealcoating() {
 
           <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-4">Virginia Statewide Sealcoating Authority</p>
           <h1 className="font-display font-black text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.88] max-w-5xl mb-8">
-            Sealcoating <br />
-            <span className="text-primary italic">That Destroys</span><br />
-            The Competition.
+            Asphalt Sealcoating <br />
+            <span className="text-primary italic">in Central</span><br />
+            Virginia.
           </h1>
           <p className="text-gray-300 text-lg md:text-2xl max-w-2xl leading-relaxed mb-10">
             Six sealcoat materials. Four crack-filler systems. 40 years of Virginia pavement science.

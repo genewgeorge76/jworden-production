@@ -106,7 +106,7 @@ export default function RichmondPaving() {
               </span>
             </div>
             <h1 className="font-display font-black text-6xl md:text-8xl text-white leading-[0.9] tracking-tighter mb-8">
-              RICHMOND'S<br /><span className="text-brand-amber">PAVING</span><br />LEGACY.
+              ASPHALT PAVING<br /><span className="text-brand-amber">IN RICHMOND,</span><br />VIRGINIA.
             </h1>
             <p className="text-white/70 text-xl max-w-2xl mb-10 leading-relaxed">
               Four generations. 40+ years. Hundreds of Richmond-area driveways, parking lots, and road sections — from The Fan to Midlothian, from Scott's Addition to Colonial Heights. We are the Richmond asphalt standard.

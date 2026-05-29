@@ -123,7 +123,7 @@ export default function CrackRepair() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Stop Cracks.<br /><span className="text-brand-amber">Before They</span><br />Stop You.
+                Asphalt<br /><span className="text-brand-amber">Crack Repair</span><br />in Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
                 Virginia's freeze-thaw cycles and clay soils turn a $400 crack into a $4,000 pothole in one winter season. We seal it right — with industrial hot-pour rubber that actually lasts — not hardware store cold-fill.

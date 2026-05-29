@@ -81,8 +81,8 @@ export default function AsphaltPaving() {
           >
             <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-6 drop-shadow-md">Virginia Statewide Division</p>
             <h1 className="font-display font-black text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.85] max-w-5xl mb-8">
-              Paving <span className="text-primary italic">Redefined.</span><br />
-              All Roads Lead To Us.
+              Asphalt Paving <span className="text-primary italic">Across</span><br />
+              Virginia.
             </h1>
             <p className="text-gray-300 text-lg md:text-2xl max-w-2xl leading-relaxed mb-10">
               From residential driveways to massive commercial developments. Asphalt, Concrete, and Hand-Laid Hardscapes built with 40 years of Virginia grit.

@@ -143,7 +143,7 @@ export default function ParkingLots() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Commercial<br /><span className="text-brand-amber">Parking Lots</span><br />Built For Business.
+                Commercial<br /><span className="text-brand-amber">Parking Lot Paving</span><br />in Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
                 Restaurant, retail, office, church, HOA, industrial, and active commercial lots need more than fresh blacktop. They need access planning, drainage, ADA layout, striping, drive-thru durability, and a crew that knows how to work around customers.

@@ -114,7 +114,7 @@ export default function TarAndChip() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Tar And Chip Division</p>
           <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
-            Tar And Chip Paving For Driveways And Parking Areas
+            Tar And Chip Driveway Paving in Virginia
           </h1>
           <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
             Get durable, traction-focused surfaces with a cost-effective paving system designed for residential and light-commercial properties.

@@ -38,7 +38,7 @@ export default function Hardscapes() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <p className="font-display text-primary text-xs tracking-widest uppercase mb-4">Luxury Residential & Commercial Division</p>
           <h1 className="font-display font-black text-5xl md:text-8xl uppercase tracking-tighter leading-[0.9] mb-8">
-            The Art Of <br /> <span className="text-primary italic">Hardscapes.</span>
+            Hardscaping & Paver <br /> <span className="text-primary italic">Installation</span> in Virginia
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 max-w-3xl leading-relaxed mb-10">
             From historic Richmond brickwork to modern decorative concrete. We design and install high-performance 

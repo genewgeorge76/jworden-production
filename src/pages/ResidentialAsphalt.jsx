@@ -145,7 +145,7 @@ export default function ResidentialAsphalt() {
             <div>
               <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Residential Driveway Division</p>
               <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
-                Luxury Driveways Built With Structural Discipline
+                Asphalt Driveway Paving in Virginia
               </h1>
               <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
                 Your driveway is part of your property value. We evaluate drainage, base condition, tie-ins, edges, turnarounds,
