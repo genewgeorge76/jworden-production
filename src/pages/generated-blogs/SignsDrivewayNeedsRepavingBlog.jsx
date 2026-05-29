@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
-import { Calendar, Clock, ArrowRight, ArrowLeft, AlertTriangle } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, ArrowLeft } from 'lucide-react'
 
 export default function SignsDrivewayNeedsRepavingBlog() {
   const jsonLd = premiumBlogPostingSchema({
