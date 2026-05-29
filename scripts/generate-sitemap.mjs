@@ -15,13 +15,14 @@
  * Hooked into npm run build via "prebuild" in package.json.
  * ---------------------------------------------------------------
  */
-import { writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const DEFAULT_SITE = 'https://www.jwordenasphaltpaving.com';
+const GENERATED_BLOGS_DIR = resolve(ROOT, 'src/pages/generated-blogs');
 const SITE = String(process.env.SITEMAP_SITE_URL || process.env.VITE_SITE_URL || DEFAULT_SITE)
   .trim()
   .replace(/\/$/, '');
@@ -76,6 +77,26 @@ function assertValidSitemapEntries(entries) {
   }
 }
 
+function collectGeneratedBlogPaths() {
+  try {
+    const files = readdirSync(GENERATED_BLOGS_DIR).filter((name) => name.endsWith('.jsx'));
+    const paths = new Set();
+
+    for (const file of files) {
+      const source = readFileSync(resolve(GENERATED_BLOGS_DIR, file), 'utf8');
+      const match = source.match(/canonicalPath=\{'([^']+)'\}/);
+      if (match?.[1]?.startsWith('/')) {
+        paths.add(match[1]);
+      }
+    }
+
+    return [...paths].sort();
+  } catch (e) {
+    console.warn('[sitemap] could not read generated blogs directory:', e.message);
+    return [];
+  }
+}
+
 // ── 1. Hand-curated public routes (priority + changefreq tuned for local-pack) ─
 const STATIC_ROUTES = [
   { path: '/',                              priority: '1.0', changefreq: 'weekly' },
@@ -122,6 +143,7 @@ let WORDEN_ACTIVE_STATES = [];
 let STATE_MAP = {};
 let LANDING_PAGES = [];
 let BLOG_POSTS = [];
+let GENERATED_BLOG_PATHS = [];
 let RICHMOND_ZIP_PAGES = {};
 let stateSlug = (s) => s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -154,6 +176,7 @@ try {
 } catch (e) {
   console.warn('[sitemap] could not load src/data/blogPosts.js:', e.message);
 }
+GENERATED_BLOG_PATHS = collectGeneratedBlogPaths();
 try {
   const zipMod = await importDataModule('src/data/richmondZipPages.js');
   RICHMOND_ZIP_PAGES = zipMod.RICHMOND_ZIP_PAGES || {};
@@ -206,6 +229,15 @@ for (const bp of BLOG_POSTS) {
     lastmod: bp.date || today,
     changefreq: 'monthly',
     priority: '0.75',
+  });
+}
+
+for (const blogPath of GENERATED_BLOG_PATHS) {
+  urls.push({
+    loc: `${SITE}${blogPath}`,
+    lastmod: today,
+    changefreq: 'monthly',
+    priority: '0.72',
   });
 }
 
@@ -270,5 +302,5 @@ writeFileSync(
 console.log(
   `[sitemap] wrote ${deduped.length} URLs ` +
     `(${STATIC_ROUTES.length} static, ${LOCATIONS.length} locations, ` +
-    `${SERVICE_AREAS.length} service-areas, ${LANDING_PAGES.length} landing pages, ${BLOG_POSTS.length} blogs, ${Object.keys(RICHMOND_ZIP_PAGES).length} zip-pages, ${stateCodesForSitemap.length} states, mode=${INCLUDE_ALL_STATES ? 'all_51' : 'active_only'})`
+    `${SERVICE_AREAS.length} service-areas, ${LANDING_PAGES.length} landing pages, ${BLOG_POSTS.length} blogs, ${GENERATED_BLOG_PATHS.length} generated-blogs, ${Object.keys(RICHMOND_ZIP_PAGES).length} zip-pages, ${stateCodesForSitemap.length} states, mode=${INCLUDE_ALL_STATES ? 'all_51' : 'active_only'})`
 );
