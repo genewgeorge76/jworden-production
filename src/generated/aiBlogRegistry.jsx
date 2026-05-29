@@ -4,25 +4,25 @@ import { lazy } from 'react'
 // Maintained with approved contractor-content copy for flagship production routes.
 
 const AdaCompliancePavingBlog = lazy(() => import('@/pages/generated-blogs/AdaCompliancePavingBlog'))
-const AiWebsiteBuilderForContractorsBlog = lazy(() => import('@/pages/generated-blogs/AiWebsiteBuilderForContractorsBlog'))
 const AsphaltMillingAndResurfacingBlog = lazy(() => import('@/pages/generated-blogs/AsphaltMillingAndResurfacingBlog'))
-const AutomatedContractorMarketingSyndicateBlog = lazy(() => import('@/pages/generated-blogs/AutomatedContractorMarketingSyndicateBlog'))
+const AsphaltVsConcreteVirginiaBlog = lazy(() => import('@/pages/generated-blogs/AsphaltVsConcreteVirginiaBlog'))
 const CommercialAsphaltPavingBlog = lazy(() => import('@/pages/generated-blogs/CommercialAsphaltPavingBlog'))
-const FastestStaticWebsiteGeneratorForLocalBusinessBlog = lazy(() => import('@/pages/generated-blogs/FastestStaticWebsiteGeneratorForLocalBusinessBlog'))
+const DrivewayCostVirginiaBlog = lazy(() => import('@/pages/generated-blogs/DrivewayCostVirginiaBlog'))
 const HeavyDutyConcreteFlatworkBlog = lazy(() => import('@/pages/generated-blogs/HeavyDutyConcreteFlatworkBlog'))
+const HoaAsphaltPavingGuideBlog = lazy(() => import('@/pages/generated-blogs/HoaAsphaltPavingGuideBlog'))
 const IndustrialParkingLotRepairBlog = lazy(() => import('@/pages/generated-blogs/IndustrialParkingLotRepairBlog'))
-const OutrankTraditionalWebDevelopmentCompaniesBlog = lazy(() => import('@/pages/generated-blogs/OutrankTraditionalWebDevelopmentCompaniesBlog'))
-const ProgrammaticSeoWebAgencyBlog = lazy(() => import('@/pages/generated-blogs/ProgrammaticSeoWebAgencyBlog'))
+const ParkingLotRepairVsReplaceBlog = lazy(() => import('@/pages/generated-blogs/ParkingLotRepairVsReplaceBlog'))
+const SignsDrivewayNeedsRepavingBlog = lazy(() => import('@/pages/generated-blogs/SignsDrivewayNeedsRepavingBlog'))
 
 export const aiBlogRegistry = [
 	{ path: '/blog/info/ada-compliance-paving', Component: AdaCompliancePavingBlog },
-	{ path: '/blog/info/ai-website-builder-for-contractors', Component: AiWebsiteBuilderForContractorsBlog },
 	{ path: '/blog/info/asphalt-milling-and-resurfacing', Component: AsphaltMillingAndResurfacingBlog },
-	{ path: '/blog/info/automated-contractor-marketing-syndicate', Component: AutomatedContractorMarketingSyndicateBlog },
+	{ path: '/blog/info/asphalt-vs-concrete-driveway-virginia', Component: AsphaltVsConcreteVirginiaBlog },
 	{ path: '/blog/info/commercial-asphalt-paving', Component: CommercialAsphaltPavingBlog },
-	{ path: '/blog/info/fastest-static-website-generator-for-local-business', Component: FastestStaticWebsiteGeneratorForLocalBusinessBlog },
+	{ path: '/blog/info/driveway-paving-cost-virginia', Component: DrivewayCostVirginiaBlog },
 	{ path: '/blog/info/heavy-duty-concrete-flatwork', Component: HeavyDutyConcreteFlatworkBlog },
+	{ path: '/blog/info/hoa-asphalt-paving-guide-virginia', Component: HoaAsphaltPavingGuideBlog },
 	{ path: '/blog/info/industrial-parking-lot-repair', Component: IndustrialParkingLotRepairBlog },
-	{ path: '/blog/info/outrank-traditional-web-development-companies', Component: OutrankTraditionalWebDevelopmentCompaniesBlog },
-	{ path: '/blog/info/programmatic-seo-web-agency', Component: ProgrammaticSeoWebAgencyBlog },
+	{ path: '/blog/info/parking-lot-repair-vs-replace-virginia', Component: ParkingLotRepairVsReplaceBlog },
+	{ path: '/blog/info/signs-driveway-needs-repaving-virginia', Component: SignsDrivewayNeedsRepavingBlog },
 ]

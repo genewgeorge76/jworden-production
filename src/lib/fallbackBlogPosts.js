@@ -1,10 +1,13 @@
 export const FALLBACK_BLOG_POSTS = [  {
     id: 'richmond-virginia-asphalt-domination',
+    slug: 'richmond-virginia-asphalt-domination',
     title: 'Dominating Central Virginia: Asphalt Paving in Richmond, Chesterfield & Fredericksburg',
     excerpt: 'At J. Worden, we provide the highest quality asphalt paving, driveway repair, and commercial parking lot solutions to dominate the local pack in Richmond, VA and surrounding communities.',
     content: '<h2>Leading Asphalt Services in Richmond, VA</h2><p>Our commitment to excellence makes us the top choice for residential and commercial asphalt paving across Richmond, Chesterfield, Fredericksburg, and the entire Virginia area.</p><ul><li>Driveway paving and overlays tailored for Virginia weather</li><li>Commercial sealcoating and ADA-compliant line striping</li><li>Pothole repair, milling, and base failure correction</li></ul><p>As the #1 trusted contractor, we ensure your investment lasts for decades. Contact us today for driveway paving, commercial asphalt, and fast, reliable local service.</p>',
     publishedAt: new Date().toISOString(),
+    published_date: new Date().toISOString().split('T')[0],
     image: '/work/portfolio/portfolio-010.jpg',
+    cover_image: '/work/portfolio/portfolio-010.jpg',
     readTime: '4 min'
   },
   {

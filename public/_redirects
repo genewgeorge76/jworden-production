@@ -46,38 +46,27 @@ https://mechanicsvillepaving.com/*   https://www.jwordenasphaltpaving.com/locati
 https://www.mechanicsvillepaving.com/* https://www.jwordenasphaltpaving.com/locations/mechanicsville-va 301!
 
 # ============================================================
-# GEORGIA GEO DOMAINS
+# OUT-OF-STATE VANITY DOMAINS → homepage
+# (location pages removed — Virginia-only operation)
 # ============================================================
-https://savannahpaving.com/*         https://www.jwordenasphaltpaving.com/locations/savannah-ga       301!
-https://www.savannahpaving.com/*     https://www.jwordenasphaltpaving.com/locations/savannah-ga       301!
-https://atlantapavingpros.com/*      https://www.jwordenasphaltpaving.com/locations/atlanta-ga        301!
-https://www.atlantapavingpros.com/*  https://www.jwordenasphaltpaving.com/locations/atlanta-ga        301!
-https://augustapaving.com/*          https://www.jwordenasphaltpaving.com/locations/augusta-ga        301!
-https://www.augustapaving.com/*      https://www.jwordenasphaltpaving.com/locations/augusta-ga        301!
-
-# ============================================================
-# NORTH CAROLINA GEO DOMAINS
-# ============================================================
-https://charlottepavingpros.com/*    https://www.jwordenasphaltpaving.com/locations/charlotte-nc      301!
-https://www.charlottepavingpros.com/* https://www.jwordenasphaltpaving.com/locations/charlotte-nc     301!
-https://raleighpavingpros.com/*      https://www.jwordenasphaltpaving.com/locations/raleigh-nc        301!
-https://www.raleighpavingpros.com/*  https://www.jwordenasphaltpaving.com/locations/raleigh-nc        301!
-https://greensboropaving.com/*       https://www.jwordenasphaltpaving.com/locations/greensboro-nc     301!
-https://www.greensboropaving.com/*   https://www.jwordenasphaltpaving.com/locations/greensboro-nc     301!
-
-# ============================================================
-# SOUTH CAROLINA GEO DOMAINS
-# ============================================================
-https://charlestonpavingpros.com/*   https://www.jwordenasphaltpaving.com/locations/charleston-sc     301!
-https://www.charlestonpavingpros.com/* https://www.jwordenasphaltpaving.com/locations/charleston-sc   301!
-https://columbiapavingpros.com/*     https://www.jwordenasphaltpaving.com/locations/columbia-sc       301!
-https://www.columbiapavingpros.com/* https://www.jwordenasphaltpaving.com/locations/columbia-sc       301!
-
-# ============================================================
-# MISSOURI GEO DOMAIN
-# ============================================================
-https://kansascitypavingpros.com/*   https://www.jwordenasphaltpaving.com/locations/kansas-city-mo    301!
-https://www.kansascitypavingpros.com/* https://www.jwordenasphaltpaving.com/locations/kansas-city-mo  301!
+https://savannahpaving.com/*           https://www.jwordenasphaltpaving.com/   301!
+https://www.savannahpaving.com/*       https://www.jwordenasphaltpaving.com/   301!
+https://atlantapavingpros.com/*        https://www.jwordenasphaltpaving.com/   301!
+https://www.atlantapavingpros.com/*    https://www.jwordenasphaltpaving.com/   301!
+https://augustapaving.com/*            https://www.jwordenasphaltpaving.com/   301!
+https://www.augustapaving.com/*        https://www.jwordenasphaltpaving.com/   301!
+https://charlottepavingpros.com/*      https://www.jwordenasphaltpaving.com/   301!
+https://www.charlottepavingpros.com/*  https://www.jwordenasphaltpaving.com/   301!
+https://raleighpavingpros.com/*        https://www.jwordenasphaltpaving.com/   301!
+https://www.raleighpavingpros.com/*    https://www.jwordenasphaltpaving.com/   301!
+https://greensboropaving.com/*         https://www.jwordenasphaltpaving.com/   301!
+https://www.greensboropaving.com/*     https://www.jwordenasphaltpaving.com/   301!
+https://charlestonpavingpros.com/*     https://www.jwordenasphaltpaving.com/   301!
+https://www.charlestonpavingpros.com/* https://www.jwordenasphaltpaving.com/   301!
+https://columbiapavingpros.com/*       https://www.jwordenasphaltpaving.com/   301!
+https://www.columbiapavingpros.com/*   https://www.jwordenasphaltpaving.com/   301!
+https://kansascitypavingpros.com/*     https://www.jwordenasphaltpaving.com/   301!
+https://www.kansascitypavingpros.com/* https://www.jwordenasphaltpaving.com/   301!
 
 # ============================================================
 # PATH-LEVEL REDIRECTS (legacy URLs → current structure)
@@ -96,7 +85,7 @@ https://www.kansascitypavingpros.com/* https://www.jwordenasphaltpaving.com/loca
 /get-a-quote           /quote          301!
 /estimate              /contact        301!
 /free-quote            /quote          301!
-/request-estimate      /contact        301!
+/request-estimate      /index.html     200
 /request-a-quote       /quote          301!
 /asphalt-paving        /paving         301!
 /asphalt               /paving         301!
