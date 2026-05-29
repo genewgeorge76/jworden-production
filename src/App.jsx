@@ -212,7 +212,6 @@ const PublicLayout = ({ children }) => (
     <Navbar />
     {children}
     <Footer />
-    <MobileCallBar />
   </div>
 );
 
@@ -415,6 +414,7 @@ function App() {
           <Router>
             <SplashScreen />
             <AuthenticatedApp />
+            <MobileCallBar />
             {shouldRenderChatWidget ? <ChatWidget /> : null}
           </Router>
           <Toaster />

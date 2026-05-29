@@ -55,6 +55,12 @@ export default function MarketHero({ city, state, region, headline, intro }) {
             >
               <Phone className="w-4 h-4" /> (804) 446-1296
             </a>
+            <a
+              href="/quote"
+              className="bg-accent text-accent-foreground px-7 py-4 font-display font-bold text-sm tracking-wider uppercase hover:brightness-95 transition-colors min-h-[48px] flex items-center gap-2"
+            >
+              Request Estimate
+            </a>
             <button
               onClick={scrollDown}
               className="border border-border text-foreground px-6 py-4 font-display font-bold text-sm tracking-wider uppercase hover:border-primary hover:text-primary transition-colors min-h-[48px] flex items-center gap-2"

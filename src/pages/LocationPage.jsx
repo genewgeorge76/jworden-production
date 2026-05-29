@@ -136,7 +136,7 @@ export default function LocationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background font-body">
+    <div className="min-h-screen bg-background font-body pb-20 md:pb-0">
       <SEO
         title={title}
         description={description}

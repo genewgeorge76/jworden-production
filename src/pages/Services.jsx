@@ -385,6 +385,20 @@ export default function Services() {
             Asphalt paving, parking lots, driveways, sealcoating, crack filling, repair,
             maintenance, utility-safe planning, and full GC support.
           </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a
+              href="tel:+18044461296"
+              className="inline-flex min-h-[52px] items-center gap-2 rounded-md bg-brand-amber px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-brand-navy transition-colors hover:bg-brand-amber-dark"
+            >
+              Call (804) 446-1296
+            </a>
+            <Link
+              to="/quote"
+              className="inline-flex min-h-[52px] items-center gap-2 rounded-md border border-white/45 px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/10"
+            >
+              Request Estimate
+            </Link>
+          </div>
         </div>
       </div>
 

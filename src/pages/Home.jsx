@@ -245,11 +245,12 @@ export default function Home() {
       <SEO 
         title="J. Worden & Sons Asphalt Paving | Chester, Richmond, Chesterfield & Henrico VA"
         description="Premium residential driveway and commercial parking lot paving in Chester, Richmond, Chesterfield, and Henrico, VA. Sealcoating, asphalt repair, resurfacing, and documented project proof."
+        canonicalPath="/"
       />
       <HomeSchema />
       <Navbar />
 
-      <main>
+      <main className="pb-20 md:pb-0">
         {/* Hero */}
         <div className="relative isolate overflow-hidden">
           <div className="absolute inset-0">
