@@ -40,19 +40,19 @@ export const SOCIAL_PROFILES = {
     color: '#000000',
   },
   googlebusiness_va: {
-    url: import.meta.env.VITE_GMB_VA_URL || 'https://g.page/r/YOUR_VA_GOOGLE_BUSINESS_ID/review',
+    url: import.meta.env.VITE_GMB_VA_URL || null,
     label: 'Google Business Profile (Virginia)',
     handle: 'J. Worden & Sons VA',
     color: '#4285F4',
   },
   googlebusiness_ga: {
-    url: import.meta.env.VITE_GMB_GA_URL || 'https://g.page/r/YOUR_GA_GOOGLE_BUSINESS_ID/review',
+    url: import.meta.env.VITE_GMB_GA_URL || null,
     label: 'Google Business Profile (Atlanta, GA)',
     handle: 'J. Worden & Sons GA',
     color: '#4285F4',
   },
   googlebusiness_fl: {
-    url: import.meta.env.VITE_GMB_FL_URL || 'https://g.page/r/YOUR_FL_GOOGLE_BUSINESS_ID/review',
+    url: import.meta.env.VITE_GMB_FL_URL || null,
     label: 'Google Business Profile (Florida)',
     handle: 'J. Worden & Sons FL',
     color: '#4285F4',

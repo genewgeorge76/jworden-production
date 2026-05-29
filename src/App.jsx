@@ -91,6 +91,7 @@ const AdvisoryStateCompare = lazy(() => import('./pages/advisory/StateCompare'))
 const AdvisoryUtilitiesHub = lazy(() => import('./pages/advisory/UtilitiesHub'));
 const AdvisoryLegalStrategy = lazy(() => import('./pages/advisory/LegalStrategyAdvisor'));
 const AdvisoryContractorRanker = lazy(() => import('./pages/advisory/ContractorRanker'));
+const RequestEstimate = lazy(() => import('./pages/RequestEstimate'));
 const AdvisoryTaxCompliance = lazy(() => import('./pages/advisory/TaxComplianceAdvisory'));
 // Worden Standard Internal / Operational
 const PrintableOnboardingPacket = lazy(() => import('./components/PrintableOnboardingPacket'));
@@ -267,6 +268,7 @@ const AuthenticatedApp = () => {
         <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
         <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
+        <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
         <Route path="/reviews" element={<PublicLayout><Reviews /></PublicLayout>} />

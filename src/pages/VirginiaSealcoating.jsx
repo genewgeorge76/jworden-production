@@ -62,7 +62,7 @@ const CRACK_FILLERS = [
 ]
 
 export default function VirginiaSealcoating() {
-  const title = 'Virginia Sealcoating Contractor | All Types | Best Pricing Statewide | J. Worden & Sons'
+  const title = 'Asphalt Sealcoating Contractor | Richmond & Central Virginia | J. Worden & Sons'
   const description = 'Virginia\'s highest-rated sealcoating contractor. Coal tar, asphalt emulsion, polymer-modified, slurry seal, fog seal. Hot-pour crack filling statewide. Houzz Pro award winner. Top 75 Pavement Magazine contractor.'
 
   const jsonLd = {
