@@ -626,9 +626,117 @@ export const LOCATIONS = [
 
   // Greater Richmond
   { slug: 'tuckahoe-va',         city: 'Tuckahoe',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.5854, lng: -77.5772 } },
-  { slug: 'glen-allen-va',       city: 'Glen Allen',       state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.6657, lng: -77.5072 } },
-  { slug: 'mechanicsville-va',   city: 'Mechanicsville',   state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Hanover',       geo: { lat: 37.6088, lng: -77.3733 } },
-  { slug: 'bon-air-va',          city: 'Bon Air',          state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Chesterfield',  geo: { lat: 37.5246, lng: -77.5697 } },
+  {
+    slug: 'glen-allen-va',
+    city: 'Glen Allen',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Henrico',
+    geo: { lat: 37.6657, lng: -77.5072 },
+    headline: 'Asphalt Paving in Glen Allen, VA — Premium Driveways & Innsbrook Commercial Lots',
+    intro:
+      'Glen Allen is two paving markets in one: high-end residential in Wyndham, Twin Hickory, and Hickory Hill, and high-traffic commercial across the Innsbrook corporate campus and West Broad Village. We do both. Our crews build engineered driveways for the West End\'s premium properties and run nighttime parking-lot resurfacing for Innsbrook offices so businesses never lose a day. The standard is the same on either side — proper base, proper drainage, proper finish.',
+    neighborhoods: [
+      'Wyndham', 'Twin Hickory', 'Hickory Hill', 'Innsbrook',
+      'West Broad Village', 'Deep Run', 'Mountain Road', 'Virginia Center',
+    ],
+    landmarks: ['Innsbrook Corporate Campus', 'West Broad Village', 'Virginia Center Commons', 'Deep Run Park', 'Meadow Event Park', 'Short Pump adjacency'],
+    climate: {
+      title: 'West End Clay + High-Traffic Commercial Wear',
+      body: 'Glen Allen\'s West End sits on plastic Cecil clay that moves with moisture, so premium residential driveways in Wyndham and Twin Hickory get a full 6-inch compacted base to stay smooth for decades. Commercial lots around Innsbrook see thousands of vehicles a day — we spec a heavy-duty surface course (SM-12.5D) over a 4-inch base so the lot doesn\'t need re-striping and patching every spring.',
+    },
+    faqs: [
+      {
+        q: 'Can you resurface an Innsbrook parking lot without closing the business?',
+        a: 'Yes — we run nighttime crews for Glen Allen and Innsbrook commercial properties. We mill in the evening, lay base and surface overnight, stripe before dawn, and the lot is open for business in the morning.',
+      },
+      {
+        q: 'What makes a premium Wyndham or Twin Hickory driveway last?',
+        a: 'The base. We build West End driveways on a compacted 6-inch stone base over the area\'s Cecil clay, with proper drainage and edge support, then finish with a smooth hot-mix surface. Sealed every few years, it stays crack-free for decades.',
+      },
+      {
+        q: 'Do you stripe commercial lots to ADA spec in Henrico?',
+        a: 'Every commercial job. We use long-life methyl-methacrylate striping and certify each ADA stall and access aisle to current Henrico County code.',
+      },
+    ],
+    reviews: 38,
+    rating: 4.9,
+  },
+  {
+    slug: 'mechanicsville-va',
+    city: 'Mechanicsville',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Hanover',
+    geo: { lat: 37.6088, lng: -77.3733 },
+    headline: 'Asphalt Paving in Mechanicsville, VA — Driveways, Lots & Repairs in Hanover County',
+    intro:
+      'Mechanicsville is core Hanover County territory for J. Worden & Sons. We pave residential driveways across Bell Creek, Atlee, and Rural Point, resurface church and retail lots along the Route 360 (Mechanicsville Turnpike) corridor, and rebuild rural driveways out toward Cold Harbor and Pole Green. Every scope starts with a base and drainage assessment — because Hanover\'s clay subsoil, not the asphalt, is what determines how long a driveway lasts.',
+    neighborhoods: [
+      'Bell Creek', 'Atlee', 'Rural Point', 'Pole Green',
+      'Cold Harbor', 'Mechanicsville', 'Hanover Courthouse', 'Studley',
+    ],
+    landmarks: ['Route 360 / Mechanicsville Turnpike', 'Cold Harbor Battlefield', 'Atlee Station', 'Bell Creek Crossing', 'Pole Green Park'],
+    climate: {
+      title: 'Hanover Clay Subsoil + Route 360 Traffic Load',
+      body: 'Mechanicsville sits on the same heavy Hanover clay that swells when wet and shrinks in summer, working cracks into any driveway laid on a thin base. The area also cycles through 30–40 freeze-thaw events each winter. We dig 4–6 inches below grade, compact a #57 stone base, and finish with a 2–3 inch hot-mix surface so driveways off Atlee and Bell Creek don\'t alligator-crack in five years. Commercial lots on the Route 360 corridor get a heavier base course built for daily traffic volume.',
+    },
+    faqs: [
+      {
+        q: 'Do I need a Hanover County permit to pave my Mechanicsville driveway?',
+        a: 'A new culvert or apron tie-in to a county road requires a Hanover County land-disturbance or entrance permit. A straight overlay of an existing private driveway usually does not. We pull and manage the permit paperwork as part of the scope when one is required.',
+      },
+      {
+        q: 'Why do Mechanicsville driveways crack so quickly?',
+        a: 'Almost always a thin or missing stone base over Hanover clay. When the clay swells and shrinks with moisture, a driveway with only 2 inches of base flexes and cracks. We build on a compacted 4–6 inch stone base so the surface is isolated from soil movement.',
+      },
+      {
+        q: 'How fast can you start a Mechanicsville project?',
+        a: 'Mechanicsville is close to our Chester headquarters, so most residential driveways start within 7–10 days of signing. We give a written, line-item estimate before any work begins.',
+      },
+    ],
+    reviews: 41,
+    rating: 4.9,
+  },
+  {
+    slug: 'bon-air-va',
+    city: 'Bon Air',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Chesterfield',
+    geo: { lat: 37.5246, lng: -77.5697 },
+    headline: 'Asphalt Paving in Bon Air, VA — Driveways for an Established Tree-Lined Suburb',
+    intro:
+      'Bon Air is one of the Richmond area\'s oldest suburbs — leafy, established, and full of mature trees and decades-old driveways nearing the end of their life. We repave and rebuild driveways through Historic Bon Air, Rockaway, and the Buford Road neighborhoods, protecting the canopy that makes the area what it is while putting a properly engineered base under surfaces that were laid two generations ago.',
+    neighborhoods: [
+      'Historic Bon Air', 'Buford', 'Rockaway', 'Cherokee',
+      'Crestwood', 'Stratford Hills', 'Westover Hills adjacency', 'Forest Hill',
+    ],
+    landmarks: ['Buford Road', 'Powhite Parkway', 'James River', 'Bon Air Historic District', 'Rockwood Park', 'Huguenot Road corridor'],
+    climate: {
+      title: 'Mature Tree Roots, Aging Driveways & River-Edge Clay',
+      body: 'Bon Air\'s appeal — old trees and established lots — is also its paving challenge. Mature root systems lift and crack driveways from below, and many surfaces here sit on thin, decades-old bases that have simply worn out. We pave around protected roots with bridging techniques and rebuild the base properly during repaving, so a new Bon Air driveway lasts another 25 years instead of failing over the same old foundation.',
+    },
+    faqs: [
+      {
+        q: 'My old Bon Air driveway is cracked and lifting — repair or replace?',
+        a: 'If the base is original and tree roots have lifted sections, an overlay just cracks again over the same problem. We core the base, assess root involvement, and usually recommend a rebuild with a fresh compacted base — which resets the clock for 25+ years rather than patching a worn foundation.',
+      },
+      {
+        q: 'Can you pave without damaging my mature trees?',
+        a: 'Yes — this is constant work in Bon Air. We use a root-bridge geogrid over critical root zones so the driveway is supported without suffocating the roots, keeping the canopy healthy.',
+      },
+      {
+        q: 'Do you match the look of an older Bon Air home\'s driveway?',
+        a: 'We can frame the asphalt with brick or a clean cut edge to suit the historic character, and grade it to fit the existing landscape and drainage rather than forcing a generic shape.',
+      },
+    ],
+    reviews: 31,
+    rating: 5.0,
+  },
   { slug: 'lakeside-va',         city: 'Lakeside',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.6087, lng: -77.4783 } },
   { slug: 'sandston-va',         city: 'Sandston',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.5251, lng: -77.3197 } },
   { slug: 'stratford-hills-va',  city: 'Stratford Hills',  state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Richmond City', geo: { lat: 37.5337, lng: -77.5447 } },
@@ -636,7 +744,43 @@ export const LOCATIONS = [
   { slug: 'windsor-farms-va',    city: 'Windsor Farms',    state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Richmond City', geo: { lat: 37.5604, lng: -77.5119 } },
 
   // Tri-Cities / Chesterfield
-  { slug: 'chesterfield-va',     city: 'Chesterfield',     state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Chesterfield',  geo: { lat: 37.3777, lng: -77.5050 } },
+  {
+    slug: 'chesterfield-va',
+    city: 'Chesterfield',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Tri-Cities / Central Virginia',
+    county: 'Chesterfield',
+    geo: { lat: 37.3777, lng: -77.5050 },
+    headline: 'Asphalt Paving in Chesterfield County, VA — Driveways, HOA Roads & Commercial Lots',
+    intro:
+      'Chesterfield County is home territory — our Chester headquarters sits right inside it. We pave residential driveways from Brandermill and Woodlake to Moseley and Matoaca, maintain HOA roads and church lots across the Hull Street and Route 288 corridors, and handle commercial work near Chesterfield Towne Center. As a local Chesterfield contractor, we know the county\'s soils, the permit office, and the inspectors by name.',
+    neighborhoods: [
+      'Brandermill', 'Woodlake', 'Moseley', 'Matoaca',
+      'Hull Street corridor', 'Midlothian', 'Chester', 'Ettrick', 'Enon',
+    ],
+    landmarks: ['Route 288', 'Hull Street Road (Route 360)', 'Chesterfield Towne Center', 'Pocahontas State Park', 'Chesterfield County Airport', 'Swift Creek Reservoir'],
+    climate: {
+      title: 'James River Basin Clay + County-Wide Freeze-Thaw',
+      body: 'Chesterfield spans the James River basin, where expansive clay subsoil swells and shrinks with the seasons and 30–50 freeze-thaw cycles a winter work cracks into anything built on a thin base. We compact a 4–6 inch stone base under every driveway and a deeper base course under commercial and HOA traffic, so surfaces from Brandermill to Matoaca stay sound instead of alligator-cracking in a handful of seasons.',
+    },
+    faqs: [
+      {
+        q: 'Do I need a Chesterfield County permit to pave my driveway?',
+        a: 'New construction or a culvert/apron tie-in to a county road requires a Chesterfield permit through Building Inspection or the VDOT entrance process. A straight overlay of an existing private driveway typically does not. We handle the permit paperwork when one is needed.',
+      },
+      {
+        q: 'Do you provide written paving specs for Chesterfield HOAs?',
+        a: 'Yes. HOA and ARB submittals get a full packet — mix design, base depth, compaction spec, drainage plan, and a typical section drawing — so the board can approve and compare bids on equal terms.',
+      },
+      {
+        q: 'You\'re based in Chesterfield — does that mean faster service?',
+        a: 'Yes. Our Chester headquarters is inside the county, so most Chesterfield driveways start within 7–10 days of signing and our trucks are minutes from the job, not hours.',
+      },
+    ],
+    reviews: 64,
+    rating: 4.9,
+  },
   { slug: 'petersburg-va',       city: 'Petersburg',       state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Petersburg City', geo: { lat: 37.2279, lng: -77.4019 } },
   { slug: 'hopewell-va',         city: 'Hopewell',         state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Hopewell City', geo: { lat: 37.3043, lng: -77.2872 } },
   { slug: 'colonial-heights-va', city: 'Colonial Heights', state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',                            geo: { lat: 37.2654, lng: -77.3992 } },
@@ -664,11 +808,83 @@ export const LOCATIONS = [
 
   // Surrounding Counties
   { slug: 'charlottesville-va',  city: 'Charlottesville',  state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Albemarle',     geo: { lat: 38.0293, lng: -78.4767 } },
-  { slug: 'hanover-va',          city: 'Hanover',          state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Hanover',       geo: { lat: 37.7613, lng: -77.3697 } },
+  {
+    slug: 'hanover-va',
+    city: 'Hanover',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Hanover',
+    geo: { lat: 37.7613, lng: -77.3697 },
+    headline: 'Asphalt Paving in Hanover County, VA — Rural Driveways, Farm Lanes & Commercial Lots',
+    intro:
+      'Hanover County runs long and rural, and that changes how asphalt has to be built. We pave estate driveways and farm lanes around Beaverdam, Montpelier, and Rockville, handle commercial and church lots near Hanover Courthouse and the Route 1 / I-95 corridor, and pour the heavier base needed for Doswell properties near Kings Dominion. Long rural driveways need proper crown, drainage, and base depth — get those wrong and water destroys the run in a few seasons.',
+    neighborhoods: [
+      'Hanover Courthouse', 'Beaverdam', 'Montpelier', 'Rockville',
+      'Doswell', 'Mechanicsville', 'Ashland', 'Studley', 'Negro Foot',
+    ],
+    landmarks: ['Hanover Courthouse', 'Kings Dominion (Doswell)', 'I-95 corridor', 'Route 1', 'Pamunkey River', 'Hanover Tomato country'],
+    climate: {
+      title: 'Long Rural Driveways, Clay Subsoil & Open Drainage',
+      body: 'Most Hanover paving happens away from curb-and-gutter, so water management is everything. A 300–800 foot rural driveway has to be crowned and graded to shed water off the edges, not trap it in the base. On Hanover\'s clay and the sandier Pamunkey bottomland, we set base depth to the soil and the traffic — heavier for farm equipment and grain trucks, standard for passenger driveways — and compact in lifts so the surface doesn\'t rut or pump.',
+    },
+    faqs: [
+      {
+        q: 'Can you pave a long rural driveway in Hanover County?',
+        a: 'Yes — long driveways, farm lanes, and estate entrances are routine work for us across Beaverdam, Montpelier, and Rockville. We laser-grade for a proper crown and cross-fall, build a compacted stone base matched to the traffic, and cut drainage swales where the run needs them.',
+      },
+      {
+        q: 'My farm driveway carries tractor and truck traffic — is standard asphalt enough?',
+        a: 'No. Standard residential spec ruts under farm equipment in a season. We build agricultural driveways with a thicker binder course over a deeper stone base, and we\'ll often recommend a concrete apron at the heaviest turning points.',
+      },
+      {
+        q: 'Do you serve Doswell and the areas near Kings Dominion?',
+        a: 'Yes. Doswell, Beaverdam, and the northern Hanover corridor are regular service areas. Commercial and high-traffic properties there get a heavier base course built for the load.',
+      },
+    ],
+    reviews: 33,
+    rating: 4.9,
+  },
   { slug: 'powhatan-va',         city: 'Powhatan',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Powhatan',      geo: { lat: 37.5435, lng: -77.9166 } },
   { slug: 'goochland-va',        city: 'Goochland',        state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Goochland',     geo: { lat: 37.6837, lng: -77.8836 } },
   { slug: 'amelia-va',           city: 'Amelia',           state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Amelia',        geo: { lat: 37.3438, lng: -77.9836 } },
-  { slug: 'ashland-va',          city: 'Ashland',          state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Hanover',       geo: { lat: 37.7593, lng: -77.4791 } },
+  {
+    slug: 'ashland-va',
+    city: 'Ashland',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Hanover',
+    geo: { lat: 37.7593, lng: -77.4791 },
+    headline: 'Asphalt Paving in Ashland, VA — Driveways & Lots in the "Center of the Universe"',
+    intro:
+      'Ashland is a tight-knit railroad town, and paving here means working around mature trees, historic-district sensibilities, and the rail corridor that splits Center Street. We pave residential driveways through the College Town and England Street neighborhoods, resurface lots for businesses along Route 1 and near Randolph-Macon College, and rebuild older driveways that have outlived their original base. Clean edges, careful tree protection, and a finish that suits the town\'s character.',
+    neighborhoods: [
+      'Downtown Ashland', 'College Town', 'England Street', 'Center Street',
+      'Cedar Lane', 'Gwathmey', 'Hickory Hill', 'Berkleytown',
+    ],
+    landmarks: ['Randolph-Macon College', 'Ashland Train Station', 'Center Street rail corridor', 'England Street', 'Route 1', 'Hanover Arts & Activities Center'],
+    climate: {
+      title: 'Mature Trees, Historic Edges & Hanover Clay',
+      body: 'Ashland\'s older neighborhoods are full of mature oaks and tight lots, so root protection and clean edging matter as much as the base. We use root-bridge techniques near protected trees and frame driveways with crisp cut or brick-bordered edges that fit the historic streetscape. Underneath, it\'s the same discipline every Hanover job needs: a compacted stone base over clay subsoil and a crown that sheds Ashland\'s freeze-thaw winter moisture.',
+    },
+    faqs: [
+      {
+        q: 'Can you pave around the mature trees in my Ashland yard?',
+        a: 'Yes. Ashland\'s tree canopy is part of its character, and we pave around protected root zones using a root-bridge geogrid that keeps oxygen and water moving to the roots. It costs a little more than standard but it keeps the trees alive.',
+      },
+      {
+        q: 'Do you handle historic-district edges and finishes in downtown Ashland?',
+        a: 'Yes. We frame driveways with brick borders or clean cut edges that suit the College Town and Center Street streetscape, and we keep equipment and staging tight on the narrower historic lots.',
+      },
+      {
+        q: 'Do you pave commercial lots near Randolph-Macon and Route 1?',
+        a: 'Yes — we resurface and stripe retail, office, and church lots along the Route 1 corridor and the Randolph-Macon area, scheduling around business hours and the college calendar where needed.',
+      },
+    ],
+    reviews: 26,
+    rating: 5.0,
+  },
   { slug: 'charles-city-va',     city: 'Charles City',     state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Charles City',  geo: { lat: 37.3424, lng: -77.0758 } },
   { slug: 'cumberland-va',       city: 'Cumberland',       state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Cumberland',    geo: { lat: 37.5101, lng: -78.2422 } },
   { slug: 'fluvanna-va',         city: 'Fluvanna',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Fluvanna',      geo: { lat: 37.8412, lng: -78.2769 } },
