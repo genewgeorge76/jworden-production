@@ -1,11 +1,12 @@
 import React from 'react';
-import { ArrowRight, Award, BookOpen, Building2, CheckCircle2, CircleDollarSign, ClipboardCheck, Hammer, ListChecks, Phone, TriangleAlert } from 'lucide-react';
+import { ArrowRight, Award, BookOpen, Building2, CheckCircle2, CircleDollarSign, ClipboardCheck, Hammer, ListChecks, MessageSquare, Phone, TriangleAlert } from 'lucide-react';
 import SEO from '../components/SEO';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import HomeSchema from '../components/HomeSchema';
 import SmartImage from '@/components/SmartImage';
 import { trackPhoneClick } from '@/lib/analytics';
+import { PHONE_E164, SMS_E164, SMS_PREFILL } from '@/lib/businessInfo';
 import LiveReviewBadges from '../components/LiveReviewBadges';
 import CommercialServicesHighlights from '../components/CommercialServicesHighlights';
 import CustomerProofGallery from '../components/CustomerProofGallery';
@@ -325,9 +326,37 @@ export default function Home() {
                 </a>
               </div>
 
-              {/* 1-tap lead capture: phone number only. Beats the long /quote form. */}
-              <div className="mt-8 max-w-2xl">
-                <QuickQuoteBar source="home_hero" servicePreset="paving" />
+              {/* Kickserv self-service request embed — replaces the broken phone-only form.
+                  TODO: once Kickserv is confirmed working, remove chat-lead-capture and
+                  lead-fallback-notify Netlify functions (QuickQuoteBar on /quote still uses them). */}
+              <div className="mt-8 max-w-2xl rounded-lg border-2 border-brand-amber/70 bg-white p-5 shadow-[0_18px_36px_-26px_rgba(15,48,68,0.45)]">
+                <p className="font-display text-lg font-extrabold uppercase tracking-wide text-brand-navy md:text-xl">
+                  Get a free quote — takes 60 seconds.
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">Fill out the form below or tap to call/text us directly.</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href={`tel:${PHONE_E164}`}
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-md border-2 border-primary px-5 font-display text-sm font-extrabold uppercase tracking-wide text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  >
+                    <Phone className="h-4 w-4" /> Call Now
+                  </a>
+                  <a
+                    href={`sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`}
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-md border-2 border-emerald-600 px-5 font-display text-sm font-extrabold uppercase tracking-wide text-emerald-700 transition-colors hover:bg-emerald-600 hover:text-white"
+                  >
+                    <MessageSquare className="h-4 w-4" /> Text Us
+                  </a>
+                </div>
+                <div className="mt-4 w-full overflow-hidden rounded-md">
+                  <iframe
+                    src="https://app.kickserv.com/jwordenandsonspaving/self_service/requests/new?iframe=true"
+                    style={{ border: 'none', width: '100%', height: '1000px' }}
+                    title="Request a Free Quote"
+                    loading="lazy"
+                    scrolling="auto"
+                  />
+                </div>
               </div>
             </div>
 
