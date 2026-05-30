@@ -625,7 +625,43 @@ export const LOCATIONS = [
   // when these optional fields are undefined.
 
   // Greater Richmond
-  { slug: 'tuckahoe-va',         city: 'Tuckahoe',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.5854, lng: -77.5772 } },
+  {
+    slug: 'tuckahoe-va',
+    city: 'Tuckahoe',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Henrico',
+    geo: { lat: 37.5854, lng: -77.5772 },
+    headline: 'Asphalt Paving in Tuckahoe, VA — Premium West End Driveways Done Right',
+    intro:
+      "Tuckahoe is one of Richmond's most established West End communities, and premium driveways here demand premium base work. We pave long curved approaches in the River Road and Pump Road corridors, rebuild aging surfaces in Tuckahoe Pines and Gayton, and work around the mature canopy that defines the neighborhood. Cecil clay underlies most of the West End — get the base wrong and even an expensive driveway alligator-cracks in five years.",
+    neighborhoods: [
+      'Tuckahoe Pines', 'River Road corridor', 'Pump Road corridor', 'Gayton',
+      'Skipwith', 'Stony Point', 'Gaskins Road', 'Three Chopt',
+    ],
+    landmarks: ['River Road', 'Pump Road', 'Tuckahoe Park', 'Gayton Road', 'Skipwith area', 'Three Chopt Road'],
+    climate: {
+      title: "West End Cecil Clay + Mature Tree Root Pressure",
+      body: "Tuckahoe's Cecil clay subsoil swells with every wet spell and shrinks in Virginia's dry summers, creating movement at the base of any driveway built without proper stone depth. Add mature oak and maple root systems — common throughout Tuckahoe Pines and the River Road corridor — and you have two independent forces working to crack the surface from below. We dig to 6 inches on West End driveways, compact crushed bluestone in layers, and bridge root zones so both problems are solved at installation.",
+    },
+    faqs: [
+      {
+        q: 'My Tuckahoe driveway is cracking along the edges — why?',
+        a: 'Edge cracking in West End neighborhoods almost always comes from thin base preparation over Cecil clay, tree root uplift, or inadequate drainage at the driveway margins. We diagnose which before recommending overlay vs. full rebuild — edge-only failure often means a targeted perimeter rebuild rather than full tear-out.',
+      },
+      {
+        q: 'Can you pave a long curved Tuckahoe driveway without disturbing the tree canopy?',
+        a: "Yes — we do this constantly in the River Road and Pump Road corridors. We use a root-bridge geogrid over the critical root zone so the driveway is supported without cutting feeder roots, and we laser-grade for proper drainage along the entire run.",
+      },
+      {
+        q: 'How much does a premium Tuckahoe driveway cost?',
+        a: 'Most residential driveways in Tuckahoe and the broader West End run $4–$8 per square foot for full installation, depending on base condition, length, and access. We provide a written line-item estimate after the site visit — no rough numbers before we see the property.',
+      },
+    ],
+    reviews: 44,
+    rating: 4.9,
+  },
   {
     slug: 'glen-allen-va',
     city: 'Glen Allen',
@@ -737,11 +773,191 @@ export const LOCATIONS = [
     reviews: 31,
     rating: 5.0,
   },
-  { slug: 'lakeside-va',         city: 'Lakeside',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.6087, lng: -77.4783 } },
-  { slug: 'sandston-va',         city: 'Sandston',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.5251, lng: -77.3197 } },
-  { slug: 'stratford-hills-va',  city: 'Stratford Hills',  state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Richmond City', geo: { lat: 37.5337, lng: -77.5447 } },
-  { slug: 'westham-va',          city: 'Westham',          state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Henrico',       geo: { lat: 37.5851, lng: -77.5519 } },
-  { slug: 'windsor-farms-va',    city: 'Windsor Farms',    state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Richmond City', geo: { lat: 37.5604, lng: -77.5119 } },
+  {
+    slug: 'lakeside-va',
+    city: 'Lakeside',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Henrico',
+    geo: { lat: 37.6087, lng: -77.4783 },
+    headline: 'Asphalt Paving in Lakeside, VA — Older Driveways on the Brook Road Corridor',
+    intro:
+      "Lakeside is a dense, established Henrico neighborhood north of Richmond, and most of its driveways are decades old — many built on bases that were never deep enough for Virginia's clay soil and freeze-thaw winters. We repave and rebuild driveways throughout the Lakeside Avenue, Brook Road, and Hermitage Road corridors, giving older surfaces a proper foundation that doesn't crack again in three years.",
+    neighborhoods: [
+      'Lakeside', 'Hermitage Road corridor', 'Brook Road', 'Lakeside Avenue',
+      'Bryan Park area', 'Belmont', 'Northside', 'Glenside',
+    ],
+    landmarks: ['Bryan Park', 'Brook Road (Route 1)', 'Lakeside Avenue', 'Hermitage Road', 'Lakeside Pool', 'Glenside Drive'],
+    climate: {
+      title: 'Aging Base + Henrico Clay + Dense Residential Traffic',
+      body: "Lakeside's housing stock dates from the 1940s through 1970s, and many original driveway bases were only 2–3 inches of stone — well below the 4–6 inch minimum needed to handle Virginia's Piedmont clay and 30–40 freeze-thaw cycles per winter. The result is driveways that have cracked through, alligatored, and begun to pull away from the garage apron. We rebuild from the base up rather than overlay a failed foundation.",
+    },
+    faqs: [
+      {
+        q: 'My Lakeside driveway has cracked completely through — can it be overlaid?',
+        a: 'Only if the base is sound. Alligator cracking — the grid-pattern cracking that looks like the surface is breaking into pieces — usually means base failure. Overlaying a failed base just delays the same cracks reappearing in 2–3 years. We probe the base before recommending overlay vs. full rebuild.',
+      },
+      {
+        q: 'Do you work in the Hermitage Road and Brook Road area?',
+        a: 'Yes — the Lakeside, Hermitage, and Brook Road corridor is regular territory for our crew. We schedule efficiently in the neighborhood so multiple Lakeside jobs can run in the same week.',
+      },
+      {
+        q: 'How long does a rebuilt Lakeside driveway last?',
+        a: 'A properly rebuilt driveway — compacted 4–6 inch stone base, 2–3 inch hot-mix surface, sealed on schedule — lasts 20–25 years in Henrico conditions. We provide a written warranty and a sealcoat timing recommendation at completion.',
+      },
+    ],
+    reviews: 36,
+    rating: 4.9,
+  },
+  {
+    slug: 'sandston-va',
+    city: 'Sandston',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Henrico',
+    geo: { lat: 37.5251, lng: -77.3197 },
+    headline: 'Asphalt Paving in Sandston, VA — Airport-Corridor Driveways and Industrial Yards',
+    intro:
+      "Sandston sits along the Williamsburg Road corridor east of Richmond, adjacent to Richmond International Airport, and it is two markets in one: established residential driveways in the Sandston and Highland Springs communities, and industrial/commercial yards serving the airport and Laburnum Avenue logistics corridor. We handle both — residential driveways built for Eastern Henrico's sandy-loam soil and heavy-duty commercial paving for warehouse and freight properties.",
+    neighborhoods: [
+      'Sandston', 'Highland Springs', 'Airport Road corridor', 'Williamsburg Road',
+      'Nine Mile Road', 'Laburnum Avenue', 'Varina', 'Eastridge',
+    ],
+    landmarks: ['Richmond International Airport (RIC)', 'Williamsburg Road (Route 60)', 'Nine Mile Road', 'Laburnum Avenue', 'Highland Springs', 'Airport industrial corridor'],
+    climate: {
+      title: 'Sandy-Loam Subgrade + Airport Industrial Load',
+      body: "Eastern Henrico transitions from the West End's clay to a sandier loam derived from the old Chickahominy floodplain, and it behaves differently under load. Sandy-loam bases pump fines when the geotextile separator is missing — a common failure point in airport-area industrial yards. For residential driveways, the sandy subsoil still needs a proper compacted stone base. For commercial properties near RIC and Laburnum, we spec heavy-duty base courses rated for freight and cargo vehicle loads.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave industrial and warehouse yards near Richmond Airport?',
+        a: 'Yes — we pave and resurface industrial yards, freight staging areas, and commercial properties along the Laburnum Avenue and Airport Road corridor. Sandston and eastern Henrico industrial properties get a heavy-duty base course built for truck and forklift traffic.',
+      },
+      {
+        q: 'Is Eastern Henrico soil different from the West End?',
+        a: 'Yes. East of I-295 toward Sandston, the subsoil shifts from the West End\'s heavy Cecil clay to a sandy loam from the old Chickahominy floodplain. It drains faster but pumps fines under load without a geotextile separator. We adjust base spec based on a site-specific soil check.',
+      },
+      {
+        q: 'How quickly can you start a Sandston residential driveway?',
+        a: 'We typically quote within 48 hours of the site visit and schedule residential Sandston driveways within 1–2 weeks. Our Chester headquarters is about 20 minutes away so crew mobilization is efficient.',
+      },
+    ],
+    reviews: 29,
+    rating: 4.9,
+  },
+  {
+    slug: 'stratford-hills-va',
+    city: 'Stratford Hills',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Richmond City',
+    geo: { lat: 37.5337, lng: -77.5447 },
+    headline: 'Asphalt Paving in Stratford Hills, VA — James River-Edge Driveways Rebuilt Right',
+    intro:
+      "Stratford Hills is a classic mid-century Richmond neighborhood perched between the James River and Chippenham Parkway — beautiful, leafy, and full of 50-year-old driveways ready for their second life. We repave and rebuild driveways across the Forest Hill Avenue and Huguenot Road side of the neighborhood, protecting the mature canopy while giving homes the modern, well-drained surface they should have had all along.",
+    neighborhoods: [
+      'Stratford Hills', 'Forest Hill', 'Westover Hills adjacency', 'Wilton Farm',
+      'Huguenot area', 'James River adjacency', 'Chippenham corridor', 'Powhatan Avenue',
+    ],
+    landmarks: ['James River', 'Forest Hill Park', 'Huguenot Bridge', 'Chippenham Parkway', 'Forest Hill Avenue', 'Stratford Hills Shopping Center'],
+    climate: {
+      title: "River-Edge Clay, Mature Roots & Mid-Century Driveways",
+      body: "Stratford Hills sits in James River basin clay — the same expansive subsoil that cracks old driveways throughout South Richmond. Most original Stratford Hills driveways were laid on minimal stone bases in the 1950s–70s, and decades of clay movement, tree root pressure, and Virginia's freeze-thaw cycles have worked them into alligator-cracked failure. Overlay is rarely the right fix here — we assess the base, bridge root zones where needed, and rebuild to a 25-year spec.",
+    },
+    faqs: [
+      {
+        q: 'My 1960s Stratford Hills driveway is alligator-cracking — can I just overlay it?',
+        a: "Probably not. Alligator cracking in a decades-old surface usually means the original base has failed — adding 2 inches of new asphalt just delays the same cracks reappearing in 2–3 years. We test the base and give you an honest answer: overlay if the base is still solid, full rebuild if it isn't.",
+      },
+      {
+        q: 'Can you protect the big trees in my Stratford Hills yard during paving?',
+        a: "Yes. Root-bridge techniques over critical root zones are standard practice in Forest Hill and Stratford Hills. We keep equipment off the drip line and pave across roots with a perforated geogrid that maintains oxygen exchange.",
+      },
+      {
+        q: 'How quickly can you start a Stratford Hills project?',
+        a: 'Our Chester headquarters is about 15 minutes from Stratford Hills. Most residential driveways start within 7–10 days of contract signing — same crew, no subcontractors.',
+      },
+    ],
+    reviews: 33,
+    rating: 4.9,
+  },
+  {
+    slug: 'westham-va',
+    city: 'Westham',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Henrico',
+    geo: { lat: 37.5851, lng: -77.5519 },
+    headline: 'Asphalt Paving in Westham, VA — Established West End Driveways Near the University of Richmond',
+    intro:
+      "Westham sits in the premium west Henrico corridor adjacent to the University of Richmond campus and along the River Road approach toward Deep Run. Driveways here are on established lots with mature landscaping, and paving needs to be clean, precise, and executed without damaging the surroundings that make the neighborhood what it is.",
+    neighborhoods: [
+      'Westham', 'River Road corridor', 'University of Richmond area', 'Westhampton',
+      'Three Chopt', 'Cary Street Road', 'West End', 'Tuckahoe adjacency',
+    ],
+    landmarks: ['University of Richmond', 'River Road', 'Westhampton Lake', 'Westham Bridge', 'Deep Run Park', 'Three Chopt Road'],
+    climate: {
+      title: 'West End Cecil Clay + Mature Residential Lots',
+      body: "Westham's Cecil clay subsoil is among the most plastically active in the Richmond area — it expands dramatically when wet and shrinks in dry summers, creating constant low-level movement at the driveway base. Combined with mature tree root systems throughout the River Road corridor, it makes base engineering more important here than almost anywhere else in the metro. We run a minimum 6-inch compacted stone base and bridge root zones as standard practice.",
+    },
+    faqs: [
+      {
+        q: 'Do you serve the River Road and Westham area?',
+        a: "Yes — the River Road, Westham, and Tuckahoe corridor is regular West End territory for us. We pave and resurface driveways throughout the area with full base assessment, tree protection where needed, and written warranty.",
+      },
+      {
+        q: 'What is the right base depth for a West End Westham driveway?',
+        a: "On Cecil clay, we build a minimum 6-inch compacted crushed stone base — significantly more than the 3–4 inches many contractors use. That extra depth isolates the surface from the seasonal clay movement that cracks underprepared driveways.",
+      },
+      {
+        q: 'Can you work around a University of Richmond calendar for paving?',
+        a: 'Yes — for properties near the UR campus, we can schedule around academic-year traffic and event calendars. Summer and winter break windows are easiest for larger scope work.',
+      },
+    ],
+    reviews: 27,
+    rating: 5.0,
+  },
+  {
+    slug: 'windsor-farms-va',
+    city: 'Windsor Farms',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Richmond City',
+    geo: { lat: 37.5604, lng: -77.5119 },
+    headline: "Asphalt Paving in Windsor Farms, VA — Historic Richmond's Most Demanding Driveways",
+    intro:
+      "Windsor Farms is one of Richmond's most distinctive neighborhoods — English-style homes, river-edge lots, and the Agecroft Hall and Virginia House estates — and driveway paving here has to suit the setting. We pave and repave long curved approaches in the Cary Street Road and Hampton Street corridors, working with historic-district sensibilities and the mature canopy that defines Windsor Farms. No shortcuts, no generic finishes.",
+    neighborhoods: [
+      'Windsor Farms', 'Cary Street Road', 'Hampton Street', 'Banbury',
+      'James River adjacency', 'Agecroft area', 'Maple Road', 'Canterbury Road',
+    ],
+    landmarks: ['Agecroft Hall', 'Virginia House', 'Cary Street Road', 'James River', 'Windsor Farms neighborhood', 'Canterbury Road'],
+    climate: {
+      title: 'River-Edge Clay, Historic Overlay & Premium Finish Standards',
+      body: "Windsor Farms sits directly on James River bank clay — the most expansive subsoil in Richmond. Original driveways in the neighborhood date to the 1920s and 1930s, with some surfaces never properly rebuilt. Modern repaving here means removing the failed surface, addressing decades of clay movement at the base level, and finishing with a precision edge that respects the architectural character of the neighborhood.",
+    },
+    faqs: [
+      {
+        q: 'My Windsor Farms driveway is original — should I overlay or fully rebuild?',
+        a: "On a 1920s–1940s original surface in Windsor Farms, full rebuild is almost always the right answer. Those surfaces have outlived their base life, and the James River clay movement means overlay just cracks over the same failed foundation. A proper rebuild with a 6-inch compacted base resets the clock for 25+ years.",
+      },
+      {
+        q: 'Can you match the historic character of a Windsor Farms entrance?',
+        a: "Yes — we can frame the driveway with brick border courses, natural stone edging, or clean-cut curb forms that suit the English-style architecture of Windsor Farms. The asphalt spec is engineered, the finish is custom.",
+      },
+      {
+        q: 'Do you handle estates and larger property paving in Windsor Farms?',
+        a: "Yes — we have paved long estate approaches, motor courts, and service drives in Windsor Farms and adjacent River Road properties. We bring the equipment for long runs and provide engineered drainage design for river-edge grade changes.",
+      },
+    ],
+    reviews: 22,
+    rating: 5.0,
+  },
 
   // Tri-Cities / Chesterfield
   {
@@ -781,12 +997,227 @@ export const LOCATIONS = [
     reviews: 64,
     rating: 4.9,
   },
-  { slug: 'petersburg-va',       city: 'Petersburg',       state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Petersburg City', geo: { lat: 37.2279, lng: -77.4019 } },
-  { slug: 'hopewell-va',         city: 'Hopewell',         state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Hopewell City', geo: { lat: 37.3043, lng: -77.2872 } },
-  { slug: 'colonial-heights-va', city: 'Colonial Heights', state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',                            geo: { lat: 37.2654, lng: -77.3992 } },
-  { slug: 'moseley-va',          city: 'Moseley',          state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Chesterfield',  geo: { lat: 37.4163, lng: -77.7758 } },
-  { slug: 'prince-george-va',    city: 'Prince George',    state: 'Virginia', stateAbbr: 'VA', region: 'Tri-Cities / Central Virginia',   county: 'Prince George', geo: { lat: 37.2235, lng: -77.2880 } },
-  { slug: 'sussex-va',           city: 'Sussex',           state: 'Virginia', stateAbbr: 'VA', region: 'Southside Virginia / I-85 Corridor', county: 'Sussex',     geo: { lat: 36.9135, lng: -77.2730 } },
+  {
+    slug: 'petersburg-va',
+    city: 'Petersburg',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Tri-Cities / Central Virginia',
+    county: 'Petersburg City',
+    geo: { lat: 37.2279, lng: -77.4019 },
+    headline: 'Asphalt Paving in Petersburg, VA — Tri-Cities Driveways, Lots & Commercial Work',
+    intro:
+      "Petersburg is the anchor city of the Tri-Cities corridor — historic, dense, and home to a wide range of paving needs: residential driveways in Old Towne and Walnut Hill neighborhoods, church and commercial lots along Sycamore Street and East Washington Street, and access road work near Fort Gregg-Adams and the I-85/I-95 interchange. We provide base-first installation with drainage correction and a written warranty on every job.",
+    neighborhoods: [
+      'Old Towne', 'Walnut Hill', 'Blandford', 'Poplar Lawn',
+      'Crater Road corridor', 'East Washington Street', 'Halifax Road', 'Temple Avenue',
+    ],
+    landmarks: ['Old Towne Petersburg', 'Fort Gregg-Adams (Fort Lee)', 'Petersburg National Battlefield', 'Appomattox River', 'Sycamore Street', 'I-85 / I-95 interchange'],
+    climate: {
+      title: 'Appomattox River Basin Clay + Dense Urban Drainage',
+      body: "Petersburg sits at the confluence of the Appomattox and Nottoway rivers, with river-basin clay subsoil throughout the city's historic residential areas. Old Towne driveways sit on slopes that shed water toward alleys and curbs — drainage management is as important as the base. We address both: proper stone depth for the clay subsoil and correct surface grading so water moves away from foundations and garages rather than pooling at the threshold.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave residential driveways in Old Towne Petersburg?',
+        a: "Yes. We work in Old Towne and throughout Petersburg's established residential neighborhoods, handling driveway paving, resurfacing, crack repair, and sealcoating with the careful access management that dense historic neighborhoods require.",
+      },
+      {
+        q: 'Do you handle church and commercial lots in Petersburg?',
+        a: 'Yes — churches, community properties, retail lots, and commercial yards along the Sycamore Street, East Washington Street, and South Crater Road corridors are regular commercial work for us.',
+      },
+      {
+        q: 'How quickly can you start a Petersburg project?',
+        a: 'Petersburg is about 20 minutes from our Chester headquarters. We typically quote within 48 hours and schedule start dates within 1–2 weeks of contract signing for most residential and small commercial scopes.',
+      },
+    ],
+    reviews: 51,
+    rating: 4.8,
+  },
+  {
+    slug: 'hopewell-va',
+    city: 'Hopewell',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Tri-Cities / Central Virginia',
+    county: 'Hopewell City',
+    geo: { lat: 37.3043, lng: -77.2872 },
+    headline: 'Asphalt Paving in Hopewell, VA — Industrial-Grade and Residential Paving on the James',
+    intro:
+      "Hopewell sits at the confluence of the James and Appomattox Rivers with one of the most varied paving profiles in the region: established City Point residential neighborhoods, industrial and chemical-corridor access roads and yards, and commercial properties serving the Fort Gregg-Adams community. We handle all three with scope-appropriate base specs and drainage-first prep.",
+    neighborhoods: [
+      'City Point', 'Ashburn', 'Weston', 'Crescent Hills',
+      'Downtown Hopewell', 'Colonial Heights adjacency', 'Industrial corridor', 'Riverside',
+    ],
+    landmarks: ["City Point (Grant's Civil War HQ)", 'James River / Appomattox River confluence', 'Hopewell Chemical Corridor', 'Fort Gregg-Adams (nearby)', 'I-295 corridor', 'Route 10'],
+    climate: {
+      title: 'River-Basin Clay, Industrial Load & Tidal Base Moisture',
+      body: "Hopewell's riverside position means two paving challenges: tidal-influenced drainage that makes base moisture management critical, and industrial-corridor traffic that demands heavier base courses than standard residential spec. City Point residential driveways sit on James River clay; industrial yards along the chemical corridor require heavy-duty stone depth and geotextile for freight vehicle loads. We match the spec to the site.",
+    },
+    faqs: [
+      {
+        q: "Do you pave industrial and commercial properties in Hopewell's chemical corridor?",
+        a: "Yes. We build and resurface access roads, truck staging yards, and commercial properties in Hopewell's industrial corridor with heavy-duty base courses designed for frequent heavy vehicle traffic.",
+      },
+      {
+        q: 'Do you serve the City Point residential neighborhoods?',
+        a: 'Yes — City Point and the established residential areas of Hopewell are regular territory. We provide driveway paving, resurfacing, sealcoating, and crack repair with the same base-first approach we use on larger commercial work.',
+      },
+      {
+        q: "How does Hopewell's riverside location affect driveway paving?",
+        a: 'River-adjacent properties often have elevated base moisture from the water table. We install woven geotextile under the stone base on low-lying properties so the subgrade does not pump fines into the stone over time — the most common cause of premature residential failure near the rivers.',
+      },
+    ],
+    reviews: 38,
+    rating: 4.8,
+  },
+  {
+    slug: 'colonial-heights-va',
+    city: 'Colonial Heights',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Tri-Cities / Central Virginia',
+    geo: { lat: 37.2654, lng: -77.3992 },
+    headline: 'Asphalt Paving in Colonial Heights, VA — Tri-Cities Residential and Commercial Paving',
+    intro:
+      "Colonial Heights is the more suburban side of the Tri-Cities — established residential streets along the Appomattox River bluff, commercial corridors on Boulevard and Temple Avenue, and properties that straddle the Petersburg city line. We pave and resurface driveways throughout the Violet Bank and Colonial Avenue neighborhoods, handle commercial lots on the Boulevard, and work across the city boundary without treating it as two separate quotes.",
+    neighborhoods: [
+      'Violet Bank', 'Colonial Avenue', 'Boulevard corridor', 'Temple Avenue',
+      'Appomattox River bluff', 'Colonial Heights Courthouse', 'Jefferson Park', 'Arlington area',
+    ],
+    landmarks: ['Violet Bank Museum', 'Appomattox River', 'Boulevard (US 1)', 'Temple Avenue', 'Colonial Heights City Hall', 'Fort Gregg-Adams (nearby)'],
+    climate: {
+      title: 'Appomattox Bluff Clay + Tri-Cities Freeze-Thaw',
+      body: "Colonial Heights sits on the Appomattox River bluff, where river-basin clay is the primary subsoil. Most of the city's original residential driveways date from the 1950s–1970s, and decades of clay movement and Virginia's freeze-thaw cycles have worked them toward failure. Overlay is viable when the base is still sound; full rebuild is the call when the base has moved. We assess before recommending.",
+    },
+    faqs: [
+      {
+        q: 'Do you serve both Colonial Heights and Petersburg for the same project?',
+        a: 'Yes — we work across the Colonial Heights / Petersburg boundary without treating them as separate service areas. If your property or project spans both, that is one job.',
+      },
+      {
+        q: 'My Colonial Heights driveway is pulling away from the garage apron — is that fixable?',
+        a: 'Yes. Apron separation usually means base settling or clay movement at the transition joint. We can saw-cut and repair the affected section, address the base condition, and seal the joint properly rather than replacing the whole surface.',
+      },
+      {
+        q: 'Do you pave commercial lots on Colonial Heights Boulevard?',
+        a: 'Yes — we resurface and stripe retail, office, and commercial lots along the Boulevard corridor and the Temple Avenue commercial strip in Colonial Heights.',
+      },
+    ],
+    reviews: 32,
+    rating: 4.9,
+  },
+  {
+    slug: 'moseley-va',
+    city: 'Moseley',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Tri-Cities / Central Virginia',
+    county: 'Chesterfield',
+    geo: { lat: 37.4163, lng: -77.7758 },
+    headline: 'Asphalt Paving in Moseley, VA — New Construction and Estate Driveways in Southwest Chesterfield',
+    intro:
+      "Moseley is one of the fastest-growing corridors in Chesterfield County — new subdivisions, rural estates, and long private driveways along the Old Hundred Road, Genito Road, and Skinquarter Road areas are the defining paving landscape here. New construction means new grading, builder fill, and long driveway runs that need proper engineering before they ever see asphalt. We assess, prep, and build every Moseley driveway to last.",
+    neighborhoods: [
+      'Moseley', 'Old Hundred Road', 'Genito Road', 'Skinquarter Road',
+      'Swift Creek Reservoir area', 'Woodlake adjacency', 'Pocahontas State Park corridor', 'Coalfield area',
+    ],
+    landmarks: ['Old Hundred Road', 'Genito Road', 'Swift Creek Reservoir', 'Pocahontas State Park', 'Route 360 (Hull Street) approach', 'Woodlake adjacency'],
+    climate: {
+      title: "Builder Fill, Long Estate Driveways & Southwest Chesterfield Clay",
+      body: "Moseley's rapid new-construction growth means many driveways are paved on recently disturbed or filled ground that hasn't fully settled — and Chesterfield clay amplifies that instability. A driveway paved on under-compacted builder fill shows ruts and settlement depressions within 2–3 years. We check fill compaction, test base bearing capacity, and build a minimum 6-inch stone base so new Moseley driveways don't start failing before the landscaping is even finished.",
+    },
+    faqs: [
+      {
+        q: 'Why are new-construction driveways in Moseley failing so quickly?',
+        a: "Builder fill in Moseley's new development areas is often compacted to 90%, but driveways need 95% or higher under vehicle load. Combined with Chesterfield's clay subsoil, the result is ruts and depressions within 1–3 years. The fix is subgrade re-compaction or stabilization and a proper 6-inch base — not just adding asphalt on top.",
+      },
+      {
+        q: 'Do you pave long private driveways on Old Hundred and Genito Road rural properties?',
+        a: 'Yes — long rural and estate driveways in the Old Hundred, Genito, and Skinquarter Road corridors are regular work for us. We laser-grade for proper crown and drainage and build the base to match the run length and traffic.',
+      },
+      {
+        q: 'How close is Moseley to your headquarters?',
+        a: 'Moseley is in western Chesterfield, about 30 minutes from our Chester headquarters. We can quote within 48 hours and typically schedule residential driveways within 1–2 weeks.',
+      },
+    ],
+    reviews: 29,
+    rating: 4.9,
+  },
+  {
+    slug: 'prince-george-va',
+    city: 'Prince George',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Tri-Cities / Central Virginia',
+    county: 'Prince George',
+    geo: { lat: 37.2235, lng: -77.2880 },
+    headline: 'Asphalt Paving in Prince George, VA — Rural Driveways and Commercial Work Near Fort Gregg-Adams',
+    intro:
+      "Prince George County spans the south bank of the James River across from Hopewell, with residential driveways in the Prince George Courthouse area, rural estates and farm lanes throughout the county, and commercial properties serving Fort Gregg-Adams and the I-295 corridor. We pave long rural approaches, rebuild failing driveways on Prince George clay, and provide commercial paving for the county's growing defense-adjacent development.",
+    neighborhoods: [
+      'Prince George Courthouse', 'Disputanta', 'Burrowsville', 'Templeton',
+      'Beechwood', 'Fort Gregg-Adams corridor', 'Route 460 corridor', 'I-295 area',
+    ],
+    landmarks: ['Fort Gregg-Adams (Fort Lee)', 'I-295 corridor', 'Route 460', 'Appomattox River', 'Prince George Courthouse', 'Hopewell Gateway area'],
+    climate: {
+      title: 'Rural Clay, Fort Lee Traffic & Long Driveway Runs',
+      body: "Prince George County paving is mostly rural — long residential driveways, farm lanes, and access roads on clay subsoil, plus commercial properties in the Fort Gregg-Adams and I-295 corridor built for defense-adjacent and logistics traffic. Rural driveways here have no curb system, so all drainage management comes from crown, slope, and edge treatment. We spec the base for the traffic load and grade every run for open drainage.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave residential and rural driveways in Prince George County?',
+        a: 'Yes — rural driveways, farm lanes, estate entrances, and residential paving throughout Prince George County are regular work for our southern crew.',
+      },
+      {
+        q: 'Do you serve commercial properties near Fort Gregg-Adams and the I-295 corridor?',
+        a: 'Yes — commercial lots, access roads, and industrial properties along the Fort Gregg-Adams approach and I-295 corridor in Prince George are within our regular service area.',
+      },
+      {
+        q: 'What is the typical cost for a rural Prince George driveway?',
+        a: 'Standard residential driveway installation in Prince George runs $4–$7 per square foot depending on base condition, length, and drainage requirements. Long rural runs get a line-item estimate that breaks out grading, stone, and asphalt separately.',
+      },
+    ],
+    reviews: 26,
+    rating: 4.9,
+  },
+  {
+    slug: 'sussex-va',
+    city: 'Sussex',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Southside Virginia / I-85 Corridor',
+    county: 'Sussex',
+    geo: { lat: 36.9135, lng: -77.2730 },
+    headline: 'Asphalt Paving in Sussex County, VA — Southside Driveways and Rural Access Roads',
+    intro:
+      "Sussex County is deep Southside Virginia — rural estates, farm lanes, church properties, and residential driveways spread across one of the region's quieter agricultural counties along the I-85 and Route 460 corridors. We serve Sussex County residential and commercial paving with the same base-first approach and written warranty we bring to every Southside job.",
+    neighborhoods: [
+      'Sussex Courthouse', 'Stony Creek', 'Wakefield', 'Waverly',
+      'Dendron', 'Homeville', 'I-85 corridor', 'Route 460 corridor',
+    ],
+    landmarks: ['I-85 corridor', 'Route 460', 'Blackwater River', 'Sussex Courthouse', 'Stony Creek', 'Waverly'],
+    climate: {
+      title: 'Southside Sandy Loam, Rural Drainage & Open-Road Paving',
+      body: "Sussex County's subsoil transitions from Southside clay near Petersburg toward a sandier Coastal Plain loam in the eastern half — both need proper base prep but handle moisture differently. Rural driveways here have no curb systems, so all drainage management comes from crown, slope, and edge treatment. We build accordingly, with drainage-first prep on every rural Sussex job.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave rural driveways and farm lanes in Sussex County?',
+        a: 'Yes. We handle residential driveways, farm lanes, and access roads throughout Sussex County with grading, drainage, and full asphalt installation.',
+      },
+      {
+        q: 'Do you serve church and community properties in Southside Virginia?',
+        a: 'Yes — churches, community halls, and small commercial properties in Sussex and the broader Southside corridor are within our service area.',
+      },
+      {
+        q: 'Is tar and chip a good option for long Sussex County driveways?',
+        a: 'Yes — tar and chip (chip seal) is often the best cost-to-value system for long rural driveways in Southside. It runs $2.50–$5.00 per square foot vs. $4–$8 for full asphalt, and properly installed it lasts 10–20 years. We can assess which system fits your property.',
+      },
+    ],
+    reviews: 18,
+    rating: 4.8,
+  },
 
   // Hampton Roads
   { slug: 'norfolk-va',          city: 'Norfolk',          state: 'Virginia', stateAbbr: 'VA', region: 'Hampton Roads',                                            geo: { lat: 36.8508, lng: -76.2859 } },
