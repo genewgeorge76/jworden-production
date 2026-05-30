@@ -90,13 +90,13 @@ export default function Home() {
               Virginia Class A Licensed · Family-Owned Since 1985
             </div>
             <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl uppercase leading-none tracking-tight mb-6">
-              Virginia's<br />
-              <span className="text-[#ff7a00]">Paving</span><br />
-              Experts
+              Asphalt Paving<br />
+              <span className="text-[#ff7a00]">in Virginia</span>
             </h1>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-xl mb-10">
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-xl mb-3">
               Driveways, parking lots, sealcoating, and crack repair built on honest diagnosis and 40 years of Virginia soil experience.
             </p>
+            <p className="text-gray-400 text-sm mb-10">Driveways from <strong className="text-white">$4/sq ft</strong> · Parking lots from <strong className="text-white">$2.50/sq ft</strong> · Free written estimate</p>
             <div className="flex flex-wrap gap-4">
               <a
                 href={`tel:${PHONE_E164}`}
@@ -365,14 +365,37 @@ export default function Home() {
           </div>
           {/* TODO: remove chat-lead-capture / lead-fallback-notify Netlify functions
               once Kickserv is confirmed working in production. QuickQuoteBar on /quote still uses them. */}
-          <div className="border border-gray-100 overflow-hidden">
+          {/* min-height reserved to prevent CLS while iframe loads */}
+          <div className="border border-gray-100 overflow-hidden" style={{ minHeight: '1000px' }}>
             <iframe
               src="https://app.kickserv.com/jwordenandsonspaving/self_service/requests/new?iframe=true"
-              style={{ border: 'none', width: '100%', height: '1000px' }}
+              style={{ border: 'none', width: '100%', height: '1000px', display: 'block' }}
               title="Request a Free Quote"
               loading="lazy"
               scrolling="auto"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ──────────────────────────────────────────────────── */}
+      <section className="bg-gray-50 py-20 md:py-24">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Common Questions</p>
+          <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
+          <div className="space-y-0 divide-y divide-gray-200">
+            {[
+              { q: 'How much does asphalt driveway paving cost in Virginia?', a: 'Most residential driveways in Virginia run $4–$7 per square foot installed — a 1,000 sq ft driveway typically costs $4,000–$7,000 depending on base condition, grade, and access. We provide free written estimates with a line-item breakdown.' },
+              { q: 'How long does an asphalt driveway last in Virginia?', a: 'A properly installed asphalt driveway in Virginia lasts 20–30 years with maintenance. The biggest lever is sealcoating every 2–3 years ($0.15–$0.35/sq ft) and filling cracks before water reaches the base.' },
+              { q: 'Do you serve all of Virginia or just Richmond?', a: 'We serve all of Virginia from our Chester, VA headquarters — Richmond, Chesterfield, Henrico, Hampton Roads, Northern Virginia, Shenandoah Valley, and rural counties throughout the state.' },
+              { q: 'Are you licensed to pave in Virginia?', a: 'Yes — we hold a Virginia Class A Contractor license, are NASCLA certified, carry $5M general liability, and maintain workers\' compensation coverage. We can provide certificates of insurance on request.' },
+              { q: 'When is the best time of year to pave in Virginia?', a: 'Virginia paving season runs mid-April through early November. Peak months are May, June, September, and October. Minimum 50°F ambient temperature with no rain in the 24-hour window before or after paving.' },
+            ].map(({ q, a }) => (
+              <div key={q} className="py-6">
+                <p className="font-display text-gray-900 text-lg uppercase tracking-wide mb-2">{q}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
