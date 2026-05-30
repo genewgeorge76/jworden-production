@@ -37,15 +37,27 @@ const HOME_SERVICE_ITEMS = [
 const HOME_SERVICE_FAQS = [
   {
     q: 'How often should homeowners sealcoat asphalt?',
-    a: 'Most residential driveways should be sealcoated every 2-3 years depending on traffic, sun exposure, and surface condition.',
+    a: "Most residential driveways should be sealcoated every 2–3 years depending on traffic, sun exposure, and surface condition. Virginia's high summer UV load and 35–45 freeze-thaw cycles per winter accelerate oxidation, so skipping cycles shortens overall driveway life significantly.",
   },
   {
     q: 'Can small cracks wait until next year?',
-    a: 'Usually no. Open cracks let water into the base and accelerate failure. Early crack sealing is significantly cheaper than replacement.',
+    a: "Usually no. Open cracks let water into the base and accelerate failure. In the Richmond area, each freeze-thaw cycle forces water deeper into every crack. Early crack sealing ($300–$800) is significantly cheaper than patching a failed base section ($800–$2,500) or replacing the driveway ($4–$8/sqft).",
   },
   {
     q: 'Do you bundle maintenance plans for homeowners?',
-    a: 'Yes. We can set a practical maintenance cadence for your driveway so repairs are proactive instead of emergency-driven.',
+    a: 'Yes. We can set a practical maintenance cadence for your driveway so repairs are proactive instead of emergency-driven. Most homeowners benefit from a 2-year sealcoat schedule with annual crack inspections.',
+  },
+  {
+    q: 'How much does driveway sealcoating cost in Virginia?',
+    a: 'For most residential driveways in the Richmond, Chester, and Chesterfield area, sealcoating runs $0.15–$0.30 per square foot. A standard 1,500–2,000 square foot driveway typically costs $250–$600 depending on surface condition, prep required, and number of coats.',
+  },
+  {
+    q: 'What causes driveway cracks in Virginia specifically?',
+    a: "Two primary forces: Virginia's Piedmont clay subsoil shrinks in dry summers — pulling the surface apart from below — and expands when wet, creating upward pressure. Combine that with 35–45 freeze-thaw cycles per winter and you get active crack formation even on well-built driveways. Catching cracks in year 3 rather than year 7 cuts repair costs dramatically.",
+  },
+  {
+    q: 'Do I need a permit for driveway repair or maintenance in Chesterfield or Henrico?',
+    a: 'Most maintenance and repair work — sealcoating, crack filling, patch repairs — does not require a permit in Chesterfield or Henrico County. New driveway construction or significant widening may require a land disturbance permit depending on scope and lot. We flag anything permit-relevant during the estimate.',
   },
 ]
 
@@ -81,10 +93,12 @@ export default function HomeServices() {
         },
         serviceType: [
           'Driveway sealcoating',
-          'Crack filling',
+          'Crack filling and joint sealing',
           'Asphalt patch repair',
           'Drainage correction',
           'Driveway widening',
+          'Gravel to asphalt conversion',
+          'Driveway maintenance plans',
         ],
         url: 'https://www.jwordenasphaltpaving.com/home-services',
       },
@@ -236,6 +250,69 @@ export default function HomeServices() {
         </div>
       </section>
 
+      <section className="py-14 md:py-16 border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Virginia's Climate</p>
+          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+            Virginia's Climate Makes Driveway Maintenance Non-Negotiable
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <div className="space-y-5">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Richmond-area homeowners face one of the most demanding asphalt maintenance environments on the East Coast. Summer surface temperatures routinely reach 140–160°F, softening and oxidizing the binder that holds asphalt together. By year three without sealcoating, the surface begins to gray, crack, and become porous — letting water establish a direct path to the base.
+              </p>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                The base problem is the hidden one. Virginia's Piedmont clay subsoil shrinks in dry summers, pulling the driveway apart from below, then expands when wet, creating upward pressure. Every open crack becomes a water entry point. The Richmond metro averages 35–45 freeze-thaw cycles each winter — each cycle forces water deeper into any existing crack, widening it and undermining base aggregate. By the time you see a pothole, the failure has been building for two or three seasons.
+              </p>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                A driveway maintained on a 2-year sealcoat schedule with timely crack sealing typically lasts 25 or more years. Left unmaintained, the same driveway usually requires full replacement within 12–15 years. That difference represents thousands of dollars — and it is nearly entirely preventable with consistent, low-cost maintenance.
+              </p>
+            </div>
+            <div className="space-y-5">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                We have been paving and maintaining driveways in the Richmond and Chester area since 1984 — four generations watching what Virginia's climate does to asphalt year over year. Our maintenance recommendations are built on that observation, not generic national schedules that don't account for local freeze-thaw patterns or Piedmont clay behavior.
+              </p>
+              <div className="border border-border bg-card p-6">
+                <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-4">Every Home Service Estimate Includes</p>
+                <ul className="space-y-2">
+                  {[
+                    'Surface condition assessment with distress mapping',
+                    'Base stability check at visible crack locations',
+                    'Drainage review for standing water and edge erosion risk',
+                    'Sealcoat timing recommendation based on surface oxidation',
+                    'Written cost breakdown by service type',
+                    'Maintenance schedule recommendation for the next 3 years',
+                    'Written warranty on all completed work',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                      <span className="text-sm text-foreground/90 leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-border pt-8">
+            <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-4">Related Services</p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/sealcoating" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Sealcoating
+              </Link>
+              <Link to="/crack-repair" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Crack Repair
+              </Link>
+              <Link to="/residential" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Residential Driveway Paving
+              </Link>
+              <Link to="/concrete" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Concrete Services
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Common Questions</p>
@@ -262,7 +339,8 @@ export default function HomeServices() {
               <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Homeowner Support</p>
               <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Book Your Driveway Condition Review</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
-                We will assess current condition, explain priorities, and map out the next best step for your property.
+                We will assess current condition, explain priorities, and map out the next best step for your property.{' '}
+                <span className="text-foreground font-medium">4th Generation. Since 1984. Written warranty on every job.</span>
               </p>
             </div>
             <a

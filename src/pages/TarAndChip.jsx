@@ -23,24 +23,24 @@ const BENEFITS = [
 
 const FAQS = [
   {
-    q: 'How thick should a tar and chip surface be?',
-    a: 'A typical finished tar and chip system is about 1 to 1.5 inches depending on site conditions, traffic load, and aggregate selection. We confirm final spec after site review.',
-  },
-  {
-    q: 'Is tar and chip good for driveways and parking areas?',
-    a: 'Yes. Tar and chip works well for residential driveways, private lanes, and many parking areas where owners want traction, durability, and value.',
+    q: 'How much does tar and chip paving cost in Virginia?',
+    a: 'Tar and chip typically runs $2.50–$5.00 per square foot installed in Virginia, compared to $4–$8 per square foot for full hot-mix asphalt. For a 200-foot residential driveway, that is roughly $6,000–$14,000 versus $12,000–$24,000. Exact cost depends on base condition, aggregate selection, and site access.',
   },
   {
     q: 'How long does tar and chip paving last?',
-    a: 'With proper prep, drainage, and maintenance, tar and chip surfaces can provide long service life and strong performance in Virginia weather conditions.',
+    a: 'With proper base preparation and drainage, tar and chip surfaces last 10–20 years in Virginia conditions. When the surface shows wear, chip seal renewal — a fresh oil-and-chip application over the existing surface — can extend life another 8–12 years at roughly 40% of full replacement cost.',
+  },
+  {
+    q: 'How thick should a tar and chip surface be?',
+    a: "The chip seal layer itself bonds 3/4\" to 1\" aggregate to the liquid binder. What matters structurally is the base — we specify a minimum 6-inch compacted aggregate base for residential driveways to handle Virginia's clay subsoil movement and 35–45 annual freeze-thaw cycles.",
+  },
+  {
+    q: 'Is tar and chip good for driveways and parking areas?',
+    a: "Yes. Tar and chip works well for residential driveways, private lanes, farm access roads, and many parking areas. The textured aggregate surface provides better traction than smooth asphalt on sloped or curved approaches. It is not ideal for high-traffic commercial sites where line marking and smooth pavement are required.",
   },
   {
     q: 'Is chip and tar a good option for rural properties?',
-    a: 'Yes. Chip and tar is often a strong solution for rural driveways, farm lanes, private roads, and in-between corridor properties where traction and value are priorities.',
-  },
-  {
-    q: 'Why are chip and tar plus sealcoating especially important in the I-81 corridor?',
-    a: 'Mountain weather swings, freeze-thaw cycling, and rural route traffic patterns make traction and surface preservation critical. Chip-and-tar systems plus regular sealcoating can improve durability and reduce lifecycle repair costs in I-81 markets.',
+    a: "Yes. Chip and tar is often the strongest cost-to-value solution for rural driveways, farm lanes, private roads, and long-run approaches where full asphalt would be significantly more expensive. Virginia's rural properties with clay subsoil often benefit from chip seal's drainage flexibility compared to a rigid asphalt slab.",
   },
 ]
 
@@ -78,8 +78,10 @@ export default function TarAndChip() {
         serviceType: [
           'Tar and chip paving',
           'Chip seal driveways',
+          'Chip seal renewal',
           'Private lane paving',
           'Parking area paving',
+          'Farm lane paving',
         ],
         url: 'https://www.jwordenasphaltpaving.com/tar-and-chip',
       },
@@ -199,6 +201,57 @@ export default function TarAndChip() {
                 <ShieldCheck className="w-3.5 h-3.5 text-primary" />
                 Site-specific recommendations for traffic, grade, and drainage conditions
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 md:py-16 border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Virginia-Specific Knowledge</p>
+          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+            Why Tar And Chip Works In Virginia
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <div className="space-y-5">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Tar and chip — also called chip seal — is a cost-effective alternative to hot-mix asphalt with a strong track record in Virginia's rural and suburban environments. The process bonds aggregate stone chips to a hot-applied liquid asphalt binder, creating a textured, semi-porous surface that handles water runoff well and provides superior traction on graded approaches and sloped driveways.
+              </p>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                The cost difference versus full hot-mix asphalt is substantial. Tar and chip typically runs $2.50–$5.00 per square foot installed, compared to $4–$8 per square foot for standard asphalt paving. For a 300-foot rural driveway, that translates to $8,000–$15,000 versus $13,000–$24,000. For landowners with long lanes, farm access roads, or budget-conscious improvement projects, that margin is significant.
+              </p>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Properly installed tar and chip lasts 10–20 years in Virginia conditions when the base is correctly prepared and drainage is managed. When the surface shows wear, chip seal renewal — a fresh layer of hot oil and aggregate — extends life another 8–12 years at roughly 40% of full replacement cost. That lifecycle math makes chip seal one of the most cost-efficient long-life paving systems available for the right application.
+              </p>
+            </div>
+            <div className="space-y-5">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Virginia's geology also works in chip seal's favor. The granular aggregate layer handles Piedmont clay subsoil movement better than a rigid asphalt slab in many rural applications — particularly on long driveways where slight grade variation and drainage flexibility matter. We size aggregate chips to match the traffic load, drainage pattern, and aesthetic preference for each property: local limestone, Culpeper granite chips, and recycled aggregate each have different traction and color profiles.
+              </p>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Along the I-81 corridor in Roanoke, Harrisonburg, and Winchester, mountain weather patterns add freeze-thaw pressure beyond what central Virginia sees. Chip seal's flexible bonding tolerates thermal movement better than rigid hot-mix in these environments, making it a practical long-term surface option for properties in those markets.
+              </p>
+              <div className="border border-border bg-card p-5 mt-2">
+                <p className="font-display font-black text-foreground text-sm uppercase tracking-tight mb-1">4th Generation. Since 1984.</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">Written warranty on every tar and chip installation. Site-specific aggregate and binder recommendations — not a one-spec-fits-all system.</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-border pt-8">
+            <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-4">Related Services</p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/residential" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Residential Asphalt Paving
+              </Link>
+              <Link to="/sealcoating" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Sealcoating
+              </Link>
+              <Link to="/crack-repair" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Crack Repair
+              </Link>
+              <Link to="/paving" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+                Commercial Paving
+              </Link>
             </div>
           </div>
         </div>
