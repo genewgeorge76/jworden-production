@@ -64,10 +64,6 @@ export default function SEO({
       '/leads',
       '/voice-calls',
       '/revenue',
-      '/residential',
-      '/home-services',
-      '/general-contracting',
-      '/tar-and-chip',
       '/contractor-ai',
       '/advisory',
     ].some((prefix) => normalizedPath === prefix || normalizedPath.startsWith(`${prefix}/`));
