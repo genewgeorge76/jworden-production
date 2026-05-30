@@ -8,11 +8,16 @@ const AsphaltMillingAndResurfacingBlog = lazy(() => import('@/pages/generated-bl
 const AsphaltVsConcreteVirginiaBlog = lazy(() => import('@/pages/generated-blogs/AsphaltVsConcreteVirginiaBlog'))
 const CommercialAsphaltPavingBlog = lazy(() => import('@/pages/generated-blogs/CommercialAsphaltPavingBlog'))
 const DrivewayCostVirginiaBlog = lazy(() => import('@/pages/generated-blogs/DrivewayCostVirginiaBlog'))
+const DrivewaySurfacingVsReplacementBlog = lazy(() => import('@/pages/generated-blogs/DrivewaySurfacingVsReplacementBlog'))
+const GravelVsAsphaltDrivewayBlog = lazy(() => import('@/pages/generated-blogs/GravelVsAsphaltDrivewayBlog'))
 const HeavyDutyConcreteFlatworkBlog = lazy(() => import('@/pages/generated-blogs/HeavyDutyConcreteFlatworkBlog'))
 const HoaAsphaltPavingGuideBlog = lazy(() => import('@/pages/generated-blogs/HoaAsphaltPavingGuideBlog'))
 const IndustrialParkingLotRepairBlog = lazy(() => import('@/pages/generated-blogs/IndustrialParkingLotRepairBlog'))
+const NewConstructionDrivewayVirginiaBlog = lazy(() => import('@/pages/generated-blogs/NewConstructionDrivewayVirginiaBlog'))
 const ParkingLotRepairVsReplaceBlog = lazy(() => import('@/pages/generated-blogs/ParkingLotRepairVsReplaceBlog'))
+const SealcoatingCostVirginiaBlog = lazy(() => import('@/pages/generated-blogs/SealcoatingCostVirginiaBlog'))
 const SignsDrivewayNeedsRepavingBlog = lazy(() => import('@/pages/generated-blogs/SignsDrivewayNeedsRepavingBlog'))
+const TarAndChipVirginiaGuideBlog = lazy(() => import('@/pages/generated-blogs/TarAndChipVirginiaGuideBlog'))
 
 export const aiBlogRegistry = [
 	{ path: '/blog/info/ada-compliance-paving', Component: AdaCompliancePavingBlog },
@@ -20,9 +25,15 @@ export const aiBlogRegistry = [
 	{ path: '/blog/info/asphalt-vs-concrete-driveway-virginia', Component: AsphaltVsConcreteVirginiaBlog },
 	{ path: '/blog/info/commercial-asphalt-paving', Component: CommercialAsphaltPavingBlog },
 	{ path: '/blog/info/driveway-paving-cost-virginia', Component: DrivewayCostVirginiaBlog },
+	{ path: '/blog/info/driveway-resurfacing-vs-replacement-virginia', Component: DrivewaySurfacingVsReplacementBlog },
+	{ path: '/blog/info/gravel-vs-asphalt-driveway-virginia', Component: GravelVsAsphaltDrivewayBlog },
 	{ path: '/blog/info/heavy-duty-concrete-flatwork', Component: HeavyDutyConcreteFlatworkBlog },
 	{ path: '/blog/info/hoa-asphalt-paving-guide-virginia', Component: HoaAsphaltPavingGuideBlog },
 	{ path: '/blog/info/industrial-parking-lot-repair', Component: IndustrialParkingLotRepairBlog },
+	{ path: '/blog/info/new-construction-driveway-paving-virginia', Component: NewConstructionDrivewayVirginiaBlog },
 	{ path: '/blog/info/parking-lot-repair-vs-replace-virginia', Component: ParkingLotRepairVsReplaceBlog },
+	{ path: '/blog/info/sealcoating-cost-virginia', Component: SealcoatingCostVirginiaBlog },
 	{ path: '/blog/info/signs-driveway-needs-repaving-virginia', Component: SignsDrivewayNeedsRepavingBlog },
+	{ path: '/blog/info/tar-and-chip-paving-virginia', Component: TarAndChipVirginiaGuideBlog },
 ]
+
