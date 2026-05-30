@@ -90,13 +90,13 @@ export default function Home() {
               Virginia Class A Licensed · Family-Owned Since 1985
             </div>
             <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl uppercase leading-none tracking-tight mb-6">
-              Virginia's<br />
-              <span className="text-[#ff7a00]">Paving</span><br />
-              Experts
+              Asphalt Paving<br />
+              <span className="text-[#ff7a00]">in Virginia</span>
             </h1>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-xl mb-10">
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-xl mb-3">
               Driveways, parking lots, sealcoating, and crack repair built on honest diagnosis and 40 years of Virginia soil experience.
             </p>
+            <p className="text-gray-400 text-sm mb-10">Driveways from <strong className="text-white">$4/sq ft</strong> · Parking lots from <strong className="text-white">$2.50/sq ft</strong> · Free written estimate</p>
             <div className="flex flex-wrap gap-4">
               <a
                 href={`tel:${PHONE_E164}`}
@@ -365,14 +365,52 @@ export default function Home() {
           </div>
           {/* TODO: remove chat-lead-capture / lead-fallback-notify Netlify functions
               once Kickserv is confirmed working in production. QuickQuoteBar on /quote still uses them. */}
-          <div className="border border-gray-100 overflow-hidden">
+          {/* min-height reserved to prevent CLS while iframe loads */}
+          <div className="border border-gray-100 overflow-hidden" style={{ minHeight: '1000px' }}>
             <iframe
               src="https://app.kickserv.com/jwordenandsonspaving/self_service/requests/new?iframe=true"
-              style={{ border: 'none', width: '100%', height: '1000px' }}
+              style={{ border: 'none', width: '100%', height: '1000px', display: 'block' }}
               title="Request a Free Quote"
               loading="lazy"
               scrolling="auto"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ──────────────────────────────────────────────────── */}
+      <section className="bg-gray-50 py-20 md:py-24">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Common Questions</p>
+          <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
+          <div className="space-y-0 divide-y divide-gray-200">
+            {[
+              {
+                q: 'How much does asphalt driveway paving cost in Virginia?',
+                a: 'Most residential driveways in Virginia run $4–$7 per square foot installed. The biggest cost variables are base condition (poor compaction or clay pumping adds $2–$5/sq ft to fix), grade complexity, and tear-out of an existing surface (+$1–$3/sq ft). A 1,000 sq ft driveway in average condition typically runs $4,500–$6,500 all-in. We provide free written estimates with a line-item breakdown — not just a number.',
+              },
+              {
+                q: 'Why do driveways fail early in Virginia?',
+                a: "Virginia's Piedmont clay is the #1 culprit. Clay swells with moisture in winter and shrinks in summer — that expansion cycle pumps base material upward and cracks the surface from below. Contractors who skip the geotextile fabric separator or pour less than 4–6 inches of compacted aggregate base will see failure in 5–8 years instead of 20–30. We diagnose the base before we quote so we're fixing the actual problem, not covering it.",
+              },
+              {
+                q: 'What areas of Virginia do you serve?',
+                a: 'We operate statewide from our Chester, VA headquarters — with full crews regularly working Richmond, Chesterfield, Henrico, Midlothian, Hampton Roads, Williamsburg, Northern Virginia, Fredericksburg, the Shenandoah Valley, and rural Southside and Piedmont counties. Central Virginia and the I-95 corridor typically get same-week estimates.',
+              },
+              {
+                q: 'Are you licensed and insured to pave in Virginia?',
+                a: 'Yes. Virginia Class A Contractor license (Board for Contractors, 9960 Mayland Drive, Richmond), NASCLA certified, $5M general liability, and workers\' compensation. We can provide certificates of insurance naming your property as additional insured — common for HOA and commercial projects.',
+              },
+              {
+                q: 'When is the best time of year to pave in Virginia?',
+                a: "Virginia's paving season runs mid-April through early November. May, June, September, and October give the best cure conditions — warm days, cool nights, low rain probability. We require a minimum 50°F ambient temperature (rising, not falling) and a 24-hour rain-free window on both sides. Scheduling in April or late October often means faster availability and sometimes off-peak pricing.",
+              },
+            ].map(({ q, a }) => (
+              <div key={q} className="py-6">
+                <p className="font-display text-gray-900 text-lg uppercase tracking-wide mb-2">{q}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
