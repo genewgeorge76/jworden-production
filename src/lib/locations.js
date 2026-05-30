@@ -1220,22 +1220,533 @@ export const LOCATIONS = [
   },
 
   // Hampton Roads
-  { slug: 'norfolk-va',          city: 'Norfolk',          state: 'Virginia', stateAbbr: 'VA', region: 'Hampton Roads',                                            geo: { lat: 36.8508, lng: -76.2859 } },
-  { slug: 'newport-news-va',     city: 'Newport News',     state: 'Virginia', stateAbbr: 'VA', region: 'Hampton Roads',                                            geo: { lat: 37.0871, lng: -76.4730 } },
-  { slug: 'hampton-va',          city: 'Hampton',          state: 'Virginia', stateAbbr: 'VA', region: 'Hampton Roads',                                            geo: { lat: 37.0299, lng: -76.3452 } },
-  { slug: 'suffolk-va',          city: 'Suffolk',          state: 'Virginia', stateAbbr: 'VA', region: 'Hampton Roads',                                            geo: { lat: 36.7282, lng: -76.5836 } },
-  { slug: 'portsmouth-va',       city: 'Portsmouth',       state: 'Virginia', stateAbbr: 'VA', region: 'Hampton Roads',                                            geo: { lat: 36.8354, lng: -76.2983 } },
+  {
+    slug: 'norfolk-va',
+    city: 'Norfolk',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Hampton Roads',
+    geo: { lat: 36.8508, lng: -76.2859 },
+    headline: 'Asphalt Paving in Norfolk, VA — Naval Station-Adjacent Driveways and Commercial Lots',
+    intro:
+      "Norfolk is Hampton Roads' urban core — a dense mix of military housing, historic neighborhoods, commercial corridors, and industrial waterfronts. We pave residential driveways in Ghent, Larchmont, and Wards Corner, resurface commercial lots along Military Highway and Granby Street, and handle heavy-duty industrial paving near the Naval Station perimeter. Coastal soil conditions, salt exposure, and a high water table are non-negotiable parts of every spec we write in Norfolk.",
+    neighborhoods: [
+      'Ghent', 'Larchmont', 'Wards Corner', 'Freemason',
+      'Botanical Gardens area', 'Granby Street corridor', 'Military Highway', 'Berkley',
+      'Norfolk Naval Station perimeter', 'Ocean View', 'Broad Creek', 'Park Place',
+    ],
+    landmarks: ['Naval Station Norfolk', 'Nauticus / USS Wisconsin', 'Chrysler Museum of Art', 'Granby Street', 'Military Highway (Route 13)', 'I-64 corridor'],
+    climate: {
+      title: 'Coastal Clay + Salt Aerosol + High Water Table',
+      body: "Norfolk's tidal geography means asphalt sits close to a water table that fluctuates with tide cycles in low-lying areas, and salt aerosol from the Chesapeake Bay accelerates binder oxidation year-round. We install woven geotextile on every Norfolk job as a standard line item — not an upgrade — and use anti-strip additive in the asphalt mix. On properties within a mile of the water, we seal every 2–2.5 years instead of the standard 3–4. The Naval Station perimeter and industrial waterfront properties get heavy-duty base courses rated for government fleet traffic.",
+    },
+    faqs: [
+      {
+        q: 'Does the high water table in Norfolk affect my driveway base?',
+        a: "Yes. In low-lying Norfolk neighborhoods — Ocean View, Berkley, and areas near the Elizabeth River — the water table can be within 3–4 feet of grade. Untreated, base stone wicks moisture and pumps fines under vehicle load. We install woven geotextile on every job and use #57 stone at 6-inch minimum depth to prevent base saturation and premature failure.",
+      },
+      {
+        q: 'Do you pave commercial and industrial lots near Naval Station Norfolk?',
+        a: 'Yes — commercial and light industrial properties in the Military Highway, Granby Street, and Naval Station perimeter corridors are regular work. Government-adjacent properties often see heavy fleet vehicle traffic, which requires a heavier base course spec than standard residential.',
+      },
+      {
+        q: 'How do Ghent and Larchmont residential driveways differ from typical suburban work?',
+        a: "Ghent and Larchmont are tight urban lots with mature trees, alley access, and narrow approaches — the opposite of a suburban cul-de-sac. We work with small equipment where needed, protect root zones, and engineer clean edges that fit the historic streetscape rather than a generic suburban finish.",
+      },
+    ],
+    reviews: 43,
+    rating: 4.8,
+  },
+  {
+    slug: 'newport-news-va',
+    city: 'Newport News',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Hampton Roads',
+    geo: { lat: 37.0871, lng: -76.4730 },
+    headline: 'Asphalt Paving in Newport News, VA — Shipyard-Corridor to Suburban Driveways',
+    intro:
+      "Newport News runs 25 miles from the Warwick Courthouse area down to the shipyard waterfront, and the paving landscape changes dramatically along that run. We handle residential driveways in Hidenwood, Kiln Creek, and Oyster Point, commercial lots along Jefferson Avenue and Warwick Boulevard, and industrial-grade work in the Shipyard and Port corridor. Same base-first approach across all of it — Newport News soil gives no margin for shortcuts.",
+    neighborhoods: [
+      'Hidenwood', 'Kiln Creek', 'Oyster Point', 'Denbigh',
+      'Jefferson Avenue corridor', 'Warwick Boulevard', 'Shipyard district', 'Port area',
+      'Hilton Village', 'Beechwood', 'Newmarket', 'City Center at Oyster Point',
+    ],
+    landmarks: ['Newport News Shipbuilding (HII)', 'Jefferson Avenue', 'Warwick Boulevard', 'City Center at Oyster Point', 'Mariners Museum', 'James River Bridge approach'],
+    climate: {
+      title: 'Tidewater Clay-Sand Transition + Industrial Load Corridors',
+      body: "Newport News straddles the James River tidal zone — soil transitions from sandy tidal flats near the shipyard to heavier clay through the Denbigh and Kiln Creek corridors. Both conditions require proper geotextile and base depth, just for different reasons: sandy tidal soils pump fines without a separator; the upland clay swells with moisture and freeze-thaw cycles. On industrial properties near HII and the port, we spec heavy-duty base courses rated for freight and government vehicle loads.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave industrial and commercial properties near Newport News Shipbuilding?',
+        a: 'Yes — commercial lots, access roads, and industrial staging areas in the Shipyard and Port corridor are within our regular service area. These sites get a heavy-duty base course spec built for the loads generated by shipyard and freight operations.',
+      },
+      {
+        q: 'My Kiln Creek or Oyster Point driveway has ruts — what causes that?',
+        a: "Rutting in Kiln Creek and Oyster Point is usually a base or subgrade issue, not a surface issue. The area's soil transitions from sandy tidal loam to clay, and a thin or unseparated base pumps fines under vehicle load. We core the base before recommending overlay vs. rebuild.",
+      },
+      {
+        q: 'Do you serve the full length of Newport News from Denbigh to the shipyard?',
+        a: 'Yes — we work the full Newport News corridor, from the Denbigh and Hidenwood residential areas down to Jefferson Avenue commercial and the shipyard waterfront. Same crew, same spec, one quote.',
+      },
+    ],
+    reviews: 37,
+    rating: 4.8,
+  },
+  {
+    slug: 'hampton-va',
+    city: 'Hampton',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Hampton Roads',
+    geo: { lat: 37.0299, lng: -76.3452 },
+    headline: 'Asphalt Paving in Hampton, VA — Langley-Adjacent Driveways and Coastal Commercial Work',
+    intro:
+      "Hampton is the oldest continuously English-speaking settlement in America, and its paving landscape reflects that layered history — colonial-era street grids, established residential neighborhoods, military housing near Langley AFB, and commercial corridors along Mercury Boulevard and Coliseum Drive. We pave residential driveways in Buckroe, Phoebus, and Fox Hill, resurface commercial lots along the Mercury Boulevard corridor, and handle military-adjacent industrial paving near Langley.",
+    neighborhoods: [
+      'Buckroe Beach', 'Phoebus', 'Fox Hill', 'Wythe',
+      'Mercury Boulevard corridor', 'Coliseum Drive', 'Langley AFB perimeter', 'Newmarket',
+      'Hampton University area', 'Kecoughtan', 'Elizabeth Lake Estates', 'Aberdeen',
+    ],
+    landmarks: ['Langley Air Force Base (JBLAngley-Eustis)', 'Hampton Roads Convention Center', 'Hampton Coliseum', 'Mercury Boulevard', 'Hampton University', 'Buckroe Beach'],
+    climate: {
+      title: 'Coastal Tidal Flats + Military Traffic + Chesapeake Salt Exposure',
+      body: "Hampton's coastal position on the Chesapeake Bay puts asphalt under dual stress: salt aerosol from the Bay that accelerates binder oxidation, and low-lying tidal flats in Buckroe and Fox Hill where the water table runs 3–5 feet from the surface. We use anti-strip additive in every Hampton mix, install geotextile on all low-lying properties, and seal every 2–2.5 years near the waterfront. Military-adjacent properties near Langley AFB get heavy-duty base specs.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave near Langley AFB and military-adjacent properties in Hampton?',
+        a: 'Yes — residential and commercial properties in the Langley perimeter area and along the Coliseum Drive corridor are regular work. Government-adjacent sites often need heavier base specs for fleet vehicle traffic.',
+      },
+      {
+        q: 'My Buckroe or Fox Hill driveway floods during storms — can you fix that?',
+        a: 'Flooding on low-lying Hampton properties is often a grade and drainage issue rather than just a pavement issue. We assess the site drainage, recommend corrections, and grade the surface for proper runoff before the asphalt goes down so the problem is solved, not paved over.',
+      },
+      {
+        q: 'Do you handle commercial lots along Mercury Boulevard?',
+        a: 'Yes — retail, office, and commercial lots along the Mercury Boulevard and Coliseum Drive corridors are regular commercial work. We schedule around business hours and provide ADA-compliant striping on every commercial job.',
+      },
+    ],
+    reviews: 31,
+    rating: 4.8,
+  },
+  {
+    slug: 'suffolk-va',
+    city: 'Suffolk',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Hampton Roads',
+    geo: { lat: 36.7282, lng: -76.5836 },
+    headline: 'Asphalt Paving in Suffolk, VA — Hampton Roads\' Largest City, Rural to Commercial',
+    intro:
+      "Suffolk is Virginia's largest city by land area — a sprawling mix of historic downtown streets, fast-growing suburban corridors like Harbour View, rural estate driveways, and agricultural land along the Nansemond River. We pave residential driveways in Harbour View, Bennetts Creek, and the western development corridors, handle commercial lots along Route 58 and the Business 58 Bypass, and build rural approaches on the wooded estate lots that still define much of Suffolk's character.",
+    neighborhoods: [
+      'Harbour View', 'Bennetts Creek', 'Lakeview', 'Historic Downtown Suffolk',
+      'Route 58 corridor', 'Business 58 Bypass', 'Nansemond River area', 'Whaleyville',
+      'Holland', 'Driver', 'Chuckatuck', 'Isle of Wight adjacency',
+    ],
+    landmarks: ['Route 58 corridor', 'Harbour View development', 'Nansemond River', 'Suffolk Executive Airport', 'Great Dismal Swamp', 'Business 58 Bypass'],
+    climate: {
+      title: 'Coastal Plain Sandy Loam + Rural Estate Drainage',
+      body: "Suffolk's soils shift from the sandy Coastal Plain loam near the waterways to heavier clay in the upland areas — both need proper base prep but behave differently. Near the Nansemond River and in the lower-elevation Harbour View corridors, base moisture management is critical. On the rural estate lots that dominate western Suffolk, long driveway runs need proper crown and open drainage since there is no curb system to handle runoff. We adjust spec to the site.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave driveways in Harbour View and the Bennetts Creek area?',
+        a: 'Yes — Harbour View, Bennetts Creek, and the northern Suffolk development corridors are regular residential territory. We assess the base and drainage on every estimate and build to a spec that handles the coastal soil conditions in those areas.',
+      },
+      {
+        q: 'Can you pave a long rural driveway in western Suffolk?',
+        a: 'Yes — long driveways on rural estate lots in Chuckatuck, Driver, and the western Suffolk corridor are routine work. We laser-grade for proper crown, build the base to the soil and traffic, and cut drainage swales where the run needs them.',
+      },
+      {
+        q: 'Do you handle commercial lots along Route 58 in Suffolk?',
+        a: 'Yes — commercial, retail, and light industrial properties along the Route 58 and Business 58 Bypass corridors are within our regular service area. We schedule around business operations and provide line-item estimates before any work begins.',
+      },
+    ],
+    reviews: 27,
+    rating: 4.9,
+  },
+  {
+    slug: 'portsmouth-va',
+    city: 'Portsmouth',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Hampton Roads',
+    geo: { lat: 36.8354, lng: -76.2983 },
+    headline: 'Asphalt Paving in Portsmouth, VA — Olde Towne to Naval Shipyard Corridor',
+    intro:
+      "Portsmouth sits across the Elizabeth River from Norfolk — a historic naval shipyard city with Olde Towne's preserved 18th-century streetscape on one side and the industrial Portsmouth Naval Shipyard on the other. We pave residential driveways in Olde Towne, Cradock, and Port Norfolk, resurface commercial lots along High Street and Frederick Boulevard, and handle industrial-grade work in the Shipyard corridor. Dense urban lots, tight access, and tidal soil conditions define the work here.",
+    neighborhoods: [
+      'Olde Towne', 'Cradock', 'Port Norfolk', 'Churchland',
+      'High Street corridor', 'Frederick Boulevard', 'Naval Shipyard perimeter', 'Hodges Manor',
+      'Cavalier Manor', 'Academy Park', 'Western Branch adjacency', 'Prentis Park',
+    ],
+    landmarks: ['Portsmouth Naval Shipyard', 'Olde Towne Historic District', 'Elizabeth River', 'High Street', 'Naval Medical Center Portsmouth', 'I-264 corridor'],
+    climate: {
+      title: 'Tidal Elizabeth River Clay + Historic Lot Constraints',
+      body: "Portsmouth's Elizabeth River tidal zone means many neighborhoods sit on saturated clay with a water table within 4–5 feet of grade. In Olde Towne and Cradock's dense historic lots, equipment access is tight and surface finishes need to suit the historic streetscape. We work with small equipment on narrow lots, install geotextile as standard on all Elizabeth River-adjacent properties, and use anti-strip additive in every Portsmouth mix to counter tidal moisture's effect on binder adhesion.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave in Olde Towne Portsmouth\'s historic district?',
+        a: "Yes — Olde Towne's tight lots, alley access, and historic overlay require careful equipment selection and clean finishing. We've done multiple Olde Towne driveways and know how to work within the historic district constraints without damaging the streetscape.",
+      },
+      {
+        q: 'Do you handle industrial and commercial work near the Portsmouth Naval Shipyard?',
+        a: 'Yes — commercial lots, access roads, and industrial properties in the Shipyard perimeter and High Street corridor are regular work. Shipyard-adjacent sites get a heavy-duty base course spec.',
+      },
+      {
+        q: 'My Portsmouth driveway has soft spots and sunken areas — what causes that?',
+        a: 'Soft spots and sunken areas in Portsmouth are almost always from tidal moisture undermining the base — the water table fluctuates, saturates the base stone, and the surface sinks under vehicle load. The fix requires excavating to a dry base, installing geotextile, rebuilding with proper stone, and then paving. Surface patching alone won\'t hold.',
+      },
+    ],
+    reviews: 24,
+    rating: 4.8,
+  },
 
-  // Northern Virginia
-  { slug: 'mclean-va',           city: 'McLean',           state: 'Virginia', stateAbbr: 'VA', region: 'Northern Virginia / DMV Fringe',  county: 'Fairfax',       geo: { lat: 38.9339, lng: -77.1773 } },
-  { slug: 'warrenton-va',        city: 'Warrenton',        state: 'Virginia', stateAbbr: 'VA', region: 'Northern Virginia / DMV Fringe',  county: 'Fauquier',      geo: { lat: 38.7137, lng: -77.7956 } },
-  { slug: 'culpeper-va',         city: 'Culpeper',         state: 'Virginia', stateAbbr: 'VA', region: 'Northern Virginia / DMV Fringe',  county: 'Culpeper',      geo: { lat: 38.4732, lng: -77.9967 } },
-  { slug: 'spotsylvania-va',     city: 'Spotsylvania',     state: 'Virginia', stateAbbr: 'VA', region: 'I-95 Corridor / Rappahannock',    county: 'Spotsylvania',  geo: { lat: 38.1985, lng: -77.5853 } },
-  { slug: 'stafford-va',         city: 'Stafford',         state: 'Virginia', stateAbbr: 'VA', region: 'I-95 Corridor / Rappahannock',    county: 'Stafford',      geo: { lat: 38.4221, lng: -77.4083 } },
-  { slug: 'caroline-va',         city: 'Caroline',         state: 'Virginia', stateAbbr: 'VA', region: 'I-95 Corridor / Rappahannock',    county: 'Caroline',      geo: { lat: 38.0334, lng: -77.3464 } },
-  { slug: 'king-george-va',      city: 'King George',      state: 'Virginia', stateAbbr: 'VA', region: 'I-95 Corridor / Rappahannock',    county: 'King George',   geo: { lat: 38.2682, lng: -77.1856 } },
-  { slug: 'orange-va',           city: 'Orange',           state: 'Virginia', stateAbbr: 'VA', region: 'Northern Virginia / DMV Fringe',  county: 'Orange',        geo: { lat: 38.2462, lng: -78.1109 } },
-  { slug: 'prince-william-va',   city: 'Prince William',   state: 'Virginia', stateAbbr: 'VA', region: 'Northern Virginia / DMV Fringe',  county: 'Prince William', geo: { lat: 38.7026, lng: -77.4789 } },
+  // Northern Virginia / I-95 Corridor
+  {
+    slug: 'mclean-va',
+    city: 'McLean',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Northern Virginia / DMV Fringe',
+    county: 'Fairfax',
+    geo: { lat: 38.9339, lng: -77.1773 },
+    headline: 'Asphalt Paving in McLean, VA — Premium Estate Driveways in Northern Virginia',
+    intro:
+      "McLean is among Northern Virginia's most affluent communities — long estate driveways, circular approaches, gated entries, and premium properties that demand premium installation. We pave and resurface driveways throughout the Georgetown Pike, Chain Bridge Road, and Old Dominion Drive corridors, working with the precise finishes and careful tree protection that McLean properties expect.",
+    neighborhoods: [
+      'Georgetown Pike corridor', 'Chain Bridge Road', 'Old Dominion Drive', 'Langley',
+      'Great Falls adjacency', 'Tysons Corner adjacency', 'Kirby Road', 'Dolley Madison Boulevard',
+    ],
+    landmarks: ['CIA Headquarters (Langley)', 'Georgetown Pike', 'Chain Bridge Road', 'Tysons Corner', 'Great Falls Park approach', 'Dolley Madison Boulevard'],
+    climate: {
+      title: 'NOVA Freeze-Thaw + Premium Estate Base Requirements',
+      body: "McLean averages 35–45 freeze-thaw cycles per winter — more than Richmond — and the heavy clay soils throughout Fairfax County move with moisture year-round. Estate driveways here run 200–600 feet and often include circular approaches, motor courts, and decorative edge treatments. We engineer each scope with a minimum 6-inch structural stone base, polymer-modified PG 70-22 binder, and the drainage management long premium runs require.",
+    },
+    faqs: [
+      {
+        q: 'Can you pave a long circular driveway on a McLean estate?',
+        a: 'Yes — long estate approaches, circular motor courts, and gated entry driveways are regular work in the McLean and Great Falls corridor. We laser-grade for a 2% cross-fall, engineer the drainage at the turnaround, and finish with the precision edge detail the property calls for.',
+      },
+      {
+        q: 'How much does a premium McLean driveway cost?',
+        a: 'Premium Northern Virginia driveways with proper 6-inch base, polymer binder, and finish detailing typically run $5–$9 per square foot. Long estate runs and circular approaches are priced by the linear foot and square footage. We provide a written line-item estimate after the site visit.',
+      },
+      {
+        q: 'Do you serve Great Falls and the Fairfax County estate corridor?',
+        a: 'Yes — the McLean, Great Falls, and Langley estate corridor is our Northern Virginia premium residential market. Same structural spec, same written warranty.',
+      },
+    ],
+    reviews: 29,
+    rating: 5.0,
+  },
+  {
+    slug: 'warrenton-va',
+    city: 'Warrenton',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Northern Virginia / DMV Fringe',
+    county: 'Fauquier',
+    geo: { lat: 38.7137, lng: -77.7956 },
+    headline: 'Asphalt Paving in Warrenton, VA — Piedmont Hunt Country Driveways and Commercial Work',
+    intro:
+      "Warrenton is the county seat of Fauquier County and the gateway to Virginia's Piedmont hunt country — long estate and farm driveways, equestrian property approaches, and commercial lots in the historic downtown and Lee Highway corridors. We pave residential and estate driveways throughout Fauquier County, handle commercial lots along Route 29 and Lee Highway, and build the heavy-duty approaches equestrian properties need for trailer and farm equipment traffic.",
+    neighborhoods: [
+      'Downtown Warrenton', 'Lee Highway corridor', 'Route 29 corridor', 'Meetze',
+      'New Baltimore', 'Vint Hill', 'Marshall', 'The Plains',
+      'Goldvein', 'Bealeton', 'Remington', 'Calverton',
+    ],
+    landmarks: ['Fauquier County Courthouse', 'Lee Highway (Route 211)', 'Route 29 corridor', 'Vint Hill Farms (former Army base)', 'Warrenton Training Center', 'Old Town Warrenton'],
+    climate: {
+      title: 'Piedmont Clay + Equestrian Load + Hunt Country Frost Depth',
+      body: "Warrenton's Piedmont clay is among the most active in Virginia — deep, plastic, and responsive to every wet/dry cycle. The area also sees 40+ freeze-thaw cycles per winter at its elevation. Equestrian and farm properties add a heavy-load dimension: horse trailer turnarounds, tractor approaches, and paddock access lanes that standard residential spec will rut under in a single season. We size the base to the traffic — deeper stone and heavier binder for any approach that sees trailer or farm equipment weight.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave equestrian property driveways and farm approaches in Fauquier County?',
+        a: 'Yes — equestrian property approaches, horse trailer turnarounds, farm lane paving, and paddock access roads in the Warrenton and Fauquier County area are regular work. These sites get a heavier base course spec than standard residential, typically 6–8 inches of stone under a 3-inch asphalt section.',
+      },
+      {
+        q: 'How does Fauquier County Piedmont clay affect driveway paving?',
+        a: "Fauquier's Piedmont clay is deep and plastic — it shrinks significantly in summer droughts and expands when wet. Driveways built on thin bases crack and heave within 3–5 years. We build a minimum 6-inch compacted stone base and use geotextile fabric to isolate the asphalt from clay movement.",
+      },
+      {
+        q: 'Do you serve The Plains, Marshall, and the rural Fauquier hunt country?',
+        a: 'Yes — the rural Fauquier corridor including The Plains, Marshall, and the Route 17 hunt country area are within our service area for driveways, farm lanes, and estate approaches.',
+      },
+    ],
+    reviews: 22,
+    rating: 4.9,
+  },
+  {
+    slug: 'culpeper-va',
+    city: 'Culpeper',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Northern Virginia / DMV Fringe',
+    county: 'Culpeper',
+    geo: { lat: 38.4732, lng: -77.9967 },
+    headline: 'Asphalt Paving in Culpeper, VA — Piedmont Driveways and the Route 29 Corridor',
+    intro:
+      "Culpeper County sits at the intersection of Piedmont Virginia and the I-66/Route 29 commuter corridor — a mix of rural estate driveways, growing residential subdivisions, and commercial lots serving the Route 29 and Route 15 business strips. We pave residential driveways and long estate approaches across the county, handle commercial lots in the downtown and Route 29 corridor, and build farm-road approaches on the agricultural properties that define the Culpeper landscape.",
+    neighborhoods: [
+      'Downtown Culpeper', 'Route 29 corridor', 'Route 15 corridor', 'Stevensburg',
+      'Brandy Station', 'Elkwood', 'Lignum', 'Rapidan area',
+      'Mitchells', 'Rixeyville', 'Raccoon Ford', 'James Madison Highway',
+    ],
+    landmarks: ['Route 29 corridor', 'James Madison Highway (Route 15)', 'Culpeper National Cemetery', 'Cedar Mountain Battlefield', 'Rapidan River', 'Shenandoah National Park approach'],
+    climate: {
+      title: 'Culpeper Clay Loam + Piedmont Rural Drainage',
+      body: "Culpeper's soils are a clay-loam mix from the Piedmont — heavier than Coastal Plain sand but less plastic than the deep clays of Chesterfield or Fauquier. The county still sees 35–40 freeze-thaw cycles per winter, and rural properties have no curb systems to manage runoff from long driveway runs. We build to the soil — stone base depth adjusted for the clay content at each site — and grade every rural run for open drainage so water moves off the drive, not into it.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave residential and estate driveways in Culpeper County?',
+        a: 'Yes — residential driveways, rural estate approaches, and farm lane paving throughout Culpeper County are regular work. We provide base assessments and written line-item estimates before any work begins.',
+      },
+      {
+        q: 'Do you handle commercial lots along Route 29 and Route 15 in Culpeper?',
+        a: 'Yes — commercial, retail, and small industrial lots along the Route 29 and James Madison Highway (Route 15) corridors in Culpeper are within our service area.',
+      },
+      {
+        q: 'Is tar and chip a good option for long Culpeper rural driveways?',
+        a: 'Often yes. Tar and chip at $2.50–$5/sqft vs. full asphalt at $4–$8/sqft gives rural Culpeper landowners a cost-effective, durable surface for long private driveways and farm lanes. Properly installed over a correct base, it lasts 10–20 years. We assess which system fits each property.',
+      },
+    ],
+    reviews: 19,
+    rating: 4.9,
+  },
+  {
+    slug: 'spotsylvania-va',
+    city: 'Spotsylvania',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'I-95 Corridor / Rappahannock',
+    county: 'Spotsylvania',
+    geo: { lat: 38.1985, lng: -77.5853 },
+    headline: 'Asphalt Paving in Spotsylvania, VA — New-Construction Driveways and Growing Subdivision Work',
+    intro:
+      "Spotsylvania County has exploded with new residential construction along the I-95 and Route 1 corridors, and with it has come a wave of new driveways laid on incompletely compacted builder fill. We rebuild failed new-construction driveways throughout the Spotsylvania Courthouse, Chancellor, and Lake Wilderness areas, and we coordinate with builders on new homes to get the subgrade right before the asphalt goes down.",
+    neighborhoods: [
+      'Spotsylvania Courthouse', 'Chancellor', 'Lake Wilderness', 'Salem Fields',
+      'Fawn Lake', 'Leavells', 'Massaponax', 'Thornburg',
+      'Partlow', 'Brokenburg', 'Ni River area', 'Battlefield area',
+    ],
+    landmarks: ['Spotsylvania Court House Battlefield', 'Lake Anna (proximity)', 'I-95 Exits 118–130', 'Route 1 corridor', 'Spotsylvania Town Centre', 'Lake Wilderness'],
+    climate: {
+      title: 'New-Construction Fill Failure + Rappahannock-Watershed Clay',
+      body: "Spotsylvania's rapid growth means most new driveways are paved on recently graded land where builder fill hasn't fully consolidated. The county's red-clay subsoil amplifies settlement — even properly compacted fill on Piedmont clay continues to consolidate under traffic load for 2–3 years. Driveways paved before that consolidation ends develop ruts and depression spots that worsen every season. We test the subgrade, stabilize where needed, and build a structural stone base that won't deflect when the underlying soil is still settling.",
+    },
+    faqs: [
+      {
+        q: 'My new Spotsylvania subdivision driveway has ruts after one year — what happened?',
+        a: "Almost certainly builder fill compaction failure. Spotsylvania's red clay on partially consolidated fill deflects under vehicle load, and driveways paved before the subgrade is ready show tire-track ruts within 1–2 years. The correct fix is subgrade re-compaction and a proper 6-inch stone base — not an overlay.",
+      },
+      {
+        q: 'Do you coordinate with builders on new Spotsylvania homes before paving?',
+        a: 'Yes — and we prefer it. Coordinating before the builder lays the subgrade lets us spec the compaction requirement and base depth that prevents premature failure. Talk to us before the builder starts driveway work, not after the driveway ruts.',
+      },
+      {
+        q: 'Do you serve Lake Wilderness, Fawn Lake, and the rural Spotsylvania corridors?',
+        a: 'Yes — residential, estate, and rural driveways throughout Spotsylvania County including the Fawn Lake, Lake Wilderness, and Partlow areas are within our service area.',
+      },
+    ],
+    reviews: 31,
+    rating: 4.9,
+  },
+  {
+    slug: 'stafford-va',
+    city: 'Stafford',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'I-95 Corridor / Rappahannock',
+    county: 'Stafford',
+    geo: { lat: 38.4221, lng: -77.4083 },
+    headline: 'Asphalt Paving in Stafford, VA — I-95 Commuter Driveways Built to Last',
+    intro:
+      "Stafford County is one of Virginia's fastest-growing I-95 corridor markets — bedroom communities for DC and Quantico that see heavy daily commuter traffic and rapid new-construction residential development. We rebuild failed new-construction driveways throughout Aquia Harbour, Garrisonville, and the Austin Ridge area, and we pave new driveways for the estates and rural properties along the Rappahannock bluffs that give Stafford its other character.",
+    neighborhoods: [
+      'Aquia Harbour', 'Garrisonville', 'Austin Ridge', 'Embrey Mill',
+      'Shelton Woods', 'Widewater', 'Stafford Courthouse', 'Hartwood',
+      'Falmouth', 'Brooke', 'Winding Creek', 'Quantico adjacency',
+    ],
+    landmarks: ['Marine Corps Base Quantico (approach)', 'I-95 Exits 140–152', 'Route 1 / Jefferson Davis Highway', 'Aquia Creek', 'Rappahannock River bluffs', 'Garrisonville Road corridor'],
+    climate: {
+      title: 'Quantico-Corridor Clay + I-95 Commuter Traffic Load',
+      body: "Stafford's Piedmont clay is active — deep, plastic, and responsive to Virginia's moisture swings — and the I-95 commuter corridor amplifies traffic load beyond what standard residential driveways are typically built for. New-construction driveways on the county's rapid growth corridors show the same builder fill compaction failure we see in Spotsylvania: ruts and depressions within 1–2 years. Our fix is a structural 6-inch stone base on a properly tested and stabilized subgrade, engineered to carry the daily commuter load without deflecting.",
+    },
+    faqs: [
+      {
+        q: 'Do you serve Aquia Harbour, Garrisonville, and the I-95 Stafford corridor?',
+        a: 'Yes — the Aquia Harbour, Garrisonville, Austin Ridge, and Embrey Mill residential areas are regular territory for our Northern crew. Same structural spec, same written warranty as every other market.',
+      },
+      {
+        q: 'Do you pave near Marine Corps Base Quantico in Stafford?',
+        a: 'Yes — residential and commercial properties in the Quantico corridor and Widewater area are within our service area. Military-adjacent sites often see heavy vehicle traffic and get a heavier base course spec.',
+      },
+      {
+        q: 'Why does my Stafford driveway have ruts when it is only 2 years old?',
+        a: "Rutting in 2-year-old Stafford driveways is almost always builder fill compaction failure on Piedmont clay. The fix is excavation to a firm bearing depth, subgrade re-compaction or stabilization, and a proper 6-inch stone base — not another overlay.",
+      },
+    ],
+    reviews: 28,
+    rating: 4.9,
+  },
+  {
+    slug: 'caroline-va',
+    city: 'Caroline',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'I-95 Corridor / Rappahannock',
+    county: 'Caroline',
+    geo: { lat: 38.0334, lng: -77.3464 },
+    headline: 'Asphalt Paving in Caroline County, VA — Rural Driveways Between Richmond and Fredericksburg',
+    intro:
+      "Caroline County is the rural stretch between Richmond and Fredericksburg along the I-95 corridor — agricultural land, estate driveways, rural residential properties, and the Bowling Green commercial area. We pave long rural driveways, rebuild failing approaches on Caroline's clay soils, and provide commercial paving for the Bowling Green and Route 301 corridor businesses.",
+    neighborhoods: [
+      'Bowling Green', 'Milford', 'Port Royal', 'Woodford',
+      'Penola', 'Sparta', 'Ladysmith', 'Ruther Glen',
+      'I-95 corridor', 'Route 301 corridor', 'Mattaponi River area', 'Rappahannock River area',
+    ],
+    landmarks: ['Bowling Green (county seat)', 'I-95 corridor', 'Route 301', 'Mattaponi River', 'Rappahannock River', 'Port Royal'],
+    climate: {
+      title: 'I-95 Corridor Clay + Open Rural Drainage',
+      body: "Caroline County's Piedmont-to-Coastal Plain transition soils range from clay-heavy near the Rappahannock bluffs to sandier loam near the Mattaponi River — both need proper base prep but drain differently. Rural driveways throughout the county have no curb systems, so all water management comes from crown, slope, and edge grading. We assess the soil and drainage at each site before specifying stone depth and drainage corrections.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave long rural driveways in Caroline County?',
+        a: 'Yes — rural driveways, farm lanes, and estate approaches throughout Caroline County are within our service area. Long rural runs get a line-item estimate that breaks out grading, drainage, stone, and asphalt separately.',
+      },
+      {
+        q: 'Do you serve the Bowling Green and Route 301 commercial corridor?',
+        a: 'Yes — commercial lots, church properties, and small industrial facilities in the Bowling Green and Route 301 corridor are regular commercial work.',
+      },
+      {
+        q: 'Is Caroline County between your Richmond and Fredericksburg crews?',
+        a: "Yes — Caroline sits on our I-95 corridor route between Chester and the Fredericksburg market. We schedule Caroline work efficiently alongside Spotsylvania and Stafford jobs to keep mobilization costs reasonable.",
+      },
+    ],
+    reviews: 17,
+    rating: 4.9,
+  },
+  {
+    slug: 'king-george-va',
+    city: 'King George',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'I-95 Corridor / Rappahannock',
+    county: 'King George',
+    geo: { lat: 38.2682, lng: -77.1856 },
+    headline: 'Asphalt Paving in King George County, VA — Dahlgren Naval Surface Warfare Center Corridor',
+    intro:
+      "King George County sits along the Potomac River between Fredericksburg and the Potomac, anchored by Dahlgren Naval Surface Warfare Center. The county is a mix of residential communities serving Dahlgren's civilian and military workforce, rural estate properties, and the growing Route 3 corridor commercial strip. We pave residential driveways, rural approaches, and commercial lots throughout the county.",
+    neighborhoods: [
+      'King George Courthouse', 'Dahlgren', 'Hopyard Farm', 'Comorn',
+      'Route 3 corridor', 'Potomac River bluffs', 'Caledon area', 'Cleydael',
+    ],
+    landmarks: ['Dahlgren Naval Surface Warfare Center', 'Route 3 corridor', 'Potomac River', 'Caledon State Park', 'King George Courthouse', 'Dahlgren Heritage Museum'],
+    climate: {
+      title: 'Potomac River Clay + Naval Corridor Traffic',
+      body: "King George County's Potomac River bluff soils are heavy clay — among the most plastic in the Northern Neck and Northern Virginia region. Driveways on thin bases crack and heave within 3–4 years on this subsoil. The Dahlgren corridor also sees regular heavy government vehicle traffic that demands more than standard residential base depth. We assess the soil and traffic on each site and build accordingly.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave near Dahlgren Naval Surface Warfare Center in King George County?',
+        a: 'Yes — residential and commercial properties in the Dahlgren corridor and Route 3 commercial strip are within our service area. Government-adjacent sites often need heavier base specs.',
+      },
+      {
+        q: 'Do you serve rural estate driveways on the Potomac River bluffs?',
+        a: 'Yes — estate driveways and rural approaches on the King George Potomac River bluffs are regular work. The clay soil here requires a minimum 6-inch stone base and geotextile fabric to prevent early cracking.',
+      },
+      {
+        q: 'How far is King George from your closest crew?',
+        a: "King George is about 45 minutes from our Fredericksburg-corridor crew staging. We schedule King George work alongside other Northern Rappahannock jobs to keep mobilization efficient.",
+      },
+    ],
+    reviews: 14,
+    rating: 4.9,
+  },
+  {
+    slug: 'orange-va',
+    city: 'Orange',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Northern Virginia / DMV Fringe',
+    county: 'Orange',
+    geo: { lat: 38.2462, lng: -78.1109 },
+    headline: 'Asphalt Paving in Orange County, VA — Piedmont Estate Driveways and Wine Country Approaches',
+    intro:
+      "Orange County is the heart of Virginia Piedmont wine country — the Route 20 and Route 15 corridors are lined with vineyards, estates, historic properties, and the James Madison and Montpelier corridor. We pave long estate and vineyard approaches, residential driveways in the Town of Orange area, and rural farm lane access throughout the county.",
+    neighborhoods: [
+      'Town of Orange', 'Rapidan', 'Unionville', 'Barboursville',
+      'Locust Grove', 'Route 20 corridor', 'Route 15 corridor', 'Montpelier area',
+      'Wilderness area', 'Gordonsville adjacency', 'Somerset', 'Rhoadesville',
+    ],
+    landmarks: ['Montpelier (James Madison home)', 'Barboursville Vineyards', 'Route 20 corridor', 'Route 15 (James Madison Highway)', 'Rapidan River', 'Lake Orange'],
+    climate: {
+      title: 'Piedmont Vineyard Clay + Estate Driveway Frost Depth',
+      body: "Orange County's Piedmont soils are deep red clay — heavy, plastic, and highly responsive to moisture. The county sees 35–40 freeze-thaw cycles per winter at its elevation, and the long approach driveways on vineyard and estate properties put substantial thermal and moisture stress on anything built on a thin base. We build estate approaches with a minimum 6-inch structural stone base over geotextile fabric and use polymer-modified binder on long runs to handle the Piedmont frost-heave cycle.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave vineyard and estate approach driveways in Orange County?',
+        a: 'Yes — long estate approaches, vineyard access drives, and farm lane paving throughout the Orange County wine country corridor are regular work. We engineer each run for proper drainage and build the base to handle the traffic and soil conditions.',
+      },
+      {
+        q: 'Do you serve the Montpelier and Barboursville estate corridor?',
+        a: 'Yes — the Route 20 estate and vineyard corridor from Orange Courthouse to the Culpeper County line is within our service area.',
+      },
+      {
+        q: 'Is tar and chip suitable for a long Orange County rural driveway?',
+        a: 'Often yes. For long rural or vineyard access drives where traction and cost efficiency matter more than smooth appearance, tar and chip at $2.50–$5/sqft provides a durable 10–20 year surface at a significant cost savings vs. full asphalt.',
+      },
+    ],
+    reviews: 16,
+    rating: 4.9,
+  },
+  {
+    slug: 'prince-william-va',
+    city: 'Prince William',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Northern Virginia / DMV Fringe',
+    county: 'Prince William',
+    geo: { lat: 38.7026, lng: -77.4789 },
+    headline: 'Asphalt Paving in Prince William County, VA — Manassas to Woodbridge Corridor',
+    intro:
+      "Prince William County is one of Virginia's fastest-growing suburban markets, stretching from the Manassas and Gainesville growth corridors in the west to the I-95 Woodbridge and Dale City communities in the east. We pave residential driveways in Gainesville, Lake Ridge, and Occoquan, resurface commercial lots along Route 28 and I-66, and handle HOA road work in the county's rapid-growth subdivision corridors.",
+    neighborhoods: [
+      'Gainesville', 'Haymarket', 'Woodbridge', 'Dale City',
+      'Lake Ridge', 'Occoquan', 'Dumfries', 'Manassas adjacency',
+      'Montclair', 'Independent Hill', 'Nokesville', 'Catharpin',
+    ],
+    landmarks: ['I-95 Prince William corridor', 'I-66 / Route 28 interchange', 'Potomac Mills', 'Manassas National Battlefield', 'Marine Corps Base Quantico (southern perimeter)', 'Occoquan Reservoir'],
+    climate: {
+      title: 'Northern Virginia Growth-Corridor Clay + I-95 Commuter Load',
+      body: "Prince William County's clay-heavy soils and rapid development create the same builder fill compaction failure we see throughout the I-95 growth corridor — new driveways rutting and settling within 1–2 years on partially consolidated builder pads. The county also sees 40+ freeze-thaw cycles per winter in the western Gainesville and Haymarket corridors. We test the subgrade on every new-construction site and build a structural 6-inch stone base that won't deflect before the underlying soil finishes consolidating.",
+    },
+    faqs: [
+      {
+        q: 'Do you pave driveways in Gainesville, Haymarket, and western Prince William County?',
+        a: 'Yes — the Gainesville, Haymarket, and Route 29 corridor in western Prince William are regular residential and commercial territory for our Northern crew.',
+      },
+      {
+        q: 'Do you serve Woodbridge, Dale City, and the I-95 eastern corridor?',
+        a: 'Yes — the I-95 Woodbridge and Dale City corridors in eastern Prince William are within our service area for residential driveways, commercial lots, and HOA road work.',
+      },
+      {
+        q: 'My Prince William subdivision driveway has ruts after two years — what do I do?',
+        a: "Rutting in 1–2 year old driveways on Prince William builder pads is almost always subgrade compaction failure on clay fill. The durable fix is excavation, subgrade stabilization, and a proper 6-inch stone base — not an overlay that will rut again in another season.",
+      },
+    ],
+    reviews: 26,
+    rating: 4.9,
+  },
 
   // Surrounding Counties
   { slug: 'charlottesville-va',  city: 'Charlottesville',  state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Albemarle',     geo: { lat: 38.0293, lng: -78.4767 } },
