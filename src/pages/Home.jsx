@@ -8,6 +8,7 @@ import { PHONE_E164, PHONE_DISPLAY, SMS_E164, SMS_PREFILL } from '@/lib/business
 import { trackPhoneClick } from '@/lib/analytics';
 import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
+import EstimateForm from '../components/EstimateForm';
 
 const HERO_IMAGE = '/work/portfolio/portfolio-010.jpg';
 const RESIDENTIAL_IMAGE = '/work/portfolio/portfolio-017.jpg';
@@ -336,16 +337,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── KICKSERV QUOTE EMBED ─────────────────────────────────── */}
-      <section id="quote" className="bg-white py-20 md:py-28">
+      {/* ── ESTIMATE FORM ────────────────────────────────────────── */}
+      <section id="quote" className="bg-gray-50 py-20 md:py-28">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-10">
             <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Free Estimate</p>
             <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight mb-4">
-              Request a Quote
+              Get a Written Quote
             </h2>
             <p className="text-gray-500 text-lg">
-              We respond within 1 business hour. Or call/text us directly:
+              Or reach us directly — same-day response guaranteed.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mt-6">
               <a
@@ -363,18 +364,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          {/* TODO: remove chat-lead-capture / lead-fallback-notify Netlify functions
-              once Kickserv is confirmed working in production. QuickQuoteBar on /quote still uses them. */}
-          {/* min-height reserved to prevent CLS while iframe loads */}
-          <div className="border border-gray-100 overflow-hidden" style={{ minHeight: '1000px' }}>
-            <iframe
-              src="https://app.kickserv.com/jwordenandsonspaving/self_service/requests/new?iframe=true"
-              style={{ border: 'none', width: '100%', height: '1000px', display: 'block' }}
-              title="Request a Free Quote"
-              loading="lazy"
-              scrolling="auto"
-            />
-          </div>
+          <EstimateForm source="homepage_quote_section" />
         </div>
       </section>
 
