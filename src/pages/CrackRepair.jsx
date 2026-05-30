@@ -123,7 +123,7 @@ export default function CrackRepair() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Stop Cracks.<br /><span className="text-brand-amber">Before They</span><br />Stop You.
+                Asphalt<br /><span className="text-brand-amber">Crack Repair</span><br />in Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
                 Virginia's freeze-thaw cycles and clay soils turn a $400 crack into a $4,000 pothole in one winter season. We seal it right — with industrial hot-pour rubber that actually lasts — not hardware store cold-fill.
@@ -215,6 +215,55 @@ export default function CrackRepair() {
                 <p className="text-white/50 text-sm leading-relaxed">{faq.a}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Virginia Expertise + Internal Links */}
+      <section className="py-20 bg-white/5 border-t border-white/10 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Why Virginia Cracks Are Different</span>
+              <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-6">
+                Virginia's Freeze-Thaw Cycle Turns Every Crack Into An Emergency.
+              </h2>
+              <div className="space-y-4 text-white/60 text-sm leading-relaxed">
+                <p>Richmond averages 35–45 freeze-thaw cycles per winter — more than most northern cities because Virginia's temperature swings back and forth through the 32°F threshold repeatedly through December, January, and February rather than staying frozen. Each cycle pumps water into the crack, freezes it, expands the gap, and leaves a wider entry point for the next cycle. A quarter-inch surface crack becomes a half-inch structural crack in a single winter without treatment.</p>
+                <p>Virginia's clay subsoils compound the problem. When water penetrates a crack and reaches the aggregate base, the clay absorbs it and begins to migrate. The base loses density and the asphalt above loses support — loading from vehicles then punches through the weakened zone and creates the alligator cracking and pothole formation that requires full-depth replacement rather than surface treatment.</p>
+                <p>The intervention window is real and it matters. A sealed crack in October costs $300–$800. That same crack left through winter costs $800–$2,500 to patch as a pothole. If the base fails, you're looking at $3–$6 per square foot for full-depth resurfacing. The math is straightforward — seal it now.</p>
+                <p>After crack sealing, the most cost-effective next step is a scheduled <Link to="/sealcoating" className="text-brand-amber hover:underline">sealcoating program</Link> to block UV oxidation and surface water infiltration. A properly maintained driveway or parking lot that gets crack sealing and sealcoating on schedule rarely needs <Link to="/residential" className="text-brand-amber hover:underline">full replacement</Link> before 20–25 years.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-brand-navy border border-white/10 rounded-2xl p-6">
+                <p className="text-white font-black text-base uppercase tracking-widest mb-4">Our Crack Sealing Process</p>
+                <ol className="space-y-3">
+                  {[
+                    'Surface evaluation — classify crack type and severity',
+                    'Router or saw-cut to create clean uniform walls (if needed)',
+                    'Air-blow and clean the crack channel — remove all debris',
+                    'Apply 400°F hot-pour rubberized sealant to manufacturer spec',
+                    'Level and dress — no raised bead that collects water',
+                    'Document with photos and provide written maintenance plan',
+                  ].map((step, i) => (
+                    <li key={step} className="flex items-start gap-3 text-sm text-white/60">
+                      <span className="text-brand-amber font-black text-sm shrink-0 w-4">{i + 1}.</span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div className="bg-brand-navy border border-white/10 rounded-2xl p-6">
+                <p className="text-white font-black text-base uppercase tracking-widest mb-3">Related Services</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/sealcoating" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Sealcoating</Link>
+                  <Link to="/residential" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Driveway Paving</Link>
+                  <Link to="/parking-lots" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Parking Lots</Link>
+                  <Link to="/paving" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Asphalt Paving</Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -164,7 +164,7 @@ export default function ShenandoahValleyPaving() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                The Valley.<br /><span className="text-brand-amber">The Ridge.</span><br />We Know Both.
+                Asphalt Paving<br /><span className="text-brand-amber">in the Shenandoah</span><br />Valley, VA.
               </h1>
               <p className="text-white/70 text-xl max-w-2xl">
                 We have paved the Shenandoah Valley for 40 years — from Winchester orchards to Roanoke industrial yards, from resort driveways on Massanutten to agricultural facility lots in Rockingham County. Flat-land contractors don't understand mountain drainage. We do.

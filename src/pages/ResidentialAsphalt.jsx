@@ -60,16 +60,28 @@ const RESIDENTIAL_SERVICES = [
 
 const RESIDENTIAL_FAQS = [
   {
+    q: 'How much does a new asphalt driveway cost in Virginia?',
+    a: 'Most residential asphalt driveways in the Richmond, Chesterfield, and Henrico area run $4–$8 per square foot installed, depending on base depth, drainage corrections, and linear footage. A 600-square-foot standard driveway typically ranges $2,400–$4,800. We provide a written itemized estimate at no charge before any work begins.',
+  },
+  {
     q: 'How long should a residential asphalt driveway last in Virginia?',
-    a: 'A properly built residential asphalt driveway in Virginia typically lasts 18-25 years with correct base prep, drainage, and maintenance.',
+    a: 'A properly built residential driveway with a minimum 6-inch compacted aggregate base, correct drainage, and a regular sealcoating schedule typically lasts 20–25 years in Virginia. Driveways built on shallow bases or skipped drainage correction fail in 5–8 years — sometimes sooner after a hard freeze-thaw winter.',
+  },
+  {
+    q: 'How long after paving can I drive on my new driveway?',
+    a: 'In summer conditions (above 75°F), we recommend waiting 24 hours for light vehicles and 48–72 hours for trucks, SUVs, and heavy vehicles. Virginia\'s heat can keep asphalt soft longer — avoid sharp turns, parking in the same spot, and any vehicle with sharp metal edges like kickstands for the first two weeks.',
+  },
+  {
+    q: 'Do you pull permits for driveway work in Chesterfield and Henrico?',
+    a: 'Most residential driveway replacements in Chesterfield County, Henrico County, and Richmond City do not require a permit unless you are expanding the impervious surface footprint or working within 15 feet of a property line. We evaluate permit requirements at estimate and handle the application when required.',
   },
   {
     q: 'Do you provide written scope and pricing before starting?',
-    a: 'Yes. We provide clear line-item scope, asphalt section details, and straightforward pricing before any work begins.',
+    a: 'Yes. Every estimate includes a written scope of work, asphalt section specification (base depth, lift thickness, mix type), and clear pricing before we begin. We do not start work without a written, signed agreement.',
   },
   {
     q: 'Can you fix drainage issues at the same time as paving?',
-    a: 'Yes. We correct grade and drainage conditions during construction so water runs away from your home and away from the new mat.',
+    a: 'Yes. We evaluate and correct grade, cross-slope, and edge drainage conditions during construction. Proper drainage is built into the project — not treated as an add-on. Water running toward your home or pooling at the garage is a base-failure accelerator that we eliminate at construction time.',
   },
 ]
 
@@ -145,7 +157,7 @@ export default function ResidentialAsphalt() {
             <div>
               <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Residential Driveway Division</p>
               <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
-                Luxury Driveways Built With Structural Discipline
+                Asphalt Driveway Paving in Virginia
               </h1>
               <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
                 Your driveway is part of your property value. We evaluate drainage, base condition, tie-ins, edges, turnarounds,
@@ -276,6 +288,59 @@ export default function ResidentialAsphalt() {
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="w-3.5 h-3.5 text-primary" />
                 Professional residential paving standards with accountable execution
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 md:py-18 border-b border-border bg-card">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Virginia Driveway Science</p>
+              <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-6">
+                Why Virginia Driveways Fail — And How We Build Against It
+              </h2>
+              <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+                <p>Virginia's Piedmont clay soils are the primary cause of driveway failure across Chesterfield, Henrico, and Richmond. Clay absorbs moisture, expands during winter freeze-thaw cycles, and contracts in summer heat — putting constant stress on any base layer that isn't deep enough or properly drained. Most driveways that crack within five years were built on four inches of base where six is required, or on improperly graded soil that traps water under the mat.</p>
+                <p>Our standard residential spec starts at a minimum six-inch compacted aggregate base. In heavy clay areas — Midlothian's mica-schist subsoil corridor, Chesterfield's James River basin flats, and older Henrico subdivisions — we add geotextile filter fabric between the native soil and stone layer to prevent clay migration into the base over time. The asphalt itself is PG-grade binder specified for Virginia's temperature swings, not a discounted off-spec mix. Each lift is compacted to density before the next goes down.</p>
+                <p>That base discipline is the difference between a driveway that lasts twenty years and one that needs resurfacing after eight. Once it's built right, regular <Link to="/sealcoating" className="text-primary hover:underline font-medium">asphalt sealcoating every 2–4 years</Link> and prompt <Link to="/crack-repair" className="text-primary hover:underline font-medium">crack sealing</Link> whenever surface cracks appear protect the investment for the long term.</p>
+                <p>We've been building residential driveways in Chester, Richmond, Chesterfield, and Henrico since 1984. Four generations of the same family. The owner is on-site, not in an office. Every job gets documented photos and a written maintenance schedule on completion.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="border border-border bg-background p-6">
+                <p className="font-display font-black text-foreground text-lg uppercase tracking-tight mb-4">Every Estimate Includes</p>
+                <ul className="space-y-2.5">
+                  {[
+                    'Written scope with asphalt section specification',
+                    'Drainage evaluation and grade correction plan',
+                    'Base depth recommendation by soil condition',
+                    'PG-grade asphalt mix specification',
+                    'Written 5-year workmanship warranty',
+                    'Sealcoating schedule and maintenance plan',
+                    'Project photos delivered on completion',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="border border-primary/40 bg-primary/5 p-6">
+                <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-2">4th Generation. Since 1984.</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">J. Worden &amp; Sons has paved driveways across Central Virginia for forty years. The same owner answers the phone, reviews your scope, and stands behind the result. No subcontracting, no bait-and-switch crews. The people who give you the estimate are the people who pour the asphalt.</p>
+              </div>
+              <div className="border border-border bg-background p-5">
+                <p className="font-display font-black text-foreground text-sm uppercase tracking-tight mb-3">Related Services</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/sealcoating" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Sealcoating</Link>
+                  <Link to="/crack-repair" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Crack Repair</Link>
+                  <Link to="/paving" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Asphalt Paving</Link>
+                  <Link to="/parking-lots" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Parking Lots</Link>
+                </div>
               </div>
             </div>
           </div>

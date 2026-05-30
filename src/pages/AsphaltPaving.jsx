@@ -10,47 +10,78 @@ import { trackPhoneClick } from '@/lib/analytics'
 
 const PAVING_SERVICES = [
   {
-    title: 'Precision Asphalt Paving',
-    description: 'High-density asphalt mix designed for Virginia climate, specifically tailored for Richmond, Chesterfield, and Fredericksburg. Every job includes site grading, 6-inch stone base compaction, and dual-roller finishing.',
+    title: 'Asphalt Driveway Paving',
+    description: 'New asphalt driveways and full repaving for homes across Richmond, Chesterfield, Henrico, and Hanover. Every driveway is built on a compacted 4–6 inch stone base with a hot-mix asphalt surface and dual-roller compaction — so it holds up to Virginia freeze-thaw winters.',
     icon: <Construction className="w-6 h-6 text-primary" />
   },
   {
-    title: 'Reinforced Concrete Solutions',
-    description: 'From 4000 PSI driveways to industrial loading docks. We handle stamped decorative concrete and heavy-duty structural pads.',
+    title: 'Commercial Parking Lot Paving',
+    description: 'Parking lot paving, resurfacing, and repair for retail, office, church, and HOA properties. We handle subgrade drainage, ADA-compliant line striping, and phased schedules that keep your lot open while we work.',
     icon: <ShieldCheck className="w-6 h-6 text-primary" />
   },
   {
-    title: 'Hardscape Artistry',
-    description: 'Premium cobblestone, brick pavers, and Belgian block. Elevate your curb appeal with hand-laid patterns that last a lifetime.',
+    title: 'Asphalt Overlay & Resurfacing',
+    description: 'When the base is still sound, a 2-inch asphalt overlay restores a worn driveway or lot for a fraction of full replacement — and adds 8 to 12 years of service life without a full tear-out.',
     icon: <Award className="w-6 h-6 text-primary" />
   },
   {
-    title: 'Millings & Recycled Pavement',
-    description: 'Dust-free, cost-effective solutions for private lanes and ranch roads. We offer specialized "coated millings" for maximum binding.',
+    title: 'Private Roads & Asphalt Millings',
+    description: 'Full-depth asphalt and dust-free recycled millings for private lanes, farm roads, and long rural driveways across Central Virginia — graded, crowned, and compacted for proper drainage.',
     icon: <HardHat className="w-6 h-6 text-primary" />
   }
 ]
 
+const PAVING_FAQS = [
+  {
+    q: 'How much does asphalt paving cost in Virginia?',
+    a: 'Most residential asphalt driveways in Central Virginia run $3 to $6 per square foot for a full installation — grading, a compacted stone base, and a 2 to 3 inch hot-mix surface. A typical 1,000 square foot driveway lands between $3,000 and $6,000. Commercial parking lots are priced by square footage, base condition, and striping scope. We give every customer a written, line-item estimate before any work begins.',
+  },
+  {
+    q: 'How long does a new asphalt driveway take to cure?',
+    a: 'You can usually drive on a new asphalt driveway within 24 to 48 hours. Full curing takes 30 to 90 days as the surface continues to harden, and we recommend waiting 6 to 12 months before the first sealcoat so the asphalt can cure fully.',
+  },
+  {
+    q: 'How long does asphalt paving last in Virginia?',
+    a: 'A properly installed asphalt driveway lasts 20 to 30 years in Virginia when it is sealed every 2 to 4 years and cracks are filled early. The base is what determines lifespan — which is why we never pave over a failed base.',
+  },
+  {
+    q: 'What areas of Virginia do you serve?',
+    a: 'We are based in Chester, VA and pave throughout Central Virginia — Richmond, Chesterfield, Henrico, Hanover, Midlothian, Short Pump, Mechanicsville, Powhatan, Goochland, Petersburg, and the surrounding counties — with extended service to Hampton Roads, Fredericksburg, and the I-81 corridor.',
+  },
+]
+
 export default function AsphaltPaving() {
   const canonicalPath = '/paving'
-  const title = 'Virginia Paving Contractor | Asphalt, Concrete & Hardscapes | J. Worden & Sons'
-  const description = 'The highest-rated paving contractor in Virginia. Specializing in asphalt paving, concrete driveways, cobblestone, and premium sealcoating. 40+ years of family-built excellence.'
+  const title = 'Asphalt Paving in Virginia | Driveways & Parking Lots | J. Worden & Sons'
+  const description = 'J. Worden & Sons paves asphalt driveways, commercial parking lots, and private roads across Richmond, Chesterfield, Henrico, and Central Virginia. Family-owned for 40+ years. Free written estimates — call (804) 446-1296.'
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'PavingService',
-    'name': 'J. Worden & Sons Paving LLC',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'J. Worden & Sons Paving LLC',
-      'telephone': '+18044461296',
-      'priceRange': '$$'
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      'serviceType': 'Asphalt Paving',
+      'name': 'Asphalt Paving in Virginia',
+      'provider': {
+        '@type': 'LocalBusiness',
+        'name': 'J. Worden & Sons Paving LLC',
+        'telephone': '+18044461296',
+        'priceRange': '$$'
+      },
+      'areaServed': {
+        '@type': 'State',
+        'name': 'Virginia'
+      }
     },
-    'areaServed': {
-      '@type': 'State',
-      'name': 'Virginia'
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': PAVING_FAQS.map((f) => ({
+        '@type': 'Question',
+        'name': f.q,
+        'acceptedAnswer': { '@type': 'Answer', 'text': f.a }
+      }))
     }
-  }
+  ]
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -81,11 +112,11 @@ export default function AsphaltPaving() {
           >
             <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-6 drop-shadow-md">Virginia Statewide Division</p>
             <h1 className="font-display font-black text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.85] max-w-5xl mb-8">
-              Paving <span className="text-primary italic">Redefined.</span><br />
-              All Roads Lead To Us.
+              Asphalt Paving <span className="text-primary italic">Across</span><br />
+              Virginia.
             </h1>
             <p className="text-gray-300 text-lg md:text-2xl max-w-2xl leading-relaxed mb-10">
-              From residential driveways to massive commercial developments. Asphalt, Concrete, and Hand-Laid Hardscapes built with 40 years of Virginia grit.
+              J. Worden & Sons installs asphalt driveways, commercial parking lots, and private roads across Richmond, Chesterfield, Henrico, and Central Virginia — every surface built on a compacted stone base engineered for our freeze-thaw winters and clay soil.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -121,10 +152,10 @@ export default function AsphaltPaving() {
       <section className="py-24 bg-card">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="font-display font-black text-4xl md:text-6xl uppercase tracking-tight mb-4">Mastering Every Surface</h2>
+            <h2 className="font-display font-black text-4xl md:text-6xl uppercase tracking-tight mb-4">Asphalt Paving Services Across Central Virginia</h2>
             <div className="w-24 h-1 bg-primary mx-auto mb-6" />
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              We specialize in the high-stakes work. The surfaces where durability and aesthetics meet.
+              Driveways, commercial parking lots, overlays, and private roads — installed by a 4th-generation crew that grades, bases, and compacts every job to spec.
             </p>
           </div>
 
@@ -142,10 +173,51 @@ export default function AsphaltPaving() {
         </div>
       </section>
 
+      {/* SEO content — Asphalt paving in Virginia */}
+      <section className="py-24 bg-background">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 space-y-6 text-lg leading-relaxed text-muted-foreground">
+          <h2 className="font-display font-black text-3xl md:text-5xl uppercase tracking-tight text-foreground mb-4">
+            Asphalt Paving Built for Virginia's Climate
+          </h2>
+          <p>
+            Asphalt fails in Virginia for one reason more than any other: a base that was never built to handle our soil. Central Virginia's red clay swells when it rains and shrinks when it dries, and the region cycles through 30 to 50 freeze-thaw events every winter. Pave over that without a properly compacted stone base and the surface cracks within a few seasons. We start every asphalt paving project — driveway or parking lot — with grading, drainage, and a 4 to 6 inch compacted stone base before a single load of hot-mix asphalt is laid.
+          </p>
+          <p>
+            For homeowners, that means an <Link to="/residential" className="text-primary hover:underline">asphalt driveway</Link> that stays smooth and crack-free for decades. For property managers, it means a <Link to="/parking-lots" className="text-primary hover:underline">commercial parking lot</Link> with proper drainage, ADA-compliant striping, and a phased schedule that keeps your business open. When an existing surface is worn but structurally sound, an asphalt overlay restores it without the cost of a full rebuild — and routine <Link to="/sealcoating" className="text-primary hover:underline">sealcoating</Link> every few years protects the investment.
+          </p>
+          <p>
+            Not sure whether asphalt or concrete is right for your property? Read our honest comparison of <Link to="/blog/info/asphalt-vs-concrete-driveway-virginia" className="text-primary hover:underline">asphalt vs. concrete driveways in Virginia</Link>, or see real 2026 numbers in our <Link to="/blog/info/driveway-paving-cost-virginia" className="text-primary hover:underline">Virginia driveway paving cost guide</Link>.
+          </p>
+          <h3 className="font-display font-black text-2xl uppercase tracking-tight text-foreground pt-6">
+            Where We Pave
+          </h3>
+          <p>
+            J. Worden & Sons is based in Chester, VA and provides asphalt paving across Central Virginia — including Richmond, Chesterfield, Henrico, Hanover, Midlothian, Short Pump, Glen Allen, Mechanicsville, Powhatan, Goochland, Petersburg, and Colonial Heights — with extended service to Hampton Roads, Fredericksburg, and the Shenandoah Valley.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ — asphalt paving */}
+      <section className="py-24 bg-card border-t border-border">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <h2 className="font-display font-black text-3xl md:text-5xl uppercase tracking-tight text-center mb-14">
+            Virginia Asphalt Paving FAQs
+          </h2>
+          <div className="space-y-8">
+            {PAVING_FAQS.map((f) => (
+              <div key={f.q} className="border-b border-border pb-8">
+                <h3 className="font-display font-bold text-xl text-foreground mb-3">{f.q}</h3>
+                <p className="text-muted-foreground leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action Bar */}
       <section className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-          <h2 className="font-display font-black text-2xl md:text-4xl text-primary-foreground uppercase tracking-tight">Ready for a Lifetime Result?</h2>
+          <h2 className="font-display font-black text-2xl md:text-4xl text-primary-foreground uppercase tracking-tight">Get a Written Asphalt Paving Estimate</h2>
           <a 
             href="tel:+18044461296" 
             onClick={() => trackPhoneClick('paving_bottom')}

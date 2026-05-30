@@ -143,7 +143,7 @@ export default function FredericksburgPaving() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Fredericksburg<br /><span className="text-brand-amber">Is Growing.</span><br />So Is Demand.
+                Asphalt Paving<br /><span className="text-brand-amber">in Fredericksburg,</span><br />Virginia.
               </h1>
               <p className="text-white/70 text-xl max-w-2xl">
                 Stafford and Spotsylvania are two of the fastest-growing counties in Virginia. Thousands of driveways, subdivision roads, and commercial lots are being paved every year — and too many are being done wrong. We've done this for 40 years. We do it right.

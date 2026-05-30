@@ -294,8 +294,8 @@ export default function Home() {
                 <span className="font-display text-sm uppercase tracking-[0.24em]">Chester based • Richmond metro • real job photos</span>
               </div>
               <h1 className="font-display text-5xl font-black uppercase leading-[0.88] tracking-normal text-foreground sm:text-6xl md:text-8xl lg:text-9xl">
-                Premium Asphalt<br />
-                <span className="text-primary">Built To Last.</span>
+                Asphalt Paving in<br />
+                <span className="text-primary">Central Virginia.</span>
               </h1>
               <p className="mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-2xl">
                 Residential and commercial asphalt work across Chester, Richmond, Chesterfield, Henrico, and Central Virginia. From The Fan and Short Pump to Route 1 business corridors, every scope is built around traffic, drainage, and long-term pavement life.

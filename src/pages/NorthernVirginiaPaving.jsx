@@ -141,7 +141,7 @@ export default function NorthernVirginiaPaving() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Northern Virginia<br /><span className="text-brand-amber">Deserves</span><br />Virginia Expertise.
+                Asphalt Paving<br /><span className="text-brand-amber">in Northern</span><br />Virginia.
               </h1>
               <p className="text-white/70 text-xl max-w-2xl">
                 Fairfax data centers. Dulles tech campuses. Tysons Corner retail. Loudoun subdivision roads. We bring 40 years of Virginia paving knowledge to Northern Virginia's most demanding commercial and institutional projects.

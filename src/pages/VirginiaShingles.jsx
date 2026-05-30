@@ -51,7 +51,7 @@ export default function VirginiaShingles() {
               Paving & Roofing Integrated Logic
             </span>
             <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight">
-              Roofing <span className="text-brand-amber">Integrated</span>.
+              Roofing & <span className="text-brand-amber">Shingle</span> Services in Virginia.
             </h1>
             <p className="text-white/70 text-lg md:text-xl max-w-xl">
               We leverage our planetary supply chain to provide roofing contractors and property managers with unbeatable material rates and professional-grade installation crews across the Commonwealth.

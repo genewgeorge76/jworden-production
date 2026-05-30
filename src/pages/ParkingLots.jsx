@@ -143,7 +143,7 @@ export default function ParkingLots() {
                 </span>
               </div>
               <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
-                Commercial<br /><span className="text-brand-amber">Parking Lots</span><br />Built For Business.
+                Commercial<br /><span className="text-brand-amber">Parking Lot Paving</span><br />in Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
                 Restaurant, retail, office, church, HOA, industrial, and active commercial lots need more than fresh blacktop. They need access planning, drainage, ADA layout, striping, drive-thru durability, and a crew that knows how to work around customers.
@@ -271,6 +271,59 @@ export default function ParkingLots() {
                 <p className="text-white/50 text-sm leading-relaxed">{faq.a}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VIRGINIA COMMERCIAL EXPERTISE */}
+      <section className="py-24 bg-brand-navy border-t border-white/10 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Virginia Commercial Pavement Science</span>
+              <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-6">
+                Why Virginia Parking Lots Fail — And What We Do Differently.
+              </h2>
+              <div className="space-y-4 text-white/60 text-sm leading-relaxed">
+                <p>Virginia's commercial parking lots face a specific set of failure conditions that most paving companies underestimate. Richmond clay soils — prevalent from Chesterfield through Henrico and into the city itself — have high shrink-swell potential. In wet seasons, clay expands and pushes the base material upward. In dry summers, it contracts and pulls support away from the mat. Lots built without proper subbase drainage fail through the bottom, not the top, and no amount of surface patching corrects a base that's moving.</p>
+                <p>Our commercial spec always begins with a drainage evaluation. We identify low points, broken catch basins, missing French drains, and clay-dominant subbase zones before we quote the job. The drainage solution is part of the project cost — not a surprise add-on that appears after the lot is stripped. Virginia's commercial lots that fail prematurely almost always share one cause: inadequate base drainage that was never corrected at construction time.</p>
+                <p>For active commercial properties — restaurants, retail centers, churches, office parks — we execute phased projects that keep customers and tenants moving throughout the job. We use temporary traffic control, section off active work zones, and coordinate night and weekend shifts to match your operational needs. A parking lot project should not cost you a single day of revenue.</p>
+                <p>After installation, a managed <Link to="/sealcoating" className="text-brand-amber hover:underline">sealcoating program every 3–5 years</Link> and routine <Link to="/crack-repair" className="text-brand-amber hover:underline">crack sealing</Link> whenever thermal cracks appear protect a 20–25 year life expectancy on properly built commercial asphalt. We provide a written maintenance schedule with every completed lot.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <p className="text-white font-black text-base uppercase tracking-widest mb-4">Commercial Markets We Serve</p>
+                <div className="grid grid-cols-2 gap-2 text-sm text-white/60">
+                  {[
+                    'Richmond City', 'Chester & Chesterfield',
+                    'Henrico & Short Pump', 'Midlothian & Bon Air',
+                    'Colonial Heights', 'Mechanicsville & Hanover',
+                    'Petersburg & Hopewell', 'Glen Allen & Innsbrook',
+                    'Hampton Roads', 'Northern Virginia',
+                    'Fredericksburg Corridor', 'Shenandoah Valley',
+                  ].map((city) => (
+                    <div key={city} className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-amber shrink-0" />
+                      <span>{city}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <p className="text-white font-black text-base uppercase tracking-widest mb-3">Related Services</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/sealcoating" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Sealcoating</Link>
+                  <Link to="/crack-repair" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Crack Repair</Link>
+                  <Link to="/paving" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Asphalt Paving</Link>
+                  <Link to="/residential" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Driveway Paving</Link>
+                </div>
+              </div>
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <p className="text-white font-black text-base uppercase tracking-widest mb-2">4th Generation. Since 1984.</p>
+                <p className="text-white/50 text-sm leading-relaxed">Family-owned and operated out of Chester, Virginia. No project management layers, no subcontracted crews, no national franchise pricing. The owner reviews your scope, your crew knows the layout, and your lot is treated like it belongs to someone who cares.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -182,9 +182,9 @@ export default function VirginiaSealcoating() {
 
           <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-4">Virginia Statewide Sealcoating Authority</p>
           <h1 className="font-display font-black text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.88] max-w-5xl mb-8">
-            Sealcoating <br />
-            <span className="text-primary italic">That Destroys</span><br />
-            The Competition.
+            Asphalt Sealcoating <br />
+            <span className="text-primary italic">in Central</span><br />
+            Virginia.
           </h1>
           <p className="text-gray-300 text-lg md:text-2xl max-w-2xl leading-relaxed mb-10">
             Six sealcoat materials. Four crack-filler systems. 40 years of Virginia pavement science.
@@ -326,6 +326,94 @@ export default function VirginiaSealcoating() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Virginia Sealcoating Context ────────────────────────────────── */}
+      <section className="py-24 bg-card border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Why Virginia Asphalt Oxidizes Faster</p>
+              <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tight mb-6">
+                Sealcoating in Virginia's Climate Is Not Optional.
+              </h2>
+              <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+                <p>Virginia's climate is one of the most demanding environments for asphalt in the eastern United States. Richmond averages 35–45 freeze-thaw cycles per winter — each cycle pushing water into micro-cracks, freezing, expanding, and widening the gap. Summer surface temperatures routinely reach 140–160°F, accelerating the oxidation that turns fresh black asphalt grey and brittle. Left unsealed, most driveways and parking lots begin showing surface cracking within three to five years of installation.</p>
+                <p>Sealcoating arrests that oxidation cycle. A properly applied sealer blocks UV penetration, closes surface pores against water intrusion, and restores the binder oils that keep asphalt flexible through temperature swings. Applied on a 2–4 year schedule, it's the single highest-return maintenance investment in pavement management — typically extending pavement life by 50–100% at a fraction of resurfacing cost.</p>
+                <p>The material choice matters as much as the schedule. Residential driveways in Chesterfield and Henrico typically perform best with asphalt emulsion — it bonds well to residential mixes and handles the freeze-thaw cycle cleanly. Commercial lots with fuel exposure (gas stations, QSR drive-thrus, industrial yards) require coal-tar emulsion, which resists petroleum solvents that break down standard sealers. We spec the right material for the surface — not the one with the highest margin.</p>
+                <p>Every job starts with <Link to="/crack-repair" className="text-primary hover:underline font-medium">hot-pour rubberized crack sealing</Link> before any sealer goes down. Applying sealcoat over open cracks creates a cosmetic result that fails within one season. Crack fill first. Seal second. That's the only sequence that protects the base.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="border border-border bg-background p-6">
+                <p className="font-display font-black text-foreground text-lg uppercase tracking-tight mb-4">Where We Sealcoat</p>
+                <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+                  {[
+                    'Chester & Chesterfield', 'Richmond City', 'Henrico & Short Pump',
+                    'Midlothian & Bon Air', 'Mechanicsville & Hanover', 'Colonial Heights',
+                    'Petersburg & Hopewell', 'Ashland & Doswell', 'Glen Allen',
+                    'Hampton Roads', 'Northern Virginia', 'Shenandoah Valley',
+                  ].map((city) => (
+                    <div key={city} className="flex items-center gap-1.5">
+                      <div className="w-1 h-1 rounded-full bg-primary shrink-0" />
+                      <span>{city}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="border border-primary/40 bg-primary/5 p-6">
+                <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-3">Related Services</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/crack-repair" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Crack Repair</Link>
+                  <Link to="/residential" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Driveway Paving</Link>
+                  <Link to="/parking-lots" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Parking Lots</Link>
+                  <Link to="/paving" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Asphalt Paving</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ Section ──────────────────────────────────────────────────── */}
+      <section className="py-24 bg-background border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <div className="mb-12">
+            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Common Questions</p>
+            <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tight">
+              Sealcoating FAQ — Virginia
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {[
+              {
+                q: 'What is the best sealcoating material for a Virginia driveway?',
+                a: 'For residential driveways in Virginia, asphalt emulsion is the most practical choice — it bonds well to residential asphalt mixes, handles the Richmond freeze-thaw cycle cleanly, and is suitable for the eco-sensitive residential corridor from Midlothian to Mechanicsville. Coal-tar emulsion is recommended for surfaces with fuel or oil exposure: gas stations, industrial yards, and QSR drive-thrus. We specify the right material at the estimate stage — not the cheapest one available.',
+              },
+              {
+                q: 'How often should I sealcoat my asphalt driveway in Virginia?',
+                a: 'Every 2–4 years depending on sun exposure, traffic volume, and the condition of the previous seal. Virginia\'s hot summers (surface temps regularly hit 140°F) accelerate UV oxidation faster than northern climates. A driveway with full southern sun exposure needs sealing closer to every 2 years; a shaded driveway can go 3–4. We provide a written maintenance schedule with every project.',
+              },
+              {
+                q: 'Do you fill cracks before sealcoating?',
+                a: 'Yes — always. We hot-pour rubberized crack filler at 400°F before any sealer application. Applying sealer over open cracks creates a cosmetic fix that fails within one freeze-thaw season. Crack fill first, cure, then seal. That\'s the only process that delivers lasting results.',
+              },
+              {
+                q: 'What areas of Virginia do you serve for sealcoating?',
+                a: 'We serve the entire Commonwealth — Richmond metro (Chester, Chesterfield, Henrico, Midlothian, Mechanicsville, Hanover, Ashland), Hampton Roads (Norfolk, Virginia Beach, Chesapeake, Suffolk), Northern Virginia, Shenandoah Valley, Roanoke, Charlottesville, and Fredericksburg corridor.',
+              },
+              {
+                q: 'How long does sealcoating take to dry in Virginia weather?',
+                a: 'Under ideal conditions (70–85°F, low humidity, light wind), a freshly sealed surface is dry to foot traffic in 4–6 hours and ready for vehicles in 24 hours. Virginia\'s humid summers can extend cure time — we monitor conditions and schedule jobs accordingly. We never apply sealer when rain is forecast within 24 hours or when surface temperature is below 55°F.',
+              },
+            ].map((faq) => (
+              <article key={faq.q} className="border border-border bg-card p-6">
+                <h3 className="font-display font-black text-foreground text-lg uppercase tracking-tight leading-tight mb-3">{faq.q}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
