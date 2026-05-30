@@ -1749,7 +1749,43 @@ export const LOCATIONS = [
   },
 
   // Surrounding Counties
-  { slug: 'charlottesville-va',  city: 'Charlottesville',  state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Albemarle',     geo: { lat: 38.0293, lng: -78.4767 } },
+  {
+    slug: 'charlottesville-va',
+    city: 'Charlottesville',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Albemarle',
+    geo: { lat: 38.0293, lng: -78.4767 },
+    headline: 'Asphalt Paving in Charlottesville, VA — UVA-Adjacent Driveways, Historic-District Lots & Albemarle Estate Approaches',
+    intro:
+      'Charlottesville sits at the foot of the Blue Ridge, and paving here means navigating historic-district sensibilities in Belmont and Woolen Mills, steep-grade driveways in the Pantops and Ragged Mountain fringe, and the base specifications that Albemarle County\'s expansive red clay demands. We pave residential driveways through Fry\'s Spring and North Downtown, resurface commercial lots near the Route 29 corridor and Barracks Road, and build long rural approaches for estate properties in Free Union, Earlysville, and along Route 250 West toward Crozet. Urban tight-lot work and rural estate paving call for different specs — and we know which is which.',
+    neighborhoods: [
+      'Belmont', "Fry's Spring", 'North Downtown', 'Woolen Mills',
+      'Locust Grove', 'Fifeville', 'Pantops', 'Barracks', 'Johnson Village',
+    ],
+    landmarks: ['University of Virginia', 'Barracks Road Shopping Center', 'Monticello (Route 53)', 'Route 29 North corridor', 'Ragged Mountain Reservoir', 'Rivanna River'],
+    climate: {
+      title: 'Albemarle Clay, Blue Ridge Freeze-Thaw & Historic-District Constraints',
+      body: 'Charlottesville averages 35–40 freeze-thaw cycles per year — enough to pump any base that was under-compacted or built too shallow. Albemarle\'s red-orange clay is expansive: it swells with winter moisture and contracts and cracks in July heat. We build a minimum 6-inch compacted aggregate base on residential driveways and go deeper on estate approaches that carry horse trailers or farm equipment. In Belmont and the Woolen Mills historic corridor, we work to a tight footprint, protect mature trees with root-bridge geogrid, and keep staging off brick-curbed streetscapes.',
+    },
+    faqs: [
+      {
+        q: 'How much does driveway paving cost in Charlottesville?',
+        a: 'Residential driveways in Charlottesville and Albemarle County typically run $4–$8 per square foot installed, depending on base condition, grade, and access. Steep approaches on the Ragged Mountain fringe or rural estate lanes in Free Union cost more because of the extra grading, drainage, and deeper base required. We provide free written estimates with a line-item breakdown.',
+      },
+      {
+        q: 'Does Albemarle County require a permit for driveway paving near Route 29 or Route 250?',
+        a: 'A VDOT entrance permit is required any time a driveway connects to a state-maintained road, which includes most Route 29, Route 250, and Route 20 frontages in Albemarle County. We handle VDOT entrance permit applications on those jobs. Work entirely on private property with an existing entrance does not require a separate permit.',
+      },
+      {
+        q: 'Can you pave a steep or curved driveway in the Charlottesville hills?',
+        a: 'Yes — steep grades and curved approaches in the Pantops area and along the mountain fringes are routine for us. We grade a consistent cross-fall so water sheds off the edges rather than running down the center, install interceptor drains at transition points, and use a slightly slower-set binder mix on grades above 8% to prevent shoving.',
+      },
+    ],
+    reviews: 29,
+    rating: 4.9,
+  },
   {
     slug: 'hanover-va',
     city: 'Hanover',
@@ -1787,9 +1823,117 @@ export const LOCATIONS = [
     reviews: 33,
     rating: 4.9,
   },
-  { slug: 'powhatan-va',         city: 'Powhatan',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Powhatan',      geo: { lat: 37.5435, lng: -77.9166 } },
-  { slug: 'goochland-va',        city: 'Goochland',        state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Goochland',     geo: { lat: 37.6837, lng: -77.8836 } },
-  { slug: 'amelia-va',           city: 'Amelia',           state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Amelia',        geo: { lat: 37.3438, lng: -77.9836 } },
+  {
+    slug: 'powhatan-va',
+    city: 'Powhatan',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Powhatan',
+    geo: { lat: 37.5435, lng: -77.9166 },
+    headline: 'Asphalt Paving in Powhatan County, VA — Equestrian Driveways, Estate Approaches & Rural Property Paving',
+    intro:
+      'Powhatan County is horse country — large rural lots, long driveway runs, and equestrian-property approaches that have to handle trailer traffic without rutting. We pave residential driveways and farm lanes throughout the Route 60 corridor and around Powhatan Court House, Flat Rock, and Tobaccoville. Builder fill from newer subdivisions along the Route 60 / Route 13 growth corridor hides compaction failures that don\'t show up until the first hard winter — we diagnose base problems before we pave and fix them rather than cover them. Whether it\'s a 600-foot estate entrance or a simple 2-car residential pour, Powhatan jobs get the drainage crown and base depth rural clay soil demands.',
+    neighborhoods: [
+      'Powhatan Court House', 'Flat Rock', 'Tobaccoville', 'Fine Creek Mills',
+      'Huguenot Trail corridor', 'Route 60 West', 'Maidens', 'Belboeuf',
+    ],
+    landmarks: ['Powhatan State Park', 'Powhatan County Courthouse', 'Route 60 corridor', 'Huguenot Trail', 'James River (Powhatan access)', 'Fine Creek'],
+    climate: {
+      title: 'Rural Clay Subsoil, Equestrian Traffic & Long Driveway Drainage',
+      body: 'Powhatan\'s Piedmont clay swells in wet winters and shrinks in dry summers — the same expansion-contraction cycle that cracks undersized bases across Central Virginia. Equestrian-property driveways face a compounding load: horses, trailers, and feed deliveries hit the surface repeatedly at concentrated points, which demands a deeper base than a passenger-car driveway. We build equestrian approaches with a 6–8-inch compacted aggregate base, proper crown for edge drainage, and a binder course specified for moderate traffic. Long rural runs also need turnouts or widened passing areas at the bottom to prevent mud push-off from trailer backing.',
+    },
+    faqs: [
+      {
+        q: 'Can you pave a horse farm driveway or trailer approach in Powhatan County?',
+        a: 'Yes — equestrian driveways and trailer approaches are regular work for us in Powhatan. We build them to a heavier spec than standard residential: deeper aggregate base, a crowned cross-section that drains to both edges, and a concrete or reinforced apron at the turning area if needed. Standard residential asphalt spec ruts under repeated trailer loading within a few years.',
+      },
+      {
+        q: 'Do new subdivisions in Powhatan County have paving problems?',
+        a: 'Some do. Builder fill on newer Route 60 corridor lots is sometimes placed fast and not compacted properly, leaving a spongy base that pumps under traffic. We probe and test before we quote — if the base is soft, we excavate and recompact rather than pave over a problem. A failed base repair costs two to three times as much as fixing it before the first pour.',
+      },
+      {
+        q: 'What does a long rural driveway cost in Powhatan?',
+        a: 'Rural residential driveways in Powhatan County typically run $4–$7 per square foot installed. Long runs — 300 feet or more — can be lower per foot because fixed mobilization costs spread over more area. Equestrian approaches with heavier base specs cost more. We provide free on-site estimates for any property in Powhatan.',
+      },
+    ],
+    reviews: 22,
+    rating: 4.9,
+  },
+  {
+    slug: 'goochland-va',
+    city: 'Goochland',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Goochland',
+    geo: { lat: 37.6837, lng: -77.8836 },
+    headline: 'Asphalt Paving in Goochland County, VA — River Road Estate Driveways, Rural Lanes & Wine Country Approaches',
+    intro:
+      'Goochland County stretches along the James River between Richmond\'s western suburbs and the Piedmont interior, and the paving work here reflects that geography: West End-adjacent estate driveways on River Road and Route 6, rural farm and vineyard approaches west of Goochland Court House, and the longer low-density runs that come with Goochland\'s five-acre minimum lot size in most of the county. The James River corridor brings river-bank clay with high moisture variability — driveways here fail from base saturation as often as from load. We build to the soil, not to a generic spec.',
+    neighborhoods: [
+      'Goochland Court House', 'Manakin-Sabot', 'Hadensville', 'Fife',
+      'Shallow Well', 'Centerville', 'Sandy Hook', 'River Road corridor',
+    ],
+    landmarks: ['Goochland County Courthouse', 'River Road / Route 6 corridor', 'James River (Goochland access)', 'Elk Hill Farm Winery', 'Tuckahoe Creek', 'Route 250 West'],
+    climate: {
+      title: 'James River Clay, River-Bank Moisture & Low-Density Long Driveways',
+      body: 'Goochland\'s riverfront properties sit on alluvial clay that retains moisture long after rain has stopped — a base problem for any paving that wasn\'t set deep enough or drained properly. Further back from the river the soil transitions to Piedmont red clay with the same shrink-swell behavior seen across Central Virginia. Long rural driveways — common in Goochland given the lot sizes — need a full crown so water runs to the edges, not the center, and properly sloped turnouts where the grade changes. We size the base to the soil profile and traffic, not to a residential minimum.',
+    },
+    faqs: [
+      {
+        q: 'Do you pave driveways on River Road and the Route 6 corridor in Goochland?',
+        a: 'Yes — River Road and Route 6 in Manakin-Sabot and Fife are regular service areas for us. Estate driveways along the river corridor get a properly drained base with geotextile filter fabric under the aggregate where the soil is particularly wet, and we match the finished width and edge treatment to the property character.',
+      },
+      {
+        q: 'What is the minimum driveway spec for a property in rural Goochland?',
+        a: 'For a rural residential driveway in Goochland we build a minimum 6-inch compacted 21-A aggregate base, a full-width geotextile fabric separator where clay subsoil is soft or wet, a 2-inch binder course, and 1.5-inch surface. Longer runs or heavier traffic — farm equipment, boat trailers — get a deeper binder and additional base.',
+      },
+      {
+        q: 'Can you pave a vineyard or winery approach road in Goochland County?',
+        a: 'Yes. Vineyard and farm access roads carry delivery trucks, harvest equipment, and event visitor traffic — they need a commercial-grade base even if they look rural. We\'ve built and rebuilt farm lane approaches across Goochland and the surrounding wine country and spec them to the heaviest anticipated load, not the lightest.',
+      },
+    ],
+    reviews: 18,
+    rating: 5.0,
+  },
+  {
+    slug: 'amelia-va',
+    city: 'Amelia',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Amelia',
+    geo: { lat: 37.3438, lng: -77.9836 },
+    headline: 'Asphalt Paving in Amelia County, VA — Southside Rural Driveways, Farm Lanes & Tar and Chip Paving',
+    intro:
+      'Amelia County is deep Southside rural — long driveways on large lots, county-maintained gravel roads that transition to private asphalt or tar-and-chip, and the kind of low-traffic estate paving that rewards a proper base over a rushed surface. We serve Amelia Court House and the Route 360 / Route 153 corridors, paving residential driveways and farm lane approaches for properties spread across one of Virginia\'s most rural counties. Tar and chip is a strong option here — it matches the rural aesthetic, handles the low traffic volumes well, and costs 30–40% less than full hot-mix on long driveways while lasting 10–15 years with a chip seal renewal.',
+    neighborhoods: [
+      'Amelia Court House', 'Deatonsville', 'Jetersville', 'Mannboro',
+      'Winterham', 'Chula', 'Route 360 corridor', 'Route 153 corridor',
+    ],
+    landmarks: ['Amelia County Courthouse', 'Route 360 corridor', 'Appomattox-Buckingham State Forest (Amelia fringe)', 'Amelia Wildlife Management Area', 'Deep Creek'],
+    climate: {
+      title: 'Southside Clay, Low Traffic & Tar-and-Chip Suitability',
+      body: 'Amelia\'s soils are Southside Piedmont clay — heavy, slow-draining, and prone to base saturation after wet winters. Long rural driveways on large lots mean water runoff has to be managed the full length of the run, not just at the entrance. Because Amelia sees low daily traffic volumes on most private driveways, tar-and-chip is frequently the right call: it drains better than impervious asphalt, handles freeze-thaw without cracking as severely, and is renewable with a chip seal top coat at roughly 40% of replacement cost. For heavier-traffic entrances and commercial properties, we build full hot-mix with the compacted aggregate base and drainage crowns that Virginia clay demands.',
+    },
+    faqs: [
+      {
+        q: 'Is tar and chip a good choice for a rural driveway in Amelia County?',
+        a: 'Yes — for a low-traffic rural driveway in Amelia, tar and chip typically runs $2.50–$4.50 per square foot installed versus $4–$7 for full hot-mix asphalt. It drains well on long runs, tolerates the freeze-thaw cycle, suits the rural aesthetic, and can be renewed with a chip seal top coat at about 40% of replacement cost every 8–12 years. We\'ll walk you through both options so you can decide what fits your budget and use.',
+      },
+      {
+        q: 'How deep does the base need to be on a rural driveway in Amelia County?',
+        a: 'On Amelia\'s Southside clay, we build a minimum 6-inch compacted aggregate base for standard residential driveways. Longer runs where water has more time to infiltrate the base, or driveways that carry farm equipment, get 8 inches or a geotextile separator under the stone to prevent clay pumping up through the base material.',
+      },
+      {
+        q: 'Do you serve Amelia Court House and the surrounding rural properties?',
+        a: 'Yes — Amelia Court House and the full Route 360 and Route 153 corridors are service areas for us. Rural Southside is where we started and these counties get the same on-site assessment and written estimate process as our Richmond-area work.',
+      },
+    ],
+    reviews: 16,
+    rating: 4.8,
+  },
   {
     slug: 'ashland-va',
     city: 'Ashland',
@@ -1827,11 +1971,191 @@ export const LOCATIONS = [
     reviews: 26,
     rating: 5.0,
   },
-  { slug: 'charles-city-va',     city: 'Charles City',     state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Charles City',  geo: { lat: 37.3424, lng: -77.0758 } },
-  { slug: 'cumberland-va',       city: 'Cumberland',       state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Cumberland',    geo: { lat: 37.5101, lng: -78.2422 } },
-  { slug: 'fluvanna-va',         city: 'Fluvanna',         state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Fluvanna',      geo: { lat: 37.8412, lng: -78.2769 } },
-  { slug: 'louisa-va',           city: 'Louisa',           state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'Louisa',        geo: { lat: 37.9786, lng: -77.9961 } },
-  { slug: 'king-william-va',     city: 'King William',     state: 'Virginia', stateAbbr: 'VA', region: 'Central Virginia',                county: 'King William',  geo: { lat: 37.6826, lng: -77.1011 } },
+  {
+    slug: 'charles-city-va',
+    city: 'Charles City',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Charles City',
+    geo: { lat: 37.3424, lng: -77.0758 },
+    headline: 'Asphalt Paving in Charles City County, VA — James River Plantation Approaches & Historic Rural Driveways',
+    intro:
+      'Charles City County is one of Virginia\'s most historically significant rural counties — Route 5 runs through it as a National Scenic Byway, connecting Richmond to Williamsburg past Shirley, Berkeley, and Westover Plantations. Paving here means long estate and plantation-approach driveways on James River alluvial clay, farm lane rebuilds on working agricultural properties, and the occasional commercial or civic lot along the thin Route 5 commercial corridor. We understand that a paving job in Charles City County is visible to historic properties and neighbors who take the landscape seriously — and we work accordingly.',
+    neighborhoods: [
+      'Charles City Court House', 'Weyanoke', 'Ruthville', 'Barretts',
+      'Lanexa fringe', 'Route 5 corridor', 'Sherwood Forest',
+    ],
+    landmarks: ['Shirley Plantation', 'Berkeley Plantation', 'Westover Plantation', 'Sherwood Forest (John Tyler estate)', 'Route 5 National Scenic Byway', 'James River (Charles City access)'],
+    climate: {
+      title: 'James River Alluvial Clay, Historic-Landscape Sensitivity & Long Low-Traffic Runs',
+      body: 'The James River bottomlands through Charles City carry alluvial clay that retains moisture year-round — a base-saturation risk if the sub-grade drainage and stone base aren\'t set correctly. Plantation and estate driveways here can run 500–1,500 feet, which means the grade and crown have to be designed to drain water the full length of the run without ponding at any transition point. Traffic volumes are low enough that tar-and-chip is an appropriate surface alternative on working farm lanes, and it fits the rural landscape better than a glossy black asphalt finish.',
+    },
+    faqs: [
+      {
+        q: 'Can you pave a long plantation or estate driveway in Charles City County?',
+        a: 'Yes — long estate and plantation-approach driveways along Route 5 and the James River corridor are the kind of work we do in Charles City County. We design the grade and drainage for the full run, not just the entrance, set the base depth to the soil moisture conditions, and deliver a clean finished edge that fits a historic landscape.',
+      },
+      {
+        q: 'Is tar and chip suitable for a farm lane in Charles City County?',
+        a: 'Yes — for low-traffic farm lanes in Charles City, tar and chip runs $2.50–$4.50 per square foot installed versus $4–$7 for full hot-mix. It handles the clay subsoil drainage better than an impervious asphalt surface on long rural runs, suits the agricultural landscape, and can be chip-seal renewed at about 40% of replacement cost every 8–12 years.',
+      },
+      {
+        q: 'How far out is Charles City County for J. Worden & Sons?',
+        a: 'Charles City County is about 30–45 minutes east of our Chester base depending on where in the county the property sits. We serve the full Route 5 corridor from the New Kent County line to the Williamsburg fringe, and we provide free on-site estimates with no travel charge to the county.',
+      },
+    ],
+    reviews: 14,
+    rating: 5.0,
+  },
+  {
+    slug: 'cumberland-va',
+    city: 'Cumberland',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Cumberland',
+    geo: { lat: 37.5101, lng: -78.2422 },
+    headline: 'Asphalt Paving in Cumberland County, VA — Remote Rural Driveways, Farm Lanes & Estate Approaches',
+    intro:
+      'Cumberland County sits between the Appomattox River and the James River, west of Powhatan and south of Goochland — one of Central Virginia\'s most rural and least-developed counties. Paving here is almost entirely residential and agricultural: long driveways on large rural lots, farm lane rebuilds on working properties, and the occasional church or community hall parking lot. Low traffic volumes and tight budgets make tar-and-chip a frequent fit for Cumberland, and we know how to build it to last on the Piedmont clay that dominates the county\'s subsoil.',
+    neighborhoods: [
+      'Cumberland Court House', 'Cartersville', 'Farmville fringe', 'Columbia',
+      'Faber', 'Route 60 corridor', 'Route 45 corridor',
+    ],
+    landmarks: ['Cumberland County Courthouse', 'Appomattox River (Cumberland access)', 'James River (western access)', 'Route 60 corridor', 'Willis Mountain (kyanite quarry)'],
+    climate: {
+      title: 'Piedmont Clay, Appomattox River Moisture & Rural Low-Traffic Paving',
+      body: 'Cumberland\'s Piedmont soils are heavy clay with poor drainage — the same subsoil profile as the rest of the Central Virginia Piedmont, but with more rural isolation and less access to the rapid-response contractors that serve suburban markets. That means a base failure on a Cumberland driveway can sit unrepaired for years, getting progressively worse. We diagnose the existing sub-grade condition before quoting so we\'re fixing the problem, not just covering it up. For low-traffic rural lanes, we evaluate whether tar-and-chip delivers better value than full hot-mix, and we give you honest numbers for both.',
+    },
+    faqs: [
+      {
+        q: 'Do you serve Cumberland County for residential and farm paving?',
+        a: 'Yes — we serve Cumberland Court House, Cartersville, and the Route 60 and Route 45 corridors. Cumberland is farther out than our Richmond core but we make the drive and provide free on-site estimates with no travel charge within the county.',
+      },
+      {
+        q: 'Is tar and chip a good option for a low-budget rural driveway in Cumberland?',
+        a: 'For a low-traffic rural driveway in Cumberland, tar and chip typically saves 30–40% compared to full hot-mix — running $2.50–$4.50 per square foot installed versus $4–$7 for asphalt. It performs well on low-traffic clay subsoil conditions and can be renewed with a chip seal at 40% of replacement cost every 8–12 years. We\'ll walk through both options with you on-site.',
+      },
+      {
+        q: 'My gravel driveway in Cumberland has soft spots and ruts — can it be paved over?',
+        a: 'Usually not without addressing the soft spots first. Soft gravel sections are typically caused by sub-grade clay saturation or base material that has been pumped up by clay underneath. We probe and test before we quote — if the base needs work, we excavate and recompact before paving rather than letting a weak spot turn into a warranty claim.',
+      },
+    ],
+    reviews: 12,
+    rating: 4.9,
+  },
+  {
+    slug: 'fluvanna-va',
+    city: 'Fluvanna',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Fluvanna',
+    geo: { lat: 37.8412, lng: -78.2769 },
+    headline: 'Asphalt Paving in Fluvanna County, VA — Lake Monticello Driveways, Palmyra Lots & Route 250 Corridor Paving',
+    intro:
+      'Fluvanna County is growing faster than most of Central Virginia\'s rural counties, driven largely by Lake Monticello — a private residential lake community east of Charlottesville that has brought thousands of homes and driveways to an otherwise rural county. We pave driveways throughout Lake Monticello\'s neighborhoods, resurface commercial lots along the Route 250 corridor in Palmyra, and build new driveways and access roads for the new-construction growth spreading east from Charlottesville. Builder fill compaction on newer Fluvanna lots is a known issue — we check before we pour.',
+    neighborhoods: [
+      'Lake Monticello', 'Palmyra', 'Columbia', 'Cunningham',
+      'Fork Union', 'Riverton', 'Route 250 corridor',
+    ],
+    landmarks: ['Lake Monticello', 'Fluvanna County Courthouse (Palmyra)', 'Fork Union Military Academy', 'Route 250 corridor', 'James River (Columbia access)', 'Rivanna River'],
+    climate: {
+      title: 'Lake Monticello Clay Fill, Rapid Growth & Freeze-Thaw Exposure',
+      body: 'Lake Monticello\'s neighborhoods were developed in multiple phases over several decades, and the base quality under older driveways varies widely. Some 1970s and 1980s-era driveways were built on poorly compacted fill that has been slowly settling ever since. Newer construction around Palmyra and the Route 250 growth corridor sometimes has the opposite problem: builder fill placed for speed rather than compaction that fails in the first winter. Fluvanna\'s Piedmont clay also runs cold and wet in January and February — 35–40 freeze-thaw cycles per year is enough to crack any base with hidden soft spots.',
+    },
+    faqs: [
+      {
+        q: 'Do you pave driveways in Lake Monticello?',
+        a: 'Yes — Lake Monticello is a primary service area for Fluvanna County work. We pave new driveways, resurface aging ones, and repair cracked or settled sections throughout the community. Lake Monticello\'s gate and road access rules are familiar to us — we coordinate delivery and equipment timing to work within the community\'s requirements.',
+      },
+      {
+        q: 'How much does driveway paving cost in Fluvanna County?',
+        a: 'Residential driveways in Fluvanna County typically run $4–$7 per square foot installed. Lake Monticello driveways on level lots toward the lower end; steeper or longer driveways that need extra drainage work or base remediation toward the higher end. We provide free on-site estimates with a written line-item breakdown.',
+      },
+      {
+        q: 'My Lake Monticello driveway is cracking and has soft spots — what\'s the fix?',
+        a: 'Soft spots under an asphalt surface usually mean base failure — either the original fill compaction was inadequate or clay has migrated up through the stone. A surface overlay won\'t hold over a soft base. We core or probe the soft areas, excavate to stable material, recompact and replace the base, then resurface. The repair costs more than a straight overlay but it lasts instead of failing again in two winters.',
+      },
+    ],
+    reviews: 24,
+    rating: 4.9,
+  },
+  {
+    slug: 'louisa-va',
+    city: 'Louisa',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'Louisa',
+    geo: { lat: 37.9786, lng: -77.9961 },
+    headline: 'Asphalt Paving in Louisa County, VA — Lake Anna Driveways, Rural Property Paving & Route 33 Corridor',
+    intro:
+      'Louisa County is Lake Anna country — the largest inland lake in Virginia, ringed by second-home properties, recreational residences, and year-round lakefront driveways that take a beating from boat-trailer and ATV traffic. We pave residential driveways throughout Lake Anna\'s Louisa County shoreline, build new driveways for the new-construction growth pushing west from the Fredericksburg corridor, and service rural properties along Route 33 and Route 208. Lake Anna properties need heavier base specs than typical residential — boat trailers, jet ski rigs, and the sandy loam soils near the lake require a deeper foundation to stay stable.',
+    neighborhoods: [
+      'Lake Anna (Louisa County shoreline)', 'Louisa Court House', 'Mineral',
+      'Bumpass', 'Ferncliff', 'Trevilians', 'Route 208 corridor',
+    ],
+    landmarks: ['Lake Anna', 'Lake Anna State Park', 'Dominion Energy North Anna Power Station', 'Louisa County Courthouse', 'Route 208 corridor', 'CSX rail corridor (Trevilians)'],
+    climate: {
+      title: 'Sandy Lake Soils, Boat-Trailer Traffic & Freeze-Thaw Exposure',
+      body: 'Lake Anna\'s Louisa County shoreline sits on sandy loam soils rather than the pure clay found farther south in the Piedmont — which means water moves faster but the base material can wash out if the drainage isn\'t designed correctly. Boat-trailer driveways need a wider turning radius, a concrete or heavily reinforced apron at the bottom, and enough slope to drain water off the launch area rather than pooling on the surface. Further inland on the Route 33 and Route 208 corridors, Piedmont clay returns, and the usual freeze-thaw base requirements apply. Louisa County averages 35–40 freeze-thaw cycles per year.',
+    },
+    faqs: [
+      {
+        q: 'Do you pave driveways at Lake Anna in Louisa County?',
+        a: 'Yes — Lake Anna driveways on the Louisa County side are a regular service area for us. Lakefront driveways often carry boat trailers, ATVs, and recreational equipment that standard residential asphalt isn\'t spec\'d for. We build them heavier: deeper aggregate base, reinforced apron at the turning/launch area, and drainage designed for both rain runoff and trailer wash-down.',
+      },
+      {
+        q: 'How much does driveway paving cost in Louisa County?',
+        a: 'Residential driveways in Louisa County typically run $4–$7 per square foot installed. Lake Anna lakefront driveways with boat-trailer aprons and reinforced turning areas are toward the higher end. We provide free on-site estimates — call or text for availability.',
+      },
+      {
+        q: 'My Lake Anna driveway has cracking and edge failures — can it be repaired or does it need to be replaced?',
+        a: 'It depends on the base condition. Surface cracks that haven\'t broken through to the base can be crack-filled and sealed to extend life 3–5 years. Edge failures where the asphalt is crumbling at the sides usually indicate the base has washed out — those sections need excavation, base replacement, and a new surface patch. A full replacement is warranted when more than 30% of the surface shows structural failure. We assess and give you an honest recommendation on repair vs replace.',
+      },
+    ],
+    reviews: 20,
+    rating: 4.9,
+  },
+  {
+    slug: 'king-william-va',
+    city: 'King William',
+    state: 'Virginia',
+    stateAbbr: 'VA',
+    region: 'Central Virginia',
+    county: 'King William',
+    geo: { lat: 37.6826, lng: -77.1011 },
+    headline: 'Asphalt Paving in King William County, VA — Rural Driveways, Farm Lanes & Mattaponi River Corridor Paving',
+    intro:
+      'King William County sits between the Pamunkey and Mattaponi Rivers northeast of Richmond — one of Virginia\'s most rural and historically rooted counties, home to the Pamunkey and Mattaponi Indian Tribal communities and thousands of acres of working farmland. Paving here is almost entirely rural: long residential driveways on large lots, farm lane rebuilds, and the occasional civic or church lot along the Route 360 corridor through King William Court House. Low traffic volumes, large properties, and rural clay subsoil make tar-and-chip a practical choice for many King William jobs alongside full hot-mix asphalt.',
+    neighborhoods: [
+      'King William Court House', 'Aylett', 'West Point fringe', 'Mangohick',
+      'Acquinton', 'Route 360 corridor', 'Mattaponi corridor',
+    ],
+    landmarks: ['King William County Courthouse', 'Mattaponi Indian Tribal Reservation', 'Pamunkey Indian Tribal Reservation', 'Pamunkey River', 'Mattaponi River', 'Route 360 corridor'],
+    climate: {
+      title: 'River-Bottom Clay, Long Rural Driveways & Low-Traffic Paving Needs',
+      body: 'King William\'s Pamunkey and Mattaponi River bottomlands carry heavy alluvial clay that holds moisture through the winter — a base-saturation problem if the sub-grade drainage and aggregate base aren\'t sized to the soil. Long rural driveways on these floodplain-adjacent lots need a crowned cross-section, proper side drainage, and a base that won\'t pump clay up through the stone. Inland areas transition to Piedmont clay with the familiar freeze-thaw cycle exposure. Because daily traffic volumes on most King William driveways are low, we evaluate tar-and-chip versus full asphalt on every job and give you honest cost and performance numbers for both options.',
+    },
+    faqs: [
+      {
+        q: 'Do you pave driveways and farm lanes in King William County?',
+        a: 'Yes — King William County is a service area for us, including the Route 360 corridor, Aylett, and the Mattaponi and Pamunkey River corridor properties. Rural King William is about 45–60 minutes from our Chester base and we provide free on-site estimates with no travel charge within the county.',
+      },
+      {
+        q: 'Is tar and chip a good fit for a King William County rural driveway?',
+        a: 'Often yes. Tar and chip typically runs $2.50–$4.50 per square foot in King William versus $4–$7 for full hot-mix asphalt — a 30–40% savings on long rural runs. It handles clay subsoil conditions and freeze-thaw well on low-traffic driveways, fits the rural landscape, and can be chip-seal renewed at about 40% of replacement cost every 8–12 years. We\'ll walk through both options with you on-site.',
+      },
+      {
+        q: 'My King William gravel driveway turns to mud in wet weather — can it be paved?',
+        a: 'Yes, and it\'s usually the right call when a gravel driveway is causing repeated maintenance headaches. We grade and crown the sub-grade first, install geotextile fabric to separate the clay from the aggregate, build the compacted base, and then pave. A properly built asphalt or tar-and-chip surface eliminates the mud problem permanently rather than adding more gravel every year.',
+      },
+    ],
+    reviews: 15,
+    rating: 5.0,
+  },
 
 ];
 
