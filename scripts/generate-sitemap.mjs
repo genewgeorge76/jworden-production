@@ -84,7 +84,8 @@ function collectGeneratedBlogPaths() {
 
     for (const file of files) {
       const source = readFileSync(resolve(GENERATED_BLOGS_DIR, file), 'utf8');
-      const match = source.match(/canonicalPath=\{'([^']+)'\}/);
+      const match = source.match(/canonicalPath=(?:\{'([^']+)'\}|"([^"]+)")/);
+      if (match) { match[1] = match[1] || match[2]; }
       if (match?.[1]?.startsWith('/')) {
         paths.add(match[1]);
       }
