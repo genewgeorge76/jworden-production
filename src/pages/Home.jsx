@@ -385,11 +385,26 @@ export default function Home() {
           <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
           <div className="space-y-0 divide-y divide-gray-200">
             {[
-              { q: 'How much does asphalt driveway paving cost in Virginia?', a: 'Most residential driveways in Virginia run $4–$7 per square foot installed — a 1,000 sq ft driveway typically costs $4,000–$7,000 depending on base condition, grade, and access. We provide free written estimates with a line-item breakdown.' },
-              { q: 'How long does an asphalt driveway last in Virginia?', a: 'A properly installed asphalt driveway in Virginia lasts 20–30 years with maintenance. The biggest lever is sealcoating every 2–3 years ($0.15–$0.35/sq ft) and filling cracks before water reaches the base.' },
-              { q: 'Do you serve all of Virginia or just Richmond?', a: 'We serve all of Virginia from our Chester, VA headquarters — Richmond, Chesterfield, Henrico, Hampton Roads, Northern Virginia, Shenandoah Valley, and rural counties throughout the state.' },
-              { q: 'Are you licensed to pave in Virginia?', a: 'Yes — we hold a Virginia Class A Contractor license, are NASCLA certified, carry $5M general liability, and maintain workers\' compensation coverage. We can provide certificates of insurance on request.' },
-              { q: 'When is the best time of year to pave in Virginia?', a: 'Virginia paving season runs mid-April through early November. Peak months are May, June, September, and October. Minimum 50°F ambient temperature with no rain in the 24-hour window before or after paving.' },
+              {
+                q: 'How much does asphalt driveway paving cost in Virginia?',
+                a: 'Most residential driveways in Virginia run $4–$7 per square foot installed. The biggest cost variables are base condition (poor compaction or clay pumping adds $2–$5/sq ft to fix), grade complexity, and tear-out of an existing surface (+$1–$3/sq ft). A 1,000 sq ft driveway in average condition typically runs $4,500–$6,500 all-in. We provide free written estimates with a line-item breakdown — not just a number.',
+              },
+              {
+                q: 'Why do driveways fail early in Virginia?',
+                a: "Virginia's Piedmont clay is the #1 culprit. Clay swells with moisture in winter and shrinks in summer — that expansion cycle pumps base material upward and cracks the surface from below. Contractors who skip the geotextile fabric separator or pour less than 4–6 inches of compacted aggregate base will see failure in 5–8 years instead of 20–30. We diagnose the base before we quote so we're fixing the actual problem, not covering it.",
+              },
+              {
+                q: 'What areas of Virginia do you serve?',
+                a: 'We operate statewide from our Chester, VA headquarters — with full crews regularly working Richmond, Chesterfield, Henrico, Midlothian, Hampton Roads, Williamsburg, Northern Virginia, Fredericksburg, the Shenandoah Valley, and rural Southside and Piedmont counties. Central Virginia and the I-95 corridor typically get same-week estimates.',
+              },
+              {
+                q: 'Are you licensed and insured to pave in Virginia?',
+                a: 'Yes. Virginia Class A Contractor license (Board for Contractors, 9960 Mayland Drive, Richmond), NASCLA certified, $5M general liability, and workers\' compensation. We can provide certificates of insurance naming your property as additional insured — common for HOA and commercial projects.',
+              },
+              {
+                q: 'When is the best time of year to pave in Virginia?',
+                a: "Virginia's paving season runs mid-April through early November. May, June, September, and October give the best cure conditions — warm days, cool nights, low rain probability. We require a minimum 50°F ambient temperature (rising, not falling) and a 24-hour rain-free window on both sides. Scheduling in April or late October often means faster availability and sometimes off-peak pricing.",
+              },
             ].map(({ q, a }) => (
               <div key={q} className="py-6">
                 <p className="font-display text-gray-900 text-lg uppercase tracking-wide mb-2">{q}</p>
