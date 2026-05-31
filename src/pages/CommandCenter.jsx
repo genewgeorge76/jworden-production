@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
-import { api, trackEvent } from '@/api/client'
+import { api } from '@/api/client'
 import OwnerConfirmModal from '../components/OwnerConfirmModal'
 import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
@@ -709,9 +709,9 @@ function ActivityFeed() {
 function CrmTable() {
   const [leads, setLeads] = useState([])
   const [loading, setLoading] = useState(true)
-  const [actingId, setActingId] = useState(null)
-  const [actionKind, setActionKind] = useState(null) // 'call' | 'email'
-  const [_note, setNote] = useState('')
+  const [actingId, _setActingId] = useState(null)
+  const [actionKind, _setActionKind] = useState(null) // 'call' | 'email'
+  const [_note, _setNote] = useState('')
   const [_errorNote, setErrorNote] = useState('')
 
   const reload = useCallback(async () => {
@@ -744,7 +744,7 @@ function CrmTable() {
   }, [])
 
   // pending owner modal state
-  const [pendingOwnerAction, setPendingOwnerAction] = useState(null)
+  const [_pendingOwnerAction, setPendingOwnerAction] = useState(null)
   const [_showUnlockModal, setShowUnlockModal] = useState(false)
   const [_sessionUnlocked, setSessionUnlocked] = useState(() => {
     try {
@@ -753,47 +753,6 @@ function CrmTable() {
       return false
     }
   })
-
-  const _performPendingOwnerAction = useCallback(async ({ token = null } = {}) => {
-    if (!pendingOwnerAction) return
-    const { kind, lead } = pendingOwnerAction
-    // persist token to session if provided
-    try { if (token) window.sessionStorage.setItem('OWNER_TOKEN', token) } catch { /* noop */ }
-    setActingId(lead.id); setActionKind(kind); setErrorNote(''); setNote('')
-    try {
-      if (kind === 'call') {
-        const res = await api.jarvisCall(
-          lead.phone,
-          `Reach ${lead.name || 'lead'} about ${lead.service_type || lead.surface_type || 'their estimate'}`,
-          `Hi this is Jarvis calling on behalf of J. Worden & Sons about your ${lead.service_type || 'paving'} request. Is now a good time?`
-        )
-        const ok = res?.status === 'queued' || res?.status === 'success' || res?.call_id
-        setNote(ok ? `☎️ Jarvis is calling ${lead.name || lead.phone}…` : (res?.message || 'Call request sent.'))
-        appendJarvisActivity({ kind: 'call', leadId: lead.id, leadName: lead.name, phone: lead.phone, status: ok ? 'queued' : 'unknown', detail: res?.message || '' })
-        try { trackEvent('jarvis_call_lead', { lead_id: lead.id, source: 'crm_table' }) } catch { /* noop */ }
-      } else if (kind === 'email') {
-        const subject = `Following up on your ${lead.service_type || 'paving'} request — J. Worden & Sons`
-        const body = `Hi ${lead.name || 'there'},\n\nThanks for reaching out to J. Worden & Sons about your ${lead.service_type || 'project'}${lead.address ? ` at ${lead.address}` : ''}. We'd love to put together a free estimate. What's the best time for a quick call this week?\n\nWe're a 3rd-generation family business and every estimate is reviewed by Jeremy personally.\n\nReply to this email or text us at 804-446-1296.\n\n— J. Worden & Sons`
-        const res = await api.jarvisEmail(subject, body, lead.email)
-        const ok = res?.status === 'sent' || res?.status === 'queued' || res?.message_id
-        setNote(ok ? `✉️ Email sent to ${lead.email}` : (res?.message || 'Email request sent.'))
-        appendJarvisActivity({ kind: 'email', leadId: lead.id, leadName: lead.name, email: lead.email, status: ok ? 'sent' : 'unknown', detail: res?.message || '' })
-        try { trackEvent('jarvis_email_lead', { lead_id: lead.id, source: 'crm_table' }) } catch { /* noop */ }
-      }
-    } catch (err) {
-      setErrorNote(err?.message || `Could not perform ${pendingOwnerAction.kind}.`)
-      appendJarvisActivity({ kind: pendingOwnerAction.kind, leadId: lead.id, leadName: lead.name, status: 'failed', detail: err?.message || '' })
-    } finally {
-      setActingId(null); setActionKind(null); setPendingOwnerAction(null)
-    }
-  }, [pendingOwnerAction])
-
-  const _handleUnlock = useCallback(({ pin: _pin, token }) => {
-    setShowUnlockModal(false)
-    setSessionUnlocked(true)
-    try { if (token) sessionStorage.setItem('OWNER_TOKEN', token) } catch { /* noop */ }
-    alert('Session unlocked for this tab.')
-  }, [])
 
   const askJarvisDraft = useCallback((lead) => {
     if (typeof window === 'undefined') return
