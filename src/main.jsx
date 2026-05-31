@@ -11,12 +11,8 @@ import { canonicalBackendDomain } from '@/config/integration'
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const backendTraceTarget = (() => {
-  try {
-    const host = new URL(canonicalBackendDomain).host
-    return new RegExp(`^https://${escapeRegex(host)}`)
-  } catch {
-    return /^https:\/\/codexbuildfreeofbase44-production\.up\.railway\.app/
-  }
+  const host = new URL(canonicalBackendDomain).host
+  return new RegExp(`^https://${escapeRegex(host)}`)
 })()
 
 // Lazy-load Sentry after the page is interactive so it doesn't block LCP.

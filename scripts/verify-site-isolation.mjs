@@ -14,6 +14,8 @@ const integration = manifest.integration || {}
 const canonicalBackend = String(integration?.canonicalBackend?.domain || '').replace(/\/$/, '')
 const surfaces = Array.isArray(integration.surfaces) ? integration.surfaces : []
 
+const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 const toOrigin = (value) => {
   try {
     return new URL(String(value || '')).origin.toLowerCase()
@@ -57,7 +59,9 @@ const checks = [
   },
   {
     label: 'Netlify /api redirect points to canonical backend domain',
-    ok: backendOrigin ? netlify.includes(`${canonicalBackend}/api/:splat`) : false,
+    ok: backendOrigin
+      ? new RegExp(`\\[\\[redirects\\]\\][\\s\\S]*?from\\s*=\\s*"/api/\\*"[\\s\\S]*?to\\s*=\\s*"${escapeRegex(canonicalBackend)}/api/:splat"`).test(netlify)
+      : false,
   },
   {
     label: 'No surface domain points at backend origin',
