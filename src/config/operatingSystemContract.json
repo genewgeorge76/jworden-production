@@ -1,0 +1,74 @@
+{
+  "contractVersion": "1.0.0",
+  "compatibilityPolicy": {
+    "policyVersion": "2026.5.0",
+    "requiredManifestMajor": 1,
+    "requiredSharedApiVersion": "2026.1"
+  },
+  "repositories": [
+    {
+      "repo": "jwordenproduction",
+      "role": "primary-surface",
+      "status": "active",
+      "scopeMode": "full",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0"
+    },
+    {
+      "repo": "codexbuildfreeofbase44",
+      "role": "canonical-backend",
+      "status": "active",
+      "scopeMode": "full",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0"
+    },
+    {
+      "repo": "jwordenuniversity",
+      "role": "learning-surface",
+      "status": "active",
+      "scopeMode": "full",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0"
+    },
+    {
+      "repo": "minnesotaasphaltpaving",
+      "role": "market-surface",
+      "status": "active",
+      "scopeMode": "full",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0"
+    },
+    {
+      "repo": "thewordenstandard",
+      "role": "operations-surface",
+      "status": "active",
+      "scopeMode": "full",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0"
+    },
+    {
+      "repo": "obxpaving",
+      "role": "market-surface",
+      "status": "active",
+      "scopeMode": "full",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0"
+    },
+    {
+      "repo": "spacexgeminijworden",
+      "role": "legacy-data-source",
+      "status": "trapped",
+      "scopeMode": "partial",
+      "contractVersion": "1.0.0",
+      "minCompatiblePolicyVersion": "2026.5.0",
+      "maxCompatiblePolicyVersion": "2026.12.0",
+      "notes": "Required for legacy city data lineage until full migration is complete."
+    }
+  ]
+}

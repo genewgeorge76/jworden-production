@@ -18,12 +18,6 @@ export default function HeroSection() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToFaq = () => {
-    trackEvent('hero_cta_click', { cta: 'diagnose_first' });
-    const el = document.querySelector('#faq');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <section className="relative min-h-screen flex flex-col justify-end overflow-hidden mesh-gradient-hero">
       {/* Background image */}

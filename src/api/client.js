@@ -7,7 +7,9 @@
  * never hangs indefinitely on a slow/down backend.
  */
 
-const BASE = import.meta.env.VITE_API_BASE_URL || ''
+import { getApiBaseUrl } from '@/config/integration'
+
+const BASE = getApiBaseUrl()
 const DEFAULT_TIMEOUT_MS = 10_000
 const LOCAL_ENTITY_PREFIX = 'jworden.local.entity.'
 const AUTH_TOKEN_STORAGE_KEY = 'jworden.auth.token'
@@ -876,7 +878,7 @@ export const api = {
     const form = new FormData()
     form.append('file', file)
     const qs = buildQS(params)
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
+    const BASE_URL = getApiBaseUrl()
     const controller = new AbortController()
     const tId = setTimeout(() => controller.abort(), 30_000)
     try {
@@ -898,7 +900,7 @@ export const api = {
     if (contact.email) form.append('contact_email', contact.email)
     if (contact.address) form.append('project_address', contact.address)
     if (contact.notes) form.append('notes', contact.notes)
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
+    const BASE_URL = getApiBaseUrl()
     const controller = new AbortController()
     const tId = setTimeout(() => controller.abort(), 120_000)
     try {

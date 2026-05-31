@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  security-events: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -41,6 +42,15 @@ jobs:
       - name: Guard multi-site isolation
         run: npm run guard:site-isolation
 
+      - name: Guard tenant contract drift
+        run: npm run guard:tenant-contract-drift
+
+      - name: Guard operating-system contract
+        run: npm run guard:operating-system-contract
+
+      - name: Guard deploy mode
+        run: npm run guard:deploy-mode
+
       - name: Build
         run: npm run build
         env:
@@ -51,6 +61,12 @@ jobs:
 
       - name: Guard SEO readiness
         run: npm run guard:seo-readiness
+
+      - name: Guard release readiness
+        run: npm run guard:release-readiness
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

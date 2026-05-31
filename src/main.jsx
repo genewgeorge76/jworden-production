@@ -5,6 +5,15 @@ import App from '@/App.jsx'
 import '@/index.css'
 import { trackEvent } from '@/api/client'
 import { resolveSiteProfile } from '@/lib/siteProfiles'
+import { canonicalBackendDomain } from '@/config/integration'
+
+
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const backendTraceTarget = (() => {
+  const host = new URL(canonicalBackendDomain).host
+  return new RegExp(`^https://${escapeRegex(host)}`)
+})()
 
 // Lazy-load Sentry after the page is interactive so it doesn't block LCP.
 // Sentry's bundle is ~150KB+ and shouldn't be on the critical path.
@@ -20,7 +29,7 @@ if (_isValidSentryDsn && typeof window !== 'undefined') {
           Sentry.replayIntegration(),
         ],
         tracesSampleRate: 1.0,
-        tracePropagationTargets: ["localhost", /^https:\/\/codexbuildfreeofbase44-production\.up\.railway\.app/, /^https:\/\/app\.jwordenasphaltpaving\.com/],
+        tracePropagationTargets: ["localhost", backendTraceTarget, /^https:\/\/app\.jwordenasphaltpaving\.com/],
         replaysSessionSampleRate: 0.1,
         replaysOnErrorSampleRate: 1.0,
       });

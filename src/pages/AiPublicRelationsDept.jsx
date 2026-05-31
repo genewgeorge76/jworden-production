@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 export default function AiPublicRelationsDept() {
   const [topic, setTopic] = useState('');
   const [tone, setTone] = useState('Professional');
-  const [format, setFormat] = useState('Press Release');
+  const [format, _setFormat] = useState('Press Release');
   const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 

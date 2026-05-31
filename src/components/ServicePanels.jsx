@@ -1,8 +1,5 @@
 ﻿import React from 'react';
 
-const RESIDENTIAL_IMG = '/work/imported/va cars photos and videos for website/IMG_8721.JPG';
-const COMMERCIAL_IMG = '/work/imported/KFC/IMG_9496.JPG';
-const INDUSTRIAL_IMG = '/work/imported/va cars photos and videos for website/IMG_8838.JPG';
 
 const SECTORS = [
   { title: "National Retail", description: "Multi-site rollout and maintenance for commercial brands." },

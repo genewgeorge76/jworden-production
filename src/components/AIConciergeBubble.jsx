@@ -411,7 +411,7 @@ export default function AIConciergeBubble() {
         },
       ]);
       return sessionId;
-    } catch (e) {
+    } catch {
       setMessages([
         { role: 'assistant', content: "I'm having trouble connecting. Please call (804) 446-1296 — we answer during business hours." },
       ]);

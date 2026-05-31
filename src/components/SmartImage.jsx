@@ -35,7 +35,7 @@ export default function SmartImage({
   height = 600,
   priority = false,
   className = '',
-  gradient = 'from-brand-navy via-brand-charcoal to-brand-navy',
+  gradient: _gradient = 'from-brand-navy via-brand-charcoal to-brand-navy',
   sizes,
 }) {
   const [failed, setFailed] = useState(false)

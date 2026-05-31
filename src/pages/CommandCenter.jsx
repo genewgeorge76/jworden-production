@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
-import { api, trackEvent } from '@/api/client'
+import { api } from '@/api/client'
 import OwnerConfirmModal from '../components/OwnerConfirmModal'
 import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
@@ -709,10 +709,10 @@ function ActivityFeed() {
 function CrmTable() {
   const [leads, setLeads] = useState([])
   const [loading, setLoading] = useState(true)
-  const [actingId, setActingId] = useState(null)
-  const [actionKind, setActionKind] = useState(null) // 'call' | 'email'
-  const [note, setNote] = useState('')
-  const [errorNote, setErrorNote] = useState('')
+  const [actingId, _setActingId] = useState(null)
+  const [actionKind, _setActionKind] = useState(null) // 'call' | 'email'
+  const [_note, _setNote] = useState('')
+  const [_errorNote, setErrorNote] = useState('')
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -744,56 +744,15 @@ function CrmTable() {
   }, [])
 
   // pending owner modal state
-  const [pendingOwnerAction, setPendingOwnerAction] = useState(null)
-  const [showUnlockModal, setShowUnlockModal] = useState(false)
-  const [sessionUnlocked, setSessionUnlocked] = useState(() => {
+  const [_pendingOwnerAction, setPendingOwnerAction] = useState(null)
+  const [_showUnlockModal, setShowUnlockModal] = useState(false)
+  const [_sessionUnlocked, setSessionUnlocked] = useState(() => {
     try {
       return Boolean(sessionStorage.getItem('OWNER_PIN_HASH'))
     } catch {
       return false
     }
   })
-
-  const performPendingOwnerAction = useCallback(async ({ token = null } = {}) => {
-    if (!pendingOwnerAction) return
-    const { kind, lead } = pendingOwnerAction
-    // persist token to session if provided
-    try { if (token) window.sessionStorage.setItem('OWNER_TOKEN', token) } catch { /* noop */ }
-    setActingId(lead.id); setActionKind(kind); setErrorNote(''); setNote('')
-    try {
-      if (kind === 'call') {
-        const res = await api.jarvisCall(
-          lead.phone,
-          `Reach ${lead.name || 'lead'} about ${lead.service_type || lead.surface_type || 'their estimate'}`,
-          `Hi this is Jarvis calling on behalf of J. Worden & Sons about your ${lead.service_type || 'paving'} request. Is now a good time?`
-        )
-        const ok = res?.status === 'queued' || res?.status === 'success' || res?.call_id
-        setNote(ok ? `☎️ Jarvis is calling ${lead.name || lead.phone}…` : (res?.message || 'Call request sent.'))
-        appendJarvisActivity({ kind: 'call', leadId: lead.id, leadName: lead.name, phone: lead.phone, status: ok ? 'queued' : 'unknown', detail: res?.message || '' })
-        try { trackEvent('jarvis_call_lead', { lead_id: lead.id, source: 'crm_table' }) } catch { /* noop */ }
-      } else if (kind === 'email') {
-        const subject = `Following up on your ${lead.service_type || 'paving'} request — J. Worden & Sons`
-        const body = `Hi ${lead.name || 'there'},\n\nThanks for reaching out to J. Worden & Sons about your ${lead.service_type || 'project'}${lead.address ? ` at ${lead.address}` : ''}. We'd love to put together a free estimate. What's the best time for a quick call this week?\n\nWe're a 3rd-generation family business and every estimate is reviewed by Jeremy personally.\n\nReply to this email or text us at 804-446-1296.\n\n— J. Worden & Sons`
-        const res = await api.jarvisEmail(subject, body, lead.email)
-        const ok = res?.status === 'sent' || res?.status === 'queued' || res?.message_id
-        setNote(ok ? `✉️ Email sent to ${lead.email}` : (res?.message || 'Email request sent.'))
-        appendJarvisActivity({ kind: 'email', leadId: lead.id, leadName: lead.name, email: lead.email, status: ok ? 'sent' : 'unknown', detail: res?.message || '' })
-        try { trackEvent('jarvis_email_lead', { lead_id: lead.id, source: 'crm_table' }) } catch { /* noop */ }
-      }
-    } catch (err) {
-      setErrorNote(err?.message || `Could not perform ${pendingOwnerAction.kind}.`)
-      appendJarvisActivity({ kind: pendingOwnerAction.kind, leadId: lead.id, leadName: lead.name, status: 'failed', detail: err?.message || '' })
-    } finally {
-      setActingId(null); setActionKind(null); setPendingOwnerAction(null)
-    }
-  }, [pendingOwnerAction])
-
-  const handleUnlock = useCallback(({ pin, token }) => {
-    setShowUnlockModal(false)
-    setSessionUnlocked(true)
-    try { if (token) sessionStorage.setItem('OWNER_TOKEN', token) } catch { /* noop */ }
-    alert('Session unlocked for this tab.')
-  }, [])
 
   const askJarvisDraft = useCallback((lead) => {
     if (typeof window === 'undefined') return
@@ -2442,7 +2401,7 @@ function GoogleAdsBudgetControlPanel() {
       return null
     }
   })
-  const [note, setNote] = useState('')
+  const [_note, setNote] = useState('')
 
   useEffect(() => {
     try {
@@ -2691,7 +2650,7 @@ function HumanApprovalPolicyPanel() {
 
 function TempInAppOpsFallbackPanel() {
   const [busy, setBusy] = useState(false)
-  const [note, setNote] = useState('')
+  const [_note, setNote] = useState('')
   const [providerSummary, setProviderSummary] = useState(null)
 
   const downloadJson = useCallback((filename, payload) => {
@@ -3660,73 +3619,6 @@ function CivilContractorIntelligencePanel() {
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 md:px-5 py-4 text-xs text-white/55 leading-relaxed">
         Advisory output is internal prep, not legal advice. For plan-based bids, the system should produce a draft estimate, risk sheet, and bid package, then require human estimator and legal review before customer release.
-      </div>
-    </div>
-  )
-}
-
-function PinGate({ onUnlock }) {
-  const [pin, setPin] = useState('')
-  const [error, setError] = useState(false)
-
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault()
-      if (pin === CC_PASSWORD) {
-        onUnlock()
-      } else {
-        setError(true)
-        setPin('')
-      }
-    },
-    [pin, onUnlock],
-  )
-
-  return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="w-full max-w-sm rounded-2xl border border-brand-navy/10 bg-white p-8 shadow-xl text-center">
-        <div className="w-14 h-14 rounded-xl bg-brand-navy flex items-center justify-center text-brand-amber text-2xl mx-auto mb-6">
-          🔒
-        </div>
-        <h2 className="font-display font-bold text-2xl text-brand-navy mb-2">Command Center</h2>
-        <p className="text-brand-navy/55 text-sm mb-6">Enter your access PIN to continue.</p>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="password"
-            autoComplete="current-password"
-            placeholder="PIN"
-            value={pin}
-            onChange={(e) => {
-              setPin(e.target.value)
-              setError(false)
-            }}
-            className="w-full rounded-lg border border-brand-navy/20 px-4 py-3 text-center tracking-widest text-lg focus:outline-none focus:ring-2 focus:ring-brand-amber"
-          />
-          {error && (
-            <p className="text-red-500 text-sm">Incorrect PIN. Try again.</p>
-          )}
-          <button type="submit" className="btn-primary py-3">
-            Unlock
-          </button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-function DisabledNotice() {
-  return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-        <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center text-white/40 text-2xl mx-auto mb-6">
-          🚫
-        </div>
-        <h2 className="font-display font-bold text-xl text-white mb-2">Not Available</h2>
-        <p className="text-white/50 text-sm">
-          Command Center is not configured in this environment.
-          <br />
-          Set <code className="bg-white/10 px-1 rounded text-xs">VITE_CC_PASSWORD</code> to enable access.
-        </p>
       </div>
     </div>
   )
@@ -6664,4 +6556,3 @@ export default function CommandCenter() {
     </div>
   )
 }
-

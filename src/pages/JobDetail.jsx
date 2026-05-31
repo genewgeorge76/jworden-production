@@ -34,7 +34,7 @@ export default function JobDetail() {
     setInvoiceStatus(null);
 
     try {
-      const response = await api.functions.invoke('generateAndEmailInvoice', { jobId });
+      await api.functions.invoke('generateAndEmailInvoice', { jobId });
       setInvoiceStatus({ type: 'success', message: 'Invoice sent successfully!' });
       setTimeout(() => setInvoiceStatus(null), 3000);
     } catch (error) {

@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  security-events: read
 
 # Only one deployment per branch runs at a time; newer run cancels the previous one.
 concurrency:
@@ -70,6 +71,21 @@ jobs:
       # ── Install dependencies ───────────────────────────────────────────────
       - name: Install Node dependencies
         run: npm ci
+
+      - name: Guard tenant contract drift
+        run: npm run guard:tenant-contract-drift
+
+      - name: Guard operating-system contract
+        run: npm run guard:operating-system-contract
+
+      - name: Guard deploy mode
+        run: npm run guard:deploy-mode
+
+      - name: Guard release readiness
+        run: npm run guard:release-readiness
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Check required build variables
         run: |

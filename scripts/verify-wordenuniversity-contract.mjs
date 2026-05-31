@@ -14,6 +14,9 @@
  *   node scripts/verify-wordenuniversity-contract.mjs --repo=jwordenaii/wordenuniversity --branch=main
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 const argv = process.argv.slice(2);
 
 function getArg(name, fallback) {
@@ -25,6 +28,16 @@ function getArg(name, fallback) {
 const repo = getArg("repo", process.env.WORDEN_UNIVERSITY_REPO || "jwordenaii/wordenuniversity");
 const branch = getArg("branch", process.env.WORDEN_UNIVERSITY_BRANCH || "main");
 const expectedContractVersion = Number(getArg("contract-version", "1"));
+
+const manifestPath = path.resolve(process.cwd(), 'src/config/siteFactoryManifest.json');
+let localIntegrationContract = null;
+if (fs.existsSync(manifestPath)) {
+  try {
+    const localManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    localIntegrationContract = localManifest?.integration?.sharedContract || null;
+  } catch {}
+}
+
 
 function fail(message) {
   console.error(`[wordenuniversity-contract] FAIL: ${message}`);
@@ -62,6 +75,22 @@ function expectIncludes(filePath, content, expected, errors) {
 async function main() {
   const errors = [];
   const notes = [];
+
+  const canonicalEndpoint = String(localIntegrationContract?.universityContractEndpoint || '').replace(/\/$/, '');
+  if (!canonicalEndpoint) {
+    errors.push('Local integration sharedContract.universityContractEndpoint is missing.');
+  } else if (!canonicalEndpoint.endsWith('/api/worden-university/contract')) {
+    errors.push(`Local university contract endpoint is invalid: ${canonicalEndpoint}`);
+  }
+
+  const expectedSources = Array.isArray(localIntegrationContract?.expectedSources)
+    ? localIntegrationContract.expectedSources.map((v) => String(v || '').toLowerCase())
+    : [];
+  for (const source of ['jwordenproduction', 'jwordenuniversity']) {
+    if (!expectedSources.includes(source)) {
+      errors.push(`Local sharedContract.expectedSources is missing ${source}.`);
+    }
+  }
 
   let readme = "";
   let app = "";

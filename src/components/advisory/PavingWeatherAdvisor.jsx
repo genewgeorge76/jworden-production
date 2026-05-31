@@ -24,7 +24,7 @@ export default function PavingWeatherAdvisor() {
       } else {
         setError(data.error || 'Failed to fetch weather data');
       }
-    } catch (err) {
+    } catch {
       setError('Connection to JWordenAI Weather Service failed. Please try again.');
     } finally {
       setLoading(false);

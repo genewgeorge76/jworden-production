@@ -17,9 +17,9 @@ export default function CrewFieldApp() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
-  const [currentJob, setCurrentJob] = useState(null);
+  const [currentJob, _setCurrentJob] = useState(null);
   const [status, setStatus] = useState('idle'); // 'idle', 'clocked_in', 'working', 'break', 'transit'
-  const [photos, setPhotos] = useState([]);
+  const [photos, _setPhotos] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState(null);
   const [submitState, setSubmitState] = useState('idle'); // 'idle', 'submitting', 'submitted', 'error'

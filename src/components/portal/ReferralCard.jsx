@@ -46,7 +46,7 @@ export default function ReferralCard({ userEmail }) {
       } else {
         toast.error(res?.data?.error || 'Something went wrong');
       }
-    } catch (err) {
+    } catch {
       toast.error('Submission failed');
     } finally {
       setSubmitting(false);

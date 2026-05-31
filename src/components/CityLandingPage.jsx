@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchLocalProjects } from '../api/jworden-authority';
 
-export default function CityLandingPage({ cityName, zipCodes }) {
+export default function CityLandingPage({ cityName }) {
   const [recentProjects, setRecentProjects] = useState([]);
 
   useEffect(() => {

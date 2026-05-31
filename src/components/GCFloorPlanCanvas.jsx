@@ -28,7 +28,6 @@ const ROOM_COLORS = {
   other:     '#708090',
 }
 
-const FLOOR_COLOR = '#d6cfc4'
 const WALL_HEIGHT = 0.12   // visual wall stub (world units = feet / 10)
 const SCALE = 0.1          // 1 world unit = 10 ft
 

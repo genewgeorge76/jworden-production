@@ -52,5 +52,77 @@
     "minnesotaasphaltpaving.com": "minnesota",
     "www.thewordenstandard.com": "wordenstandard",
     "thewordenstandard.com": "wordenstandard"
+  },
+  "integration": {
+    "canonicalBackend": {
+      "repo": "codexbuildfreeofbase44",
+      "domain": "https://codexbuildfreeofbase44-production.up.railway.app",
+      "aliases": [
+        "codeexfreofbase44"
+      ],
+      "envOwner": "genewgeorge76",
+      "deployOwner": "railway"
+    },
+    "sharedContract": {
+      "apiBaseUrl": "https://codexbuildfreeofbase44-production.up.railway.app",
+      "universityContractEndpoint": "https://codexbuildfreeofbase44-production.up.railway.app/api/worden-university/contract",
+      "expectedSources": [
+        "jwordenproduction",
+        "jwordenuniversity"
+      ],
+      "allowedOrigins": [
+        "https://www.jwordenasphaltpaving.com",
+        "https://jwordenasphaltpaving.com",
+        "https://www.minnesotaasphaltpaving.com",
+        "https://minnesotaasphaltpaving.com",
+        "https://www.thewordenstandard.com",
+        "https://thewordenstandard.com",
+        "https://jwordenuniversity.com",
+        "https://obxpaving.com",
+        "http://localhost:5173",
+        "http://localhost:3000"
+      ]
+    },
+    "surfaces": [
+      {
+        "repo": "jwordenproduction",
+        "domain": "https://www.jwordenasphaltpaving.com",
+        "frontendEnvOwner": "genewgeorge76",
+        "frontendDeployOwner": "netlify"
+      },
+      {
+        "repo": "minnesotaasphaltpaving",
+        "domain": "https://www.minnesotaasphaltpaving.com",
+        "frontendEnvOwner": "genewgeorge76",
+        "frontendDeployOwner": "netlify"
+      },
+      {
+        "repo": "thewordenstandard",
+        "domain": "https://www.thewordenstandard.com",
+        "frontendEnvOwner": "genewgeorge76",
+        "frontendDeployOwner": "netlify"
+      },
+      {
+        "repo": "jwordenuniversity",
+        "domain": "https://jwordenuniversity.com",
+        "frontendEnvOwner": "genewgeorge76",
+        "frontendDeployOwner": "netlify"
+      },
+      {
+        "repo": "obxpaving",
+        "domain": "https://obxpaving.com",
+        "frontendEnvOwner": "genewgeorge76",
+        "frontendDeployOwner": "netlify"
+      }
+    ],
+    "dataSources": {
+      "sourceRepo": "spacexgeminijworden",
+      "notesFile": "data/notes_data_56_cities.csv",
+      "locationFile": "data/location_data_56_cities.csv"
+    },
+    "legacyAssets": {
+      "sourceRepo": "doooooone",
+      "notes": "Legacy media assets referenced by src/data/legacyPortfolio.js and import scripts."
+    }
   }
 }
