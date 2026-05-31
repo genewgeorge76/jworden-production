@@ -5,7 +5,7 @@ import { estimatePrice } from '../lib/pricing'
 import { STATE_OPTIONS, getStateSummary } from '../lib/states50'
 import { downloadPdf } from '../lib/pdfUtils'
 import QuickQuoteBar from '../components/QuickQuoteBar'
-import KickservEstimate from '../components/KickservEstimate'
+import EstimateForm from '../components/EstimateForm'
 import { loadStripe } from '@stripe/stripe-js'
 // ── Step definitions ──────────────────────────────────────────────────────────
 
@@ -382,10 +382,10 @@ export default function Quote() {
             />
           </div>
 
-          {/* Primary estimate path — Kickserv self-service request form.
-              Leads land directly in the Kickserv CRM (scheduling/estimating). */}
+          {/* Primary estimate path — direct-email form. Submissions are
+              delivered to LEAD_EMAIL via Gmail and captured in Netlify Forms. */}
           <div className="mb-8">
-            <KickservEstimate />
+            <EstimateForm source="quote_page" />
           </div>
 
           <div className="mb-8 text-center">
