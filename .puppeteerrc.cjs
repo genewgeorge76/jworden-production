@@ -1,0 +1,9 @@
+/** @type {import('puppeteer').Configuration} */
+module.exports = {
+  chrome: {
+    skipDownload: true,
+  },
+  'chrome-headless-shell': {
+    skipDownload: true,
+  },
+};
