@@ -56,7 +56,7 @@ function quickEstimate(rooms) {
 
 let _nextId = 1
 function newRoom(type) {
-  const rt = ROOM_TYPES.find((r) => r.value === type) || ROOM_TYPES[0]
+  const _rt = ROOM_TYPES.find((r) => r.value === type) || ROOM_TYPES[0]
   return {
     id: _nextId++,
     name: rt.label,
@@ -84,7 +84,7 @@ function AddRoomPanel({ onAdd }) {
   const [width, setWidth] = useState(18)
   const [len, setLen]     = useState(20)
 
-  const rt = ROOM_TYPES.find((r) => r.value === type)
+  const _rt = ROOM_TYPES.find((r) => r.value === type)
 
   const handleTypeChange = (v) => {
     const def = ROOM_TYPES.find((r) => r.value === v)
@@ -144,7 +144,7 @@ function AddRoomPanel({ onAdd }) {
 }
 
 // ── Room List ─────────────────────────────────────────────────────────────────
-function RoomList({ rooms, selected, onSelect, onRemove, onUpdate }) {
+function RoomList({ rooms, selected, onSelect, onRemove, onUpdate: _onUpdate }) {
   return (
     <div className="space-y-2">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">

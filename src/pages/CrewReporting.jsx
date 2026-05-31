@@ -35,7 +35,7 @@ export default function CrewReporting() {
     sqft: crew.totalSqft,
   }));
 
-  const crewEfficiency = summary.map((crew) => ({
+  const _crewEfficiency = summary.map((crew) => ({
     crew: crew.crew,
     avgPerJob: crew.avgSqftPerJob,
     avgDuration: crew.avgDuration,

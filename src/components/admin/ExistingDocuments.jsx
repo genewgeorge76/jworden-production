@@ -20,7 +20,7 @@ export default function ExistingDocuments({ documents, onChange }) {
       });
       toast.success(`Document ${!doc.visible_to_client ? 'shown' : 'hidden'} in portal.`);
       onChange?.();
-    } catch (error) {
+    } catch {
       toast.error('Failed to update.');
     }
   };
@@ -31,7 +31,7 @@ export default function ExistingDocuments({ documents, onChange }) {
       await api.entities.ProjectDocument.delete(doc.id);
       toast.success('Document deleted.');
       onChange?.();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete.');
     }
   };

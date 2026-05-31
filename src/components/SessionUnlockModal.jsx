@@ -17,7 +17,7 @@ export default function SessionUnlockModal({ open, defaultPin = '', defaultToken
         try {
           sessionStorage.setItem('OWNER_SESSION_ID', res.session_id)
           if (token) sessionStorage.setItem('OWNER_TOKEN', token)
-        } catch (e) {}
+        } catch {}
         onUnlock({ pin, token, session_id: res.session_id })
       } else {
         setError('Unlock failed')

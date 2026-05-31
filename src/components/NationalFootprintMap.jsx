@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -23,8 +23,7 @@ const goldPinIcon = L.divIcon({
 });
 
 export default function NationalFootprintMap() {
-  const [selected, setSelected] = useState(null);
-
+  
   return (
     <section id="footprint" className="py-24 bg-[#0A0A0A] border-t border-zinc-900">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

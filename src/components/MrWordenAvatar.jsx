@@ -21,7 +21,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 /** The SVG character art for Mr. Worden, simplified to a minimalist, smart AI indicator. */
-function JWordenSVG({ talking = false, state = 'idle', eyeDx = 0, eyeDy = 0, audioActive = false }) {
+function JWordenSVG({ talking: _talking = false, state = 'idle', eyeDx: _eyeDx = 0, eyeDy: _eyeDy = 0, audioActive = false }) {
   const isActive = state === 'talking' || state === 'listening' || audioActive
   
   return (

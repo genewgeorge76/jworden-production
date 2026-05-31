@@ -711,8 +711,8 @@ function CrmTable() {
   const [loading, setLoading] = useState(true)
   const [actingId, setActingId] = useState(null)
   const [actionKind, setActionKind] = useState(null) // 'call' | 'email'
-  const [note, setNote] = useState('')
-  const [errorNote, setErrorNote] = useState('')
+  const [_note, setNote] = useState('')
+  const [_errorNote, setErrorNote] = useState('')
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -745,8 +745,8 @@ function CrmTable() {
 
   // pending owner modal state
   const [pendingOwnerAction, setPendingOwnerAction] = useState(null)
-  const [showUnlockModal, setShowUnlockModal] = useState(false)
-  const [sessionUnlocked, setSessionUnlocked] = useState(() => {
+  const [_showUnlockModal, setShowUnlockModal] = useState(false)
+  const [_sessionUnlocked, setSessionUnlocked] = useState(() => {
     try {
       return Boolean(sessionStorage.getItem('OWNER_PIN_HASH'))
     } catch {
@@ -754,7 +754,7 @@ function CrmTable() {
     }
   })
 
-  const performPendingOwnerAction = useCallback(async ({ token = null } = {}) => {
+  const _performPendingOwnerAction = useCallback(async ({ token = null } = {}) => {
     if (!pendingOwnerAction) return
     const { kind, lead } = pendingOwnerAction
     // persist token to session if provided
@@ -788,7 +788,7 @@ function CrmTable() {
     }
   }, [pendingOwnerAction])
 
-  const handleUnlock = useCallback(({ pin, token }) => {
+  const _handleUnlock = useCallback(({ pin: _pin, token }) => {
     setShowUnlockModal(false)
     setSessionUnlocked(true)
     try { if (token) sessionStorage.setItem('OWNER_TOKEN', token) } catch { /* noop */ }
@@ -2442,7 +2442,7 @@ function GoogleAdsBudgetControlPanel() {
       return null
     }
   })
-  const [note, setNote] = useState('')
+  const [_note, setNote] = useState('')
 
   useEffect(() => {
     try {
@@ -2691,7 +2691,7 @@ function HumanApprovalPolicyPanel() {
 
 function TempInAppOpsFallbackPanel() {
   const [busy, setBusy] = useState(false)
-  const [note, setNote] = useState('')
+  const [_note, setNote] = useState('')
   const [providerSummary, setProviderSummary] = useState(null)
 
   const downloadJson = useCallback((filename, payload) => {
@@ -3660,73 +3660,6 @@ function CivilContractorIntelligencePanel() {
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 md:px-5 py-4 text-xs text-white/55 leading-relaxed">
         Advisory output is internal prep, not legal advice. For plan-based bids, the system should produce a draft estimate, risk sheet, and bid package, then require human estimator and legal review before customer release.
-      </div>
-    </div>
-  )
-}
-
-function PinGate({ onUnlock }) {
-  const [pin, setPin] = useState('')
-  const [error, setError] = useState(false)
-
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault()
-      if (pin === CC_PASSWORD) {
-        onUnlock()
-      } else {
-        setError(true)
-        setPin('')
-      }
-    },
-    [pin, onUnlock],
-  )
-
-  return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="w-full max-w-sm rounded-2xl border border-brand-navy/10 bg-white p-8 shadow-xl text-center">
-        <div className="w-14 h-14 rounded-xl bg-brand-navy flex items-center justify-center text-brand-amber text-2xl mx-auto mb-6">
-          🔒
-        </div>
-        <h2 className="font-display font-bold text-2xl text-brand-navy mb-2">Command Center</h2>
-        <p className="text-brand-navy/55 text-sm mb-6">Enter your access PIN to continue.</p>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="password"
-            autoComplete="current-password"
-            placeholder="PIN"
-            value={pin}
-            onChange={(e) => {
-              setPin(e.target.value)
-              setError(false)
-            }}
-            className="w-full rounded-lg border border-brand-navy/20 px-4 py-3 text-center tracking-widest text-lg focus:outline-none focus:ring-2 focus:ring-brand-amber"
-          />
-          {error && (
-            <p className="text-red-500 text-sm">Incorrect PIN. Try again.</p>
-          )}
-          <button type="submit" className="btn-primary py-3">
-            Unlock
-          </button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-function DisabledNotice() {
-  return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-        <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center text-white/40 text-2xl mx-auto mb-6">
-          🚫
-        </div>
-        <h2 className="font-display font-bold text-xl text-white mb-2">Not Available</h2>
-        <p className="text-white/50 text-sm">
-          Command Center is not configured in this environment.
-          <br />
-          Set <code className="bg-white/10 px-1 rounded text-xs">VITE_CC_PASSWORD</code> to enable access.
-        </p>
       </div>
     </div>
   )
@@ -6664,4 +6597,3 @@ export default function CommandCenter() {
     </div>
   )
 }
-

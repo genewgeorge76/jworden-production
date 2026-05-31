@@ -239,7 +239,7 @@ function CheckInTab({ token }) {
     try {
       const data = await api.staffCheckins(token);
       setCheckins(data.checkins || []);
-    } catch (_) {}
+    } catch {}
     setLoadingHist(false);
   }, [token]);
 
@@ -406,7 +406,7 @@ function MyDocsTab({ token }) {
   );
 }
 
-function DocUploadRow({ docType, label, status, existing, needsExpiry, uploading, onUpload }) {
+function DocUploadRow({ docType: _docType, label, status, existing, needsExpiry, uploading, onUpload }) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [expiry, setExpiry] = useState('');
@@ -685,7 +685,7 @@ function WorkerDetail({ worker: initialWorker, onBack }) {
     try {
       const d = await api.adminWorker(initialWorker.id);
       setData(d);
-    } catch (_) {}
+    } catch {}
     setLoading(false);
   }, [initialWorker.id]);
 

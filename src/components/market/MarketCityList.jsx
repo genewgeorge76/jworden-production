@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
 
-export default function MarketCityList({ city, state, neighborhoods, landmarks }) {
+export default function MarketCityList({ city, state: _state, neighborhoods, landmarks }) {
   const hasNeighborhoods = Array.isArray(neighborhoods) && neighborhoods.length > 0;
   const hasLandmarks = Array.isArray(landmarks) && landmarks.length > 0;
   if (!hasNeighborhoods && !hasLandmarks) return null;

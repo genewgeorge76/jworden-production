@@ -404,7 +404,7 @@ function PayrollEstimator() {
   const [gross, setGross] = useState('')
   const [payType, setPayType] = useState('w2')
   const [frequency, setFrequency] = useState('biweekly')
-  const [state, setState] = useState('VA')
+  const [state, _setState] = useState('VA')
 
   const freqLabel = { weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12 }
   const paymentsPerYear = freqLabel[frequency] || 26

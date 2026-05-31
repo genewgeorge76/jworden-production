@@ -281,7 +281,7 @@ export default function MaintenanceCalculator() {
 
                   {/* Action timeline */}
                   <div className="space-y-3 mb-6">
-                    {recommendation.actions.map((action, i) => (
+                    {recommendation.actions.map((action) => (
                       <div key={action.label} className="flex items-start gap-3 border-l-2 border-primary/40 pl-4 py-1">
                         <div>
                           <p className="font-display font-bold text-foreground text-sm tracking-wider uppercase leading-tight">
