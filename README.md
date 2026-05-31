@@ -200,6 +200,8 @@ Full checklist: see [`DEPLOYMENT.md`](DEPLOYMENT.md)
 | `npm run ops:phase2` | Run logic snapshot + clean-house report together |
 | `npm run mrworden:cli` | Mr. Worden admin CLI (lead management) |
 | `npm run media:ingest` | Media ingest CLI (Dropbox / Google Photos) |
+| `npm run guard:operating-system-contract` | Validate cross-repo operating-system contract and compatibility policy |
+| `npm run guard:release-readiness` | Fail release gating when open critical code-scanning alerts exist |
 
 ---
 
@@ -240,7 +242,7 @@ scripts/        — Ops, SEO, and deploy scripts
 | [`docs/AI_TECH_RADAR.md`](docs/AI_TECH_RADAR.md) | Automated AI capability monitoring workflow |
 | [`docs/CLEAN_HOUSE_PHASE2.md`](docs/CLEAN_HOUSE_PHASE2.md) | Logic preservation + cleanup batch workflow |
 | [`docs/LEGAL_ADVISORY_LAUNCH.md`](docs/LEGAL_ADVISORY_LAUNCH.md) | Launch + compliance advisory packaging and rollout |
+| [`docs/OPERATING_SYSTEM_CORE.md`](docs/OPERATING_SYSTEM_CORE.md) | Cross-repo operating-system contract governance and release gates |
 | [`BACKEND_LOGIC_INVENTORY.md`](BACKEND_LOGIC_INVENTORY.md) | All API endpoint inventory |
 | [`WEBSOCKET_CHAT.md`](WEBSOCKET_CHAT.md) | Real-time chat / WebSocket setup |
 | [`VECTOR_SEARCH.md`](VECTOR_SEARCH.md) | Semantic search / vector store setup |
-
