@@ -3,7 +3,7 @@
  * Google, Houzz, Angi, and Pavement Magazine industry recognition
  */
 export default function LiveReviewBadges({ compact = false }) {
-    const GOOGLE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${import.meta.env.VITE_GOOGLE_PLACE_ID || 'ChIJG3X8o_OStokRzRynNBuVfQ0'}`
+  const GOOGLE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${import.meta.env.VITE_GOOGLE_PLACE_ID || 'ChIJG3X8o_OStokRzRynNBuVfQ0'}`
   const HOUZZ_URL = 'https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947'
   const ANGI_URL = 'https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-asphalt-paving-reviews-'
   const PAVEMENT_URL = 'https://www.pavementonline.com/top-contractor'

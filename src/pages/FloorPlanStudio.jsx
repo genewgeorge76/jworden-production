@@ -84,8 +84,6 @@ function AddRoomPanel({ onAdd }) {
   const [width, setWidth] = useState(18)
   const [len, setLen]     = useState(20)
 
-  const _rt = ROOM_TYPES.find((r) => r.value === type)
-
   const handleTypeChange = (v) => {
     const def = ROOM_TYPES.find((r) => r.value === v)
     setType(v)
