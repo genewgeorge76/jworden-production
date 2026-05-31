@@ -23,7 +23,6 @@ const goldPinIcon = L.divIcon({
 });
 
 export default function NationalFootprintMap() {
-  
   return (
     <section id="footprint" className="py-24 bg-[#0A0A0A] border-t border-zinc-900">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

@@ -56,13 +56,13 @@ function quickEstimate(rooms) {
 
 let _nextId = 1
 function newRoom(type) {
-  const _rt = ROOM_TYPES.find((r) => r.value === type) || ROOM_TYPES[0]
+  const roomType = ROOM_TYPES.find((r) => r.value === type) || ROOM_TYPES[0]
   return {
     id: _nextId++,
-    name: rt.label,
-    type: rt.value,
-    widthFt: rt.defaultW,
-    lengthFt: rt.defaultL,
+    name: roomType.label,
+    type: roomType.value,
+    widthFt: roomType.defaultW,
+    lengthFt: roomType.defaultL,
     x: 0,
     z: 0,
   }
