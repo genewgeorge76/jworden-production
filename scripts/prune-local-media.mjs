@@ -16,9 +16,13 @@ const pathsToPrune = (process.env.MEDIA_CDN_PRUNE_PATHS || 'work/,videos/parking
 
 const removeTarget = async (rel) => {
   const target = path.resolve(distDir, rel);
-  if (!target.startsWith(distDir)) return { rel, removed: false, bytes: 0 };
+  if (target !== distDir && !target.startsWith(distDir + path.sep)) return { rel, removed: false, bytes: 0 };
   try {
     const stat = await fs.stat(target);
+    const [realTarget, realDistDir] = await Promise.all([fs.realpath(target), fs.realpath(distDir)]);
+    if (realTarget !== realDistDir && !realTarget.startsWith(realDistDir + path.sep)) {
+      return { rel, removed: false, bytes: 0 };
+    }
     const bytes = stat.isDirectory() ? 0 : stat.size;
     await fs.rm(target, { recursive: true, force: true });
     return { rel, removed: true, bytes };
