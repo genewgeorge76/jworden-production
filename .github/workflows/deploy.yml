@@ -72,6 +72,14 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
+
       - name: Guard tenant contract drift
         run: npm run guard:tenant-contract-drift
 
