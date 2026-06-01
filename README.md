@@ -200,6 +200,10 @@ Full checklist: see [`DEPLOYMENT.md`](DEPLOYMENT.md)
 | `npm run ops:phase2` | Run logic snapshot + clean-house report together |
 | `npm run mrworden:cli` | Mr. Worden admin CLI (lead management) |
 | `npm run media:ingest` | Media ingest CLI (Dropbox / Google Photos) |
+| `npm run media:r2:dry-run` | Preview Cloudflare R2 upload candidate files from `public/` |
+| `npm run media:r2:upload` | Upload configured media prefixes from `public/` to Cloudflare R2 |
+| `npm run media:prune` | Remove migrated media paths from `dist/` when CDN prune is enabled |
+| `npm run ops:jarvis:status` | Validate `/api/v1/jarvis/status` against configured backend URL |
 | `npm run guard:operating-system-contract` | Validate cross-repo operating-system contract and compatibility policy |
 | `npm run guard:release-readiness` | Fail release gating when open critical code-scanning alerts exist |
 

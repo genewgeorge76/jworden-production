@@ -732,6 +732,7 @@ export const api = {
   dispatchJobs:     () => protectedRequest('GET', '/api/v1/admin/dispatch/jobs'),
   dispatchUpsertJob: (payload) => protectedRequest('POST', '/api/v1/admin/dispatch/jobs', payload),
   dispatchDeleteJob: (id) => protectedRequest('DELETE', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}`),
+  dispatchReschedule: (id, payload) => protectedRequest('POST', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}/reschedule`, payload),
   dispatchAssign:   (jobId) => protectedRequest('GET', `/api/v1/admin/dispatch/assign/${encodeURIComponent(jobId)}`),
   // ── Asphalt thermal lay-down window (Ship E) ─────────────────────────────
   thermalWindow: (params) => {
