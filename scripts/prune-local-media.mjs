@@ -14,13 +14,25 @@ const pathsToPrune = (process.env.MEDIA_CDN_PRUNE_PATHS || 'work/,videos/parking
   .map((s) => s.trim())
   .filter(Boolean);
 
+const isWithinOrSame = (base, candidate) => {
+  const relative = path.relative(path.normalize(base), path.normalize(candidate));
+  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+};
+const isWithin = (base, candidate) => {
+  const relative = path.relative(path.normalize(base), path.normalize(candidate));
+  return relative !== '' && !relative.startsWith('..') && !path.isAbsolute(relative);
+};
+
 const removeTarget = async (rel) => {
   const target = path.resolve(distDir, rel);
-  if (target !== distDir && !target.startsWith(distDir + path.sep)) return { rel, removed: false, bytes: 0 };
+  if (!isWithin(distDir, target)) return { rel, removed: false, bytes: 0 };
   try {
-    const stat = await fs.stat(target);
-    const [realTarget, realDistDir] = await Promise.all([fs.realpath(target), fs.realpath(distDir)]);
-    if (realTarget !== realDistDir && !realTarget.startsWith(realDistDir + path.sep)) {
+    const [stat, realDistDir, realTargetParent] = await Promise.all([
+      fs.lstat(target),
+      fs.realpath(distDir),
+      fs.realpath(path.dirname(target)),
+    ]);
+    if (!isWithinOrSame(realDistDir, realTargetParent)) {
       return { rel, removed: false, bytes: 0 };
     }
     const bytes = stat.isDirectory() ? 0 : stat.size;
