@@ -19,6 +19,10 @@ const removeTarget = async (rel) => {
   if (target !== distDir && !target.startsWith(distDir + path.sep)) return { rel, removed: false, bytes: 0 };
   try {
     const stat = await fs.stat(target);
+    const [realTarget, realDistDir] = await Promise.all([fs.realpath(target), fs.realpath(distDir)]);
+    if (realTarget !== realDistDir && !realTarget.startsWith(realDistDir + path.sep)) {
+      return { rel, removed: false, bytes: 0 };
+    }
     const bytes = stat.isDirectory() ? 0 : stat.size;
     await fs.rm(target, { recursive: true, force: true });
     return { rel, removed: true, bytes };
