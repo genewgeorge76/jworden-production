@@ -5523,7 +5523,7 @@ function DispatchPanel() {
       {err && <div className="text-red-300 text-sm">{err}</div>}
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">Crew Timeline (read-only)</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">Crew Timeline (view only lane snapshot)</h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {[...timeline.entries()].map(([laneId, jobs]) => {
             const laneTruck = (snap?.trucks || []).find((t) => t.id === laneId)

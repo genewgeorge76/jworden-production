@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 const base = (process.env.JARVIS_STATUS_BASE_URL || process.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 
-if (!base) {
-  console.error('[jarvis-status] Missing JARVIS_STATUS_BASE_URL or VITE_API_BASE_URL');
-  process.exit(1);
-}
-
-const url = `${base}/api/v1/jarvis/status`;
-
 const main = async () => {
+  if (!base) {
+    throw new Error('Missing JARVIS_STATUS_BASE_URL or VITE_API_BASE_URL')
+  }
+
+  const url = `${base}/api/v1/jarvis/status`
   const res = await fetch(url, { headers: { Accept: 'application/json' } });
   if (!res.ok) {
     const body = await res.text();

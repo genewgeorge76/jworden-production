@@ -107,7 +107,7 @@ const upload = async () => {
   }, Promise.resolve(0));
 
   if (dryRun) {
-    console.log(`[r2-upload] DRY RUN: ${selected.length} files, ${(await totalBytes / (1024 * 1024)).toFixed(1)} MB`);
+    console.log(`[r2-upload] DRY RUN: ${selected.length} files, ${((await totalBytes) / (1024 * 1024)).toFixed(1)} MB`);
     for (const f of selected.slice(0, 25)) {
       console.log(` - ${f.relPath}`);
     }

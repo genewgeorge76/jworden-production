@@ -118,6 +118,11 @@ _ALLOWED_JOB_STATUS = {
 }
 
 
+def _job_status_error(value: Any) -> str:
+    options = ", ".join(sorted(_ALLOWED_JOB_STATUS))
+    return f"Invalid job status '{value}'. Must be one of: {options}"
+
+
 def _normalize(payload: dict, allowed: set[str]) -> dict:
     out: dict = {}
     for k, v in (payload or {}).items():
@@ -185,7 +190,7 @@ def upsert_job(payload: dict) -> dict:
         raise ValueError("job.site_name required")
     row.setdefault("status", "scheduled")
     if str(row.get("status", "")).lower() not in _ALLOWED_JOB_STATUS:
-        raise ValueError("job.status invalid")
+        raise ValueError(_job_status_error(row.get("status")))
     row.setdefault("priority", "normal")
     row.setdefault("tons_needed", 0.0)
     with _LOCK:
@@ -228,7 +233,7 @@ async def reschedule_job(job_id: str, payload: dict) -> dict:
         if "status" in payload and payload.get("status") is not None:
             status = str(payload.get("status")).strip().lower()
             if status not in _ALLOWED_JOB_STATUS:
-                raise ValueError("job.status invalid")
+                raise ValueError(_job_status_error(payload.get("status")))
             updates["status"] = status
 
         if "assigned_truck_id" in payload:
@@ -240,12 +245,12 @@ async def reschedule_job(job_id: str, payload: dict) -> dict:
         if payload.get("scheduled_start"):
             start_dt = _parse_schedule(payload.get("scheduled_start"))
             if not start_dt:
-                raise ValueError("scheduled_start must be YYYY-MM-DD HH:MM")
+                raise ValueError(f"Invalid scheduled_start format '{payload.get('scheduled_start')}'. Expected YYYY-MM-DD HH:MM")
             updates["scheduled_start"] = _fmt_schedule(start_dt)
             if payload.get("scheduled_end"):
                 end_dt = _parse_schedule(payload.get("scheduled_end"))
                 if not end_dt:
-                    raise ValueError("scheduled_end must be YYYY-MM-DD HH:MM")
+                    raise ValueError(f"Invalid scheduled_end format '{payload.get('scheduled_end')}'. Expected YYYY-MM-DD HH:MM")
                 updates["scheduled_end"] = _fmt_schedule(end_dt)
             elif job.get("scheduled_end"):
                 current_end = _parse_schedule(job.get("scheduled_end"))
@@ -269,7 +274,7 @@ async def reschedule_job(job_id: str, payload: dict) -> dict:
         script = f"Your paving appointment was rescheduled to {start_at}. Reply or call us with any questions."
         call_result = await vapi_caller.place_call(
             updated["customer_phone"],
-            purpose=f\"Dispatch reschedule update for {updated.get('site_name', 'job')}\",
+            purpose=f"Dispatch reschedule update for {updated.get('site_name', 'job')}",
             script_hint=script,
             confirmed=True,
         )
