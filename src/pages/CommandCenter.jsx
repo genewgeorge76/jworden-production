@@ -5461,37 +5461,37 @@ function DispatchPanel() {
     } catch (e) {
       setAssignResult({ error: e.message || 'failed' })
     }
-
-    const patchJob = async (jobId, payload) => {
-      setBusy(true)
-      try {
-        await api.dispatchReschedule(jobId, { ...payload, notify_customer: notifyOnReschedule })
-        await reload()
-      } catch (e) {
-        setErr(e.message || 'reschedule failed')
-      } finally {
-        setBusy(false)
-      }
-    }
-
-    const shiftJob = async (job, minutes) => {
-      const base = parseSchedule(job.scheduled_start) || new Date()
-      const next = new Date(base.getTime() + (minutes * 60 * 1000))
-      await patchJob(job.id, { scheduled_start: formatSchedule(next), status: job.status })
-    }
-
-    const timeline = useMemo(() => {
-      const jobs = Array.isArray(snap?.jobs) ? snap.jobs : []
-      const lanes = new Map([['unassigned', []]])
-      ;(snap?.trucks || []).forEach((truck) => lanes.set(truck.id, []))
-      jobs.forEach((job) => {
-        const key = job.assigned_truck_id && lanes.has(job.assigned_truck_id) ? job.assigned_truck_id : 'unassigned'
-        lanes.get(key).push(job)
-      })
-      lanes.forEach((laneJobs) => laneJobs.sort((a, b) => String(a.scheduled_start || '').localeCompare(String(b.scheduled_start || ''))))
-      return lanes
-    }, [snap])
   }
+
+  const patchJob = async (jobId, payload) => {
+    setBusy(true)
+    try {
+      await api.dispatchReschedule(jobId, { ...payload, notify_customer: notifyOnReschedule })
+      await reload()
+    } catch (e) {
+      setErr(e.message || 'reschedule failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const shiftJob = async (job, minutes) => {
+    const base = parseSchedule(job.scheduled_start) || new Date()
+    const next = new Date(base.getTime() + (minutes * 60 * 1000))
+    await patchJob(job.id, { scheduled_start: formatSchedule(next), status: job.status })
+  }
+
+  const timeline = useMemo(() => {
+    const jobs = Array.isArray(snap?.jobs) ? snap.jobs : []
+    const lanes = new Map([['unassigned', []]])
+    ;(snap?.trucks || []).forEach((truck) => lanes.set(truck.id, []))
+    jobs.forEach((job) => {
+      const key = job.assigned_truck_id && lanes.has(job.assigned_truck_id) ? job.assigned_truck_id : 'unassigned'
+      lanes.get(key).push(job)
+    })
+    lanes.forEach((laneJobs) => laneJobs.sort((a, b) => String(a.scheduled_start || '').localeCompare(String(b.scheduled_start || ''))))
+    return lanes
+  }, [snap])
 
   const setDraft = (kind, k, v) =>
     setDrafts(d => ({ ...d, [kind]: { ...d[kind], [k]: v } }))
