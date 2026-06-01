@@ -5375,6 +5375,29 @@ function ThermalPanel() {
 }
 
 function DispatchPanel() {
+  const STATUS_OPTIONS = ['scheduled', 'en-route', 'on-site', 'laying', 'blocked', 'recall', 'complete']
+  const statusClass = (status) => {
+    const normalized = String(status || '').toLowerCase()
+    if (normalized === 'complete') return 'bg-emerald-500/20 text-emerald-200 border-emerald-400/30'
+    if (normalized === 'blocked' || normalized === 'recall') return 'bg-red-500/20 text-red-200 border-red-400/30'
+    if (normalized === 'laying') return 'bg-amber-500/20 text-amber-200 border-amber-400/30'
+    if (normalized === 'on-site' || normalized === 'en-route') return 'bg-sky-500/20 text-sky-200 border-sky-400/30'
+    return 'bg-white/10 text-white/80 border-white/20'
+  }
+  const parseSchedule = (value) => {
+    if (!value) return null
+    const d = new Date(String(value).replace(' ', 'T'))
+    return Number.isNaN(d.getTime()) ? null : d
+  }
+  const formatSchedule = (date) => {
+    if (!date) return ''
+    const yyyy = date.getFullYear()
+    const mm = String(date.getMonth() + 1).padStart(2, '0')
+    const dd = String(date.getDate()).padStart(2, '0')
+    const hh = String(date.getHours()).padStart(2, '0')
+    const min = String(date.getMinutes()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}`
+  }
   const [snap, setSnap] = useState(null)
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState('')
@@ -5383,6 +5406,7 @@ function DispatchPanel() {
   const [busy, setBusy] = useState(false)
   const [assignFor, setAssignFor] = useState(null)
   const [assignResult, setAssignResult] = useState(null)
+  const [notifyOnReschedule, setNotifyOnReschedule] = useState(true)
 
   const reload = async () => {
     setLoading(true); setErr('')
@@ -5437,6 +5461,36 @@ function DispatchPanel() {
     } catch (e) {
       setAssignResult({ error: e.message || 'failed' })
     }
+
+    const patchJob = async (jobId, payload) => {
+      setBusy(true)
+      try {
+        await api.dispatchReschedule(jobId, { ...payload, notify_customer: notifyOnReschedule })
+        await reload()
+      } catch (e) {
+        setErr(e.message || 'reschedule failed')
+      } finally {
+        setBusy(false)
+      }
+    }
+
+    const shiftJob = async (job, minutes) => {
+      const base = parseSchedule(job.scheduled_start) || new Date()
+      const next = new Date(base.getTime() + (minutes * 60 * 1000))
+      await patchJob(job.id, { scheduled_start: formatSchedule(next), status: job.status })
+    }
+
+    const timeline = useMemo(() => {
+      const jobs = Array.isArray(snap?.jobs) ? snap.jobs : []
+      const lanes = new Map([['unassigned', []]])
+      ;(snap?.trucks || []).forEach((truck) => lanes.set(truck.id, []))
+      jobs.forEach((job) => {
+        const key = job.assigned_truck_id && lanes.has(job.assigned_truck_id) ? job.assigned_truck_id : 'unassigned'
+        lanes.get(key).push(job)
+      })
+      lanes.forEach((laneJobs) => laneJobs.sort((a, b) => String(a.scheduled_start || '').localeCompare(String(b.scheduled_start || ''))))
+      return lanes
+    }, [snap])
   }
 
   const setDraft = (kind, k, v) =>
@@ -5467,6 +5521,30 @@ function DispatchPanel() {
         </button>
       </div>
       {err && <div className="text-red-300 text-sm">{err}</div>}
+
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">Crew Timeline (read-only)</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {[...timeline.entries()].map(([laneId, jobs]) => {
+            const laneTruck = (snap?.trucks || []).find((t) => t.id === laneId)
+            const laneName = laneTruck?.name || 'Unassigned'
+            return (
+              <div key={laneId} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                <div className="text-xs font-semibold text-white/70 mb-2">{laneName}</div>
+                <div className="space-y-2">
+                  {jobs.map((job) => (
+                    <div key={job.id} className="rounded-md border border-white/10 bg-black/20 px-2 py-1.5 text-xs flex items-center justify-between gap-2">
+                      <div className="truncate">{job.scheduled_start || 'TBD'} · {job.site_name}</div>
+                      <span className={`px-2 py-0.5 rounded border ${statusClass(job.status)}`}>{job.status || 'scheduled'}</span>
+                    </div>
+                  ))}
+                  {jobs.length === 0 && <div className="text-xs text-white/40">No jobs</div>}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
 
       <div className="flex gap-2 border-b border-white/10">
         {['jobs', 'trucks', 'drivers'].map(t => (
@@ -5531,17 +5609,40 @@ function DispatchPanel() {
             <input value={drafts.job.address||''} onChange={e=>setDraft('job','address',e.target.value)} placeholder="Address" className="bg-white/10 text-white text-sm rounded px-2 py-1.5 col-span-2" />
             <input value={drafts.job.tons_needed||''} onChange={e=>setDraft('job','tons_needed',Number(e.target.value)||0)} placeholder="Tons needed" type="number" className="bg-white/10 text-white text-sm rounded px-2 py-1.5" />
             <input value={drafts.job.priority||''} onChange={e=>setDraft('job','priority',e.target.value)} placeholder="Priority (low/normal/high)" className="bg-white/10 text-white text-sm rounded px-2 py-1.5" />
+            <input value={drafts.job.customer_phone||''} onChange={e=>setDraft('job','customer_phone',e.target.value)} placeholder="Customer phone (+1804...)" className="bg-white/10 text-white text-sm rounded px-2 py-1.5 col-span-2" />
+            <select value={drafts.job.status||'scheduled'} onChange={e=>setDraft('job','status',e.target.value)} className="bg-white/10 text-white text-sm rounded px-2 py-1.5">
+              {STATUS_OPTIONS.map((s)=><option key={s} value={s} className="bg-slate-900">{s}</option>)}
+            </select>
             <input value={drafts.job.lat||''} onChange={e=>setDraft('job','lat',Number(e.target.value)||0)} placeholder="Lat" type="number" step="0.0001" className="bg-white/10 text-white text-sm rounded px-2 py-1.5" />
             <input value={drafts.job.lng||''} onChange={e=>setDraft('job','lng',Number(e.target.value)||0)} placeholder="Lng" type="number" step="0.0001" className="bg-white/10 text-white text-sm rounded px-2 py-1.5" />
             <input value={drafts.job.scheduled_start||''} onChange={e=>setDraft('job','scheduled_start',e.target.value)} placeholder="Start (YYYY-MM-DD HH:MM)" className="bg-white/10 text-white text-sm rounded px-2 py-1.5 col-span-2" />
             <button type="button" onClick={()=>submit('job')} disabled={busy} className="md:col-span-6 px-3 py-1.5 rounded bg-brand-amber text-brand-navy font-semibold text-sm hover:opacity-90 disabled:opacity-50">Add Job</button>
           </div>
           <div className="space-y-1">
+            <label className="inline-flex items-center gap-2 text-xs text-white/70">
+              <input type="checkbox" checked={notifyOnReschedule} onChange={(e)=>setNotifyOnReschedule(e.target.checked)} />
+              Auto-call customer when rescheduling
+            </label>
             {(snap?.jobs||[]).map(j=>(
               <div key={j.id} className="bg-white/5 rounded px-3 py-2 text-sm text-white/90">
                 <div className="flex items-center justify-between">
-                  <div><span className="font-semibold">{j.site_name}</span> · {j.tons_needed}T · {j.priority} · {j.scheduled_start||'no time'}</div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold">{j.site_name}</span>
+                    <span>{j.tons_needed}T</span>
+                    <span>{j.priority}</span>
+                    <span>{j.scheduled_start||'no time'}</span>
+                    <span className={`px-2 py-0.5 rounded border text-xs ${statusClass(j.status)}`}>{j.status || 'scheduled'}</span>
+                  </div>
                   <div className="flex items-center gap-2">
+                    <select
+                      value={j.status || 'scheduled'}
+                      onChange={(e)=>patchJob(j.id, { status: e.target.value })}
+                      className="bg-white/10 text-white text-xs rounded px-2 py-1"
+                    >
+                      {STATUS_OPTIONS.map((s)=><option key={s} value={s} className="bg-slate-900">{s}</option>)}
+                    </select>
+                    <button type="button" onClick={()=>shiftJob(j, -30)} className="px-2 py-1 rounded bg-white/10 text-white/80 text-xs font-semibold hover:bg-white/20">-30m</button>
+                    <button type="button" onClick={()=>shiftJob(j, 30)} className="px-2 py-1 rounded bg-white/10 text-white/80 text-xs font-semibold hover:bg-white/20">+30m</button>
                     <button type="button" onClick={()=>runAssign(j.id)} className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-200 text-xs font-semibold hover:bg-emerald-500/30">Recommend Crew</button>
                     <button type="button" onClick={()=>remove('job',j.id)} className="text-red-300 hover:text-red-200 text-xs">Delete</button>
                   </div>

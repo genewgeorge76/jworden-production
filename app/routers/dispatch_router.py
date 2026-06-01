@@ -123,6 +123,16 @@ def delete_job(rid: str, _owner: str = Depends(_require_owner)):
     return {"ok": True}
 
 
+@router.post("/jobs/{rid}/reschedule")
+async def reschedule_job(rid: str, payload: dict = Body(...), _owner: str = Depends(_require_owner)):
+    try:
+        return await dispatch_engine.reschedule_job(rid, payload)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.get("/assign/{job_id}")
 async def assign(job_id: str, _owner: str = Depends(_require_owner)):
     try:

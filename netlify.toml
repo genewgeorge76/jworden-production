@@ -12,6 +12,8 @@
   # Failures degrade to cached content — never block the build.
   VITE_API_BASE_URL   = "https://codexbuildfreeofbase44-production.up.railway.app"
   VITE_DEPLOY_MODE    = "production"
+  MEDIA_CDN_PRUNE_ENABLED = "true"
+  MEDIA_CDN_PRUNE_PATHS = "work/,videos/parking-lot.mp4"
 
 [functions]
   directory    = "netlify/functions"
@@ -146,6 +148,18 @@
 [[redirects]]
   from = "/api/*"
   to = "https://codexbuildfreeofbase44-production.up.railway.app/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/work/*"
+  to = "https://media.jwordenasphaltpaving.com/work/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/videos/*"
+  to = "https://media.jwordenasphaltpaving.com/videos/:splat"
   status = 200
   force = true
 

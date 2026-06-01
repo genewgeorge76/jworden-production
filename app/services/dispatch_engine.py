@@ -31,12 +31,14 @@ import tempfile
 import threading
 import time
 import uuid
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Optional
 
 import httpx
 
 from . import runtime_config
+from . import vapi_caller
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +111,10 @@ _ALLOWED_JOB_FIELDS = {
     "id", "site_name", "address", "lat", "lng", "tons_needed", "lift_count",
     "scheduled_start", "scheduled_end", "priority", "status", "notes",
     "assigned_truck_id", "assigned_driver_id",
+    "customer_phone",
+}
+_ALLOWED_JOB_STATUS = {
+    "en-route", "on-site", "laying", "complete", "blocked", "recall", "scheduled",
 }
 
 
@@ -178,6 +184,8 @@ def upsert_job(payload: dict) -> dict:
     if not row.get("site_name"):
         raise ValueError("job.site_name required")
     row.setdefault("status", "scheduled")
+    if str(row.get("status", "")).lower() not in _ALLOWED_JOB_STATUS:
+        raise ValueError("job.status invalid")
     row.setdefault("priority", "normal")
     row.setdefault("tons_needed", 0.0)
     with _LOCK:
@@ -187,6 +195,86 @@ def upsert_job(payload: dict) -> dict:
         data["jobs"][rid] = row
         _save(data)
         return row
+
+
+def _parse_schedule(v: Any) -> Optional[datetime]:
+    if not isinstance(v, str):
+        return None
+    raw = v.strip()
+    if not raw:
+        return None
+    normalized = raw.replace(" ", "T")
+    try:
+        return datetime.fromisoformat(normalized)
+    except ValueError:
+        return None
+
+
+def _fmt_schedule(dt: datetime) -> str:
+    return dt.strftime("%Y-%m-%d %H:%M")
+
+
+async def reschedule_job(job_id: str, payload: dict) -> dict:
+    notify_customer = bool(payload.get("notify_customer"))
+    call_result = None
+
+    with _LOCK:
+        data = _load()
+        job = data["jobs"].get(job_id)
+        if not job:
+            raise KeyError(f"job {job_id} not found")
+
+        updates = {}
+        if "status" in payload and payload.get("status") is not None:
+            status = str(payload.get("status")).strip().lower()
+            if status not in _ALLOWED_JOB_STATUS:
+                raise ValueError("job.status invalid")
+            updates["status"] = status
+
+        if "assigned_truck_id" in payload:
+            updates["assigned_truck_id"] = payload.get("assigned_truck_id") or None
+
+        if "assigned_driver_id" in payload:
+            updates["assigned_driver_id"] = payload.get("assigned_driver_id") or None
+
+        if payload.get("scheduled_start"):
+            start_dt = _parse_schedule(payload.get("scheduled_start"))
+            if not start_dt:
+                raise ValueError("scheduled_start must be YYYY-MM-DD HH:MM")
+            updates["scheduled_start"] = _fmt_schedule(start_dt)
+            if payload.get("scheduled_end"):
+                end_dt = _parse_schedule(payload.get("scheduled_end"))
+                if not end_dt:
+                    raise ValueError("scheduled_end must be YYYY-MM-DD HH:MM")
+                updates["scheduled_end"] = _fmt_schedule(end_dt)
+            elif job.get("scheduled_end"):
+                current_end = _parse_schedule(job.get("scheduled_end"))
+                current_start = _parse_schedule(job.get("scheduled_start"))
+                if current_end and current_start:
+                    updates["scheduled_end"] = _fmt_schedule(start_dt + (current_end - current_start))
+                else:
+                    updates["scheduled_end"] = _fmt_schedule(start_dt + timedelta(hours=1))
+            else:
+                updates["scheduled_end"] = _fmt_schedule(start_dt + timedelta(hours=1))
+
+        if payload.get("customer_phone"):
+            updates["customer_phone"] = str(payload.get("customer_phone")).strip()
+
+        job.update(updates)
+        _save(data)
+        updated = dict(job)
+
+    if notify_customer and updated.get("customer_phone"):
+        start_at = updated.get("scheduled_start") or "the updated time"
+        script = f"Your paving appointment was rescheduled to {start_at}. Reply or call us with any questions."
+        call_result = await vapi_caller.place_call(
+            updated["customer_phone"],
+            purpose=f\"Dispatch reschedule update for {updated.get('site_name', 'job')}\",
+            script_hint=script,
+            confirmed=True,
+        )
+
+    return {"job": updated, "notified": bool(call_result and call_result.get("ok")), "call": call_result}
 
 
 def delete_truck(rid: str) -> bool:
