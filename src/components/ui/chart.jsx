@@ -46,6 +46,9 @@ const ChartContainer = React.forwardRef(({ id, className, children, config, ...p
 })
 ChartContainer.displayName = "Chart"
 
+const CSS_PROP_RE = /^[a-zA-Z0-9_-]+$/
+const CSS_COLOR_RE = /^[a-zA-Z0-9#(),%. /-]+$/
+
 const ChartStyle = ({
   id,
   config
@@ -67,8 +70,11 @@ ${colorConfig
 const color =
   itemConfig.theme?.[theme] ||
   itemConfig.color
-return color ? `  --color-${key}: ${color};` : null
+const safeKey = CSS_PROP_RE.test(String(key)) ? key : null
+const safeColor = color && CSS_COLOR_RE.test(String(color)) ? color : null
+return safeKey && safeColor ? `  --color-${safeKey}: ${safeColor};` : null
 })
+.filter(Boolean)
 .join("\n")}
 }
 `)
