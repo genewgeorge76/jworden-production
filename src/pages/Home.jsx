@@ -75,11 +75,32 @@ export default function Home() {
       <section className="relative min-h-[90vh] flex items-end bg-[#0f0f0f] overflow-hidden">
         {/* background image */}
         <div className="absolute inset-0">
-          <img
-            src={HERO_IMAGE}
-            alt="J. Worden and Sons asphalt paving — Virginia"
-            className="w-full h-full object-cover opacity-35"
-          />
+          {/* LCP hero — responsive AVIF/WebP matches the <link rel="preload">
+              in index.html so the browser reuses the preloaded image (mobile
+              AVIF ~55KB vs the 161KB JPG). fetchPriority + eager keep it the
+              prioritized LCP element. */}
+          <picture>
+            <source
+              type="image/avif"
+              srcSet="/work/portfolio/portfolio-010-mobile.avif 800w, /work/portfolio/portfolio-010.avif 1600w"
+              sizes="(max-width: 768px) 100vw, 1600px"
+            />
+            <source
+              type="image/webp"
+              srcSet="/work/portfolio/portfolio-010-mobile.webp 800w, /work/portfolio/portfolio-010.webp 1600w"
+              sizes="(max-width: 768px) 100vw, 1600px"
+            />
+            <img
+              src={HERO_IMAGE}
+              alt="J. Worden and Sons asphalt paving — Virginia"
+              width={1600}
+              height={900}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="w-full h-full object-cover opacity-35"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-r from-[#0f0f0f] via-[#0f0f0f]/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent" />
         </div>
