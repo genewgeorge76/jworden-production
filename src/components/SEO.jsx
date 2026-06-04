@@ -117,11 +117,17 @@ export default function SEO({
     }
     xDefault.setAttribute('href', canonicalUrl);
 
+    // Resolve OG/Twitter image to an absolute URL — social crawlers
+    // (Facebook, LinkedIn, X) ignore relative image paths.
+    const absoluteOgImage = /^https?:\/\//i.test(ogImage)
+      ? ogImage
+      : `${canonicalBase}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
+
     // Open Graph
     setMeta('meta[property="og:title"]', 'content', title || '');
     setMeta('meta[property="og:description"]', 'content', description || '');
     setMeta('meta[property="og:url"]', 'content', canonicalUrl);
-    setMeta('meta[property="og:image"]', 'content', ogImage);
+    setMeta('meta[property="og:image"]', 'content', absoluteOgImage);
     setMeta('meta[property="og:image:width"]', 'content', '1200');
     setMeta('meta[property="og:image:height"]', 'content', '630');
     setMeta('meta[property="og:image:alt"]', 'content', title || siteName);
@@ -137,7 +143,7 @@ export default function SEO({
     setMeta('meta[name="twitter:card"]', 'content', 'summary_large_image');
     setMeta('meta[name="twitter:title"]', 'content', title || '');
     setMeta('meta[name="twitter:description"]', 'content', description || '');
-    setMeta('meta[name="twitter:image"]', 'content', ogImage);
+    setMeta('meta[name="twitter:image"]', 'content', absoluteOgImage);
     setMeta('meta[name="twitter:image:alt"]', 'content', title || siteName);
 
     // Geo tags — defaults to Virginia but can be overridden per-site/page.
