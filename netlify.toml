@@ -187,6 +187,74 @@
   status = 301
   force = true
 
+# Retired out-of-state /states/ pages → service-areas (301).
+# These pages were removed; Virginia is the only active state page.
+[[redirects]]
+  from = "/states/florida"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/georgia"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/iowa"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/kansas"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/michigan"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/minnesota"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/missouri"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/new-jersey"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/new-york"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/north-carolina"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/texas"
+  to = "/service-areas"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
