@@ -1,5 +1,14 @@
 import nodemailer from 'nodemailer'
 
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' }
@@ -61,33 +70,33 @@ export const handler = async (event) => {
               <h2 style="color:#ff7a00;margin:0;font-size:22px;letter-spacing:2px;text-transform:uppercase;">
                 New Estimate Request
               </h2>
-              <p style="color:#888;margin:4px 0 0;font-size:13px;">jwordenasphaltpaving.com — ${ts}</p>
+              <p style="color:#888;margin:4px 0 0;font-size:13px;">jwordenasphaltpaving.com — ${escapeHtml(ts)}</p>
             </div>
             <div style="background:#fff;padding:32px;border:1px solid #eee;">
               <table style="width:100%;font-size:14px;border-collapse:collapse;">
                 <tr style="border-bottom:1px solid #f5f5f5;">
                   <td style="padding:10px 16px 10px 0;font-weight:700;color:#333;width:120px;">Name</td>
-                  <td style="padding:10px 0;color:#555;">${name || '<em>not provided</em>'}</td>
+                  <td style="padding:10px 0;color:#555;">${name ? escapeHtml(name) : '<em>not provided</em>'}</td>
                 </tr>
                 <tr style="border-bottom:1px solid #f5f5f5;">
                   <td style="padding:10px 16px 10px 0;font-weight:700;color:#333;">Phone</td>
-                  <td style="padding:10px 0;color:#555;">${phone || '<em>not provided</em>'}</td>
+                  <td style="padding:10px 0;color:#555;">${phone ? escapeHtml(phone) : '<em>not provided</em>'}</td>
                 </tr>
                 <tr style="border-bottom:1px solid #f5f5f5;">
                   <td style="padding:10px 16px 10px 0;font-weight:700;color:#333;">Email</td>
-                  <td style="padding:10px 0;color:#555;">${email || '<em>not provided</em>'}</td>
+                  <td style="padding:10px 0;color:#555;">${email ? escapeHtml(email) : '<em>not provided</em>'}</td>
                 </tr>
                 <tr style="border-bottom:1px solid #f5f5f5;">
                   <td style="padding:10px 16px 10px 0;font-weight:700;color:#333;">Service</td>
-                  <td style="padding:10px 0;color:#555;">${service || '<em>not specified</em>'}</td>
+                  <td style="padding:10px 0;color:#555;">${service ? escapeHtml(service) : '<em>not specified</em>'}</td>
                 </tr>
                 <tr>
                   <td style="padding:10px 16px 10px 0;font-weight:700;color:#333;vertical-align:top;">Details</td>
-                  <td style="padding:10px 0;color:#555;white-space:pre-wrap;">${message || '<em>none</em>'}</td>
+                  <td style="padding:10px 0;color:#555;white-space:pre-wrap;">${message ? escapeHtml(message) : '<em>none</em>'}</td>
                 </tr>
               </table>
               <div style="margin-top:24px;padding:16px;background:#fffbf0;border-left:4px solid #ff7a00;">
-                <p style="margin:0;font-size:13px;color:#666;">Source: ${source}</p>
+                <p style="margin:0;font-size:13px;color:#666;">Source: ${escapeHtml(source)}</p>
               </div>
             </div>
           </div>
