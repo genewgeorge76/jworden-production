@@ -90,9 +90,8 @@ test.beforeEach(async ({ page }) => {
 test('homepage hero + key sections smoke flow', async ({ page }) => {
   await page.goto('/')
 
-  // Hero (H1 changed to local-pack-first copy after May 2026 redesign)
-  await expect(page.getByRole('heading', { level: 1, name: /Driveways.+Lots.+Done Right/is })).toBeVisible()
-  await expect(page.getByRole('link', { name: /Open JWordenAI Scan/i })).toBeVisible()
+  // Hero H1 as of June 2026 redesign
+  await expect(page.getByRole('heading', { level: 1, name: /Asphalt Paving/i })).toBeVisible()
 
   // Core narrative sections that survived the redesign
   await expect(page.getByRole('heading', { name: /Everything your pavement needs/i })).toBeVisible()
@@ -106,12 +105,11 @@ test('homepage hero + key sections smoke flow', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /wrong paving contractor is not cheap/i })).toBeVisible()
 })
 
-test('jwordenai teaser smoke flow', async ({ page }) => {
+test('jwordenai route redirects to quote page', async ({ page }) => {
+  // /jwordenai now redirects to /quote — verify the redirect lands correctly
   await page.goto('/jwordenai')
-
-  await expect(page.getByRole('heading', { name: /Scan pavement/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Use iPhone Photos/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Add Drone Views/i })).toBeVisible()
+  await expect(page).toHaveURL(/\/quote/)
+  await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
 })
 
 test('command center smoke flow', async ({ page }) => {

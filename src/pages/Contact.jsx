@@ -102,6 +102,11 @@ export default function Contact() {
       setStatus('error')
       return
     }
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setErrorMsg('Please enter a valid email address.')
+      setStatus('error')
+      return
+    }
     setStatus('submitting')
     setErrorMsg('')
 
