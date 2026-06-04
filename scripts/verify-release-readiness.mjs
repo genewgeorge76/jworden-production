@@ -1,5 +1,8 @@
 const repoSlug = String(process.env.GITHUB_REPOSITORY || '').trim();
 const token = String(process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '').trim();
+// Filter alerts to the current branch ref so alerts fixed on this branch
+// don't block CI just because main hasn't been re-scanned yet.
+const githubRef = String(process.env.GITHUB_REF || '').trim();
 
 function fail(message) {
   console.error(`[release-readiness] FAIL: ${message}`);
@@ -7,10 +10,13 @@ function fail(message) {
 }
 
 async function getOpenCriticalCodeScanningAlerts() {
+  const params = new URLSearchParams({ state: 'open', severity: 'critical', per_page: '1' });
+  if (githubRef) params.set('ref', githubRef);
+
   let response;
   try {
     response = await fetch(
-      `https://api.github.com/repos/${repoSlug}/code-scanning/alerts?state=open&severity=critical&per_page=1`,
+      `https://api.github.com/repos/${repoSlug}/code-scanning/alerts?${params}`,
       {
         headers: {
           Accept: 'application/vnd.github+json',
