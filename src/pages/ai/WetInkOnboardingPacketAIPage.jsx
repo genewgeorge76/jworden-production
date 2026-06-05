@@ -30,7 +30,7 @@ export default function WetInkOnboardingPacketAIPage() {
     '@type': 'WebPage',
     name: 'Wet-Ink Onboarding & Legal Paperwork Packet',
     description: 'Printable, legally binding document suite requiring physical ink signatures for HR record keeping and audit compliance.',
-    url: 'https://www.thewordenstandard.com/wet-ink-onboarding-packet',
+    url: 'https://www.jwordenasphaltpaving.com/wet-ink-onboarding-packet',
   }
 
   // Liquid Motion Variants

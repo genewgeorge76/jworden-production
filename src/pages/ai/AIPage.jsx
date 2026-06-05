@@ -30,7 +30,7 @@ export default function AIPage() {
     '@type': 'WebPage',
     name: 'The Worden Standard | Truth, Vision & Operational Excellence',
     description: 'The foundation, regulatory hub, and operational truth of J. Worden & Sons. Guiding generational wealth, HR applications, driver compliance, and customer standards.',
-    url: 'https://www.thewordenstandard.com/',
+    url: 'https://www.jwordenasphaltpaving.com/',
   }
 
   // Liquid Motion Variants

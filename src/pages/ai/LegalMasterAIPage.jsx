@@ -38,7 +38,7 @@ export default function LegalMasterAIPage() {
     '@type': 'WebPage',
     name: 'Master Legal & Regulatory Compliance Framework | The Worden Standard',
     description: 'Comprehensive federal, state (Virginia), and internal mandate compliance logic for J. Worden & Sons operations, safety, and employment.',
-    url: 'https://www.thewordenstandard.com/legal-master',
+    url: 'https://www.jwordenasphaltpaving.com/legal-master',
   }
 
   // Liquid Motion Variants
