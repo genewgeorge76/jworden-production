@@ -11,7 +11,6 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import RouteLoader from '@/components/RouteLoader';
-import SplashScreen from '@/components/SplashScreen';
 import AdvisoryGate from '@/components/AdvisoryGate';
 import ChatWidget from '@/components/ChatWidget';
 import Navbar from '@/components/Navbar';
@@ -414,7 +413,6 @@ function App() {
       <AuthProvider>
         <QueryClientProvider client={queryClientInstance}>
           <Router>
-            <SplashScreen />
             <AuthenticatedApp />
             <MobileCallBar />
             {shouldRenderChatWidget ? <ChatWidget /> : null}
