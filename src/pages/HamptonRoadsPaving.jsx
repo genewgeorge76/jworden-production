@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
+import { AGGREGATE_RATING } from '@/lib/reviews'
 
 // Virginia Beach / Hampton Roads — 40 years of coastal commercial experience.
 // Real commercial corridors: Military Highway, Virginia Beach Blvd, Town Center, Atlantic Ave hotel strip.
@@ -80,9 +81,7 @@ export default function HamptonRoadsPaving() {
         },
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          reviewCount: '147',
-          bestRating: '5',
+          ...AGGREGATE_RATING,
         },
         areaServed: [
           { '@type': 'City', name: 'Virginia Beach', containedInPlace: { '@type': 'State', name: 'Virginia' } },
@@ -161,7 +160,7 @@ export default function HamptonRoadsPaving() {
               <div className="grid grid-cols-4 gap-4 pt-6 border-t border-white/10">
                 {[
                   { val: '40+', label: 'Years Serving HR' },
-                  { val: '4.9★', label: 'Avg Rating' },
+                  { val: `${AGGREGATE_RATING.ratingValue}★`, label: 'Avg Rating' },
                   { val: 'Base', label: 'Access Cleared' },
                   { val: 'VDOT', label: 'Prequalified' },
                 ].map(s => (

@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
+import { AGGREGATE_RATING } from '@/lib/reviews'
 
 // Shenandoah Valley — I-81 corridor. 40 years in the mountains. This is the real story.
 // Winchester to Roanoke. US-11 (Valley Pike). Blue Ridge geology. Mountain drainage engineering.
@@ -102,9 +103,7 @@ export default function ShenandoahValleyPaving() {
         },
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          reviewCount: '147',
-          bestRating: '5',
+          ...AGGREGATE_RATING,
         },
         areaServed: [
           { '@type': 'City', name: 'Winchester', containedInPlace: { '@type': 'State', name: 'Virginia' } },

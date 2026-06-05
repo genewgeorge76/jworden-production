@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { getLocationBySlug, PRIMARY_DOMAIN } from '@/lib/locations';
+import { AGGREGATE_RATING } from '@/lib/reviews';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -58,13 +59,12 @@ export default function LocationPage() {
     description: resolvedIntro,
   };
 
-  if (typeof loc.rating === 'number' && typeof loc.reviews === 'number') {
-    businessSchema.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: loc.rating,
-      reviewCount: loc.reviews,
-    };
-  }
+  // Company-wide aggregate (same real figure on every page), not a fabricated
+  // per-city count. Sourced from reviews.js so schema == the visible numbers.
+  businessSchema.aggregateRating = {
+    '@type': 'AggregateRating',
+    ...AGGREGATE_RATING,
+  };
 
   // Only bind the Virginia Headquarters address if this location is in VA and does not have a distinct GBP address. 
   // Otherwise, Google will suspend the out-of-state GBPs for pointing to a VA address.

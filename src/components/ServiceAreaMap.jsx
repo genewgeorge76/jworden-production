@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import { Icon } from 'leaflet';
 import { MapPin, Truck, Phone, Star } from 'lucide-react';
 import { LOCATIONS } from '@/lib/locations';
+import { REVIEW_RATING, REVIEW_COUNT } from '@/lib/reviews';
 
 // HQ pin — primary amber
 const hqIcon = new Icon({
@@ -153,7 +154,7 @@ export default function ServiceAreaMap() {
                         {loc.city}, {loc.stateAbbr}
                       </p>
                       <p style={{ fontSize: 11, color: '#4a4a4a', marginBottom: 8 }}>
-                        {loc.region} · {loc.reviews} reviews · ★ {loc.rating}
+                        {loc.region} · {REVIEW_COUNT} reviews · ★ {REVIEW_RATING}
                       </p>
                       <a
                         href={`/locations/${loc.slug}`}
@@ -268,10 +269,10 @@ export default function ServiceAreaMap() {
                 <div className="flex items-center gap-3 pt-3 border-t border-primary/20 mb-4">
                   <div className="flex items-center gap-1 text-primary">
                     <Star className="w-3.5 h-3.5 fill-current" />
-                    <span className="font-display font-bold text-xs">{activeZone.rating}</span>
+                    <span className="font-display font-bold text-xs">{REVIEW_RATING}</span>
                   </div>
                   <span className="font-body text-muted-foreground text-xs">
-                    {activeZone.reviews} reviews
+                    {REVIEW_COUNT} reviews
                   </span>
                 </div>
                 <a

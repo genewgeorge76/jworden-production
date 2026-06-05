@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, Shield, Star } from 'lucide-react';
 import { trackPhoneClick } from '@/lib/analytics';
+import { REVIEW_RATING, REVIEW_COUNT } from '@/lib/reviews';
 
 /**
  * Hero section for LocationsIndex — keyword-rich H1, intro copy,
@@ -47,7 +48,7 @@ export default function LocationsHero({ cityCount }) {
               <Star className="w-5 h-5 text-primary fill-primary" />
               <div>
                 <p className="font-display font-black text-foreground text-xs tracking-wider uppercase">
-                  4.9 / 5 · 1,289 Reviews
+                  {REVIEW_RATING} / 5 · {REVIEW_COUNT} Reviews
                 </p>
                 <p className="font-display text-muted-foreground text-[10px] tracking-wider uppercase mt-0.5">
                   Houzz · Angi · Facebook

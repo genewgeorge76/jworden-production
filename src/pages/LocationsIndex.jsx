@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, ArrowUpRight, Star } from 'lucide-react';
+import { REVIEW_RATING, REVIEW_COUNT } from '@/lib/reviews';
 import {
   LOCATIONS,
   getLocationsByRegion,
@@ -242,7 +243,7 @@ export default function LocationsIndex() {
                         <div className="flex items-center gap-1.5">
                           <Star className="w-3.5 h-3.5 text-primary fill-primary" />
                           <span className="font-display text-foreground text-xs tracking-wider">
-                            {loc.rating} · {loc.reviews} reviews
+                            {REVIEW_RATING} · {REVIEW_COUNT} reviews
                           </span>
                         </div>
                         <span className="font-display text-primary text-[10px] tracking-[0.2em] uppercase group-hover:underline">

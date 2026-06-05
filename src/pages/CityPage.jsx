@@ -4,6 +4,7 @@ import SchemaMarkup, { faqSchema } from '../components/SchemaMarkup'
 import FAQAccordion from '../components/FAQAccordion'
 import { getServiceArea, SERVICE_AREAS } from '../data/serviceAreas'
 import { SITE_URL } from '../lib/schemas'
+import { AGGREGATE_RATING } from '../lib/reviews'
 import { trackEvent } from '../api/client'
 import NotFound from './NotFound'
 
@@ -37,10 +38,7 @@ function cityLocalBusinessSchema(area) {
     },
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      bestRating: '5',
-      worstRating: '1',
-      reviewCount: '87',
+      ...AGGREGATE_RATING,
     },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
@@ -245,8 +243,8 @@ export default function CityPage() {
                   <span className="text-white font-medium">1984</span>
                 </div>
                 <div className="flex justify-between border-b border-white/10 pb-2">
-                  <span>Google Rating</span>
-                  <span className="text-brand-amber font-medium">4.9 ★</span>
+                  <span>Avg Rating</span>
+                  <span className="text-brand-amber font-medium">{AGGREGATE_RATING.ratingValue} ★</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Estimates</span>

@@ -61,12 +61,9 @@ export const OPENING_HOURS = [
 export const HOURS_DISPLAY     = 'Mon–Fri 7am–6pm · Sat 7am–2pm'
 export const HOURS_DISPLAY_ALT = '24/7 Emergency Response Available'
 
-export const AGGREGATE_RATING = {
-  ratingValue: '4.9',
-  bestRating:  '5',
-  worstRating: '1',
-  reviewCount: '87',
-}
+// Review aggregate lives in reviews.js — one source across all platforms
+// (Houzz + Angi + Facebook today; add Google when the GBP is reverified).
+export { AGGREGATE_RATING, REVIEW_RATING, REVIEW_COUNT } from './reviews'
 
 export const CREDENTIALS = {
   vaLicense:    'Virginia Class A Contractor',

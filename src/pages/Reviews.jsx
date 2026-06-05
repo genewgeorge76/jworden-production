@@ -4,34 +4,14 @@ import SchemaMarkup, { reviewsSchema } from '../components/SchemaMarkup'
 import { api, trackEvent } from '../api/client'
 import SocialShare from '../components/SocialShare'
 import LiveReviewBadges from '../components/LiveReviewBadges'
+import { REVIEW_RATING, REVIEW_COUNT, FEATURED_REVIEWS } from '../lib/reviews'
 
-// Fallback in case API is unavailable
+// Honest fallback when the live Google reviews API is unavailable: the real
+// blended aggregate (reviews.js) plus real verified reviews. No invented data.
 const FALLBACK = {
-  aggregate_rating: 4.9,
-  total_reviews: 87,
-  reviews: [
-    {
-      author: 'Mark D.',
-      rating: 5,
-      text: 'J. Worden & Sons did an outstanding job on our commercial parking lot. On time, on budget, and the quality is exceptional.',
-      date: '2024-11-15',
-      source: 'Google',
-    },
-    {
-      author: 'Patricia H.',
-      rating: 5,
-      text: 'Our driveway looks brand new. They showed up on schedule, got it done in one day, and the price was very fair.',
-      date: '2024-10-22',
-      source: 'Google',
-    },
-    {
-      author: 'Riverside KFC Management',
-      rating: 5,
-      text: 'We have used J. Worden & Sons for all three of our franchise locations. Every project has been flawless.',
-      date: '2024-09-08',
-      source: 'Google',
-    },
-  ],
+  aggregate_rating: REVIEW_RATING,
+  total_reviews: REVIEW_COUNT,
+  reviews: FEATURED_REVIEWS,
 }
 
 function StarRating({ rating }) {
@@ -97,9 +77,9 @@ export default function Reviews() {
     <>
       <SchemaMarkup
         title={`${aggregate_rating}★ Reviews — What Customers Say`}
-        description={`J. Worden & Sons has a ${aggregate_rating}-star average across ${total_reviews} Google reviews. Read what homeowners and commercial clients say about our asphalt paving work.`}
+        description={`J. Worden & Sons has a ${aggregate_rating}-star average across ${total_reviews} verified customer reviews on Google, Houzz, Angi and Facebook. Read what homeowners and commercial clients say about our asphalt paving work.`}
         canonical="/reviews"
-        schema={data ? reviewsSchema(reviews, aggregate_rating) : undefined}
+        schema={data ? reviewsSchema(reviews, aggregate_rating, total_reviews) : undefined}
         breadcrumb={[
           { name: 'Home', path: '/' },
           { name: 'Reviews', path: '/reviews' },
@@ -118,7 +98,7 @@ export default function Reviews() {
           <div className="flex justify-center">
             <SocialShare
               path="/reviews"
-              text="J. Worden & Sons — 4.9★ across 87 Google reviews. See what customers say."
+              text={`J. Worden & Sons — ${REVIEW_RATING}★ across ${REVIEW_COUNT} verified customer reviews. See what customers say.`}
               compact
             />
           </div>
@@ -187,7 +167,7 @@ export default function Reviews() {
                   ))}
                 </div>
                 <div className="text-muted-foreground text-sm mt-1">
-                  {total_reviews} Google reviews
+                  {total_reviews} verified reviews
                 </div>
               </div>
               <div className="h-px w-20 sm:h-20 sm:w-px bg-border" />
