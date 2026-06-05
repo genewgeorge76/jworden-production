@@ -70,8 +70,10 @@ ${colorConfig
 const color =
   itemConfig.theme?.[theme] ||
   itemConfig.color
-const safeKey = CSS_PROP_RE.test(String(key)) ? key : null
-const safeColor = color && CSS_COLOR_RE.test(String(color)) ? color : null
+const strKey = String(key)
+const strColor = String(color ?? '')
+const safeKey = CSS_PROP_RE.test(strKey) ? strKey : null
+const safeColor = strColor && CSS_COLOR_RE.test(strColor) ? strColor : null
 return safeKey && safeColor ? `  --color-${safeKey}: ${safeColor};` : null
 })
 .filter(Boolean)

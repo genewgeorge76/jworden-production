@@ -149,7 +149,7 @@ test('reviews page renders with Houzz awards section', async ({ page }) => {
 })
 
 // ── JWordenAI ─────────────────────────────────────────────────────────────────
-test('jwordenai page renders scan workflow', async ({ page }) => {
+test('jwordenai route redirects to quote page', async ({ page }) => {
   // /jwordenai redirects to /quote — verify the redirect and that quote page renders
   await page.goto('/jwordenai')
   await expect(page).toHaveURL(/\/quote/)
