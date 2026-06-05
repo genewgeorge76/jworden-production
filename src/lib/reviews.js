@@ -11,6 +11,13 @@
  */
 export const REVIEW_PLATFORMS = [
   {
+    name: 'Google',
+    rating: 4.4,
+    count: 7,
+    url: 'https://search.google.com/local/reviews?placeid=ChIJG3X8o_OStokRzRynNBuVfQ0',
+    accent: 'Google Business Profile',
+  },
+  {
     name: 'Houzz',
     rating: 4.8,
     count: 12,
