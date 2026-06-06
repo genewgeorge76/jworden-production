@@ -40,10 +40,15 @@ export default function SmartImage({
 }) {
   const [failed, setFailed] = useState(false)
   const [activeSrc, setActiveSrc] = useState(src)
+  // When a derived AVIF/WebP sibling 404s (not every /work image has optimized
+  // siblings generated), drop the modern <source>s and let the browser load the
+  // original JPG/PNG directly instead of falling all the way to the placeholder.
+  const [noModern, setNoModern] = useState(false)
 
   useEffect(() => {
     setActiveSrc(src)
     setFailed(false)
+    setNoModern(false)
   }, [src])
 
   const showFallback = !activeSrc || failed
@@ -52,6 +57,13 @@ export default function SmartImage({
     : { aspectRatio: `${width} / ${height}`, width: '100%', maxWidth: '100%' }
 
   const handleError = () => {
+    // First failure on an image that emitted derived AVIF/WebP <source>s: the
+    // optimized sibling is probably missing. Drop those sources and retry the
+    // original JPG/PNG before giving up to the fallback panel.
+    if (!noModern) {
+      setNoModern(true)
+      return
+    }
     if (fallbackSrc && activeSrc !== fallbackSrc) {
       setActiveSrc(fallbackSrc)
       return
@@ -96,6 +108,9 @@ export default function SmartImage({
     <div className={`image-presentation-premium image-reveal-obsidian ${className}`} style={presentationStyle}>
       <picture>
         {(() => {
+          // If a derived sibling already 404'd once, stop claiming modern
+          // formats and let the <img> below load the original directly.
+          if (noModern) return null
           // Auto-derive AVIF / WebP siblings for images under /work/* (the
           // portfolio + KFC + market galleries that scripts/optimize-images.mjs
           // generates modern-format siblings for at build time).
