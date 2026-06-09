@@ -43,6 +43,15 @@
       "accentColor": "#f59e0b",
       "routeMode": "operations",
       "enableChatWidget": false
+    },
+    {
+      "key": "wordenuniversity",
+      "label": "Worden University",
+      "canonicalUrl": "https://www.jwordenuniversity.com",
+      "primaryColor": "#08090e",
+      "accentColor": "#f5a623",
+      "routeMode": "university",
+      "enableChatWidget": false
     }
   ],
   "hostnames": {
@@ -51,7 +60,9 @@
     "www.minnesotaasphaltpaving.com": "minnesota",
     "minnesotaasphaltpaving.com": "minnesota",
     "www.thewordenstandard.com": "wordenstandard",
-    "thewordenstandard.com": "wordenstandard"
+    "thewordenstandard.com": "wordenstandard",
+    "www.jwordenuniversity.com": "wordenuniversity",
+    "jwordenuniversity.com": "wordenuniversity"
   },
   "integration": {
     "canonicalBackend": {
@@ -77,6 +88,7 @@
         "https://minnesotaasphaltpaving.com",
         "https://www.thewordenstandard.com",
         "https://thewordenstandard.com",
+        "https://www.jwordenuniversity.com",
         "https://jwordenuniversity.com",
         "https://obxpaving.com",
         "http://localhost:5173",

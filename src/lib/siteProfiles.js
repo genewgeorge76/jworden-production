@@ -16,6 +16,7 @@ export const SITE_ROUTE_MODES = {
   FULL_SITE: 'full-site',
   MARKET_LANDING: 'market-landing',
   OPERATIONS: 'operations',
+  UNIVERSITY: 'university',
 }
 
 const RAW_PROFILES = Array.isArray(factoryManifest?.profiles)
