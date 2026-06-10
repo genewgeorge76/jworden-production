@@ -30,7 +30,7 @@ export default function VaComplianceAIPage() {
     '@type': 'WebPage',
     name: 'Virginia Hiring & Compliance Regulations | The Worden Standard',
     description: 'Complete guide to Virginia hiring requirements, regulatory rules, OSHA compliance, and best operating practices for the Worden paving standard.',
-    url: 'https://www.thewordenstandard.com/va-compliance',
+    url: 'https://www.jwordenasphaltpaving.com/va-compliance',
   }
 
   // Liquid Motion Variants

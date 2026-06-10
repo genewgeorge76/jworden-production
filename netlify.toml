@@ -12,7 +12,11 @@
   # Failures degrade to cached content — never block the build.
   VITE_API_BASE_URL   = "https://codexbuildfreeofbase44-production.up.railway.app"
   VITE_DEPLOY_MODE    = "production"
-  MEDIA_CDN_PRUNE_ENABLED = "true"
+  # Media CDN pruning is DISABLED: media.jwordenasphaltpaving.com returns 404
+  # for all /work and /videos assets (it was never populated). Pruning local
+  # media while the CDN is empty made every completed-job photo 404 → SPA
+  # fallback HTML → broken images. Ship the images with the deploy instead.
+  MEDIA_CDN_PRUNE_ENABLED = "false"
   MEDIA_CDN_PRUNE_PATHS = "work/,videos/parking-lot.mp4"
 
 [functions]
@@ -151,17 +155,11 @@
   status = 200
   force = true
 
-[[redirects]]
-  from = "/work/*"
-  to = "https://media.jwordenasphaltpaving.com/work/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/videos/*"
-  to = "https://media.jwordenasphaltpaving.com/videos/:splat"
-  status = 200
-  force = true
+# NOTE: The forced "/work/*" and "/videos/*" → media CDN rewrites were removed.
+# The CDN (media.jwordenasphaltpaving.com) is empty and 404s for every asset, and
+# a forced rewrite shadows the real static files now shipping in the deploy.
+# Completed-job photos (/work/*) and videos (/videos/*) are served directly from
+# the build output instead.
 
 [[redirects]]
   from = "/owner"
@@ -184,6 +182,74 @@
 [[redirects]]
   from = "/fredericksburg-va-paving"
   to = "/locations/fredericksburg-va"
+  status = 301
+  force = true
+
+# Retired out-of-state /states/ pages → service-areas (301).
+# These pages were removed; Virginia is the only active state page.
+[[redirects]]
+  from = "/states/florida"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/georgia"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/iowa"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/kansas"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/michigan"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/minnesota"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/missouri"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/new-jersey"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/new-york"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/north-carolina"
+  to = "/service-areas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/states/texas"
+  to = "/service-areas"
   status = 301
   force = true
 

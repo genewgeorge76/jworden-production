@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
 
     <!-- Font display swap — prevents FOIT (invisible text while fonts load) -->
@@ -16,10 +18,19 @@
     <link rel="preload" as="font" type="font/woff2" crossorigin
       href="https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.woff2" />
 
-    <!-- Google Fonts CSS in <head> so the browser discovers font URLs
-         immediately instead of waiting for our app CSS to parse @import. -->
-    <link rel="stylesheet"
+    <!-- Google Fonts CSS, loaded non-render-blocking. The browser still
+         discovers the font URLs immediately (link is in <head>), but
+         media="print" keeps the stylesheet off the critical render path;
+         onload swaps it to media="all" once downloaded. Bebas Neue (the H1
+         display font) is preloaded above as woff2, so the LCP text isn't
+         affected; body/editorial fonts swap in via display=swap. The
+         <noscript> path keeps fonts working with JS disabled. -->
+    <link rel="stylesheet" media="print" onload="this.media='all'"
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" />
+    <noscript>
+      <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" />
+    </noscript>
 
     <!-- LCP preload: homepage hero image (used by SmartImage on / route).
          Responsive AVIF: phones get 800w (~55KB), desktop gets 1600w (~84KB).
@@ -87,7 +98,7 @@
     <meta property="og:title" content="J. Worden & Sons Paving LLC | Virginia" />
     <meta property="og:description" content="40+ years paving Virginia. Residential driveways, commercial lots, and industrial paving engineered to last decades. Licensed · Bonded · Insured. Serving all of Virginia." />
     <meta property="og:url" content="https://www.jwordenasphaltpaving.com/" />
-    <meta property="og:image" content="/og-default.jpg" />
+    <meta property="og:image" content="https://www.jwordenasphaltpaving.com/og-default.jpg" />
     <meta property="og:image:alt" content="Heavy asphalt paving machine laying fresh hot-mix asphalt at golden hour" />
     <meta property="og:locale" content="en_US" />
 
@@ -95,7 +106,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="J. Worden & Sons Paving LLC | Virginia" />
     <meta name="twitter:description" content="40+ years of precision asphalt paving across Virginia. Driveways, parking lots, industrial surfaces. Licensed & insured." />
-    <meta name="twitter:image" content="/og-default.jpg" />
+    <meta name="twitter:image" content="https://www.jwordenasphaltpaving.com/og-default.jpg" />
 
     <!-- Theme -->
     <meta name="theme-color" content="#FFBF00" />

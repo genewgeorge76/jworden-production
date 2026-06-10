@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
+import { AGGREGATE_RATING } from '@/lib/reviews'
 
 // Fredericksburg — fastest-growing I-95 corridor. Stafford + Spotsylvania exploding.
 // Real geography: Central Park, Celebrate Virginia, Route 3 (Plank Road), I-95 interchange commercial.
@@ -82,9 +83,7 @@ export default function FredericksburgPaving() {
         },
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          reviewCount: '147',
-          bestRating: '5',
+          ...AGGREGATE_RATING,
         },
         areaServed: [
           { '@type': 'City', name: 'Fredericksburg', containedInPlace: { '@type': 'State', name: 'Virginia' } },

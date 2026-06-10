@@ -100,21 +100,10 @@ export const STATE_PAGE_ROUTES = STATES.map((s) => ({
 
 export const STATE_SLUG_MAP = Object.fromEntries(STATES.map((s) => [stateSlug(s), s]))
 
-/** States where J. Worden & Sons has verified completed work */
-export const WORDEN_ACTIVE_STATES = [
-  'VA',
-  'NC',
-  'GA',
-  'FL',
-  'MI',
-  'TX',
-  'KS',
-  'MO',
-  'IA',
-  'MN',
-  'NY',
-  'NJ',
-]
+/** States where J. Worden & Sons has verified completed work and publishes a
+ *  dedicated /states/<slug> page. Only these states are indexed in the sitemap
+ *  and allowed to render a state paving page; all other state slugs 404. */
+export const WORDEN_ACTIVE_STATES = ['VA']
 
 /**
  * Returns state-adjusted pricing multiplier.

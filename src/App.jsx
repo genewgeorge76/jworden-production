@@ -11,7 +11,6 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import RouteLoader from '@/components/RouteLoader';
-import SplashScreen from '@/components/SplashScreen';
 import AdvisoryGate from '@/components/AdvisoryGate';
 import ChatWidget from '@/components/ChatWidget';
 import Navbar from '@/components/Navbar';
@@ -96,6 +95,7 @@ const AdvisoryTaxCompliance = lazy(() => import('./pages/advisory/TaxComplianceA
 // Worden Standard Internal / Operational
 const PrintableOnboardingPacket = lazy(() => import('./components/PrintableOnboardingPacket'));
 const AiPublicRelationsDept = lazy(() => import('./pages/AiPublicRelationsDept'));
+const WordenUniversity = lazy(() => import('./pages/WordenUniversity'));
 // Add page imports here
 
 // Initialise GA4 once — silently skipped when the measurement ID is not set.
@@ -222,6 +222,7 @@ const AuthenticatedApp = () => {
   const routeMode = siteProfile.routeMode || SITE_ROUTE_MODES.FULL_SITE;
   const isMarketLandingSite = routeMode === SITE_ROUTE_MODES.MARKET_LANDING;
   const isOperationsSite = routeMode === SITE_ROUTE_MODES.OPERATIONS;
+  const isUniversitySite = routeMode === SITE_ROUTE_MODES.UNIVERSITY;
 
   const operationsHomeEntry = publicAIPages.find(({ path }) => path === '/');
   const OperationsHome = operationsHomeEntry?.Component || Home;
@@ -255,6 +256,16 @@ const AuthenticatedApp = () => {
         <Routes>
           <Route path="/" element={<MarketLanding />} />
           <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  if (isUniversitySite) {
+    return (
+      <Suspense fallback={<RouteLoader />}>
+        <Routes>
+          <Route path="/*" element={<WordenUniversity />} />
         </Routes>
       </Suspense>
     );
@@ -414,7 +425,6 @@ function App() {
       <AuthProvider>
         <QueryClientProvider client={queryClientInstance}>
           <Router>
-            <SplashScreen />
             <AuthenticatedApp />
             <MobileCallBar />
             {shouldRenderChatWidget ? <ChatWidget /> : null}

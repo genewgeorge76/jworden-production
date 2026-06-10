@@ -30,7 +30,7 @@ export default function BackgroundChecksAIPage() {
     '@type': 'WebPage',
     name: 'Compliant Background Checks | The Worden Standard',
     description: 'Strict compliance protocols for employee background checks, adhering to the FCRA, Virginia state laws, and DOT MVR requirements.',
-    url: 'https://www.thewordenstandard.com/background-checks',
+    url: 'https://www.jwordenasphaltpaving.com/background-checks',
   }
 
   // Liquid Motion Variants

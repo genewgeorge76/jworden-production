@@ -107,12 +107,11 @@ export const GOOGLE_REVIEWS_URL = `https://search.google.com/local/reviews?place
 export const GOOGLE_WRITE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`;
 export const GOOGLE_MAPS_URL = `https://www.google.com/maps/place/?q=place_id:${GOOGLE_PLACE_ID}`;
 
-export const AGGREGATE_RATING = {
-  ratingValue: '4.9',
-  bestRating: '5',
-  worstRating: '1',
-  reviewCount: '127',
-};
+// NOTE: This file is currently unused (not imported anywhere). The live
+// review aggregate is in reviews.js. Kept consistent so it can't become a
+// stale fabricated-number trap if this file is ever wired back in.
+import { AGGREGATE_RATING } from './reviews';
+export { AGGREGATE_RATING };
 
 // ──────────────────────────────────────────────────────────────────────────────
 // EXTERNAL PROFILES (sameAs)

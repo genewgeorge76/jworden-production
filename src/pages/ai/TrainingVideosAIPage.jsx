@@ -26,7 +26,7 @@ export default function TrainingVideosAIPage() {
     '@type': 'WebPage',
     name: 'Mandatory Safety & Compliance Training Videos | The Worden Standard',
     description: 'Interactive training hub for OSHA compliance, equipment certification, and hazard recognition.',
-    url: 'https://www.thewordenstandard.com/training-videos',
+    url: 'https://www.jwordenasphaltpaving.com/training-videos',
   }
 
   // Liquid Motion Variants

@@ -26,7 +26,7 @@ export default function EmployeeHandbookAIPage() {
     '@type': 'WebPage',
     name: 'The Worden Standard Employee Handbook',
     description: 'Comprehensive digital and printable employee handbook detailing company policies, payroll, and code of conduct.',
-    url: 'https://www.thewordenstandard.com/employee-handbook',
+    url: 'https://www.jwordenasphaltpaving.com/employee-handbook',
   }
 
   // Liquid Motion Variants

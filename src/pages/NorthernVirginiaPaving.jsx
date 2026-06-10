@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
+import { AGGREGATE_RATING } from '@/lib/reviews'
 
 // Northern Virginia — Fairfax, Loudoun, Prince William.
 // Data center alley, Dulles corridor, Tysons Corner, government contractor campuses.
@@ -80,9 +81,7 @@ export default function NorthernVirginiaPaving() {
         },
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          reviewCount: '147',
-          bestRating: '5',
+          ...AGGREGATE_RATING,
         },
         areaServed: [
           { '@type': 'County', name: 'Fairfax County', containedInPlace: { '@type': 'State', name: 'Virginia' } },
@@ -160,7 +159,7 @@ export default function NorthernVirginiaPaving() {
                 {[
                   { val: '40+', label: 'Yrs Experience' },
                   { val: 'VDOT', label: 'Prequalified' },
-                  { val: '4.9★', label: 'Avg Rating' },
+                  { val: `${AGGREGATE_RATING.ratingValue}★`, label: 'Avg Rating' },
                   { val: 'NoVA', label: 'Permits Ready' },
                 ].map(s => (
                   <div key={s.label} className="text-center">

@@ -229,7 +229,7 @@ export function faqSchema(faqs) {
   }
 }
 
-export function reviewsSchema(reviews, aggregateRating) {
+export function reviewsSchema(reviews, aggregateRating, reviewCount = reviews.length) {
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -240,7 +240,7 @@ export function reviewsSchema(reviews, aggregateRating) {
       ratingValue: String(aggregateRating),
       bestRating: '5',
       worstRating: '1',
-      reviewCount: String(reviews.length),
+      reviewCount: String(reviewCount),
     },
     review: reviews.map((r) => ({
       '@type': 'Review',

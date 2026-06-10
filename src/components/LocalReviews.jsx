@@ -1,33 +1,7 @@
 ﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, ExternalLink, Award } from 'lucide-react';
-
-// Real, verified review data from public profiles.
-// Source: Google Search results for "J. Worden & Sons Paving LLC" (April 2026).
-// Update these numbers as profile counts grow.
-const REVIEW_PLATFORMS = [
-  {
-    name: 'Houzz',
-    rating: 4.8,
-    count: 12,
-    url: 'https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484',
-    accent: '4× Best of Houzz Service',
-  },
-  {
-    name: 'Angi',
-    rating: 4.5,
-    count: 15,
-    url: 'https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-paving-reviews-7601083.htm',
-    accent: 'Verified Pro',
-  },
-  {
-    name: 'Facebook',
-    rating: 4.3,
-    count: 57,
-    url: 'https://www.facebook.com/jwordenpaving/',
-    accent: '130+ followers',
-  },
-];
+import { REVIEW_PLATFORMS } from '@/lib/reviews';
 
 const ACHIEVEMENTS = [
   'Pavement Magazine Top 75 — 4 Categories',

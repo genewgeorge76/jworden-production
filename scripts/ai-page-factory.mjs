@@ -241,10 +241,15 @@ ${internalPages}
 `
 }
 
-function sitemapEntries(pages) {
+function sitemapEntries(pages, existingLocs) {
   const now = new Date().toISOString().slice(0, 10)
   return pages
     .filter((page) => page.public && page.includeInSitemap)
+    .filter((page) => {
+      const domain = page.domain || process.env.VITE_URL || 'https://www.jwordenasphaltpaving.com'
+      const loc = `${domain}${page.path}`
+      return !existingLocs.has(loc)
+    })
     .map(
       (page) => `  <url>\n    <loc>${page.domain || process.env.VITE_URL || 'https://www.jwordenasphaltpaving.com'}${page.path}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>`
     )
@@ -253,7 +258,14 @@ function sitemapEntries(pages) {
 
 async function updateSitemap(pages) {
   const raw = await fs.readFile(SITEMAP_FILE, 'utf8')
-  const block = [BLOCK_START, sitemapEntries(pages), BLOCK_END].filter(Boolean).join('\n')
+  
+  // Extract locs that exist outside of the AI page factory block to prevent duplicates
+  const outsideXml = raw.includes(BLOCK_START) && raw.includes(BLOCK_END)
+    ? raw.replace(new RegExp(`${BLOCK_START}[\\s\\S]*?${BLOCK_END}`), '')
+    : raw
+  const existingLocs = new Set([...outsideXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim()))
+
+  const block = [BLOCK_START, sitemapEntries(pages, existingLocs), BLOCK_END].filter(Boolean).join('\n')
 
   const hasMarkers = raw.includes(BLOCK_START) && raw.includes(BLOCK_END)
   let updated
@@ -265,6 +277,13 @@ async function updateSitemap(pages) {
   }
 
   await fs.writeFile(SITEMAP_FILE, updated, 'utf8')
+
+  // Update sitemap.txt mirror in perfect sync
+  const locs = [...updated.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim())
+  const txtContent = locs.join('\n') + '\n'
+  const txtFile = SITEMAP_FILE.replace(/\.xml$/, '.txt')
+  await fs.writeFile(txtFile, txtContent, 'utf8')
+  console.log(`[ai-page-factory] sitemap.xml and sitemap.txt updated and synchronized.`)
 }
 
 async function ensureDirs() {

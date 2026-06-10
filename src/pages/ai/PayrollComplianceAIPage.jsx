@@ -30,7 +30,7 @@ export default function PayrollComplianceAIPage() {
     '@type': 'WebPage',
     name: 'Payroll & Timekeeping Compliance | The Worden Standard',
     description: 'Federal and Virginia state guidelines for payroll, accurate timekeeping, overtime, and labor compliance required by law.',
-    url: 'https://www.thewordenstandard.com/payroll-compliance',
+    url: 'https://www.jwordenasphaltpaving.com/payroll-compliance',
   }
 
   // Liquid Motion Variants

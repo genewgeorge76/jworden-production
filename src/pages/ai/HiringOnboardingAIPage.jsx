@@ -30,7 +30,7 @@ export default function HiringOnboardingAIPage() {
     '@type': 'WebPage',
     name: 'Employee Hiring & Onboarding Protocols | The Worden Standard',
     description: 'The mandatory Worden Standard procedures for recruiting, interviewing, vetting, and onboarding new personnel legally and efficiently.',
-    url: 'https://www.thewordenstandard.com/hiring-onboarding',
+    url: 'https://www.jwordenasphaltpaving.com/hiring-onboarding',
   }
 
   // Liquid Motion Variants

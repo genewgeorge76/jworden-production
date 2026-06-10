@@ -88,11 +88,24 @@ async function renderPage(browser, baseUrl, route) {
   }
 }
 
+// Puppeteer serializes the DOM *after* the font stylesheet's onload has run,
+// which flips media="print" → media="all" and makes the link render-blocking
+// again. Restore the non-blocking media="print" on the serialized link so the
+// shipped HTML keeps Google Fonts off the critical path; the runtime onload
+// re-enables it for real users and <noscript> covers JS-disabled visitors.
+function forceNonBlockingFonts(html) {
+  return html.replace(/<link\b[^>]*\bonload="this\.media='all'"[^>]*>/g, (tag) =>
+    /\bmedia=/.test(tag)
+      ? tag.replace(/\bmedia="[^"]*"/, 'media="print"')
+      : tag.replace(/<link\b/, '<link media="print"'),
+  )
+}
+
 function savePage(route, html) {
   const routePath = route === '/' ? '/index.html' : `${route}/index.html`
   const outPath   = path.join(DIST_DIR, routePath)
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
-  fs.writeFileSync(outPath, html, 'utf-8')
+  fs.writeFileSync(outPath, forceNonBlockingFonts(html), 'utf-8')
 }
 
 async function renderWithRetry(browser, baseUrl, route) {

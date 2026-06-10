@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import SEO from '../components/SEO'
 import { trackPhoneClick } from '../lib/analytics'
+import { AGGREGATE_RATING } from '../lib/reviews'
 
 const RICHMOND_ZONES = [
   { area: 'The Fan & Museum District', detail: "Residential driveways and alley paving in Richmond City's historic neighborhoods — tight access, precision work, no margin for error." },
@@ -81,8 +82,7 @@ export default function RichmondPaving() {
           ],
           "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "58"
+            ...AGGREGATE_RATING
           }
         }}
       />
@@ -128,7 +128,7 @@ export default function RichmondPaving() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-8 border-t border-white/10">
               {[
                 { val: '40+', label: 'Years in VA' },
-                { val: '4.9★', label: 'Google Rating' },
+                { val: `${AGGREGATE_RATING.ratingValue}★`, label: 'Avg Rating' },
                 { val: '500+', label: 'Projects Done' },
                 { val: 'VDOT', label: 'Prequalified' },
               ].map(stat => (

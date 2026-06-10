@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { Phone, Shield, MapPin, Calendar, CheckCircle2, ArrowRight, Camera } from 'lucide-react'
 import SchemaMarkup, { serviceSchema, faqSchema } from '../components/SchemaMarkup'
-import { getStatePavingPageModel, STATE_PAGE_ROUTES } from '../lib/states50'
+import { getStatePavingPageModel, STATE_PAGE_ROUTES, WORDEN_ACTIVE_STATES } from '../lib/states50'
 import NotFound from './NotFound'
 
 function statePavingSchema(model) {
@@ -29,9 +29,14 @@ export default function StatePavingPage() {
   const { stateSlug } = useParams()
   const model = getStatePavingPageModel(stateSlug)
 
-  if (!model) return <NotFound />
+  // Only states with verified completed work get a public page; everything
+  // else 404s so we don't publish thin out-of-state doorway pages.
+  if (!model || !WORDEN_ACTIVE_STATES.includes(model.abbr)) return <NotFound />
 
-  const nearbyStates = STATE_PAGE_ROUTES.filter((state) => state.abbr !== model.abbr).slice(0, 6)
+  const activeSet = new Set(WORDEN_ACTIVE_STATES)
+  const nearbyStates = STATE_PAGE_ROUTES.filter(
+    (state) => state.abbr !== model.abbr && activeSet.has(state.abbr)
+  ).slice(0, 6)
 
   return (
     <>
@@ -173,24 +178,26 @@ export default function StatePavingPage() {
       </section>
 
       {/* NEARBY STATES CRAWLER LINKAGE */}
-      <section className="py-16 bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="font-display font-bold text-lg text-slate-400 uppercase tracking-widest mb-8">
-            Also Serving Neighboring Regions
-          </h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {nearbyStates.map((state) => (
-              <Link
-                key={state.abbr}
-                to={state.path}
-                className="px-6 py-2 rounded-full border border-slate-200 text-slate-600 hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 font-medium transition-all text-sm"
-              >
-                {state.name} Paving
-              </Link>
-            ))}
+      {nearbyStates.length > 0 && (
+        <section className="py-16 bg-white border-t border-slate-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 className="font-display font-bold text-lg text-slate-400 uppercase tracking-widest mb-8">
+              Also Serving Neighboring Regions
+            </h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {nearbyStates.map((state) => (
+                <Link
+                  key={state.abbr}
+                  to={state.path}
+                  className="px-6 py-2 rounded-full border border-slate-200 text-slate-600 hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 font-medium transition-all text-sm"
+                >
+                  {state.name} Paving
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   )
 }
