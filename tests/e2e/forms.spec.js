@@ -145,6 +145,8 @@ test.describe('Contact form', () => {
     if (await emailField.isVisible() && await submitBtn.isVisible()) {
       await emailField.fill('not-an-email')
       await submitBtn.click()
+      // Wait for React to re-render the error state before checking
+      await page.waitForSelector('[data-invalid]', { timeout: 3000 }).catch(() => {})
       // Browser native validation or custom — check field validity
       const isInvalid = await emailField.evaluate((el) => !el.validity?.valid ?? false)
       // Accept either browser-native invalid OR error message shown
