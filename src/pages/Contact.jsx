@@ -239,7 +239,7 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-brand-navy mb-1.5">
@@ -358,7 +358,7 @@ export default function Contact() {
                 </details>
 
                 {status === 'error' && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm space-y-2">
+                  <div data-invalid className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm space-y-2">
                     <p>
                       {errorMsg || 'Something went wrong sending your message.'}
                     </p>

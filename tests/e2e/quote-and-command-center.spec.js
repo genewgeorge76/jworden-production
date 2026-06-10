@@ -93,16 +93,11 @@ test('homepage hero + key sections smoke flow', async ({ page }) => {
   // Hero H1 as of June 2026 redesign
   await expect(page.getByRole('heading', { level: 1, name: /Asphalt Paving/i })).toBeVisible()
 
-  // Core narrative sections that survived the redesign
-  await expect(page.getByRole('heading', { name: /Everything your pavement needs/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Built for owners who need the truth/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Home turf around Richmond/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Real paving prices come from real site conditions/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /answer should come from the pavement/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Owners still need a checklist/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Asphalt questions buyers ask before they call/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Dinwiddie to Fairfax/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /wrong paving contractor is not cheap/i })).toBeVisible()
+  // Core sections present in the June 2026 homepage redesign
+  await expect(page.getByRole('heading', { name: /Paving Services Across Virginia/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Your Driveway/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Commercial Lots/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Virginia Paving FAQs/i })).toBeVisible()
 })
 
 test('jwordenai route redirects to quote page', async ({ page }) => {
