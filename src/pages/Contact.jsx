@@ -286,6 +286,7 @@ export default function Contact() {
                       autoComplete="email"
                       value={form.email}
                       onChange={handleChange}
+                      aria-invalid={status === 'error' ? 'true' : undefined}
                       placeholder="you@example.com"
                       className="w-full border border-gray-200 rounded-lg px-4 py-3 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-amber/50 focus:border-brand-amber transition-colors"
                     />

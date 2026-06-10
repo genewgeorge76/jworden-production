@@ -139,19 +139,24 @@ test.describe('Contact form', () => {
   })
 
   test('contact form rejects obviously invalid email', async ({ page }) => {
-    const emailField = page.locator('input[type="email"], input[name="email"]').first()
-    const submitBtn = page.getByRole('button', { name: /send|submit|contact|request/i }).first()
+    // Scope selectors to the contact form itself (id="email" is unique to Contact.jsx)
+    const contactForm = page.locator('form:has(#email)')
+    const emailField = contactForm.locator('#email')
+    const submitBtn = contactForm.locator('button[type="submit"]')
 
     if (await emailField.isVisible() && await submitBtn.isVisible()) {
       await emailField.fill('not-an-email')
       await submitBtn.click()
-      // Wait for React to re-render the error state before checking
-      await page.waitForSelector('[data-invalid]', { timeout: 3000 }).catch(() => {})
-      // Browser native validation or custom — check field validity
-      const isInvalid = await emailField.evaluate((el) => !el.validity?.valid ?? false)
-      // Accept either browser-native invalid OR error message shown
-      const errorVisible = await page.locator('[aria-invalid="true"], .error, [data-invalid]').first().isVisible().catch(() => false)
-      expect(isInvalid || errorVisible).toBe(true)
+      // Poll until React renders the error div or the field is browser-invalid
+      const rejected = await page.waitForFunction(
+        () => {
+          if (document.querySelector('[data-invalid]')) return true
+          const emailInput = document.querySelector('#email')
+          return emailInput ? !emailInput.validity.valid : false
+        },
+        { timeout: 5000 }
+      ).then(() => true).catch(() => false)
+      expect(rejected).toBe(true)
     }
   })
 })
