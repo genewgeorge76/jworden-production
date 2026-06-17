@@ -1,0 +1,18 @@
+{
+  "entity": {
+    "name": "J. Worden & Sons Asphalt Paving",
+    "legalName": "J. Worden & Sons Paving, LLC",
+    "naics": "237310",
+    "phone": "(804) 446-1296"
+  },
+  "location": {
+    "street": "1601 Ware Bottom Spring Rd, Suite 214",
+    "city": "Chester",
+    "zip": "23836"
+  },
+  "branding": {
+    "primaryColor": "#004a99",
+    "accentColor": "#ffcc00",
+    "fontStack": "'Helvetica Neue', Arial, sans-serif"
+  }
+}
