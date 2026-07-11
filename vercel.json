@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "echo skip build",
-  "outputDirectory": "dist",
   "framework": "vite",
   "redirects": [
     { "source": "/sitemap.txt", "destination": "/sitemap.txt", "permanent": true },
