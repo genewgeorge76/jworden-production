@@ -10,7 +10,7 @@
   PUPPETEER_CACHE_DIR = "/opt/buildhome/.cache/puppeteer"
   # Authority engine reads this to call /api/v1/authority/local-proof at build time.
   # Failures degrade to cached content — never block the build.
-  VITE_API_BASE_URL   = "https://codexbuildfreeofbase44-production.up.railway.app"
+  VITE_API_BASE_URL   = "https://jworden-api.fly.dev"
   VITE_DEPLOY_MODE    = "production"
   # Media CDN pruning is DISABLED: media.jwordenasphaltpaving.com returns 404
   # for all /work and /videos assets (it was never populated). Pruning local
@@ -151,7 +151,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://codexbuildfreeofbase44-production.up.railway.app/api/:splat"
+  to = "https://jworden-api.fly.dev/api/:splat"
   status = 200
   force = true
 
