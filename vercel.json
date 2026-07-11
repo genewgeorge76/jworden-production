@@ -1,0 +1,110 @@
+{
+  "version": 2,
+  "buildCommand": "echo skip build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "redirects": [
+    { "source": "/sitemap.txt", "destination": "/sitemap.txt", "permanent": true },
+    { "source": "/3ef8a81ce186414ca3235bebb5072f22.txt", "destination": "/3ef8a81ce186414ca3235bebb5072f22.txt", "permanent": true },
+    { "source": "/api/(.*)", "destination": "https://jworden-api.fly.dev/api/$1", "permanent": true },
+    { "source": "/owner", "destination": "/leads", "permanent": false },
+    { "source": "/inbox", "destination": "/leads", "permanent": false },
+    { "source": "/admin", "destination": "/command-center", "permanent": false },
+    { "source": "/fredericksburg-va-paving", "destination": "/locations/fredericksburg-va", "permanent": true },
+    { "source": "/states/florida", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/georgia", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/iowa", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/kansas", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/michigan", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/minnesota", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/missouri", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/new-jersey", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/new-york", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/north-carolina", "destination": "/service-areas", "permanent": true },
+    { "source": "/states/texas", "destination": "/service-areas", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/robots.txt", "destination": "/api/robots" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(self), camera=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com; script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net; connect-src 'self' https://jworden-api.fly.dev https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://www.google.com https://*.ingest.sentry.io https://*.sentry.io; frame-src 'self' https://www.google.com https://td.doubleclick.net https://bid.g.doubleclick.net https://app.kickserv.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/command-center(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/leads(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Pragma", "value": "no-cache" }
+      ]
+    },
+    {
+      "source": "/portal(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Pragma", "value": "no-cache" }
+      ]
+    },
+    {
+      "source": "/staff(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Pragma", "value": "no-cache" }
+      ]
+    },
+    {
+      "source": "/advisory/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
+      ]
+    }
+  ]
+}
