@@ -5,9 +5,7 @@ import { SITE_URL } from '../lib/businessInfo'
 import { useGalleryImages } from '../hooks/useGalleryImages'
 import { api } from '@/api/client'
 import { useAuth } from '@/lib/AuthContext'
-import { portfolioPhotos, kfcPhotos, featuredPortfolioPhotos } from '../data/legacyPortfolio'
-
-const KFC_PAGE = 24
+import { portfolioPhotos, featuredPortfolioPhotos } from '../data/legacyPortfolio'
 
 // ── Location display order ────────────────────────────────────────────────────
 const LOCATION_ORDER = [
@@ -206,7 +204,6 @@ export default function Gallery() {
   const [activePhase, setActivePhase]       = useState('All')
   const [lightboxImages, setLightboxImages] = useState(null)
   const [lightboxIndex, setLightboxIndex]   = useState(0)
-  const [kfcPage, setKfcPage]               = useState(1)
 
   // Normalise live DB images into common shape
   const liveMapped = useMemo(() => liveImages.map(img => ({
@@ -234,32 +231,18 @@ export default function Gallery() {
     isLive:        false,
   })), [])
 
-  // Normalise KFC photos
-  const kfcMapped = useMemo(() => kfcPhotos.map(img => ({
-    id:            img.id,
-    url:           img.url,
-    job_name:      img.title,
-    location:      img.location,
-    locationGroup: img.locationGroup || img.location,
-    category:      'QSR / KFC',
-    phase:         img.phase,
-    featured:      false,
-    isLive:        false,
-  })), [])
-
   // Non-KFC display photos (live DB + portfolio)
   const displayPhotos = useMemo(() => [...liveMapped, ...portfolioMapped], [liveMapped, portfolioMapped])
 
   // After primary type filter
   const typeFiltered = useMemo(() => {
     if (activeType === 'All')       return displayPhotos
-    if (activeType === 'QSR / KFC') return kfcMapped
     return displayPhotos.filter(p => p.category === activeType)
-  }, [activeType, displayPhotos, kfcMapped])
+  }, [activeType, displayPhotos])
 
   // Location chips available for current type
   const locationOptions = useMemo(() => {
-    if (activeType === 'All' || activeType === 'QSR / KFC') return []
+    if (activeType === 'All') return []
     const locs = [...new Set(typeFiltered.map(p => p.locationGroup).filter(Boolean))]
     return locs.sort(locSort)
   }, [activeType, typeFiltered])
@@ -283,9 +266,6 @@ export default function Gallery() {
     return Array.from(map.entries()).sort(([a], [b]) => locSort(a, b))
   }, [filteredPhotos])
 
-  // KFC pagination
-  const kfcVisible = useMemo(() => kfcMapped.slice(0, kfcPage * KFC_PAGE), [kfcMapped, kfcPage])
-
   // Featured hero photos (normalised)
   const featuredMapped = useMemo(() => featuredPortfolioPhotos.map(img => ({
     id: img.id, url: img.url, job_name: img.title,
@@ -294,17 +274,16 @@ export default function Gallery() {
   })), [])
 
   const openLightbox = useCallback((image) => {
-    const pool = activeType === 'QSR / KFC' ? kfcVisible : filteredPhotos
+    const pool = filteredPhotos
     const idx  = pool.findIndex(p => p.id === image.id)
     setLightboxImages(pool)
     setLightboxIndex(Math.max(0, idx))
-  }, [activeType, kfcVisible, filteredPhotos])
+  }, [filteredPhotos])
 
   function changeType(type) {
     setActiveType(type)
     setActiveLocation('All')
     setActivePhase('All')
-    if (type !== 'QSR / KFC') setKfcPage(1)
   }
 
   function handleUploaded(newImage) {
@@ -321,12 +300,11 @@ export default function Gallery() {
      window.location.hash.includes('admin=1'))
 
   const showLocationFilter = (activeType === 'Residential' || activeType === 'Commercial') && locationOptions.length > 1
-  const showPhaseFilter    = activeType !== 'QSR / KFC'
-  const isKfcView          = activeType === 'QSR / KFC'
+  const showPhaseFilter    = true
   const isAllClean         = activeType === 'All' && activeLocation === 'All' && activePhase === 'All'
 
   const totalDisplay = portfolioMapped.length + liveMapped.length
-  const totalAll     = totalDisplay + kfcMapped.length
+  const totalAll     = totalDisplay
 
   return (
     <div className="min-h-screen bg-brand-navy pt-20">
@@ -364,8 +342,7 @@ export default function Gallery() {
           <h1 className="font-display font-black text-4xl md:text-5xl text-white mb-4">
             Project Photo Gallery
           </h1>
-          <p className="text-white/60 text-lg">
-            Real jobs. Grouped by location. {totalDisplay}+ Virginia &amp; regional projects plus {kfcMapped.length} KFC franchise sites — with during-job and completed shots.
+            Real jobs. Grouped by location. {totalDisplay}+ Virginia &amp; regional projects with during-job and completed shots.
           </p>
         </div>
 
@@ -373,7 +350,6 @@ export default function Gallery() {
         <div className="flex flex-wrap justify-center gap-8 mt-8">
           {[
             { n: `${totalDisplay}+`, label: 'Local Projects' },
-            { n: `${kfcMapped.length}+`, label: 'KFC Sites' },
             { n: '10+', label: 'VA Locations' },
             { n: '2', label: 'Project Phases' },
           ].map(s => (
@@ -408,7 +384,6 @@ export default function Gallery() {
             { label: 'All Projects', key: 'All',       count: totalAll },
             { label: 'Residential',  key: 'Residential' },
             { label: 'Commercial',   key: 'Commercial' },
-            { label: 'QSR / KFC',   key: 'QSR / KFC', count: kfcMapped.length },
           ].map(({ label, key, count }) => (
             <button
               key={key}
@@ -515,88 +490,26 @@ export default function Gallery() {
           </p>
         )}
 
-        {/* ── KFC vault ─────────────────────────────────────────────────── */}
-        {isKfcView && (
-          <div>
-            {(() => {
-              const grouped = new Map()
-              for (const img of kfcVisible) {
-                if (!grouped.has(img.locationGroup)) grouped.set(img.locationGroup, [])
-                grouped.get(img.locationGroup).push(img)
-              }
-              return Array.from(grouped.entries()).sort(([a],[b]) => locSort(a,b)).map(([loc, photos]) => (
-                <LocationSection
-                  key={loc}
-                  location={loc}
-                  photos={photos}
-                  onOpen={openLightbox}
-                />
-              ))
-            })()}
-
-            {kfcVisible.length < kfcMapped.length && (
-              <div className="text-center mt-6">
-                <button
-                  onClick={() => setKfcPage(p => p + 1)}
-                  className="px-6 py-2.5 rounded-full border border-brand-amber/40 text-brand-amber text-sm font-bold hover:bg-brand-amber/10 transition-all"
-                >
-                  Load More — {kfcMapped.length - kfcVisible.length} remaining
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* ── Location-grouped view (All / Residential / Commercial) ─────── */}
-        {!isKfcView && (
-          <>
-            {groupedByLocation.length === 0 && !loading && (
-              <div className="text-center py-20">
-                <p className="text-5xl mb-4">📷</p>
-                <p className="text-white/50">No photos match this filter.</p>
-              </div>
-            )}
+        <div>
+          {groupedByLocation.length === 0 && !loading && (
+            <div className="text-center py-20">
+              <p className="text-5xl mb-4">📷</p>
+              <p className="text-white/50">No photos match this filter.</p>
+            </div>
+          )}
 
-            {groupedByLocation.map(([location, photos]) => (
-              <LocationSection
-                key={location}
-                location={location}
-                photos={photos}
-                onOpen={openLightbox}
-                token={accessToken}
-                onDeleted={handleDeleted}
-              />
-            ))}
-
-            {/* KFC preview strip at bottom of All view */}
-            {isAllClean && (
-              <div className="mt-14 border-t border-white/10 pt-12">
-                <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-                  <div>
-                    <p className="text-brand-amber text-xs font-bold uppercase tracking-widest mb-1">National Program</p>
-                    <h2 className="text-white font-bold text-2xl">KFC Franchise Sites</h2>
-                    <p className="text-white/50 text-sm mt-1">{kfcMapped.length} job photos · 20+ states · during &amp; completed shots</p>
-                  </div>
-                  <button
-                    onClick={() => changeType('QSR / KFC')}
-                    className="text-brand-amber text-sm font-bold hover:text-amber-400 transition-colors border border-brand-amber/30 hover:border-brand-amber/60 px-4 py-2 rounded-full"
-                  >
-                    Browse all KFC photos →
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                  {kfcMapped.slice(0, 6).map(img => (
-                    <PhotoCard
-                      key={img.id}
-                      image={img}
-                      onOpen={() => changeType('QSR / KFC')}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        )}
+          {groupedByLocation.map(([location, photos]) => (
+            <LocationSection
+              key={location}
+              location={location}
+              photos={photos}
+              onOpen={openLightbox}
+              token={accessToken}
+              onDeleted={handleDeleted}
+            />
+          ))}
+        </div>
       </div>
 
       {/* ── Lightbox ───────────────────────────────────────────────────────── */}
