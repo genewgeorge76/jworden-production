@@ -62,7 +62,8 @@ export default function LegacyStory() {
                     alt={item.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                     onError={(e) => {
-                      // Fallback if image not yet pulled from Google Photos
+                      // Prevent infinite loop if fallback also fails
+                      if (e.target.src.includes('unsplash.com')) return;
                       e.target.src = 'https://images.unsplash.com/photo-1584464457692-23c21a14a849?auto=format&fit=crop&q=80&w=800'
                     }}
                   />
