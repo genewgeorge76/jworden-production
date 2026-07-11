@@ -48,23 +48,29 @@ export default function LeadConsultant() {
       `Current Status: ${lead.status}`,
     ].filter(Boolean).join('\n');
 
-    const conv = await api.agents.createConversation({
-      agent_name: 'paving_consultant',
-      metadata: { name: `${lead.name} — ${lead.surface_type || 'Project'}` },
-    });
+    const sessionId = `consultant_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    setConversation({ id: sessionId });
+    
+    // Seed the conversation locally
+    const seedMsg = `Please greet this lead and open with a proactive, personalized message based on their project details:\n\n${intro}`;
+    setMessages([{ role: 'user', content: seedMsg }]);
 
-    setConversation(conv);
-
-    // Subscribe to live updates
-    api.agents.subscribeToConversation(conv.id, (data) => {
-      setMessages([...data.messages]);
-    });
-
-    // Seed the conversation with lead context
-    await api.agents.addMessage(conv, {
-      role: 'user',
-      content: `Please greet this lead and open with a proactive, personalized message based on their project details:\n\n${intro}`,
-    });
+    // Trigger the initial AI response
+    try {
+      const response = await api.publicChat({
+        message: seedMsg,
+        session_id: sessionId,
+        history: [],
+      });
+      if (response?.message) {
+        setMessages([
+          { role: 'user', content: seedMsg },
+          { role: 'assistant', content: response.message }
+        ]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
 
     setLoadingConv(false);
   };
@@ -74,7 +80,27 @@ export default function LeadConsultant() {
     const text = input.trim();
     setInput('');
     setSending(true);
-    await api.agents.addMessage(conversation, { role: 'user', content: text });
+    setMessages((prev) => [...prev, { role: 'user', content: text }]);
+    
+    const historyForBackend = messages
+      .filter(m => m.role !== 'system')
+      .map(m => ({
+        role: m.role,
+        content: m.content
+      }));
+
+    try {
+      const response = await api.publicChat({
+        message: text,
+        session_id: conversation.id,
+        history: historyForBackend,
+      });
+      if (response?.message) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: response.message }]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
     setSending(false);
   };
 

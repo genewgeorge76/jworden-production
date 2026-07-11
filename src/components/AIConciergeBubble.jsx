@@ -396,14 +396,8 @@ export default function AIConciergeBubble() {
     if (conversation) return conversation;
     setBooting(true);
     try {
-      const conv = await api.agents.createConversation({
-        agent_name: 'paving_consultant',
-        metadata: {
-          name: 'Website Visitor Chat',
-          description: 'Anonymous chat from jwordenasphaltpaving.com',
-        },
-      });
-      setConversation(conv);
+      const sessionId = `concierge_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      setConversation({ id: sessionId });
       setMessages([
         {
           role: 'assistant',
@@ -420,15 +414,8 @@ export default function AIConciergeBubble() {
     }
   };
 
-  // Subscribe to conversation updates
   useEffect(() => {
-    if (!conversation?.id) return;
-    const unsubscribe = api.agents.subscribeToConversation(conversation.id, (data) => {
-      if (Array.isArray(data?.messages) && data.messages.length > 0) {
-        setMessages(data.messages.map(styleFounderMessage));
-      }
-    });
-    return unsubscribe;
+    // We no longer subscribe to a backend stream since publicChat is request/response.
   }, [conversation?.id]);
 
   // Auto-scroll to bottom
@@ -599,7 +586,23 @@ export default function AIConciergeBubble() {
 
       const conv = conversation || (await initConversation());
       if (!conv) return;
-      await api.agents.addMessage(conv, { role: 'user', content: text });
+
+      const historyForBackend = messages
+        .filter((m) => m.role !== 'system')
+        .map((m) => ({
+          role: m.role,
+          content: m.content,
+        }));
+
+      const response = await api.publicChat({
+        message: text,
+        session_id: conv.id,
+        history: historyForBackend,
+      });
+
+      if (response?.message) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: response.message }]);
+      }
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
