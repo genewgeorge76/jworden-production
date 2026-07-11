@@ -192,6 +192,7 @@
     "express": "^5.2.1",
     "globals": "^15.14.0",
     "postcss": "^8.5.3",
+    "puppeteer": "file:fake-puppeteer",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2",
     "vite": "^6.1.0"
