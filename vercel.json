@@ -1,6 +1,7 @@
 {
   "version": 2,
   "framework": "vite",
+  "buildCommand": "npm run build",
   "redirects": [
     { "source": "/sitemap.txt", "destination": "/sitemap.txt", "permanent": true },
     { "source": "/3ef8a81ce186414ca3235bebb5072f22.txt", "destination": "/3ef8a81ce186414ca3235bebb5072f22.txt", "permanent": true },

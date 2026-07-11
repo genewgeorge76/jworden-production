@@ -342,6 +342,7 @@ export default function Gallery() {
           <h1 className="font-display font-black text-4xl md:text-5xl text-white mb-4">
             Project Photo Gallery
           </h1>
+          <p className="text-white/60 text-lg">
             Real jobs. Grouped by location. {totalDisplay}+ Virginia &amp; regional projects with during-job and completed shots.
           </p>
         </div>
