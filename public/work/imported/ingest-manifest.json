@@ -1,0 +1,565 @@
+{
+  "action": "organize-local",
+  "generated_at": "2026-07-11T02:15:13.5579602Z",
+  "output_root": "public/work/imported",
+  "total_files": 27,
+  "location_folders": [
+    "chester",
+    "geo-37.59--77.63",
+    "geo-45.346--93.962",
+    "midlothian",
+    "richmond",
+    "unknown-location",
+    "va"
+  ],
+  "records": [
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\2 asphalt driveways goochland va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011831_local_2-asphalt-driveways-goochland-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011831_local_2-asphalt-driveways-goochland-va.jpg",
+      "timestamp_utc": "2026-03-26T05:18:31.5517341Z",
+      "location_token": "va",
+      "gps": null,
+      "file_name": "20260326_011831_local_2-asphalt-driveways-goochland-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\IMG_1451 (2).PNG",
+      "destination_file": "public\\work\\imported\\2026\\05\\01\\unknown-location\\20260501_145359_local_img_1451-2.png",
+      "relative_path": "public\\work\\imported\\2026\\05\\01\\unknown-location\\20260501_145359_local_img_1451-2.png",
+      "timestamp_utc": "2026-05-01T18:53:59.4832462Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260501_145359_local_img_1451-2.png",
+      "file_extension": ".png"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\IMG_1451 (1).PNG",
+      "destination_file": "public\\work\\imported\\2026\\05\\01\\unknown-location\\20260501_145359_local_img_1451-1.png",
+      "relative_path": "public\\work\\imported\\2026\\05\\01\\unknown-location\\20260501_145359_local_img_1451-1.png",
+      "timestamp_utc": "2026-05-01T18:53:59.3042825Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260501_145359_local_img_1451-1.png",
+      "file_extension": ".png"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\IMG_0370-EDIT.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\17\\unknown-location\\20260317_153404_local_img_0370-edit.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\17\\unknown-location\\20260317_153404_local_img_0370-edit.jpg",
+      "timestamp_utc": "2026-03-17T19:34:04.0000000Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260317_153404_local_img_0370-edit.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\hero-driveway minestoa.jpg",
+      "destination_file": "public\\work\\imported\\2025\\10\\10\\geo-45.346--93.962\\20251010_165859_local_hero-driveway-minestoa.jpg",
+      "relative_path": "public\\work\\imported\\2025\\10\\10\\geo-45.346--93.962\\20251010_165859_local_hero-driveway-minestoa.jpg",
+      "timestamp_utc": "2025-10-10T20:58:59.0000000Z",
+      "location_token": "geo-45.346--93.962",
+      "gps": {
+        "latitude": 45.346486,
+        "longitude": -93.962456
+      },
+      "file_name": "20251010_165859_local_hero-driveway-minestoa.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\HANDICAP UPGRADE WALGREENS.JPG",
+      "destination_file": "public\\work\\imported\\2026\\03\\28\\unknown-location\\20260328_140310_local_handicap-upgrade-walgreens.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\28\\unknown-location\\20260328_140310_local_handicap-upgrade-walgreens.jpg",
+      "timestamp_utc": "2026-03-28T18:03:10.3876862Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260328_140310_local_handicap-upgrade-walgreens.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\driveway paving sc.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\15\\unknown-location\\20260315_121049_local_driveway-paving-sc.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\15\\unknown-location\\20260315_121049_local_driveway-paving-sc.jpg",
+      "timestamp_utc": "2026-03-15T16:10:49.7045762Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260315_121049_local_driveway-paving-sc.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\driveway asphalt paving winsor farms.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011324_local_driveway-asphalt-paving-winsor-farms.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011324_local_driveway-asphalt-paving-winsor-farms.jpg",
+      "timestamp_utc": "2026-03-26T05:13:24.0956046Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260326_011324_local_driveway-asphalt-paving-winsor-farms.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\cvs paving picture.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\22\\unknown-location\\20260322_121035_local_cvs-paving-picture.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\22\\unknown-location\\20260322_121035_local_cvs-paving-picture.jpg",
+      "timestamp_utc": "2026-03-22T16:10:35.3493816Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260322_121035_local_cvs-paving-picture.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\cvs asphalt paving.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011253_local_cvs-asphalt-paving.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011253_local_cvs-asphalt-paving.jpg",
+      "timestamp_utc": "2026-03-26T05:12:53.8032300Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260326_011253_local_cvs-asphalt-paving.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\COMMERCIALPAVING 2026.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\28\\unknown-location\\20260328_133849_local_commercialpaving-2026.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\28\\unknown-location\\20260328_133849_local_commercialpaving-2026.jpg",
+      "timestamp_utc": "2026-03-28T17:38:49.5501109Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260328_133849_local_commercialpaving-2026.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\COBBLSTONE PIC.webp",
+      "destination_file": "public\\work\\imported\\2026\\03\\08\\unknown-location\\20260308_175550_local_cobblstone-pic.webp",
+      "relative_path": "public\\work\\imported\\2026\\03\\08\\unknown-location\\20260308_175550_local_cobblstone-pic.webp",
+      "timestamp_utc": "2026-03-08T21:55:50.6093058Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260308_175550_local_cobblstone-pic.webp",
+      "file_extension": ".webp"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\IMG_1451.PNG",
+      "destination_file": "public\\work\\imported\\2026\\05\\01\\unknown-location\\20260501_145356_local_img_1451.png",
+      "relative_path": "public\\work\\imported\\2026\\05\\01\\unknown-location\\20260501_145356_local_img_1451.png",
+      "timestamp_utc": "2026-05-01T18:53:56.3786117Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260501_145356_local_img_1451.png",
+      "file_extension": ".png"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\COBBLESTONE.webp",
+      "destination_file": "public\\work\\imported\\2026\\03\\08\\unknown-location\\20260308_175623_local_cobblestone.webp",
+      "relative_path": "public\\work\\imported\\2026\\03\\08\\unknown-location\\20260308_175623_local_cobblestone.webp",
+      "timestamp_utc": "2026-03-08T21:56:23.7217242Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260308_175623_local_cobblestone.webp",
+      "file_extension": ".webp"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\big asphalt driveay richmond va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\richmond\\20260326_011429_local_big-asphalt-driveay-richmond-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\richmond\\20260326_011429_local_big-asphalt-driveay-richmond-va.jpg",
+      "timestamp_utc": "2026-03-26T05:14:29.9537167Z",
+      "location_token": "richmond",
+      "gps": null,
+      "file_name": "20260326_011429_local_big-asphalt-driveay-richmond-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt paving with paver.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_005539_local_asphalt-paving-with-paver.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_005539_local_asphalt-paving-with-paver.jpg",
+      "timestamp_utc": "2026-03-26T04:55:39.8131587Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260326_005539_local_asphalt-paving-with-paver.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt paving goochland va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011525_local_asphalt-paving-goochland-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011525_local_asphalt-paving-goochland-va.jpg",
+      "timestamp_utc": "2026-03-26T05:15:25.6985006Z",
+      "location_token": "va",
+      "gps": null,
+      "file_name": "20260326_011525_local_asphalt-paving-goochland-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt paving goochland va 2.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011624_local_asphalt-paving-goochland-va-2.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011624_local_asphalt-paving-goochland-va-2.jpg",
+      "timestamp_utc": "2026-03-26T05:16:24.9125525Z",
+      "location_token": "va",
+      "gps": null,
+      "file_name": "20260326_011624_local_asphalt-paving-goochland-va-2.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt paving car lot on midlothian.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\22\\midlothian\\20260322_121114_local_asphalt-paving-car-lot-on-midlothian.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\22\\midlothian\\20260322_121114_local_asphalt-paving-car-lot-on-midlothian.jpg",
+      "timestamp_utc": "2026-03-22T16:11:14.5872055Z",
+      "location_token": "midlothian",
+      "gps": null,
+      "file_name": "20260322_121114_local_asphalt-paving-car-lot-on-midlothian.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt driveways goochland va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011809_local_asphalt-driveways-goochland-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\va\\20260326_011809_local_asphalt-driveways-goochland-va.jpg",
+      "timestamp_utc": "2026-03-26T05:18:09.3920997Z",
+      "location_token": "va",
+      "gps": null,
+      "file_name": "20260326_011809_local_asphalt-driveways-goochland-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt driveway with brick edging.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011229_local_asphalt-driveway-with-brick-edging.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011229_local_asphalt-driveway-with-brick-edging.jpg",
+      "timestamp_utc": "2026-03-26T05:12:29.5644356Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260326_011229_local_asphalt-driveway-with-brick-edging.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt driveway richmond va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\richmond\\20260326_011546_local_asphalt-driveway-richmond-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\richmond\\20260326_011546_local_asphalt-driveway-richmond-va.jpg",
+      "timestamp_utc": "2026-03-26T05:15:46.9074383Z",
+      "location_token": "richmond",
+      "gps": null,
+      "file_name": "20260326_011546_local_asphalt-driveway-richmond-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt driveway richmond va 3.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\richmond\\20260326_011742_local_asphalt-driveway-richmond-va-3.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\richmond\\20260326_011742_local_asphalt-driveway-richmond-va-3.jpg",
+      "timestamp_utc": "2026-03-26T05:17:42.2586883Z",
+      "location_token": "richmond",
+      "gps": null,
+      "file_name": "20260326_011742_local_asphalt-driveway-richmond-va-3.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt driveway long.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011400_local_asphalt-driveway-long.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\unknown-location\\20260326_011400_local_asphalt-driveway-long.jpg",
+      "timestamp_utc": "2026-03-26T05:14:00.1942265Z",
+      "location_token": "unknown-location",
+      "gps": null,
+      "file_name": "20260326_011400_local_asphalt-driveway-long.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\asphalt driveway chesterfield va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\chester\\20260326_011648_local_asphalt-driveway-chesterfield-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\chester\\20260326_011648_local_asphalt-driveway-chesterfield-va.jpg",
+      "timestamp_utc": "2026-03-26T05:16:48.4439924Z",
+      "location_token": "chester",
+      "gps": null,
+      "file_name": "20260326_011648_local_asphalt-driveway-chesterfield-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\circlular asphalt driveway chesterfield va.jpg",
+      "destination_file": "public\\work\\imported\\2026\\03\\26\\chester\\20260326_011722_local_circlular-asphalt-driveway-chesterfield-va.jpg",
+      "relative_path": "public\\work\\imported\\2026\\03\\26\\chester\\20260326_011722_local_circlular-asphalt-driveway-chesterfield-va.jpg",
+      "timestamp_utc": "2026-03-26T05:17:22.5292782Z",
+      "location_token": "chester",
+      "gps": null,
+      "file_name": "20260326_011722_local_circlular-asphalt-driveway-chesterfield-va.jpg",
+      "file_extension": ".jpg"
+    },
+    {
+      "provider": "local",
+      "source_file": "C:\\Users\\genew\\Downloads\\_job-photos-staging\\IMG_6981.JPG",
+      "destination_file": "public\\work\\imported\\2015\\08\\08\\geo-37.59--77.63\\20150808_153731_local_img_6981.jpg",
+      "relative_path": "public\\work\\imported\\2015\\08\\08\\geo-37.59--77.63\\20150808_153731_local_img_6981.jpg",
+      "timestamp_utc": "2015-08-08T19:37:31.0000000Z",
+      "location_token": "geo-37.59--77.63",
+      "gps": {
+        "latitude": 37.590472,
+        "longitude": -77.629822
+      },
+      "file_name": "20150808_153731_local_img_6981.jpg",
+      "file_extension": ".jpg"
+    }
+  ],
+  "project_import": [
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "va",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/va/20260326_011831_local_2-asphalt-driveways-goochland-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-05-01",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/05/01/unknown-location/20260501_145359_local_img_1451-2.png",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-05-01",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/05/01/unknown-location/20260501_145359_local_img_1451-1.png",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-17",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/17/unknown-location/20260317_153404_local_img_0370-edit.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2025-10-10",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "geo 45.346  93.962",
+      "category": "commercial",
+      "year": 2025,
+      "image_url": "/public/work/imported/2025/10/10/geo-45.346--93.962/20251010_165859_local_hero-driveway-minestoa.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-28",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/28/unknown-location/20260328_140310_local_handicap-upgrade-walgreens.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-15",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/15/unknown-location/20260315_121049_local_driveway-paving-sc.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/unknown-location/20260326_011324_local_driveway-asphalt-paving-winsor-farms.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-22",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/22/unknown-location/20260322_121035_local_cvs-paving-picture.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/unknown-location/20260326_011253_local_cvs-asphalt-paving.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-28",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/28/unknown-location/20260328_133849_local_commercialpaving-2026.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-08",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/08/unknown-location/20260308_175550_local_cobblstone-pic.webp",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-05-01",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/05/01/unknown-location/20260501_145356_local_img_1451.png",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-08",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/08/unknown-location/20260308_175623_local_cobblestone.webp",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "richmond",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/richmond/20260326_011429_local_big-asphalt-driveay-richmond-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/unknown-location/20260326_005539_local_asphalt-paving-with-paver.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "va",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/va/20260326_011525_local_asphalt-paving-goochland-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "va",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/va/20260326_011624_local_asphalt-paving-goochland-va-2.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-22",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "midlothian",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/22/midlothian/20260322_121114_local_asphalt-paving-car-lot-on-midlothian.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "va",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/va/20260326_011809_local_asphalt-driveways-goochland-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/unknown-location/20260326_011229_local_asphalt-driveway-with-brick-edging.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "richmond",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/richmond/20260326_011546_local_asphalt-driveway-richmond-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "richmond",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/richmond/20260326_011742_local_asphalt-driveway-richmond-va-3.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "unknown location",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/unknown-location/20260326_011400_local_asphalt-driveway-long.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "chester",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/chester/20260326_011648_local_asphalt-driveway-chesterfield-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2026-03-26",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "chester",
+      "category": "commercial",
+      "year": 2026,
+      "image_url": "/public/work/imported/2026/03/26/chester/20260326_011722_local_circlular-asphalt-driveway-chesterfield-va.jpg",
+      "sqft": null
+    },
+    {
+      "title": "Imported Project 2015-08-08",
+      "description": "Imported by media-ingest CLI from local.",
+      "location": "geo 37.59  77.63",
+      "category": "commercial",
+      "year": 2015,
+      "image_url": "/public/work/imported/2015/08/08/geo-37.59--77.63/20150808_153731_local_img_6981.jpg",
+      "sqft": null
+    }
+  ]
+}

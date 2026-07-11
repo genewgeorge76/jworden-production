@@ -14,159 +14,29 @@
  */
 
 // ── Real portfolio photos — grouped by state ──────────────────────────────────
-export const portfolioPhotos = [
+import importedData from '../../public/work/imported/project-import.json';
 
-  // ══ VIRGINIA ════════════════════════════════════════════════════════════════
+// ── Real portfolio photos — generated from local ingest ────────────────────────
+export const portfolioPhotos = importedData.map((item, i) => {
+  // Try to parse a nice title from the filename if possible, otherwise use the date title
+  let cleanTitle = item.title;
+  const match = item.image_url.match(/_local_(.*)\.(jpg|png|webp)/i);
+  if (match) {
+    cleanTitle = match[1].replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
 
-  // ── Goochland County, VA ─────────────────────────────────────────────────────
-  { id: 'port-001', url: '/work/portfolio/portfolio-001.jpg',
-    title: 'Two Asphalt Driveways — Goochland',
-    category: 'Residential', locationGroup: 'Goochland, VA', location: 'Goochland, VA',
-    phase: 'completed', featured: false,
-    description: 'Side-by-side residential driveways, Goochland County.' },
-
-  { id: 'port-007', url: '/work/portfolio/portfolio-007.jpg',
-    title: 'Goochland Estate Driveway',
-    category: 'Residential', locationGroup: 'Goochland, VA', location: 'Goochland, VA',
-    phase: 'completed', featured: true,
-    description: 'Large residential driveway on Goochland estate property.' },
-
-  { id: 'port-009', url: '/work/portfolio/portfolio-009.jpg',
-    title: 'Goochland Paving — Crew in Action',
-    category: 'Residential', locationGroup: 'Goochland, VA', location: 'Goochland, VA',
-    phase: 'during', featured: false,
-    description: 'J. Worden crew machine-laying asphalt, Goochland County.' },
-
-  { id: 'port-010', url: '/work/portfolio/portfolio-010.jpg',
-    title: 'Goochland County Paving Project',
-    category: 'Residential', locationGroup: 'Goochland, VA', location: 'Goochland, VA',
-    phase: 'completed', featured: true,
-    description: 'Smooth residential asphalt finish, Goochland County VA.' },
-
-  // ── Chesterfield County, VA ───────────────────────────────────────────────────
-  { id: 'port-002', url: '/work/portfolio/portfolio-002.jpg',
-    title: 'Chesterfield Driveway — Machine Finish',
-    category: 'Residential', locationGroup: 'Chesterfield, VA', location: 'Chesterfield, VA',
-    phase: 'completed', featured: true,
-    description: 'Full-depth asphalt driveway, precision machine-laid finish.' },
-
-  { id: 'port-013', url: '/work/portfolio/portfolio-013.jpg',
-    title: 'Circular Turnaround Driveway',
-    category: 'Residential', locationGroup: 'Chesterfield, VA', location: 'Chesterfield, VA',
-    phase: 'completed', featured: true,
-    description: 'Full circular driveway with center island, Chesterfield County.' },
-
-  { id: 'port-030', url: '/work/portfolio/portfolio-030.jpg',
-    title: 'Estate Circular Driveway — Chesterfield',
-    category: 'Residential', locationGroup: 'Chesterfield, VA', location: 'Chesterfield, VA',
-    phase: 'during', featured: true,
-    description: 'Large estate circular driveway being machine-laid, Chesterfield County.' },
-
-  // ── Richmond, VA ─────────────────────────────────────────────────────────────
-  { id: 'port-004', url: '/work/portfolio/portfolio-004.jpg',
-    title: 'Richmond Driveway — Clean Finish',
-    category: 'Residential', locationGroup: 'Richmond, VA', location: 'Richmond, VA',
-    phase: 'completed', featured: true,
-    description: 'Smooth asphalt driveway with clean edge detail, Richmond.' },
-
-  { id: 'port-005', url: '/work/portfolio/portfolio-005.jpg',
-    title: 'Richmond Residential Driveway',
-    category: 'Residential', locationGroup: 'Richmond, VA', location: 'Richmond, VA',
-    phase: 'completed', featured: false,
-    description: 'Residential driveway paving, City of Richmond.' },
-
-  { id: 'port-006', url: '/work/portfolio/portfolio-006.jpg',
-    title: 'Asphalt + Brick Paver Edging — Richmond',
-    category: 'Residential', locationGroup: 'Richmond, VA', location: 'Richmond, VA',
-    phase: 'completed', featured: false,
-    description: 'Custom asphalt driveway with decorative brick border, Richmond.' },
-
-  { id: 'port-012', url: '/work/portfolio/portfolio-012.jpg',
-    title: 'Large Richmond Driveway — 2-Car Wide',
-    category: 'Residential', locationGroup: 'Richmond, VA', location: 'Richmond, VA',
-    phase: 'completed', featured: true,
-    description: 'Wide residential driveway with generous approach, City of Richmond.' },
-
-  { id: 'port-017', url: '/work/portfolio/portfolio-017.jpg',
-    title: 'Windsor Farms Driveway — Historic Richmond',
-    category: 'Residential', locationGroup: 'Richmond, VA', location: 'Windsor Farms, Richmond, VA',
-    phase: 'completed', featured: true,
-    description: "Premium driveway paving in Windsor Farms, one of Richmond's premier neighborhoods." },
-
-  // ── Midlothian, VA ───────────────────────────────────────────────────────────
-  { id: 'port-008', url: '/work/portfolio/portfolio-008.jpg',
-    title: 'Car Lot Paving — Midlothian Turnpike',
-    category: 'Commercial', locationGroup: 'Midlothian, VA', location: 'Midlothian, VA',
-    phase: 'during', featured: false,
-    description: 'Commercial lot paving in progress, Midlothian Turnpike corridor.' },
-
-  // ── Virginia — Residential ───────────────────────────────────────────────────
-  { id: 'port-003', url: '/work/portfolio/portfolio-003.jpg',
-    title: 'Long Rural Driveway — Virginia Piedmont',
-    category: 'Residential', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'completed', featured: false,
-    description: 'Extended driveway installation on rural Virginia property.' },
-
-  // ── Virginia — Commercial ────────────────────────────────────────────────────
-  { id: 'port-011', url: '/work/portfolio/portfolio-011.jpg',
-    title: 'Asphalt Paver Machine — Active Lay',
-    category: 'Commercial', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'during', featured: false,
-    description: 'Machine-laid asphalt with paving machine in full operation.' },
-
-  { id: 'port-014', url: '/work/portfolio/portfolio-014.jpg',
-    title: 'Commercial Lot Paving — Virginia',
-    category: 'Commercial', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'during', featured: false,
-    description: 'Roller compaction on fresh commercial asphalt, Virginia.' },
-
-  { id: 'port-015', url: '/work/portfolio/portfolio-015.jpg',
-    title: 'CVS Pharmacy — Parking Lot',
-    category: 'Commercial', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'completed', featured: false,
-    description: 'Retail pharmacy parking lot asphalt paving and striping.' },
-
-  { id: 'port-016', url: '/work/portfolio/portfolio-016.jpg',
-    title: 'CVS Lot — Paving in Progress',
-    category: 'Commercial', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'during', featured: false,
-    description: 'Active commercial lot paving at CVS retail location.' },
-
-  { id: 'port-019', url: '/work/portfolio/portfolio-019.jpg',
-    title: 'Rite Aid — ADA Parking Upgrade',
-    category: 'Commercial', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'completed', featured: false,
-    description: 'ADA-compliant parking lot redesign and handicap space installation.' },
-
-  { id: 'port-026', url: '/work/portfolio/portfolio-026.jpg',
-    title: 'Commercial Lot — Fresh Pave & Curing',
-    category: 'Commercial', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'during', featured: false,
-    description: 'Freshly laid commercial asphalt curing with traffic cones in place.' },
-
-  // ══ SOUTH CAROLINA ══════════════════════════════════════════════════════════
-
-  { id: 'port-018', url: '/work/portfolio/portfolio-018.jpg',
-    title: 'Rural Road Paving — South Carolina',
-    category: 'Residential', locationGroup: 'South Carolina', location: 'South Carolina',
-    phase: 'during', featured: false,
-    description: 'Rural road and driveway paving project, South Carolina.' },
-
-  // ══ HARDSCAPES ══════════════════════════════════════════════════════════════
-
-  { id: 'port-031', url: '/work/portfolio/portfolio-031.webp',
-    title: 'Cobblestone Hardscape Installation',
-    category: 'Hardscapes', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'completed', featured: false,
-    description: 'Custom cobblestone hardscape work — paver borders and decorative stone integration.' },
-
-  { id: 'port-032', url: '/work/portfolio/portfolio-032.webp',
-    title: 'Cobblestone Border Detail',
-    category: 'Hardscapes', locationGroup: 'Virginia', location: 'Virginia',
-    phase: 'completed', featured: false,
-    description: 'Decorative cobblestone border complementing asphalt driveway.' },
-
-];
+  return {
+    id: `port-imp-${i}`,
+    url: item.image_url.replace('/public/', '/'),
+    title: cleanTitle,
+    category: cleanTitle.toLowerCase().includes('cvs') || cleanTitle.toLowerCase().includes('walgreens') ? 'Commercial' : 'Residential',
+    locationGroup: item.location === 'unknown-location' ? 'Virginia' : item.location.charAt(0).toUpperCase() + item.location.slice(1),
+    location: item.location === 'unknown-location' ? 'Virginia' : item.location.charAt(0).toUpperCase() + item.location.slice(1),
+    phase: 'completed',
+    featured: i < 8,
+    description: 'J. Worden & Sons real project photo.',
+  };
+});
 
 // ── 8 hero shots for main pages ───────────────────────────────────────────────
 export const featuredPortfolioPhotos = portfolioPhotos.filter(p => p.featured);
