@@ -143,7 +143,7 @@ export default function AIConciergeBubble() {
   const [booting, setBooting] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [voiceMode, setVoiceMode] = useState('push'); // off | push | handsfree
-  const [voiceOutputEnabled, setVoiceOutputEnabled] = useState(true);
+  const [voiceOutputEnabled, setVoiceOutputEnabled] = useState(false);
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [speechPulse, setSpeechPulse] = useState(0);
@@ -413,7 +413,7 @@ export default function AIConciergeBubble() {
       return sessionId;
     } catch {
       setMessages([
-        { role: 'assistant', content: "I'm having trouble connecting. Please call (804) 446-1296 — we answer during business hours." },
+        { role: 'assistant', content: "I'm currently assisting other clients or offline. Please call me directly at (804) 446-1296 — we answer during business hours." },
       ]);
     } finally {
       setBooting(false);
@@ -604,7 +604,7 @@ export default function AIConciergeBubble() {
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: "I'm having trouble connecting. Please call (804) 446-1296 — we answer during business hours." },
+        { role: 'assistant', content: "I'm currently assisting other clients or offline. Please call me directly at (804) 446-1296 — we answer during business hours." },
       ]);
     } finally {
       setSending(false);
