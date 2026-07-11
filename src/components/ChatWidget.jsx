@@ -24,7 +24,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Phone, Volume2, VolumeX, X, Camera, Ruler, ClipboardList, CalendarCheck, MessageSquare } from 'lucide-react'
 import { api } from '../api/client'
-import MrWordenAvatar from './MrWordenAvatar'
 import { voiceService } from '../lib/ElevenLabsService'
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -502,14 +501,6 @@ export default function ChatWidget() {
   useEffect(() => {
     return () => stopVoice()
   }, [stopVoice])
-
-  const avatarState = loading
-    ? 'talking'
-    : justArrived
-      ? 'wave'
-      : open
-        ? 'listening'
-        : 'idle'
 
   useEffect(() => { ssSet('mrw_open', open) }, [open])
   useEffect(() => { ssSet('mrw_tab', activeTab) }, [activeTab])
@@ -1213,14 +1204,21 @@ export default function ChatWidget() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <MrWordenAvatar
-        state={avatarState}
-        size={76}
+      <motion.button
         onClick={() => setOpen((o) => !o)}
-        isOpen={open}
-        unread={unread}
-      />
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className={`relative flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-colors duration-300 ${
+          open ? 'bg-red-500 text-white' : 'bg-brand-amber text-brand-navy'
+        }`}
+      >
+        {open ? <X size={28} /> : <MessageSquare size={28} />}
+        {unread > 0 && !open && (
+          <span className="absolute -top-1 -right-1 flex items-center justify-center w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full border-2 border-white">
+            {unread}
+          </span>
+        )}
+      </motion.button>
     </div>
   )
 }

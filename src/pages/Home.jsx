@@ -9,6 +9,8 @@ import { trackPhoneClick } from '@/lib/analytics';
 import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
 import EstimateForm from '../components/EstimateForm';
+import NetworkCoverage from '../components/NetworkCoverage';
+import LegacyStory from '../components/LegacyStory';
 
 const HERO_IMAGE = '/work/portfolio/portfolio-010.jpg';
 const RESIDENTIAL_IMAGE = '/work/portfolio/portfolio-017.jpg';
@@ -62,7 +64,7 @@ const REVIEWS = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white font-body text-gray-900">
+    <div className="min-h-screen bg-[#0a0a0a] font-body text-gray-200">
       <SEO
         title="Asphalt Paving Virginia | J. Worden & Sons — Chester, Richmond, Chesterfield"
         description="Virginia's trusted asphalt paving contractor since 1985. Driveways, parking lots, sealcoating, crack repair, and tar and chip across Richmond, Chesterfield, Hampton Roads, and all of Virginia."
@@ -161,32 +163,36 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── LEGACY STORY ─────────────────────────────────────────── */}
+      <LegacyStory />
+
       {/* ── SERVICES GRID ────────────────────────────────────────── */}
-      <section id="services" className="bg-gray-50 py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section id="services" className="py-20 md:py-28 relative overflow-hidden border-t border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,122,0,0.05),transparent_50%)]" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-14">
             <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">What We Do</p>
-            <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight">
+            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
               Paving Services Across Virginia
             </h2>
-            <p className="text-gray-500 mt-4 max-w-2xl text-lg">
+            <p className="text-gray-400 mt-4 max-w-2xl text-lg">
               Every scope starts with an on-site base assessment — not a quick look from the truck.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10">
             {SERVICES.map((svc) => (
               <a
                 key={svc.href}
                 href={svc.href}
-                className="group bg-white p-8 flex flex-col gap-4 hover:bg-[#0f0f0f] transition-colors duration-300"
+                className="group bg-[#0f0f0f] p-8 flex flex-col gap-4 hover:bg-white/5 transition-colors duration-300"
               >
-                <div className="w-12 h-12 bg-[#ff7a00]/10 flex items-center justify-center group-hover:bg-[#ff7a00]/20 transition-colors">
+                <div className="w-12 h-12 bg-[#ff7a00]/10 flex items-center justify-center group-hover:bg-[#ff7a00]/20 transition-colors rounded-xl">
                   <svc.icon className="w-6 h-6 text-[#ff7a00]" />
                 </div>
-                <h3 className="font-display text-gray-900 group-hover:text-white text-xl uppercase tracking-wide transition-colors">
+                <h3 className="font-display text-white group-hover:text-[#ff7a00] text-xl uppercase tracking-wide transition-colors">
                   {svc.title}
                 </h3>
-                <p className="text-gray-500 group-hover:text-gray-400 text-sm leading-relaxed transition-colors flex-1">
+                <p className="text-gray-400 group-hover:text-gray-300 text-sm leading-relaxed transition-colors flex-1">
                   {svc.desc}
                 </p>
                 <span className="inline-flex items-center gap-2 text-[#ff7a00] font-display text-xs uppercase tracking-[0.16em] group-hover:gap-3 transition-all">
@@ -199,30 +205,30 @@ export default function Home() {
       </section>
 
       {/* ── RESIDENTIAL FOCUS ────────────────────────────────────── */}
-      <section className="bg-white py-20 md:py-28">
+      <section className="py-20 md:py-28 border-t border-white/10 relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
               <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Residential</p>
-              <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
+              <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
                 Your Driveway<br />Done Right
               </h2>
-              <p className="text-gray-600 text-lg leading-relaxed mb-8">
+              <p className="text-gray-400 text-lg leading-relaxed mb-8">
                 Virginia clay is the #1 cause of early driveway failure. We diagnose the sub-base before we quote — so what we build stays stable through 40 freeze-thaw cycles and summer heat.
               </p>
               <div className="space-y-3 mb-10">
                 {['6" compacted aggregate base minimum on clay subsoil', 'Crowned cross-section so water drains off edges', 'Hot-mix asphalt or tar-and-chip matched to your traffic and budget', 'Clean cut edges — no ragged borders', 'Written warranty on workmanship'].map((pt) => (
                   <div key={pt} className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-[#ff7a00] shrink-0 mt-0.5" />
-                    <span className="text-gray-700 text-sm">{pt}</span>
+                    <span className="text-gray-300 text-sm">{pt}</span>
                   </div>
                 ))}
               </div>
               <div className="flex flex-wrap gap-4">
-                <a href="/residential" className="inline-flex items-center gap-2 bg-gray-900 text-white font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff7a00] hover:text-black transition-colors">
+                <a href="/residential" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
                   Residential Paving <ArrowRight className="w-4 h-4" />
                 </a>
-                <a href="/blog/info/driveway-paving-cost-virginia" className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:border-gray-400 transition-colors">
+                <a href="/blog/info/driveway-paving-cost-virginia" className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors">
                   2026 Cost Guide
                 </a>
               </div>
@@ -278,22 +284,23 @@ export default function Home() {
       </section>
 
       {/* ── TRUST / CREDENTIALS ──────────────────────────────────── */}
-      <section className="bg-gray-50 py-20 md:py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section className="py-20 md:py-24 border-t border-white/10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,122,0,0.05),transparent_50%)]" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Why J. Worden & Sons</p>
-              <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
+              <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
                 Licensed.<br />Insured.<br />Family-Owned.
               </h2>
-              <p className="text-gray-600 text-lg leading-relaxed mb-8">
+              <p className="text-gray-400 text-lg leading-relaxed mb-8">
                 Based in Chester, VA. Serving all of Virginia since 1985. We carry the licensing, insurance, and documentation that protect you — not just promises.
               </p>
               <div className="space-y-3">
                 {TRUST_POINTS.map((pt) => (
                   <div key={pt} className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-[#ff7a00] shrink-0 mt-0.5" />
-                    <span className="text-gray-700 text-sm">{pt}</span>
+                    <span className="text-gray-300 text-sm">{pt}</span>
                   </div>
                 ))}
               </div>
@@ -305,10 +312,10 @@ export default function Home() {
                 { icon: Users, title: '5,000+', sub: 'Projects completed' },
                 { icon: Clock, title: 'Same-Week', sub: 'Quotes in Central Virginia' },
               ].map((item) => (
-                <div key={item.title} className="bg-white border border-gray-100 p-6 flex flex-col gap-3">
+                <div key={item.title} className="bg-white/5 border border-white/10 backdrop-blur-md p-6 flex flex-col gap-3 rounded-xl hover:bg-white/10 transition-colors">
                   <item.icon className="w-8 h-8 text-[#ff7a00]" />
-                  <p className="font-display text-gray-900 text-2xl uppercase">{item.title}</p>
-                  <p className="text-gray-500 text-sm">{item.sub}</p>
+                  <p className="font-display text-white text-2xl uppercase">{item.title}</p>
+                  <p className="text-gray-400 text-sm">{item.sub}</p>
                 </div>
               ))}
             </div>
@@ -317,26 +324,26 @@ export default function Home() {
       </section>
 
       {/* ── REVIEWS ──────────────────────────────────────────────── */}
-      <section className="bg-white py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section className="py-20 md:py-28 border-t border-white/10 relative">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <div className="mb-14">
             <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Customer Reviews</p>
-            <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight">
+            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
               What Virginia Homeowners Say
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {REVIEWS.map((r) => (
-              <div key={r.name} className="border border-gray-100 p-8 flex flex-col gap-4">
+              <div key={r.name} className="border border-white/10 bg-white/5 backdrop-blur-md rounded-xl p-8 flex flex-col gap-4">
                 <div className="flex gap-0.5">
                   {Array.from({ length: r.stars }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-[#ff7a00] text-[#ff7a00]" />
                   ))}
                 </div>
-                <p className="text-gray-700 text-base leading-relaxed flex-1">"{r.text}"</p>
+                <p className="text-gray-300 text-base leading-relaxed flex-1">"{r.text}"</p>
                 <div>
-                  <p className="font-display font-bold text-gray-900 text-sm uppercase tracking-wide">{r.name}</p>
-                  <p className="text-gray-400 text-xs">{r.location}</p>
+                  <p className="font-display font-bold text-white text-sm uppercase tracking-wide">{r.name}</p>
+                  <p className="text-gray-500 text-xs">{r.location}</p>
                 </div>
               </div>
             ))}
@@ -346,11 +353,11 @@ export default function Home() {
       </section>
 
       {/* ── PROJECT GALLERY ───────────────────────────────────────── */}
-      <section className="bg-gray-50 py-20 md:py-24">
+      <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-12">
             <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Our Work</p>
-            <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight">
+            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
               Recent Projects
             </h2>
           </div>
@@ -359,42 +366,49 @@ export default function Home() {
       </section>
 
       {/* ── ESTIMATE FORM ────────────────────────────────────────── */}
-      <section id="quote" className="bg-gray-50 py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+      <section id="quote" className="py-20 md:py-28 border-t border-white/10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,122,0,0.08),transparent_70%)]" />
+        <div className="relative max-w-3xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-10">
             <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Free Estimate</p>
-            <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight mb-4">
+            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight mb-4">
               Get a Written Quote
             </h2>
-            <p className="text-gray-500 text-lg">
+            <p className="text-gray-400 text-lg">
               Or reach us directly — same-day response guaranteed.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mt-6">
               <a
                 href={`tel:${PHONE_E164}`}
                 onClick={() => trackPhoneClick('homepage_quote')}
-                className="inline-flex items-center gap-2 bg-gray-900 text-white font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff7a00] hover:text-black transition-colors"
+                className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff9a30] transition-colors"
               >
                 <Phone className="w-4 h-4" /> {PHONE_DISPLAY}
               </a>
               <a
                 href={`sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`}
-                className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:border-gray-400 transition-colors"
+                className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors"
               >
                 <MessageSquare className="w-4 h-4" /> Text Us
               </a>
             </div>
           </div>
-          <EstimateForm source="homepage_quote_section" />
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6 md:p-10">
+            <EstimateForm source="homepage_quote_section" />
+          </div>
         </div>
       </section>
 
+
+      {/* ── COVERAGE NETWORK ──────────────────────────────────────── */}
+      <NetworkCoverage />
+
       {/* ── FAQ ──────────────────────────────────────────────────── */}
-      <section className="bg-gray-50 py-20 md:py-24">
+      <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Common Questions</p>
-          <h2 className="font-display text-gray-900 text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
-          <div className="space-y-0 divide-y divide-gray-200">
+          <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
+          <div className="space-y-0 divide-y divide-white/10">
             {[
               {
                 q: 'How much does asphalt driveway paving cost in Virginia?',
@@ -418,8 +432,8 @@ export default function Home() {
               },
             ].map(({ q, a }) => (
               <div key={q} className="py-6">
-                <p className="font-display text-gray-900 text-lg uppercase tracking-wide mb-2">{q}</p>
-                <p className="text-gray-600 text-sm leading-relaxed">{a}</p>
+                <p className="font-display text-white text-lg uppercase tracking-wide mb-2">{q}</p>
+                <p className="text-gray-400 text-sm leading-relaxed">{a}</p>
               </div>
             ))}
           </div>
