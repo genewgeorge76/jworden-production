@@ -25,10 +25,8 @@ Disallow: /*?gclid=
 Disallow: /*?utm_
 Disallow: /*?fbclid=
 
-# Sitemaps
-Sitemap: https://www.jwordenasphaltpaving.com/sitemap.xml
-Sitemap: https://www.jwordenasphaltpaving.com/sitemap.txt
-Sitemap: https://www.jwordenasphaltpaving.com/image-sitemap.xml
+# Sitemaps are submitted via Google Search Console for each regional domain
+# to avoid cross-domain canonical conflicts in this multi-tenant architecture.
 
 # Crawl-delay for aggressive bots
 User-agent: AhrefsBot
@@ -64,3 +62,6 @@ Allow: /
 
 User-agent: anthropic-ai
 Allow: /
+
+Sitemap: https://www.jwordenasphaltpaving.com/sitemap.xml
+Sitemap: https://www.jwordenasphaltpaving.com/image-sitemap.xml

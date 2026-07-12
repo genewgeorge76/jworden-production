@@ -622,7 +622,52 @@ def get_job(job_id: int, db: Session = Depends(get_db), _: dict = Depends(verify
     return _serialize_job(job, lead)
 
 
-@router.patch("/jobs/{job_id}")
+
+@router.put("/jobs/{job_id}/scope")
+async def update_job_scope(
+    job_id: int,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+    job = db.query(Job).filter(Job.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if "geo_lat" in payload:
+        job.geo_lat = payload["geo_lat"]
+    if "geo_lng" in payload:
+        job.geo_lng = payload["geo_lng"]
+    if "scope_geojson" in payload:
+        job.scope_geojson = payload["scope_geojson"]
+        
+    db.commit()
+    db.refresh(job)
+    return job
+
+@router.post("/jobs/{job_id}/pictures")
+async def add_job_picture(
+    job_id: int,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+    import datetime
+    job = db.query(Job).filter(Job.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    pics = list(job.pictures_json) if job.pictures_json else []
+    pics.append({
+        "url": payload.get("url"),
+        "caption": payload.get("caption", ""),
+        "type": payload.get("type", "progress"),
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    })
+    
+    job.pictures_json = pics
+    
+    db.commit()
+    db.refresh(job)
+    return job
 def update_job(
     job_id: int,
     body: JobUpdateRequest = Body(...),

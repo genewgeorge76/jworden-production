@@ -18,7 +18,9 @@ from sqlalchemy import (
     Column,
     DateTime,
     Float,
+    ForeignKey,
     Integer,
+    JSON,
     String,
     Text,
     UniqueConstraint,
@@ -406,6 +408,7 @@ class BlogPost(Base):
     read_time_minutes = Column(Integer, nullable=True)
     published_at = Column(DateTime(timezone=True), nullable=True)
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    market_site_id = Column(Integer, ForeignKey("market_sites.id"), nullable=True, index=True)
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
     updated_at = Column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
@@ -542,6 +545,17 @@ class Estimate(Base):
     currency = Column(String(10), nullable=False, default="usd")
     state_code = Column(String(2), nullable=True, index=True)
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    
+    # ── Customer Portal Fields ──
+    public_token = Column(String(100), unique=True, index=True, nullable=True)
+    total_amount = Column(Float, nullable=True)
+    deposit_amount = Column(Float, nullable=True)
+    signature_data_url = Column(Text, nullable=True)
+    signed_at_utc = Column(DateTime(timezone=True), nullable=True)
+    terms_accepted = Column(Boolean, default=False)
+    payment_method = Column(String(30), nullable=True) # stripe, check, zelle, wire
+    payment_status = Column(String(30), nullable=True, default="pending") # pending, verified, failed
+
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
     updated_at = Column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
@@ -574,6 +588,13 @@ class Job(Base):
     progress_notes = Column(Text, nullable=True)
     completed_at = Column(DateTime(timezone=True), nullable=True)
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    
+    # ── Job Scope Map Fields ──
+    geo_lat = Column(Float, nullable=True)
+    geo_lng = Column(Float, nullable=True)
+    scope_geojson = Column(JSON, nullable=True) # Mapbox Draw geometry
+    pictures_json = Column(JSON, nullable=True) # Array of { url, caption, type, timestamp }
+    
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
     updated_at = Column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
@@ -1314,6 +1335,10 @@ class Tenant(Base):
     logo_url = Column(String(500), nullable=True)
     contact_email = Column(String(254), nullable=True)
     contact_phone = Column(String(30), nullable=True)
+    industry = Column(String(100), nullable=False, default="Asphalt Paving")
+    subscription_tier = Column(String(30), nullable=False, default="lite")  # lite | pro | max
+    stripe_customer_id = Column(String(100), nullable=True, index=True)
+    stripe_subscription_id = Column(String(100), nullable=True, index=True)
     is_active = Column(Integer, nullable=False, default=1)
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
     updated_at = Column(
@@ -1322,6 +1347,64 @@ class Tenant(Base):
 
     def __repr__(self) -> str:
         return f"<Tenant tenant_id={self.tenant_id!r} company={self.company_name!r}>"
+
+
+class User(Base):
+    """
+    Team members (Seats) associated with a Tenant. Supports Role-Based Access Control (RBAC).
+    """
+
+    __tablename__ = "users"
+    __table_args__ = (UniqueConstraint("email", name="uq_users_email"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), ForeignKey("tenants.tenant_id"), nullable=False, index=True)
+    email = Column(String(254), nullable=False, index=True)
+    hashed_password = Column(String(200), nullable=False)
+    full_name = Column(String(150), nullable=True)
+    role = Column(String(30), nullable=False, default="admin")  # admin | dispatcher | foreman | pilot
+    is_active = Column(Integer, nullable=False, default=1)
+    last_login_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<User email={self.email!r} role={self.role!r} tenant={self.tenant_id!r}>"
+
+
+class MarketSite(Base):
+    """
+    Dynamically generated SEO market sites for a given Tenant.
+    Replacing the hardcoded siteFactoryManifest.json.
+    """
+
+    __tablename__ = "market_sites"
+    __table_args__ = (UniqueConstraint("hostname", name="uq_market_sites_hostname"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=False, index=True)
+    hostname = Column(String(200), nullable=False, index=True)
+    route_mode = Column(String(50), nullable=False, default="market-landing")
+    site_title = Column(String(200), nullable=True)
+    site_description = Column(Text, nullable=True)
+    primary_color = Column(String(20), nullable=True)
+    accent_color = Column(String(20), nullable=True)
+    hero_headline = Column(String(300), nullable=True)
+    hero_subheadline = Column(Text, nullable=True)
+    local_weather_copy = Column(Text, nullable=True)  # e.g. "Built for Florida heat"
+    city_target = Column(String(100), nullable=True)
+    state_target = Column(String(2), nullable=True)
+    phone_override = Column(String(30), nullable=True)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<MarketSite hostname={self.hostname!r} tenant={self.tenant_id!r}>"
 
 
 # ── Real-time chat messages ───────────────────────────────────────────────────
@@ -1845,3 +1928,80 @@ class DrivewayOptIn(Base):
 
     def __repr__(self) -> str:
         return f"<DrivewayOptIn token={self.token!r} property={self.property_id!r}>"
+
+
+# ── J. Worden University (LMS) ────────────────────────────────────────────────
+
+class Course(Base):
+    """High-level training track in the Starbase LMS."""
+    __tablename__ = "lms_courses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    slug = Column(String(200), nullable=False, unique=True, index=True)
+    description = Column(Text, nullable=False)
+    category = Column(String(100), nullable=False)  # e.g., 'Safety', 'Engineering', 'Software'
+    difficulty = Column(String(50), nullable=False, default="beginner")
+    estimated_hours = Column(Float, nullable=True)
+    thumbnail_url = Column(String(500), nullable=True)
+    is_published = Column(Boolean, default=False)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<Course slug={self.slug!r} title={self.title!r}>"
+
+
+class CourseModule(Base):
+    """Grouping of lessons within a course."""
+    __tablename__ = "lms_course_modules"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("lms_courses.id"), nullable=False, index=True)
+    title = Column(String(200), nullable=False)
+    order_index = Column(Integer, nullable=False, default=0)
+    description = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+
+class Lesson(Base):
+    """Individual lesson content (video/markdown)."""
+    __tablename__ = "lms_lessons"
+
+    id = Column(Integer, primary_key=True, index=True)
+    module_id = Column(Integer, ForeignKey("lms_course_modules.id"), nullable=False, index=True)
+    title = Column(String(200), nullable=False)
+    order_index = Column(Integer, nullable=False, default=0)
+    video_url = Column(String(500), nullable=True)
+    body_markdown = Column(Text, nullable=True)
+    quiz_json = Column(Text, nullable=True)  # JSON array of questions/answers
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+
+class Enrollment(Base):
+    """Tracks which user (employee/subcontractor) is taking which course."""
+    __tablename__ = "lms_enrollments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("lms_courses.id"), nullable=False, index=True)
+    user_email = Column(String(254), nullable=False, index=True)
+    status = Column(String(50), nullable=False, default="active")  # active | completed
+    enrolled_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    completed_at = Column(DateTime(timezone=True), nullable=True)
+    certificate_url = Column(String(500), nullable=True)
+    
+    __table_args__ = (UniqueConstraint("course_id", "user_email", name="uq_enrollment"),)
+
+
+class Progress(Base):
+    """Tracks individual lesson completion for an enrollment."""
+    __tablename__ = "lms_progress"
+
+    id = Column(Integer, primary_key=True, index=True)
+    enrollment_id = Column(Integer, ForeignKey("lms_enrollments.id"), nullable=False, index=True)
+    lesson_id = Column(Integer, ForeignKey("lms_lessons.id"), nullable=False, index=True)
+    is_completed = Column(Boolean, default=False)
+    score = Column(Float, nullable=True)  # If it had a quiz
+    completed_at = Column(DateTime(timezone=True), nullable=True)
+    
+    __table_args__ = (UniqueConstraint("enrollment_id", "lesson_id", name="uq_progress"),)

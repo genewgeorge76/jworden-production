@@ -1,0 +1,404 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #050505;
+  --bg-secondary: #0a0a0a;
+  --text-primary: #f8f9fa;
+  --text-secondary: #a1a1aa;
+  --estate-gold: #d4af37;
+  --estate-gold-hover: #b8962e;
+  --carbon-black: #000000;
+  --pure-white: #ffffff;
+  --border-light: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(10, 10, 10, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+/* 
+========================================
+UTILITIES (Glassmorphism & Premium)
+========================================
+*/
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #f9d423 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 
+========================================
+THE TOP BAR (Premium Dark)
+========================================
+*/
+.top-bar {
+  background: var(--carbon-black);
+  color: var(--text-secondary);
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.navbar {
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 24px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  color: var(--estate-gold);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav-links a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.nav-links a:hover {
+  color: var(--estate-gold);
+  opacity: 1;
+}
+
+/* 
+========================================
+BUTTONS
+========================================
+*/
+.btn-primary {
+  background: var(--estate-gold);
+  color: var(--carbon-black) !important;
+  padding: 16px 36px;
+  font-weight: 700 !important;
+  font-family: 'Outfit', sans-serif;
+  text-transform: uppercase;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  letter-spacing: 1.5px;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+}
+
+.btn-primary:hover {
+  background: #f9d423;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+}
+
+/* 
+========================================
+THE HERO
+========================================
+*/
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: url('/images/hero.png') center/cover;
+  padding: 100px 20px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.15);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  padding: 0 60px;
+  color: var(--pure-white);
+}
+
+.hero-content h1 {
+  font-size: 5.5rem;
+  color: var(--pure-white);
+  margin-bottom: 24px;
+  line-height: 1.05;
+  text-transform: none;
+  letter-spacing: -2px;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.9);
+}
+
+.hero-content h1 span {
+  color: var(--estate-gold);
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 48px;
+  font-weight: 500;
+  max-width: 650px;
+  color: #fff;
+  line-height: 1.8;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+}
+
+/* 
+========================================
+TRUST STRIP
+========================================
+*/
+.trust-strip {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border-light);
+  border-top: 1px solid var(--border-light);
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 1px;
+}
+
+/* 
+========================================
+THE GRID (High End Upgrade)
+========================================
+*/
+.services-section {
+  padding: 0;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.massive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 0; 
+}
+
+.grid-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+}
+
+.grid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  filter: grayscale(80%) contrast(1.2);
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.2) 100%);
+  transition: background 0.5s ease;
+}
+
+.grid-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 50px;
+  transform: translateY(20px);
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.grid-content h3 {
+  color: var(--pure-white);
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.grid-content p {
+  color: var(--text-secondary);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* The Grid Hover Upgrade */
+.grid-item:hover .grid-bg {
+  transform: scale(1.08);
+  filter: grayscale(0%) contrast(1.1);
+}
+
+.grid-item:hover .grid-overlay {
+  background: linear-gradient(to top, rgba(5,5,5,0.98) 0%, rgba(5,5,5,0.4) 100%);
+}
+
+.grid-item:hover .grid-content {
+  transform: translateY(0);
+}
+
+.grid-item:hover .grid-content p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 
+========================================
+FOOTER
+========================================
+*/
+.footer {
+  background: var(--bg-primary);
+  color: var(--pure-white);
+  padding: 100px 40px 40px;
+  border-top: 1px solid var(--border-light);
+}
+
+.footer h3 {
+  color: var(--pure-white);
+  margin-bottom: 30px;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+
+.footer-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 80px;
+  margin-bottom: 80px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.footer-col ul li a {
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+  color: var(--estate-gold);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 40px;
+  border-top: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+/* FAQ Accordion Styles */
+details.faq-details summary::-webkit-details-marker {
+  display: none;
+}
+details.faq-details[open] summary .faq-icon {
+  transform: rotate(180deg);
+}
+.faq-icon {
+  transition: transform 0.3s ease;
+}

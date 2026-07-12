@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import siteFactoryManifest from '@/config/siteFactoryManifest.json';
+const siteFactoryManifest = {}
 
 const marketGeoSchema = z
   .object({

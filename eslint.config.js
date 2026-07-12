@@ -6,6 +6,16 @@ import pluginUnusedImports from "eslint-plugin-unused-imports";
 
 export default [
   {
+    ignores: [
+      "**/.next/**",
+      "jwordenasphaltpaving/**",
+      "jwordenai operation system/**",
+      "blueridgeasphaltpaving/**",
+      "dist/**",
+      "build/**",
+    ],
+  },
+  {
     files: [
       "src/components/**/*.{js,mjs,cjs,jsx}",
       "src/pages/**/*.{js,mjs,cjs,jsx}",

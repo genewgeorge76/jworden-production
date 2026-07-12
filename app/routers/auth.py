@@ -3,16 +3,6 @@ auth.py — JWT token issuance endpoint for JWordenAI.
 
 Routes:
   POST /api/v1/auth/token — exchange master key for a short-lived JWT
-
-The frontend (or any API client) can POST the master key in the Authorization
-header to receive a 24-hour JWT.  Subsequent requests use that JWT instead of
-the raw master key, which limits exposure of the long-lived credential.
-
-Flow:
-  1. Client sends:  Authorization: Bearer <JWORDEN_MASTER_KEY>
-  2. Server validates the master key.
-  3. Server returns a signed JWT (HS256, 24 h expiry).
-  4. Client uses the JWT for all subsequent authenticated requests.
 """
 
 import base64
@@ -22,13 +12,21 @@ import os
 import secrets
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Request
-from jose import jwt
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from jose import jwt, JWTError
+from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
+import bcrypt
 
 from ..database import get_db
+from ..models import Tenant, User
 from ..services.audit import write_audit_event
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+def get_password_hash(password: str) -> str:
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 logger = logging.getLogger(__name__)
 
@@ -58,51 +56,29 @@ class PinTokenRequest(BaseModel):
 class AuthStatusResponse(BaseModel):
     auth_required: bool
     auth_mode: str
-    token_endpoint: str | None = None
-    admin_configured: bool
 
 
-def _auth_mode() -> str:
-    return os.getenv("AUTH_MODE", "required").strip().lower()
+@router.get("/status", summary="Check authentication requirements")
+def auth_status() -> AuthStatusResponse:
+    master_key = os.getenv("JWORDEN_MASTER_KEY", "").strip()
+    return AuthStatusResponse(
+        auth_required=bool(master_key),
+        auth_mode="jwt_exchange" if master_key else "open",
+    )
 
 
 def _issue_admin_jwt() -> str:
-    secret = os.getenv("JWT_SECRET_KEY", "")
-    if not secret:
-        raise HTTPException(
-            status_code=500,
-            detail="JWT signing is not configured. Set JWT_SECRET_KEY.",
-        )
-
-    now = datetime.now(timezone.utc)
+    jwt_secret = os.getenv(
+        "JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret")
+    )
     payload = {
-        "sub": "Admin",
+        "sub": "admin",
         "tenant_id": "JWORDEN_HQ",
-        "iat": now,
-        "exp": now + timedelta(seconds=_TOKEN_EXPIRE_SECONDS),
+        "role": "system_admin",
+        "exp": datetime.now(timezone.utc) + timedelta(seconds=_TOKEN_EXPIRE_SECONDS),
+        "iat": datetime.now(timezone.utc),
     }
-    return jwt.encode(payload, secret, algorithm=_ALGORITHM)
-
-
-@router.get(
-    "/status",
-    summary="Return server-auth configuration for frontend bootstrapping",
-    response_model=AuthStatusResponse,
-)
-def auth_status():
-    mode = _auth_mode()
-    auth_required = mode not in {"none", "off", "disabled", "0", "false"}
-    admin_configured = bool(
-        os.getenv("ADMIN_PIN")
-        or (os.getenv("ADMIN_USERNAME") and os.getenv("ADMIN_PASSWORD"))
-    )
-    token_endpoint = "/.netlify/functions/get-token" if auth_required else None
-    return AuthStatusResponse(
-        auth_required=auth_required,
-        auth_mode=mode,
-        token_endpoint=token_endpoint,
-        admin_configured=admin_configured,
-    )
+    return jwt.encode(payload, jwt_secret, algorithm=_ALGORITHM)
 
 
 @router.post(
@@ -114,89 +90,45 @@ def issue_token(
     request: Request,
     db: Session = Depends(get_db),
 ):
-    """
-    Present the ``JWORDEN_MASTER_KEY`` as a Bearer token to receive a signed
-    JWT valid for 24 hours.
+    master_key = os.getenv("JWORDEN_MASTER_KEY", "").strip()
+    if not master_key:
+        return TokenResponse(access_token="unauthenticated_mode_active")
 
-    Example::
-
-        curl -X POST /api/v1/auth/token \\
-             -H "Authorization: Bearer <JWORDEN_MASTER_KEY>"
-
-    The returned ``access_token`` can then be used in place of the master key
-    for all protected endpoints.
-    """
-    auth_header = request.headers.get("authorization", "")
+    auth_header = request.headers.get("Authorization")
     if not auth_header:
         raise HTTPException(
             status_code=401,
-            detail="Authorization header with Bearer or Basic token required",
+            detail="Authorization header missing. Must provide Bearer or Basic token.",
             headers={"WWW-Authenticate": "Bearer, Basic"},
         )
 
-    scheme, _, credentials = auth_header.partition(" ")
-    scheme = scheme.lower().strip()
-    credentials = credentials.strip()
-
-    if scheme == "bearer":
-        if not credentials:
-            raise HTTPException(
-                status_code=401,
-                detail="Bearer token required",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
-        master_key = os.getenv("JWORDEN_MASTER_KEY", "")
-        if not master_key:
-            raise HTTPException(
-                status_code=500,
-                detail="Server authentication is not configured. Set JWORDEN_MASTER_KEY.",
-            )
-
-        if credentials != master_key:
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:]
+        if token != master_key:
             logger.warning(
-                "Token issuance rejected — invalid master key presented (presented=%s expected=%s)",
-                _secret_fingerprint(credentials),
+                "Failed token exchange — invalid Bearer key presented (presented=%s expected=%s)",
+                _secret_fingerprint(token),
                 _secret_fingerprint(master_key),
             )
             raise HTTPException(
                 status_code=403,
                 detail="Invalid master key",
-                headers={"WWW-Authenticate": "Bearer"},
+                headers={"WWW-Authenticate": 'Bearer realm="Auth Token"'},
             )
 
-    elif scheme == "basic":
-        if not credentials:
-            raise HTTPException(
-                status_code=401,
-                detail="Basic credentials required",
-                headers={"WWW-Authenticate": 'Basic realm="Auth Token"'},
-            )
-
-        admin_username = os.getenv("ADMIN_USERNAME", "")
-        admin_password = os.getenv("ADMIN_PASSWORD", "")
-        if not admin_username or not admin_password:
-            raise HTTPException(
-                status_code=500,
-                detail="Server authentication is not configured. Set ADMIN_USERNAME and ADMIN_PASSWORD.",
-            )
-
+    elif auth_header.startswith("Basic "):
+        encoded_credentials = auth_header[6:]
         try:
-            decoded = base64.b64decode(credentials).decode("utf-8", errors="replace")
-            provided_username, _, provided_password = decoded.partition(":")
-        except Exception:  # noqa: BLE001
-            provided_username = ""
-            provided_password = ""
+            decoded_bytes = base64.b64decode(encoded_credentials)
+            decoded_str = decoded_bytes.decode("utf-8")
+            provided_username, provided_password = decoded_str.split(":", 1)
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid Basic auth format")
 
-        username_ok = secrets.compare_digest(
-            provided_username.encode(), admin_username.encode()
-        )
-        password_ok = secrets.compare_digest(
-            provided_password.encode(), admin_password.encode()
-        )
-        if not username_ok or not password_ok:
+        expected_username = "admin"
+        if provided_username != expected_username or provided_password != master_key:
             logger.warning(
-                "Token issuance rejected — invalid basic credentials (user=%s)",
+                "Failed token exchange — invalid Basic credentials (user=%s)",
                 provided_username or "<empty>",
             )
             raise HTTPException(
@@ -276,4 +208,72 @@ def issue_pin_token(
         detail={"tenant_id": "JWORDEN_HQ", "expires_in": _TOKEN_EXPIRE_SECONDS},
     )
 
+    return TokenResponse(access_token=token)
+
+
+class RegisterRequest(BaseModel):
+    companyName: str
+    industry: str
+    email: EmailStr
+    password: str
+    state: str
+    city: str
+    plan: str
+
+
+@router.post("/register", summary="Register a new Tenant and User")
+def register_tenant(request: RegisterRequest, db: Session = Depends(get_db)):
+    # 1. Check if user already exists
+    existing_user = db.query(User).filter(User.email == request.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+        
+    # 2. Create Tenant
+    tenant_id = secrets.token_urlsafe(12)
+    new_tenant = Tenant(
+        tenant_id=tenant_id,
+        company_name=request.companyName,
+        industry=request.industry,
+        subscription_tier=request.plan.lower(),
+        contact_email=request.email,
+        is_active=1
+    )
+    db.add(new_tenant)
+    db.flush()
+    
+    # 3. Create User
+    new_user = User(
+        tenant_id=tenant_id,
+        email=request.email,
+        hashed_password=get_password_hash(request.password),
+        role="admin"
+    )
+    db.add(new_user)
+    db.commit()
+    
+    logger.info(f"New SaaS Tenant Registered: {tenant_id} ({request.companyName})")
+    return {"status": "success", "tenant_id": tenant_id}
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+@router.post("/login", summary="Login with Email and Password", response_model=TokenResponse)
+def login_user(request: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == request.email).first()
+    if not user or not verify_password(request.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+        
+    # Issue JWT containing tenant_id and role
+    jwt_secret = os.getenv("JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret"))
+    payload = {
+        "sub": user.email,
+        "tenant_id": user.tenant_id,
+        "role": user.role,
+        "exp": datetime.now(timezone.utc) + timedelta(seconds=_TOKEN_EXPIRE_SECONDS),
+        "iat": datetime.now(timezone.utc),
+    }
+    
+    token = jwt.encode(payload, jwt_secret, algorithm=_ALGORITHM)
     return TokenResponse(access_token=token)

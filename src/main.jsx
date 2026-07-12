@@ -4,7 +4,6 @@ import { HelmetProvider } from 'react-helmet-async'
 import App from '@/App.jsx'
 import '@/index.css'
 import { trackEvent } from '@/api/client'
-import { resolveSiteProfile } from '@/lib/siteProfiles'
 import { canonicalBackendDomain } from '@/config/integration'
 
 
@@ -42,15 +41,6 @@ if (_isValidSentryDsn && typeof window !== 'undefined') {
   }
 }
 
-// Resolve site profile at startup so one repo can safely support multiple
-// branded domains without changing app bootstrap behavior.
-const _siteProfile = resolveSiteProfile()
-if (typeof window !== 'undefined') {
-  window.__JWORDEN_SITE_PROFILE__ = _siteProfile
-}
-if (typeof document !== 'undefined' && document.documentElement) {
-  document.documentElement.setAttribute('data-site-profile', _siteProfile.key)
-}
 
 // ── Global conversion tracking for tel: / mailto: clicks ──────────────────
 // Catches every phone/email link site-wide so Google Ads + GA4 see the

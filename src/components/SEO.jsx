@@ -1,6 +1,6 @@
-﻿import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { PRIMARY_DOMAIN } from '@/lib/locations';
-import { resolveSiteProfile } from '@/lib/siteProfiles';
+import { useTenant } from '@/lib/TenantContext';
 
 /**
  * SEO — comprehensive document head manager implementing Google's 2026 best practices.
@@ -19,6 +19,8 @@ export default function SEO({
   modifiedTime,
   geo,
 }) {
+  const tenant = useTenant();
+
   useEffect(() => {
     if (title) document.title = title;
 
@@ -37,7 +39,7 @@ export default function SEO({
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
     const currentHostname =
       typeof window !== 'undefined' ? String(window.location.hostname || '').toLowerCase() : '';
-    const siteProfile = resolveSiteProfile(currentHostname);
+    const siteProfile = tenant;
     const isOperationsDomain =
       currentHostname.includes('thewordenstandard.com') ||
       currentHostname.includes('thewrodenstandard.com');
@@ -172,7 +174,7 @@ export default function SEO({
       script.text = JSON.stringify(jsonLd);
       document.head.appendChild(script);
     }
-  }, [title, description, canonicalPath, ogImage, ogType, jsonLd, noindex, publishedTime, modifiedTime, geo]);
+  }, [title, description, canonicalPath, ogImage, ogType, jsonLd, noindex, publishedTime, modifiedTime, geo, tenant]);
 
   return null;
 }

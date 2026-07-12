@@ -236,7 +236,14 @@ from .routers import (
     staff_router,
 )
 from .routers import audit_admin as audit_admin_router
+from .routers import superadmin as superadmin_router
+from .routers import supply_chain as supply_chain_router
 from .routers import auth as auth_router
+from .routers import system as system_router
+from .routers import lms as lms_router
+from .routers import portal as portal_router
+from .routers import billing as billing_router
+from .webhooks import stripe_webhook
 from .routers import authority as authority_router
 from .routers import autonomy as autonomy_router
 from .routers import bid_intelligence as bid_intelligence_router
@@ -253,6 +260,7 @@ from .routers import documents as documents_router
 from .routers import driveway_growth as driveway_growth_router
 from .routers import drone_scan as drone_scan_router
 from .routers import email as email_router
+from .routers import factory as factory_router
 from .routers import features as features_router
 from .routers import follow_ups as follow_ups_router
 from .routers import foreman as foreman_router
@@ -554,11 +562,21 @@ app.include_router(customers_router.router)
 
 # Ops / infrastructure routers
 app.include_router(auth_router.router)
+app.include_router(billing_router.router)
+# Global SaaS Telemetry
+app.include_router(superadmin_router.router)
+app.include_router(system_router.router)
+app.include_router(lms_router.router)
+app.include_router(portal_router.router)
+# Supply Chain Arbitrage Engine
+app.include_router(supply_chain_router.router)
+app.include_router(stripe_webhook.router)
 app.include_router(health_router.router)
 app.include_router(metrics_router.router)
 app.include_router(monitoring_router.router)
+app.include_router(factory_router.router)
 
-# Gallery
+# ── General public endpoints ──────────────────────────────────────────────────
 app.include_router(gallery_router.router)
 
 # Real-time chat (WebSocket + HTTP history/session endpoints)

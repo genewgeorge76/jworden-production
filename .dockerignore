@@ -1,0 +1,73 @@
+# Fly.io — only send the backend application code
+# Ignore everything that isn't needed to run the Python API
+
+# Frontend build artifacts and source
+node_modules/
+dist/
+public/
+
+# Exclude all of src/ EXCEPT the config files the backend needs
+src/
+!src/config/
+!src/config/siteFactoryManifest.json
+*.html
+*.jsx
+*.tsx
+*.ts
+*.css
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.avif
+*.webp
+*.mp4
+*.gif
+
+# Other repos and large directories
+jwordenai operation system/
+external-repos/
+jwordenasphaltpaving/
+blueridgeasphaltpaving/
+minnesotaasphaltpaving/
+atlantapavingandsealing/
+acarolinablacktop/
+obxpaving/
+atlantaasphaltpavingpros/
+asphaltpavingkansascity/
+michiganasphaltpavingpros/
+savannahasphaltpaving/
+
+# Dev tools and config
+.vite/
+.vite-cache/
+vite.config.*
+tailwind.config.*
+postcss.config.*
+eslint.config.*
+.eslintrc*
+.prettierrc*
+tsconfig*
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Local dev
+.env.local
+.env.vercel*
+.git/
+.github/
+*.log
+*.md
+*.sh
+scripts/
+
+# Vercel / Netlify deploy
+.vercel/
+.netlify/

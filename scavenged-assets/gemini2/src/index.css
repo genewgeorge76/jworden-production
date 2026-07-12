@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import "./styles/sovereign-2026.css";
+
+/* J. WORDEN & SONS - PREMIUM AUTHORITY STYLING
+   Version: 10.0 (Million Dollar Build)
+*/
+
+:root {
+  --jworden-dark: #121212;        /* Deep Industrial Charcoal */
+  --jworden-slate: #1e1e24;       /* Secondary Surface */
+  --jworden-gold: #ffd740;        /* Safety Gold Call-to-Action */
+  --jworden-white: #ffffff;       /* Premium Text */
+  --jworden-accent: #37474f;      /* Heavy Equipment Slate */
+}
+
+@theme {
+  --color-obsidian: #0a0a0c;
+  --color-empire-gold: #f0cc45;
+  --color-vdot-gray: #1f1f23;
+}
+
+@layer utilities {
+  .bg-glass { @apply bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]; }
+  .border-gold-glow { @apply border border-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.3)]; }
+  .text-glow { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+  .radar-sweep {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 65, 0.05) 50%, transparent 100%);
+    background-size: 100% 200%;
+    animation: radar 4s linear infinite;
+  }
+}
+
+@keyframes radar {
+  0% { background-position: 0% -100%; }
+  100% { background-position: 0% 100%; }
+}
+
+body {
+  background-color: var(--color-obsidian);
+  color: #f8fafc;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-image: radial-gradient(circle at 50% 0%, var(--color-vdot-gray) 0%, transparent 70%), linear-gradient(to bottom, transparent, var(--color-obsidian) 100%);
+  min-height: 100vh;
+  margin: 0;
+}
+
+@layer base {
+  body {
+    background-color: var(--jworden-dark);
+    color: var(--jworden-white);
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@keyframes ghost-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.15), inset 0 0 0 1px rgba(249, 115, 22, 0.08); }
+  50%       { box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.30), inset 0 0 0 1px rgba(239, 68, 68, 0.15); }
+}
+
+.ghost-protocol-panel {
+  animation: ghost-pulse 2.4s ease-in-out infinite;
+}
+
+
+/* ==============================================================
+   PREMIUM BLACK SYSTEM — v11 (SpaceX / Linear / Apple polish)
+   Layered onto the existing tokens above. Pure additions.
+   ============================================================== */
+
+@layer utilities {
+  /* The signature: deep obsidian with a soft radial vignette + faint warm core.
+     Use as: <main className="bg-premium-black"> ... */
+  .bg-premium-black {
+    background-color: transparent;
+    background-image: none;
+  }
+
+  /* Subtle film grain — applied via ::before on any container with .grain */
+  .grain { position: relative; }
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.012;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 240px 240px;
+    z-index: 1;
+  }
+
+  /* Hairline divider that sits over a grain layer without halo */
+  .hairline-t { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06); }
+  .hairline-b { box-shadow: inset 0 -1px 0 0 rgba(255, 255, 255, 0.06); }
+
+  /* Premium card surface used over a video/image backdrop */
+  .surface-glass {
+    background: linear-gradient(180deg, rgba(10, 10, 12, 0.55), rgba(5, 5, 7, 0.7));
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+      0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  }
+
+  /* The Linear/SpaceX style "lift on hover" */
+  .lift-hover { transition: transform 350ms cubic-bezier(.2,.7,.2,1), box-shadow 350ms cubic-bezier(.2,.7,.2,1), border-color 350ms ease; will-change: transform; }
+  .lift-hover:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+      0 30px 60px -25px rgba(0, 0, 0, 0.75),
+      0 0 0 1px rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  /* Pill button — primary (white on black) */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 9999px;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+    color: #050507; background: #fff;
+    transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease;
+    box-shadow: 0 12px 30px -12px rgba(255, 255, 255, 0.25);
+  }
+  .btn-primary:hover { background: #f1f1f3; transform: translateY(-1px); box-shadow: 0 18px 40px -12px rgba(255,255,255,0.35); }
+
+  /* Pill button — ghost */
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 9999px;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+    color: #fff; background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.4); transform: translateY(-1px); }
+
+  /* Eyebrow label used everywhere */
+  .eyebrow {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.32em;
+    text-transform: uppercase; color: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Section-edge top fade — emulates SpaceX's photographic stitch */
+  .edge-fade-top { mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 100%); }
+  .edge-fade-bot { mask-image: linear-gradient(180deg, #000 0%, #000 92%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 92%, transparent 100%); }
+}
+
+/* Override the default body background tint (above we set obsidian + radial gold).
+   Keep base body PURE deep black or Immersive theme bg. */
+body {
+  background-color: #020617 !important;
+  background-image: none !important;
+}
+
+/* Prefer-reduced-motion: kill backdrop fades + lift transitions */
+@media (prefers-reduced-motion: reduce) {
+  .lift-hover, .btn-primary, .btn-ghost { transition: none !important; transform: none !important; }
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > div:nth-of-type(1) > picture:nth-of-type(1) > img:nth-of-type(1) {
+  background-color: #e79930;
+}
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(1) > div:nth-of-type(1) {
+
+}
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > header:nth-of-type(1) > div:nth-of-type(1) {
+
+}
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(1) {
+
+}
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(1) > span:nth-of-type(1) {
+
+}

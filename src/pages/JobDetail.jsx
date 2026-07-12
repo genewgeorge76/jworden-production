@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '@/api/client';
-import { ArrowLeft, Mail, Loader2, Check, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Mail, Loader2, Check, AlertCircle, Upload, Image as ImageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import JobScopeMap from '@/components/JobScopeMap';
 
 export default function JobDetail() {
   const [searchParams] = useSearchParams();
@@ -13,6 +14,36 @@ export default function JobDetail() {
   const [loading, setLoading] = useState(true);
   const [sendingInvoice, setSendingInvoice] = useState(false);
   const [invoiceStatus, setInvoiceStatus] = useState(null);
+  
+  // Gallery state
+  const [uploadingPic, setUploadingPic] = useState(false);
+  
+  const handleMapSave = (updatedJob) => {
+    setJob(updatedJob);
+  };
+  
+  const handlePictureUpload = async () => {
+      const url = prompt("Enter image URL:");
+      if (!url) return;
+      setUploadingPic(true);
+      try {
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/jobs/${job.id}/pictures`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
+              },
+              body: JSON.stringify({ url, caption: "Uploaded from dashboard", type: "progress" })
+          });
+          if (res.ok) {
+              const updated = await res.json();
+              setJob(updated);
+          }
+      } catch(e) {
+          console.error(e);
+      }
+      setUploadingPic(false);
+  };
 
   useEffect(() => {
     if (!jobId) {
@@ -93,10 +124,43 @@ export default function JobDetail() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Diamond Style Mapbox Map at the top */}
+        <div className="mb-8">
+            <JobScopeMap job={job} onSave={handleMapSave} />
+        </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main details */}
           <div className="lg:col-span-2 space-y-6">
+            
+            {/* Photo Gallery */}
+            <div className="border border-border bg-card p-6 rounded-lg mb-6">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-display font-bold text-foreground text-lg uppercase tracking-wide flex items-center gap-2">
+                        <ImageIcon className="w-5 h-5 text-muted-foreground" />
+                        Site Gallery
+                    </h2>
+                    <button onClick={handlePictureUpload} disabled={uploadingPic} className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-secondary text-secondary-foreground px-3 py-1.5 rounded hover:bg-secondary/80">
+                        <Upload className="w-3 h-3" /> Add Photo
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {job.pictures_json && job.pictures_json.length > 0 ? (
+                        job.pictures_json.map((pic, i) => (
+                            <div key={i} className="relative group rounded-lg overflow-hidden border border-border aspect-video bg-muted">
+                                <img src={pic.url} alt={pic.caption} className="w-full h-full object-cover" />
+                                <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 transform translate-y-full group-hover:translate-y-0 transition-transform">
+                                    <p className="text-[10px] text-white truncate">{pic.caption}</p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-sm text-muted-foreground col-span-full">No pictures attached yet.</p>
+                    )}
+                </div>
+            </div>
+            
             {/* Status and dates */}
             <div className="border border-border bg-card p-6 rounded-lg">
               <h2 className="font-display font-bold text-foreground text-lg uppercase tracking-wide mb-4">

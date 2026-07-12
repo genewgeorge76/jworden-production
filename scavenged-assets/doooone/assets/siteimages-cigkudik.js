@@ -1,0 +1,1 @@
+const o={industrialWork:"/work/imported/va cars photos and videos for website/IMG_8838.JPG",concretePatio:"/work/imported/va cars photos and videos for website/IMG_8735.JPG",patioFinish:"/work/imported/va cars photos and videos for website/IMG_8839.JPG"};export{o as S};

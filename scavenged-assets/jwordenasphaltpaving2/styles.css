@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J. Worden & Sons Asphalt Paving | #1 Richmond & Central VA Legacy Paviors | (804) 446-1296</title>
+    <meta name="description" content="4th-generation asphalt paving experts serving Richmond (23221), Henrico, Chester, & 41 Central VA cities since 1984. Driveways, commercial lots, sealcoating. Supermax Quality.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AsphaltPavingService",
+      "name": "J. Worden & Sons Asphalt Paving",
+      "legalName": "J. Worden & Sons Paving LLC",
+      "foundingDate": "1984",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "1601 Ware Bottom Springs Rd, Suite 214",
+        "addressLocality": "Chester",
+        "addressRegion": "VA",
+        "postalCode": "23836",
+        "addressCountry": "US"
+      },
+      "geo": {"@type": "GeoCoordinates", "latitude": 37.3488, "longitude": -77.3875},
+      "telephone": "(804) 446-1296",
+      "priceRange": "$$",
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "07:00", "closes": "18:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "14:00" }
+      ],
+      "areaServed": ["Richmond", "Henrico", "Chesterfield", "Hanover", "Louisa", "Goochland", "Powhatan", "New Kent", "Williamsburg", "41 Central VA Cities"]
+    }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="supermax-paving">
+
+<header class="main-header">
+    <nav class="nav-container">
+        <div class="brand-block">
+            <span class="brand-name">J. Worden & Sons</span>
+            <span class="brand-tagline">4th-Generation Paving Authority • Est. 1984</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#areas">41 Cities</a></li>
+            <li><a href="#tracking">Live Tracking</a></li>
+            <li><a href="#contact" class="cta-pulse">Request Free Estimate</a></li>
+        </ul>
+        <a href="tel:+18044461296" class="header-phone">📞 (804) 446-1296</a>
+    </nav>
+</header>
+
+<section class="hero-supermax">
+    <div class="hero-content">
+        <h1>Richmond's Unrivaled Paving Legacy</h1>
+        <p>Premium Asphalt Installation & Maintenance Anchored to Central Virginia. Built for Longevity. Proven by Generations.</p>
+        <div class="hero-btns">
+            <a href="#contact" class="btn-ferrari">Schedule On-Site Estimate</a>
+            <a href="#gallery" class="btn-outline">View Master Portfolio</a>
+        </div>
+    </div>
+</section>
+
+<section class="henrico-impact">
+    <div class="content-limit">
+        <h2>Hyper-Local Mastery: Henrico & The West End</h2>
+        <p>Serving <strong>Short Pump, Glen Allen, Tuckahoe, Lakeside, and Varina</strong>. We navigate Henrico's complex soil and drainage patterns with precision paving infrastructure tailored for 23233, 23238, and beyond.</p>
+    </div>
+</section>
+
+<section id="services" class="services-elite">
+    <div class="grid-title"><h2>Supermax Paving Solutions</h2></div>
+    <div class="service-grid">
+        <div class="service-card">🛣️<h3>Asphalt Driveways</h3><p>Custom residential masterpieces designed to withstand Virginia's freeze-thaw cycles.</p></div>
+        <div class="service-card">🅿️<h3>Commercial Lots</h3><p>ADA-compliant construction for Richmond's business corridors (KFC, Retail, Industrial).</p></div>
+        <div class="service-card">🛡️<h3>Sealcoating</h3><p>Industrial-grade coal-tar and asphalt-based emulsions for maximum surface life.</p></div>
+        <div class="service-card">🪨<h3>Chip & Tar</h3><p>The premium choice for rural estates and private roads in Louisa and New Kent.</p></div>
+    </div>
+</section>
+
+<section id="areas" class="areas-saturation">
+    <h2>Dominating Central Virginia: 41 Cities Served</h2>
+    <div class="city-saturation-grid">
+        <a href="/richmond-va-asphalt-paving.html">Richmond 23221</a>
+        <a href="/chester-va-paving.html">Chester (HQ)</a>
+        <a href="/chesterfield-asphalt-paving.html">Chesterfield</a>
+        <a href="/henrico-asphalt-paving.html">Henrico</a>
+        <a href="/short-pump-asphalt-paving.html">Short Pump</a>
+        <a href="/glen-allen-asphalt-paving.html">Glen Allen</a>
+        <a href="/louisa-county-paving.html">Louisa</a>
+        <a href="/goochland-county-paving.html">Goochland</a>
+        <a href="/new-kent-asphalt-paving.html">New Kent</a>
+        <a href="/williamsburg-asphalt-paving.html">Williamsburg</a>
+        <a href="/ashland-va-asphalt-paving.html">Ashland</a>
+        </div>
+</section>
+
+<section id="contact" class="contact-max">
+    <form name="estimate-request" method="POST" data-netlify="true" class="form-premium">
+        <h2>Get Your Bulletproof Estimate</h2>
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="tel" name="phone" placeholder="Phone Number" required>
+        <select name="service">
+            <option>Asphalt Driveway</option>
+            <option>Commercial Parking Lot</option>
+            <option>Sealcoating / Repair</option>
+            <option>Chip & Tar (Rural)</option>
+        </select>
+        <textarea name="details" placeholder="Project Address & Details"></textarea>
+        <button type="submit" class="btn-submit">Submit Estimate Request →</button>
+    </form>
+</section>
+
+<footer class="main-footer">
+    <div class="footer-anchor">
+        <h3>J. Worden & Sons Asphalt Paving</h3>
+        <p class="address-hq">1601 Ware Bottom Springs Rd, Suite 214, Chester, VA 23836</p>
+        <p>Virginia Class A Contractor • Fully Licensed & Insured</p>
+        <p>© 2026 J. Worden & Sons. 4th-Generation Paving Authority.</p>
+    </div>
+</footer>
+
+</body>
+</html>

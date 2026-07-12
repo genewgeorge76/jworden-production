@@ -66,6 +66,9 @@ services:
     environment:
       DATABASE_URL: postgresql://jworden:jworden_dev_pass@db:5432/jworden_db
       REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_ORG_ID: ${OPENAI_ORG_ID}
+      OPENAI_WORKSPACE_ID: ${OPENAI_WORKSPACE_ID}
     volumes:
       - ./app:/app/app        # Hot-reload: mount app source directly
     command: >

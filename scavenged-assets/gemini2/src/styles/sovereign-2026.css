@@ -1,0 +1,8 @@
+/* src/styles/sovereign-2026.css */
+.dashboard-card {
+  background: rgba(22, 22, 24, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  /* Conic gradient for the 'Active Build' glow */
+  background: conic-gradient(from 180deg at 50% 50%, #161618 0deg, #D4AF37 360deg);
+}

@@ -1,0 +1,80 @@
+
+class EmailIngestRequest(BaseModel):
+    subject: str = Field(..., max_length=250)
+    body: str
+    from_email: str = Field(..., max_length=200)
+    from_name: Optional[str] = Field(default=None, max_length=150)
+    source_account: Optional[str] = Field(default="zapier_webhook", max_length=150)
+
+@router.post("/email-ingest", summary="Ingest lead from generic email/zapier")
+async def email_ingest(
+    req: EmailIngestRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+    """
+    Accepts a generic email payload (e.g. from Zapier), parses it with AI,
+    and converts it into a Lead in the CRM.
+    """
+    logger.info(f"Received inbound email lead from {req.from_email} to {req.source_account}")
+    
+    from ..services.email_intake import extract_lead_from_email
+    
+    # 1. Parse unstructured email into structured entities using GPT-4o
+    parsed = extract_lead_from_email(
+        subject=req.subject,
+        body=req.body,
+        from_email=req.from_email,
+        from_name=req.from_name or "Unknown Email Lead"
+    )
+    
+    # 2. Score the lead natively
+    scoring = score_lead(parsed)
+    
+    # 3. Create Lead in DB
+    db_lead = Lead(
+        name=parsed.get("name", "Unknown Email Lead"),
+        email=parsed.get("email", req.from_email),
+        phone=parsed.get("phone", "unknown"),
+        service_type=parsed.get("service_type", "paving"),
+        property_type=parsed.get("property_type", "residential"),
+        urgency=parsed.get("urgency", "flexible"),
+        project_size_sqft=parsed.get("project_size_sqft"),
+        address=parsed.get("address"),
+        state_code=normalize_state_code(parsed.get("state_code")),
+        message=f"[EMAIL LEAD via {req.source_account}] {parsed.get('message', req.body[:500])}",
+        score_value=scoring["score"],
+        score_label=scoring["label"],
+        score_priority=scoring["priority"],
+    )
+    
+    db.add(db_lead)
+    db.commit()
+    db.refresh(db_lead)
+    
+    # 4. Audit & Notifications
+    write_audit_event(
+        db,
+        event_type="lead.email_ingested",
+        actor_type="system",
+        actor_id="zapier_webhook",
+        entity_type="lead",
+        entity_id=db_lead.id,
+        summary=f"Inbound email lead automatically parsed. Score: {scoring['label']}",
+    )
+    
+    lead_data = {
+        **parsed, 
+        "db_id": db_lead.id, 
+        "score": scoring,
+        "type": "email_ingest"
+    }
+    background_tasks.add_task(send_lead_notification, lead_data)
+    
+    return {
+        "status": "success",
+        "message": "Email successfully ingested and parsed by AI.",
+        "lead_id": db_lead.id,
+        "score": scoring["label"],
+        "confidence": parsed.get("confidence", 0.0)
+    }

@@ -1,0 +1,74 @@
+/* J. Worden & Sons Premium Design System */
+:root { 
+    --gold: #D4AF37; 
+    --gold-hover: #B8962E; 
+    --black: #121212; 
+    --dark-grey: #1F1F1F; 
+    --light-grey: #E0E0E0; 
+    --white: #FFFFFF; 
+}
+
+body { 
+    font-family: 'Helvetica', sans-serif; 
+    background-color: var(--black); 
+    color: var(--white); 
+    line-height: 1.6; 
+    margin: 0; 
+}
+
+/* Premium Navigation */
+nav { 
+    background: rgba(18, 18, 18, 0.95); 
+    border-bottom: 1px solid var(--gold); 
+    padding: 20px; 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+nav a { 
+    color: var(--white); 
+    text-decoration: none; 
+    text-transform: uppercase; 
+    font-weight: 600; 
+    letter-spacing: 1px; 
+    margin-left: 20px; 
+    transition: 0.3s; 
+}
+
+nav a:hover { color: var(--gold); }
+
+/* High-Output Layouts */
+.section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+.card { 
+    background: var(--dark-grey); 
+    padding: 30px; 
+    border-radius: 8px; 
+    border-bottom: 3px solid transparent; 
+    transition: 0.3s; 
+}
+
+.card:hover { 
+    border-color: var(--gold); 
+    transform: translateY(-5px); 
+}
+
+.card h3 { color: var(--gold); margin-top: 0; }
+
+/* Global Typography */
+h1, h2, h3 { text-transform: uppercase; letter-spacing: 2px; }
+.text-gold { color: var(--gold); }
+
+/* Responsive Footer */
+footer { 
+    background: #000; 
+    padding: 40px 20px; 
+    text-align: center; 
+    border-top: 1px solid #333; 
+    font-size: 0.9rem; 
+}

@@ -1,0 +1,19 @@
+node_modules/
+.venv/
+external-repos/
+jwordenai/
+jwordenai operation system/
+jwordenasphaltpaving/
+blueridgeasphaltpaving/
+obx-paving/
+.git/
+.vercel/
+
+.runtime/
+test-results/
+scavenged-assets/
+jworden_leads.db
+lh-*.json
+trapped_logic_inventory.json
+scavenged-assets/**  
+jwordenai operation system/**  

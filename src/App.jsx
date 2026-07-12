@@ -13,17 +13,22 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import RouteLoader from '@/components/RouteLoader';
 import AdvisoryGate from '@/components/AdvisoryGate';
 import ChatWidget from '@/components/ChatWidget';
+import AIConciergeBubble from '@/components/AIConciergeBubble';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileCallBar from '@/components/MobileCallBar';
 import { publicAIPages, internalAIPages } from '@/generated/aiPageRegistry';
-import { resolveSiteProfile, SITE_ROUTE_MODES } from '@/lib/siteProfiles';
+import { SITE_ROUTE_MODES } from '@/lib/siteProfiles';
+import { TenantProvider, useTenant } from '@/lib/TenantContext';
 // Add programmatic SEO blog routes
 import { aiBlogRegistry } from '@/generated/aiBlogRegistry';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Home is eagerly loaded (it's the landing page — we want zero TTI delay).
 import Home from './pages/Home';
 import MarketLanding from './pages/MarketLanding';
+import EstimatePortal from './pages/EstimatePortal';
+import ApiDashboard from './pages/ApiDashboard';
 
 // All other pages are code-split so the initial bundle stays small.
 const LeadConsultant = lazy(() => import('./pages/LeadConsultant'));
@@ -53,6 +58,10 @@ const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
 const CommandCenter = lazy(() => import('./pages/CommandCenter'));
+const CockpitHome = lazy(() => import('./pages/CockpitHome'));
+const EstimatePage = lazy(() => import('./pages/EstimatePage'));
+const JarvisPage = lazy(() => import('./pages/JarvisPage'));
+const ScannerPage = lazy(() => import('./pages/ScannerPage'));
 const Visualizer = lazy(() => import('./pages/Visualizer'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const DnsMigration = lazy(() => import('./pages/DnsMigration'));
@@ -96,6 +105,7 @@ const AdvisoryTaxCompliance = lazy(() => import('./pages/advisory/TaxComplianceA
 const PrintableOnboardingPacket = lazy(() => import('./components/PrintableOnboardingPacket'));
 const AiPublicRelationsDept = lazy(() => import('./pages/AiPublicRelationsDept'));
 const WordenUniversity = lazy(() => import('./pages/WordenUniversity'));
+const WordenStandardHub = lazy(() => import('./pages/WordenStandardHub'));
 // Add page imports here
 
 // Initialise GA4 once — silently skipped when the measurement ID is not set.
@@ -119,9 +129,14 @@ const WORDEN_STANDARD_INTERNAL_PATHS = new Set([
   '/ai-public-relations',
 ]);
 
+import MarketingHome from './pages/MarketingHome';
+import Register from './pages/Register';
+import SuperAdmin from './pages/SuperAdmin';
+
 const LoadingSpinner = () => (
-  <div className="fixed inset-0 flex items-center justify-center">
-    <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+  <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="mt-4 text-foreground/70 font-mono text-sm tracking-widest animate-pulse uppercase">Booting The J. Worden Standard OS...</p>
   </div>
 );
 
@@ -218,14 +233,27 @@ const PublicLayout = ({ children }) => (
 
 const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
-  const siteProfile = resolveSiteProfile();
-  const routeMode = siteProfile.routeMode || SITE_ROUTE_MODES.FULL_SITE;
+  const tenant = useTenant();
+  const routeMode = tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE;
   const isMarketLandingSite = routeMode === SITE_ROUTE_MODES.MARKET_LANDING;
   const isOperationsSite = routeMode === SITE_ROUTE_MODES.OPERATIONS;
   const isUniversitySite = routeMode === SITE_ROUTE_MODES.UNIVERSITY;
 
-  const operationsHomeEntry = publicAIPages.find(({ path }) => path === '/');
-  const OperationsHome = operationsHomeEntry?.Component || Home;
+  const OperationsHome = () => (
+    <RequireAuth>
+      <ErrorBoundary
+        kicker="Cockpit Safe Mode"
+        title="Cockpit Recovered"
+        message="The operations cockpit hit an unexpected issue."
+        homeHref="/dashboard"
+        homeLabel="Open Dashboard"
+        secondaryHref="/"
+        secondaryLabel="Retry"
+      >
+        <CockpitHome />
+      </ErrorBoundary>
+    </RequireAuth>
+  );
 
   const filteredPublicAIPages = publicAIPages.filter(({ path }) => {
     if (path === '/') return false;
@@ -255,6 +283,8 @@ const AuthenticatedApp = () => {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<MarketLanding />} />
+          <Route path="/portal/:public_token" element={<EstimatePortal />} />
+          <Route path="/crew" element={<CrewFieldApp />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -273,11 +303,20 @@ const AuthenticatedApp = () => {
 
   return (
     <Suspense fallback={<RouteLoader />}>
+      <HelmetProvider>
       <Routes>
-        {/* Public */}
-        <Route path="/" element={isOperationsSite ? <OperationsHome /> : <Home />} />
-        <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-        <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+        {/* Public Operations / SaaS Routes */}
+        {isOperationsSite && <Route path="/super-admin" element={<SuperAdmin />} />}
+        {isOperationsSite && <Route path="/super-admin/apis" element={<ApiDashboard />} />}
+        {isOperationsSite && <Route path="/" element={<MarketingHome />} />}
+        {isOperationsSite && <Route path="/register" element={<Register />} />}
+        {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
+        {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
+
+        {/* Public Local Market Routes */}
+        {!isOperationsSite && <Route path="/" element={<Home />} />}
+        {!isOperationsSite && <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />}
+        {!isOperationsSite && <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />}
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
@@ -313,6 +352,7 @@ const AuthenticatedApp = () => {
         <Route path="/ai-research" element={<Navigate to="/blog" replace />} />
         <Route path="/general-contracting" element={<GeneralContracting />} />
         <Route path="/visualizer" element={<Visualizer />} />
+        <Route path="/worden-standard" element={<WordenStandardHub />} />
         <Route path="/floor-plan-studio" element={<FloorPlanStudio />} />
         <Route path="/cdl-application" element={<CandidatePortal />} />
         <Route path="/plans-inbox" element={<PlansInbox />} />
@@ -338,12 +378,30 @@ const AuthenticatedApp = () => {
           element={
             <RequireAuth>
               <ErrorBoundary
-                kicker="Command Center Safe Mode"
-                title="Command Center Recovered"
-                message="The Command Center hit an unexpected runtime issue. Your core owner dashboard and backend controls are still available."
+                kicker="Cockpit Safe Mode"
+                title="Cockpit Recovered"
+                message="The operations cockpit hit an unexpected issue."
                 homeHref="/dashboard"
                 homeLabel="Open Dashboard"
                 secondaryHref="/command-center"
+                secondaryLabel="Retry Cockpit"
+              >
+                <CockpitHome />
+              </ErrorBoundary>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/command-center/legacy"
+          element={
+            <RequireAuth>
+              <ErrorBoundary
+                kicker="Command Center Safe Mode"
+                title="Command Center Recovered"
+                message="The Command Center hit an unexpected runtime issue. Your core owner dashboard and backend controls are still available."
+                homeHref="/command-center"
+                homeLabel="Open Cockpit"
+                secondaryHref="/command-center/legacy"
                 secondaryLabel="Retry Command Center"
               >
                 <CommandCenter />
@@ -351,6 +409,9 @@ const AuthenticatedApp = () => {
             </RequireAuth>
           }
         />
+        <Route path="/estimate" element={<RequireAuth><EstimatePage /></RequireAuth>} />
+        <Route path="/jarvis" element={<RequireAuth><JarvisPage /></RequireAuth>} />
+        <Route path="/scanner" element={<RequireAuth><ScannerPage /></RequireAuth>} />
         <Route path="/virginia-statewide" element={<RequireAuth><VirginiaStatewide /></RequireAuth>} />
         <Route path="/autonomy" element={<RequireAuth><AutonomyDashboard /></RequireAuth>} />
         <Route path="/contractor-ai" element={<RequireAuth><ContractorAIPlatform /></RequireAuth>} />
@@ -409,29 +470,40 @@ const AuthenticatedApp = () => {
         />
 
         <Route path="/staff" element={<StaffPortal />} />
+        <Route path="/portal/:public_token" element={<EstimatePortal />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+      </HelmetProvider>
     </Suspense>
   );
 };
 
 
-function App() {
-  const siteProfile = resolveSiteProfile();
-  const shouldRenderChatWidget = Boolean(siteProfile.enableChatWidget);
+function AppContent() {
+  const tenant = useTenant();
+  const shouldRenderChatWidget = Boolean(tenant?.enableChatWidget);
 
   return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClientInstance}>
+        <Router>
+          <AuthenticatedApp />
+          <MobileCallBar />
+          {shouldRenderChatWidget ? <ChatWidget /> : null}
+          <AIConciergeBubble />
+        </Router>
+        <Toaster />
+      </QueryClientProvider>
+    </AuthProvider>
+  );
+}
+
+function App() {
+  return (
     <ErrorBoundary>
-      <AuthProvider>
-        <QueryClientProvider client={queryClientInstance}>
-          <Router>
-            <AuthenticatedApp />
-            <MobileCallBar />
-            {shouldRenderChatWidget ? <ChatWidget /> : null}
-          </Router>
-          <Toaster />
-        </QueryClientProvider>
-      </AuthProvider>
+      <TenantProvider>
+        <AppContent />
+      </TenantProvider>
     </ErrorBoundary>
   )
 }

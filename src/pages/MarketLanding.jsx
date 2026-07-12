@@ -2,7 +2,7 @@ import React from 'react'
 import { ArrowRight, CheckCircle2, Phone, ShieldCheck, Snowflake } from 'lucide-react'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
-import { resolveSiteProfile } from '@/lib/siteProfiles'
+import { useTenant } from '@/lib/TenantContext'
 
 const DEFAULT_MARKET_CONTENT = {
   marketName: 'Local Asphalt Paving',
@@ -66,10 +66,10 @@ function toTelHref(phoneDisplay) {
 }
 
 export default function MarketLanding() {
-  const siteProfile = resolveSiteProfile()
+  const tenant = useTenant()
   const market = {
     ...DEFAULT_MARKET_CONTENT,
-    ...(siteProfile.market || {}),
+    ...(tenant?.market || {}),
   }
 
   const phoneDisplay = market.phoneDisplay || DEFAULT_MARKET_CONTENT.phoneDisplay
@@ -89,7 +89,7 @@ export default function MarketLanding() {
           name: market.primaryRegion,
         },
         telephone: `+1${String(phoneDisplay || '').replace(/\D/g, '') || '8044461296'}`,
-        url: siteProfile.canonicalUrl,
+        url: tenant?.canonicalUrl || 'https://www.thewordenstandard.com',
       },
       {
         '@type': 'Service',
@@ -97,7 +97,7 @@ export default function MarketLanding() {
         provider: {
           '@type': 'Organization',
           name: market.marketName,
-          url: siteProfile.canonicalUrl,
+          url: tenant?.canonicalUrl || 'https://www.thewordenstandard.com',
         },
         areaServed: {
           '@type': 'AdministrativeArea',
@@ -214,7 +214,7 @@ export default function MarketLanding() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {PROOF_IMAGES.map((item) => (
+              {(market.proofImages || PROOF_IMAGES).map((item) => (
                 <article key={item.id} className="border border-border bg-card overflow-hidden">
                   <img
                     src={item.src}

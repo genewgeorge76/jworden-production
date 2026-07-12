@@ -1,11 +1,8 @@
-import siteFactoryManifest from '@/config/siteFactoryManifest.json'
-
-const FALLBACK_API_BASE = 'https://codexbuildfreeofbase44-production.up.railway.app'
+const FALLBACK_API_BASE = 'https://jworden-api.fly.dev'
 const FALLBACK_UNIVERSITY_ENDPOINT = `${FALLBACK_API_BASE}/api/worden-university/contract`
 
-const integration = siteFactoryManifest?.integration || {}
-const canonicalBackend = integration.canonicalBackend || {}
-const sharedContract = integration.sharedContract || {}
+const canonicalBackend = {}
+const sharedContract = {}
 
 const normalizeUrl = (value, fallback = '') => {
   const safe = String(value || fallback || '').trim()
@@ -36,9 +33,9 @@ export const repoAliases = Object.freeze(
   ),
 )
 
-export const integrationSurfaces = Object.freeze(Array.isArray(integration.surfaces) ? integration.surfaces : [])
-export const integrationDataSources = Object.freeze(integration.dataSources || {})
-export const integrationLegacyAssets = Object.freeze(integration.legacyAssets || {})
+export const integrationSurfaces = []
+export const integrationDataSources = {}
+export const integrationLegacyAssets = {}
 
 export const sharedAllowedOrigins = Object.freeze(
   Array.from(

@@ -1,5 +1,6 @@
 import { Helmet, HelmetData } from 'react-helmet-async'
 import { SITE_URL } from '../lib/schemas'
+import { useTenant } from '../lib/TenantContext'
 
 // Re-export schema helpers so existing page imports still work via this path.
 export {
@@ -42,8 +43,13 @@ export default function SchemaMarkup({
   breadcrumb,
   noindex = false,
 }) {
-  const fullTitle = `${title} | J. Worden & Sons Paving LLC`
-  const canonicalUrl = `${SITE_URL}${canonical}`
+  const tenant = useTenant()
+  const currentSiteUrl = tenant?.canonicalUrl || SITE_URL
+  const brandName = tenant?.market?.marketName || tenant?.label || 'J. Worden & Sons Paving LLC'
+
+  const fullTitle = `${title} | ${brandName}`
+  const canonicalUrl = `${currentSiteUrl}${canonical}`
+  const resolvedImage = image.startsWith('http') ? image : `${currentSiteUrl}${image.replace(SITE_URL, '')}`
 
   const schemas = []
 
@@ -62,10 +68,22 @@ export default function SchemaMarkup({
         '@type': 'ListItem',
         position: idx + 1,
         name: item.name,
-        item: `${SITE_URL}${item.path}`,
+        item: `${currentSiteUrl}${item.path}`,
       })),
     })
   }
+
+  // Dynamically rewrite hardcoded URLs and Brand Names in static schemas
+  const rewrittenSchemas = schemas.map(s => {
+    let str = JSON.stringify(s)
+    // Replace hardcoded canonical URL with the actual domain
+    str = str.replace(new RegExp(SITE_URL, 'g'), currentSiteUrl)
+    // Replace hardcoded brand name if this domain has a custom profile
+    if (brandName !== 'J. Worden & Sons Paving LLC') {
+      str = str.replace(/J\. Worden & Sons Paving LLC/g, brandName)
+    }
+    return JSON.parse(str)
+  })
 
   return (
     <Helmet helmetData={standaloneHelmetData}>
@@ -82,8 +100,8 @@ export default function SchemaMarkup({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="J. Worden & Sons Paving LLC" />
+      <meta property="og:image" content={resolvedImage} />
+      <meta property="og:site_name" content={brandName} />
       <meta property="og:locale" content="en_US" />
 
       {/* Twitter Card */}
@@ -91,10 +109,10 @@ export default function SchemaMarkup({
       <meta name="twitter:site" content="@JWordenSons" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={resolvedImage} />
 
       {/* JSON-LD blocks */}
-      {schemas.map((s, i) => (
+      {rewrittenSchemas.map((s, i) => (
         <script key={i} type="application/ld+json">
           {JSON.stringify(s)}
         </script>

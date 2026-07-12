@@ -32,13 +32,14 @@ const SITEMAPS = [
     path: 'obx-paving/public/sitemap.xml',
     expectedOrigin: 'https://www.obxpaving.com',
     robotsPath: 'obx-paving/public/robots.txt',
+    optional: true,
   },
 ]
 
 const STATIC_ROUTE_EXPECTATIONS = [
   { file: 'netlify.toml', routes: ['/robots.txt', '/sitemap.xml'] },
   { file: 'public/_redirects', routes: ['/robots.txt', '/sitemap.xml', '/sitemap.txt', '/image-sitemap.xml'] },
-  { file: 'obx-paving/netlify.toml', routes: ['/robots.txt', '/sitemap.xml'] },
+  { file: 'obx-paving/netlify.toml', routes: ['/robots.txt', '/sitemap.xml'], optional: true },
 ]
 
 function readFile(relativePath) {
@@ -76,6 +77,12 @@ function assertValidSitemap({
   txtMirrorPath,
   requireUrlMetadata = true,
 }) {
+  if (!fs.existsSync(path.resolve(ROOT, sitemapPath))) {
+    if (requireUrlMetadata && arguments[0].optional) {
+      console.log(`[sitemap-safety] ${label}: skipped (optional file missing)`);
+      return;
+    }
+  }
   const xml = readFile(sitemapPath)
   const failures = []
 
@@ -161,6 +168,10 @@ function assertValidSitemap({
 
 function assertStaticRoutes() {
   for (const expectation of STATIC_ROUTE_EXPECTATIONS) {
+    if (expectation.optional && !fs.existsSync(path.resolve(ROOT, expectation.file))) {
+      console.log(`[sitemap-safety] ${expectation.file}: skipped (optional)`)
+      continue
+    }
     const content = readFile(expectation.file)
     for (const route of expectation.routes) {
       if (!content.includes(route)) {

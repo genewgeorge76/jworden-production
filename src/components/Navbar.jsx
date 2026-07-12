@@ -6,12 +6,12 @@ import { PRIMARY_LOGO_URL } from '@/lib/branding';
 
 const NAV_LINKS = [
   { label: 'Paving', href: '/paving' },
-  { label: 'Sealcoating', href: '/sealcoating' },
+  { label: 'Visualizer', href: '/visualizer' },
+  { label: 'Worden Standard', href: '/worden-standard' },
   { label: 'Commercial', href: '/parking-lots' },
   { label: 'Hardscapes', href: '/hardscapes' },
   { label: 'GC', href: '/general-contracting' },
   { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
   { label: 'Reviews', href: '/reviews' },
   { label: 'Contact', href: '/contact' },
 ];

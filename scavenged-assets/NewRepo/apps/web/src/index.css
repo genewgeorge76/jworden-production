@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────────────────── */
+:root {
+  --color-brand-black:  #0a0a0a;
+  --color-brand-yellow: #f5a623;
+  --color-brand-gray:   #1c1c1e;
+  --color-brand-zinc:   #3f3f46;
+  --color-text-primary: #f4f4f5;
+  --color-text-muted:   #a1a1aa;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', monospace;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-brand-black);
+  color: var(--color-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Focus ring ────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--color-brand-zinc); border-radius: 2px; }
+
+/* ── Selection ─────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(245, 166, 35, 0.25);
+  color: var(--color-text-primary);
+}
+
+/* ── Leaflet map fix ──────────────────────────────────────────────── */
+.leaflet-container { z-index: 0; }

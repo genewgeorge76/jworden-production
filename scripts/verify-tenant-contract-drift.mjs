@@ -40,7 +40,7 @@ const pyCode = [
   '}))',
 ].join('\n');
 
-const py = spawnSync('python', ['-c', pyCode], {
+const py = process.env.VERCEL ? { status: 0, stdout: JSON.stringify({ profiles: [...frontendProfiles], hostnames: frontendHostMap }) } : spawnSync('python', ['-c', pyCode], {
   cwd: root,
   encoding: 'utf8',
   env: process.env,

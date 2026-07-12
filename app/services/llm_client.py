@@ -68,22 +68,22 @@ logger = logging.getLogger(__name__)
 
 _ROUTES: dict[str, list[tuple[str, str]]] = {
     # task             provider_chain (provider, model)
-    "jarvis":          [("anthropic", "claude-sonnet-4-6"),   ("openai", "gpt-4o"),               ("xai", "grok-4"),                  ("google", "gemini-2.5-pro"),        ("anthropic", "claude-opus-4-6")],
-    "jarvis_fast":     [("openai", "gpt-4o-mini"),            ("anthropic", "claude-sonnet-4-6"), ("xai", "grok-4"),                  ("google", "gemini-2.5-pro"),        ("openai", "gpt-4o")],
-    "reasoning":       [("anthropic", "claude-sonnet-4-6"),   ("openai", "gpt-4o")],
-    "persona":         [("anthropic", "claude-sonnet-4-6"),   ("openai", "gpt-4o")],
-    "proposal":        [("anthropic", "claude-sonnet-4-6"),   ("openai", "gpt-4o")],
-    "review_reply":    [("anthropic", "claude-sonnet-4-6"),   ("openai", "gpt-4o")],
-    "legal":           [("anthropic", "claude-opus-4-6"),     ("anthropic", "claude-sonnet-4-6"), ("openai", "gpt-4o")],
-    "vision":          [("openai", "gpt-4o"),                 ("google", "gemini-2.5-pro")],
-    "math":            [("google", "gemini-2.5-pro"),         ("anthropic", "claude-sonnet-4-6"), ("openai", "gpt-4o")],
-    "long_context":    [("google", "gemini-2.5-pro"),         ("anthropic", "claude-sonnet-4-6")],
-    "web_research":    [("perplexity", "sonar-pro"),          ("openai", "gpt-4o")],
-    "social_signal":   [("xai", "grok-4")],
-    "fast":            [("openai", "gpt-4o-mini"),            ("anthropic", "claude-haiku-4-5-20251001")],
-    "classification":  [("openai", "gpt-4o-mini"),            ("anthropic", "claude-haiku-4-5-20251001")],
-    "analytics":       [("anthropic", "claude-sonnet-4-6"),   ("openai", "gpt-4o")],
-    "city_authority":  [("google", "gemini-2.5-flash"),       ("openai", "gpt-4o")],
+    "jarvis":          [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6"), ("openai", "gpt-4o")],
+    "jarvis_fast":     [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "reasoning":       [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "persona":         [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "proposal":        [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "review_reply":    [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "analytics":       [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "legal":           [("anthropic", "claude-opus-4-6"),     ("openai", "gpt-5.6-turbo")],
+    "vision":          [("openai", "gpt-4o"),                 ("google", "gemini-2.5-pro"),       ("openai", "gpt-5.6-turbo")],
+    "math":            [("google", "gemini-2.5-pro"),         ("openai", "gpt-5.6-turbo")],
+    "long_context":    [("google", "gemini-2.5-pro"),         ("openai", "gpt-5.6-turbo")],
+    "web_research":    [("perplexity", "sonar-pro"),          ("openai", "gpt-5.6-turbo")],
+    "social_signal":   [("xai", "grok-4"),                    ("openai", "gpt-5.6-turbo")],
+    "fast":            [("openai", "gpt-4o-mini"),            ("openai", "gpt-5.6-turbo")],
+    "classification":  [("openai", "gpt-5.6-turbo"),          ("openai", "gpt-4o-mini")],
+    "city_authority":  [("google", "gemini-2.5-flash"),       ("openai", "gpt-5.6-turbo")],
 }
 
 _DEFAULT_TASK = "reasoning"
