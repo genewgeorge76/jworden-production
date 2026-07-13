@@ -15,12 +15,14 @@ POST /api/v1/leads/quote customer-facing endpoint).
   Base rehab markup:  1.4×         (Structural failure / alligator cracking)
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import PavingEvaluation  # noqa: PLC0415
+from ..services import margin_engine
 
 router = APIRouter(
     prefix="/api/v1/quotes",
@@ -44,6 +46,10 @@ _DAMAGE_NEEDS_BASE_REHAB: frozenset[str] = frozenset({"alligator_cracking"})
 def generate_automated_quote(
     evaluation_id: int,
     db: Session = Depends(get_db),
+    margin_mode: str = Query(
+        "worden",
+        description="'worden' = flat 35% margin floor, 'dynamic' = job-size-tiered margin.",
+    ),
 ) -> dict:
     """
     Generate a priced asphalt quote from an existing PavingEvaluation record.
@@ -54,6 +60,10 @@ def generate_automated_quote(
     - A $850 minimum is enforced to ensure project profitability.
     - All quotes are valid for 7 days (liquid asphalt market volatility).
     - All jobs quoted to VDOT 6-inch base standards.
+
+    `margin_mode` additionally computes the internal contractor bid range
+    (see `app/services/margin_engine.py`) — this is the actual number to
+    bid at, distinct from `estimated_total` which is the raw market cost.
     """
     eval_record = (
         db.query(PavingEvaluation)
@@ -75,6 +85,14 @@ def generate_automated_quote(
     subtotal    = eval_record.calculated_sqft * unit_price
     final_total = max(subtotal, _VA_PRICE_PER_SQFT["patching_min"])
 
+    contractor_bid = margin_engine.compute_contractor_bid(
+        cost_low=final_total,
+        cost_high=final_total,
+        margin_mode=margin_mode,
+        project_size_sqft=eval_record.calculated_sqft or 0,
+        service_type="general_contracting" if needs_base_rehab else "paving",
+    )
+
     return {
         "quote_id":            f"JW-{evaluation_id}",
         "evaluation_id":       evaluation_id,
@@ -90,4 +108,8 @@ def generate_automated_quote(
         "minimum_applied":     subtotal < _VA_PRICE_PER_SQFT["patching_min"],
         "valid_until":         "7 Days (Due to liquid asphalt market volatility)",
         "virginia_compliance": "Includes VDOT 6-inch base standards",
+        "margin_mode":          contractor_bid["margin_mode"],
+        "margin":                contractor_bid["margin"],
+        "margin_pct":            contractor_bid["margin_pct"],
+        "contractor_bid":        contractor_bid["contractor_bid_low"],
     }
