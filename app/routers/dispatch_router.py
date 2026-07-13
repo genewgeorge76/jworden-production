@@ -14,6 +14,7 @@ Endpoints (admin-auth gated, hidden from public OpenAPI):
     POST /api/v1/admin/dispatch/jobs
     DELETE /api/v1/admin/dispatch/jobs/{id}
     GET  /api/v1/admin/dispatch/assign/{job_id}
+    POST /api/v1/admin/dispatch/auto-schedule/{job_id}  — Foreman AI: weather + crew auto-assign
 """
 
 from __future__ import annotations
@@ -137,5 +138,18 @@ async def reschedule_job(rid: str, payload: dict = Body(...), _owner: str = Depe
 async def assign(job_id: str, _owner: str = Depends(_require_owner)):
     try:
         return await dispatch_engine.assign(job_id)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.post("/auto-schedule/{job_id}")
+async def auto_schedule(job_id: str, _owner: str = Depends(_require_owner)):
+    """
+    Foreman AI: approve a job for auto-dispatch. Finds the next paving-suitable
+    weather window for the job's address and assigns the top-ranked truck+driver
+    to it in one step. See dispatch_engine.auto_schedule() for the full logic.
+    """
+    try:
+        return await dispatch_engine.auto_schedule(job_id)
     except KeyError as e:
         raise HTTPException(status_code=404, detail=str(e))

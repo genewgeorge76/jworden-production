@@ -39,6 +39,7 @@ import httpx
 
 from . import runtime_config
 from . import vapi_caller
+from . import weather_service
 
 logger = logging.getLogger(__name__)
 
@@ -386,6 +387,68 @@ async def assign(job_id: str) -> dict:
         })
     ranked.sort(key=lambda r: r["score"], reverse=True)
     return {"job": job, "ranked": ranked, "ts": int(time.time())}
+
+
+async def auto_schedule(job_id: str) -> dict:
+    """
+    Foreman AI: given a job with an address, find the next paving-suitable
+    weather window and auto-assign the top-ranked truck+driver to it.
+
+    Wires together three previously-unconnected pieces:
+      weather_service.get_paving_forecast()  → next_optimal_window
+      assign()                               → best truck/driver pair
+      reschedule_job()                       → persists the assignment
+
+    Returns
+    -------
+    {
+        "job":            dict,       # updated job row
+        "scheduled_date": str | None, # next_optimal_window used, or None if no window found
+        "weather":        dict,       # the forecast summary used for the decision
+        "assignment":     dict | None,# {truck, driver, score, ...} or None if no crew available
+        "auto_scheduled": bool,       # True only if a window AND a crew were both found
+    }
+    """
+    with _LOCK:
+        data = _load()
+        job = data["jobs"].get(job_id)
+        if not job:
+            raise KeyError(f"job {job_id} not found")
+        address = job.get("address")
+
+    if not address:
+        return {
+            "job": job, "scheduled_date": None,
+            "weather": {"recommendation": "Job has no address — cannot forecast weather."},
+            "assignment": None, "auto_scheduled": False,
+        }
+
+    forecast = weather_service.get_paving_forecast(address)
+    next_window = forecast.get("next_optimal_window")
+
+    ranked = (await assign(job_id))["ranked"]
+    top = ranked[0] if ranked else None
+
+    if not next_window or not top or not top.get("truck"):
+        return {
+            "job": job, "scheduled_date": next_window,
+            "weather": forecast, "assignment": top, "auto_scheduled": False,
+        }
+
+    reschedule_payload = {
+        "scheduled_start": f"{next_window} 07:00",
+        "assigned_truck_id": top["truck"]["id"],
+        "status": "scheduled",
+    }
+    if top.get("driver"):
+        reschedule_payload["assigned_driver_id"] = top["driver"]["id"]
+
+    result = await reschedule_job(job_id, reschedule_payload)
+
+    return {
+        "job": result["job"], "scheduled_date": next_window,
+        "weather": forecast, "assignment": top, "auto_scheduled": True,
+    }
 
 
 def snapshot() -> dict:
