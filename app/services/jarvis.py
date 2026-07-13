@@ -18,6 +18,8 @@ from app.services import action_planner as _planner
 from app.services import safe_runner as _runner
 from app.services import short_memory
 from app.services import state_data as _state_data
+from app.services import pricing as _pricing
+from app.services import margin_engine as _margin
 from app.services.jarvis_access import (
     ROLE_OWNER_ROOT,
     ROLE_PUBLIC_CONCIERGE,
@@ -46,6 +48,9 @@ JARVIS_SYSTEM_PROMPT = (
     "When the operator asks you to call a phone number, USE the make_phone_call tool — "
     "never claim you've called without invoking it. "
     "When the operator asks you to send an email or 'email me X', USE the send_email tool. "
+    "When staff/owner asks for a priced estimate or bid on a job, USE the generate_estimate tool "
+    "rather than guessing numbers — it returns both the public market-cost range and the actual "
+    "contractor bid at margin. Never state a contractor_bid figure to a public-facing customer. "
     "Default the recipient to j.wordenandsonspaving@gmail.com unless told otherwise. "
     "For legal/compliance/licensing/civil/criminal questions, treat outputs as advisory guidance, "
     "not legal advice, and clearly recommend jurisdiction-specific verification. "
@@ -111,6 +116,38 @@ JARVIS_TOOLS = [
         },
     },
     {
+        "name": "generate_estimate",
+        "description": (
+            "Generate a priced contractor estimate for a paving/construction service. "
+            "Returns both the public ballpark market-cost range AND the internal "
+            "contractor bid at the requested margin (Worden Standard 35% floor, or "
+            "dynamic job-size-tiered margin). Staff/owner only — never expose the "
+            "contractor_bid figures to a public-facing customer conversation."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "service_type": {
+                    "type": "string",
+                    "description": (
+                        "One of: paving, sealcoating, crackfill, parking_lot, driveway, "
+                        "maintenance, general_contracting, interior_design, cobblestone_pavers, "
+                        "stone_masonry, new_construction_residential, addition, adu, "
+                        "commercial_build, concrete, drone_survey, civil_site_work"
+                    ),
+                },
+                "property_type": {"type": "string", "description": "'residential' or 'commercial'"},
+                "project_size_sqft": {"type": "number", "description": "Project size in square feet"},
+                "state_code": {"type": "string", "description": "2-letter state code for regional pricing, e.g. 'VA'"},
+                "margin_mode": {
+                    "type": "string",
+                    "description": "'worden' (flat 35% floor, default) or 'dynamic' (job-size-tiered margin)",
+                },
+            },
+            "required": ["service_type", "project_size_sqft"],
+        },
+    },
+    {
         "name": "plan_actions",
         "description": "Create a small action plan from natural language (non-destructive).",
         "input_schema": {
@@ -159,7 +196,7 @@ JARVIS_TOOLS = [
 _SENSITIVE_TOOL_NAMES = {"make_phone_call", "send_email", "run_npm"}
 _ROLE_TOOLS: dict[str, set[str]] = {
     ROLE_PUBLIC_CONCIERGE: {"web_search"},
-    ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm"},
+    ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm", "generate_estimate"},
     ROLE_OWNER_ROOT: {t["name"] for t in JARVIS_TOOLS},
 }
 
@@ -485,6 +522,23 @@ async def _run_tool(
         if not script:
             return _finalize({"ok": False, "error": "no script provided"})
         return _finalize(_runner.run_npm_script(script))
+    if name == "generate_estimate":
+        service_type = (args.get("service_type") or "").strip()
+        property_type = (args.get("property_type") or "residential").strip()
+        sqft = float(args.get("project_size_sqft") or 0)
+        state_code = args.get("state_code")
+        margin_mode = (args.get("margin_mode") or "worden").strip()
+        try:
+            cost_range = _pricing.estimate_price(service_type, property_type, sqft, state_code=state_code)
+            if cost_range is None:
+                return _finalize({"ok": False, "error": f"Unrecognized service_type '{service_type}' or invalid project_size_sqft"})
+            contractor_bid = _margin.compute_contractor_bid(
+                cost_low=cost_range["low_usd"], cost_high=cost_range["high_usd"],
+                margin_mode=margin_mode, project_size_sqft=sqft, service_type=service_type,
+            )
+            return _finalize({"ok": True, "market_cost_range": cost_range, "contractor_bid": contractor_bid})
+        except Exception as exc:
+            return _finalize({"ok": False, "error": str(exc)})
     if name == "plan_actions":
         q = args.get("query") or ""
         plan = _planner.plan(q, {"run_npm": True, "code_search": True, "open_file": True})
