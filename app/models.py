@@ -1690,6 +1690,46 @@ class VdotBid(Base):
         )
 
 
+# ── Commercial RFP Hunter (B2B Neural Hunter) ────────────────────────────────
+
+
+class CommercialRfpLead(Base):
+    """
+    Commercial RFP/bid opportunity discovered by the B2B Neural Hunter
+    (general multi-state web search via Exa, complementing the
+    Virginia-only VDOT bid board scraper above).
+
+    Fields:
+      title          — Project/RFP title as returned by the search provider
+      url            — Source URL
+      source_domain  — Host domain of `url` (e.g. "sam.gov"), for dedup/filtering
+      query          — The search query that surfaced this result
+      published_date — Publication date if the provider supplied one (nullable)
+      summary        — Short excerpt/summary from the search provider
+      status         — "new" | "reviewed" | "pushed_to_pipeline" | "dismissed"
+      provider       — "exa" | "stub"
+      tenant_id      — Multi-tenant isolation key
+    """
+
+    __tablename__ = "commercial_rfp_leads"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(400), nullable=False)
+    url = Column(String(1000), nullable=False, unique=True, index=True)
+    source_domain = Column(String(200), nullable=True, index=True)
+    query = Column(String(300), nullable=True)
+    published_date = Column(DateTime(timezone=True), nullable=True)
+    summary = Column(Text, nullable=True)
+    status = Column(String(30), nullable=False, default="new", index=True)
+    provider = Column(String(20), nullable=True)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    scraped_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<CommercialRfpLead id={self.id} title={self.title!r} status={self.status!r}>"
+
+
 # ── Paving Site Evaluation ───────────────────────────────────────────────────
 
 

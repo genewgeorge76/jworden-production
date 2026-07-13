@@ -51,6 +51,9 @@
 #   GET  /api/v1/permits/*             — permit tracking
 #   GET  /api/v1/takeoff/*             — project takeoff
 #   GET  /api/v1/weather/*             — weather scheduling (internal)
+#   POST /api/v1/quotes/generate/{id}  — internal priced quote + contractor margin
+#   GET  /api/v1/vdot-bids/*           — VDOT bid board (Virginia-only)
+#   POST/GET /api/v1/rfp-hunter/*      — B2B Neural Hunter: commercial RFP search (Exa)
 #   GET  /api/v1/geo/*                 — geospatial data
 #   GET  /api/v1/igrade/*              — grading/inspection
 #   GET  /api/v1/customers/*           — customer management
@@ -64,6 +67,8 @@
 #
 # ADMIN ENDPOINTS (require HTTP Basic auth):
 #   GET  /admin/*                      — admin dashboard (HTTP Basic)
+#   */api/v1/admin/dispatch/*          — dump-truck dispatch incl. Foreman AI
+#                                         auto-schedule (weather + crew, HTTP Basic, hidden from OpenAPI)
 # ─────────────────────────────────────────────────────────────────────────────
 
 import logging
@@ -294,6 +299,7 @@ from .routers import public_chat as public_chat_router
 from .routers import quotes as quotes_router
 from .routers import retrospectives as retrospectives_router
 from .routers import revenue as revenue_router
+from .routers import rfp_hunter_router
 from .routers import safety as safety_router
 from .routers import scaling as scaling_router
 from .routers import scc as scc_router
@@ -625,6 +631,7 @@ app.include_router(spatial_ai_router.catalog_router)
 # Statewide intelligence: SCC entity verification + VDOT bid board
 app.include_router(scc_router.router)
 app.include_router(vdot_bids_router.router)
+app.include_router(rfp_hunter_router.router)
 
 # Level 4 Autonomous Intelligence
 app.include_router(autonomy_router.router)
