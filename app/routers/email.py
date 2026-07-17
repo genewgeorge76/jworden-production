@@ -13,7 +13,7 @@ All routes require premium security (bearer token or master key).
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 
@@ -73,30 +73,28 @@ class SyncResponse(BaseModel):
 
 @router.post(
     "/sync",
-    response_model=SyncResponse,
     summary="Trigger IMAP sync of 5 Gmail accounts (admin only)",
 )
 @limiter.limit("5/minute")
 async def trigger_email_sync(
     request: Request,
+    background_tasks: BackgroundTasks,
     _: dict = Depends(verify_premium_security),
 ):
     """
-    Connects to the 5 configured Gmail IMAP accounts, fetches UNSEEN emails,
-    parses them using GPT-4o, creates new Leads, and sends admin notifications.
+    Fires the IMAP email sync in the background and returns immediately.
+    Prevents 502 timeouts when syncing hundreds of emails with GPT-4o analysis.
     """
-    logger.info("Triggering IMAP email sync from API...")
-    results = sync_gmail_accounts()
-    
-    # We always return 200 with the stats, even if some accounts failed
-    return SyncResponse(
-        status="ok" if not results["errors"] else "partial_error",
-        accounts_processed=results["accounts_processed"],
-        accounts_skipped=results["accounts_skipped"],
-        emails_read=results["emails_read"],
-        leads_created=results["leads_created"],
-        errors=results["errors"],
-    )
+    def _run_sync():
+        try:
+            results = sync_gmail_accounts()
+            logger.info("Background email sync complete: %s", results)
+        except Exception as exc:
+            logger.error("Background email sync failed: %s", exc, exc_info=True)
+
+    background_tasks.add_task(_run_sync)
+    logger.info("Email sync triggered in background via API")
+    return {"status": "started", "message": "Email sync is running in the background. Check the Inbox Triage panel in ~60 seconds."}
 
 @router.post(
     "/send-test",
