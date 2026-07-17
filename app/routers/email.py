@@ -20,13 +20,14 @@ from sqlalchemy.orm import Session
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..database import get_db
-from ..models import Lead
+from ..models import Lead, InboxMessage
 from ..services.email_service import (
     send_quote_confirmation,
     send_admin_notification,
     send_raw,
 )
 from ..services.email_templates import TEMPLATE_REGISTRY
+from ..services.email_sync import sync_gmail_accounts
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,43 @@ class ResendResponse(BaseModel):
     message: str
 
 
+class SyncResponse(BaseModel):
+    status: str
+    accounts_processed: int
+    accounts_skipped: int
+    emails_read: int
+    leads_created: int
+    errors: list[str]
+
+
 # ── Endpoints ──────────────────────────────────────────────────────────────────
+
+@router.post(
+    "/sync",
+    response_model=SyncResponse,
+    summary="Trigger IMAP sync of 5 Gmail accounts (admin only)",
+)
+@limiter.limit("5/minute")
+async def trigger_email_sync(
+    request: Request,
+    _: dict = Depends(verify_premium_security),
+):
+    """
+    Connects to the 5 configured Gmail IMAP accounts, fetches UNSEEN emails,
+    parses them using GPT-4o, creates new Leads, and sends admin notifications.
+    """
+    logger.info("Triggering IMAP email sync from API...")
+    results = sync_gmail_accounts()
+    
+    # We always return 200 with the stats, even if some accounts failed
+    return SyncResponse(
+        status="ok" if not results["errors"] else "partial_error",
+        accounts_processed=results["accounts_processed"],
+        accounts_skipped=results["accounts_skipped"],
+        emails_read=results["emails_read"],
+        leads_created=results["leads_created"],
+        errors=results["errors"],
+    )
 
 @router.post(
     "/send-test",
@@ -232,3 +269,50 @@ async def resend_confirmation(
             )
         ),
     )
+
+
+@router.get(
+    "/triage",
+    summary="Get daily inbox triage summary (admin only)",
+)
+@limiter.limit("20/minute")
+async def get_triage_summary(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: dict = Depends(verify_premium_security),
+):
+    """
+    Returns all parsed InboxMessage records from the last 24 hours,
+    grouped by category and sorted by importance.
+    """
+    from datetime import datetime, timedelta, timezone
+    
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+    
+    messages = (
+        db.query(InboxMessage)
+        .filter(InboxMessage.created_at >= cutoff)
+        .order_by(InboxMessage.importance_score.desc(), InboxMessage.created_at.desc())
+        .all()
+    )
+    
+    return {
+        "status": "ok",
+        "total_emails": len(messages),
+        "messages": [
+            {
+                "id": m.id,
+                "email_account": m.email_account,
+                "sender_name": m.sender_name,
+                "sender_email": m.sender_email,
+                "subject": m.subject,
+                "body_summary": m.body_summary,
+                "category": m.category,
+                "importance_score": m.importance_score,
+                "is_lead": m.is_lead,
+                "created_at": m.created_at.isoformat() if m.created_at else None,
+            }
+            for m in messages
+        ]
+    }
+

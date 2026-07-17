@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { api } from '@/api/client'
+import InboxTriagePanel from '../components/InboxTriagePanel'
 import OwnerConfirmModal from '../components/OwnerConfirmModal'
 import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
@@ -26,6 +27,7 @@ function isCommandCenterPath() {
 const TABS = [
   { id: 'jarvis', label: 'Jarvis' },
   { id: 'richmond-grid', label: 'Richmond Grid' },
+  { id: 'triage', label: 'Inbox Triage' },
   { id: 'kpi', label: 'KPI Wall' },
   { id: 'crm', label: 'CRM Leads' },
   { id: 'ops', label: 'Ops Pipeline' },
@@ -6543,6 +6545,8 @@ export default function CommandCenter() {
           {strategyVisible ? <HubLinkPanel /> : null}
 
           {activeTab === 'jarvis' && <JarvisPanel />}
+
+          {activeTab === 'triage' && <InboxTriagePanel />}
 
           {activeTab === 'richmond-grid' && (
             <Suspense

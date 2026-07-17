@@ -1,6 +1,9 @@
 import base64
+import logging
 import uuid
 from datetime import datetime, timedelta, timezone
+
+logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, Query, Request, UploadFile
 from pydantic import BaseModel, Field
@@ -74,10 +77,20 @@ def _normalize_job_status(status: str | None) -> str:
     return aliases.get(value, value)
 
 
+def _iso_str(val) -> str | None:
+    if not val:
+        return None
+    if isinstance(val, str):
+        return val
+    try:
+        return val.isoformat()
+    except Exception:
+        return str(val)
+
 def _serialize_job(job: Job, lead: Lead | None = None) -> dict:
-    scheduled_start = job.scheduled_start.isoformat() if job.scheduled_start else None
-    scheduled_date = job.scheduled_start.date().isoformat() if job.scheduled_start else None
-    start_time = job.scheduled_start.strftime("%I:%M %p").lstrip("0") if job.scheduled_start else None
+    scheduled_start = _iso_str(job.scheduled_start)
+    scheduled_date = job.scheduled_start.date().isoformat() if hasattr(job.scheduled_start, 'date') else (_iso_str(job.scheduled_start).split('T')[0] if _iso_str(job.scheduled_start) else None)
+    start_time = job.scheduled_start.strftime("%I:%M %p").lstrip("0") if hasattr(job.scheduled_start, 'strftime') else None
     return {
         "id": job.id,
         "job_number": job.job_number,
@@ -92,10 +105,10 @@ def _serialize_job(job: Job, lead: Lead | None = None) -> dict:
         "address": job.site_address,
         "state_code": job.state_code,
         "scheduled_start": scheduled_start,
-        "scheduled_end": job.scheduled_end.isoformat() if job.scheduled_end else None,
+        "scheduled_end": _iso_str(job.scheduled_end),
         "scheduled_date": scheduled_date,
         "start_time": start_time,
-        "completed_at": job.completed_at.isoformat() if job.completed_at else None,
+        "completed_at": _iso_str(job.completed_at),
         "progress_percent": job.progress_percent or 0,
         "progress_notes": job.progress_notes,
         "notes": job.progress_notes,
@@ -104,8 +117,8 @@ def _serialize_job(job: Job, lead: Lead | None = None) -> dict:
         "client_phone": lead.phone if lead else None,
         "sqft": lead.project_size_sqft if lead else None,
         "project_size_sqft": lead.project_size_sqft if lead else None,
-        "created_at": job.created_at.isoformat() if job.created_at else None,
-        "updated_at": job.updated_at.isoformat() if job.updated_at else None,
+        "created_at": _iso_str(job.created_at),
+        "updated_at": _iso_str(job.updated_at),
     }
 
 
@@ -505,20 +518,31 @@ def create_estimate_from_lead(
 
 @router.get("/estimates")
 def list_estimates(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
-    items = db.query(Estimate).order_by(Estimate.created_at.desc()).all()
+    items = (
+        db.query(Estimate, Lead)
+        .outerjoin(Lead, Estimate.lead_id == Lead.id)
+        .order_by(Estimate.created_at.desc())
+        .all()
+    )
+    
+    estimates_list = []
+    for est, lead in items:
+        est_dict = {
+            "id": est.id,
+            "estimate_number": est.estimate_number,
+            "lead_id": est.lead_id,
+            "status": est.status,
+            "amount_low": est.amount_low,
+            "amount_high": est.amount_high,
+            "address": lead.address if lead else None,
+            "latitude": lead.latitude if lead else None,
+            "longitude": lead.longitude if lead else None,
+        }
+        estimates_list.append(est_dict)
+
     return {
-        "total": len(items),
-        "estimates": [
-            {
-                "id": item.id,
-                "estimate_number": item.estimate_number,
-                "lead_id": item.lead_id,
-                "status": item.status,
-                "amount_low": item.amount_low,
-                "amount_high": item.amount_high,
-            }
-            for item in items
-        ],
+        "total": len(estimates_list),
+        "estimates": estimates_list,
     }
 
 
@@ -627,7 +651,8 @@ def get_job(job_id: int, db: Session = Depends(get_db), _: dict = Depends(verify
 async def update_job_scope(
     job_id: int,
     payload: dict,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: dict = Depends(verify_premium_security)
 ):
     job = db.query(Job).filter(Job.id == job_id).first()
     if not job:
@@ -648,7 +673,8 @@ async def update_job_scope(
 async def add_job_picture(
     job_id: int,
     payload: dict,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: dict = Depends(verify_premium_security)
 ):
     import datetime
     job = db.query(Job).filter(Job.id == job_id).first()
@@ -668,6 +694,9 @@ async def add_job_picture(
     db.commit()
     db.refresh(job)
     return job
+
+
+@router.patch("/jobs/{job_id}")
 def update_job(
     job_id: int,
     body: JobUpdateRequest = Body(...),
@@ -920,3 +949,21 @@ def delete_project_document(
         detail={"document_id": document_id},
     )
     return {"status": "deleted", "id": document_id}
+
+
+@router.get("/diamond-jobs")
+def get_diamond_jobs(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+    try:
+        items = db.query(Job).all()
+        diamond_jobs = [item for item in items if item.job_number and len(str(item.job_number)) == 36 and not str(item.job_number).startswith("JOB-")]
+        
+        active = [_serialize_job(j) for j in diamond_jobs if j.status == 'active']
+        available = [_serialize_job(j) for j in diamond_jobs if j.status == 'available']
+        
+        return {
+            "active": active,
+            "available": available
+        }
+    except Exception as e:
+        logger.error("Error in get_diamond_jobs: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Diamond jobs error: {str(e)}")

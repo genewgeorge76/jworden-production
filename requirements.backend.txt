@@ -71,3 +71,7 @@ stripe==15.3.0
 PyJWT==2.12.1
 passlib==1.7.4
 bcrypt==5.0.0
+
+google-api-python-client==2.115.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.0

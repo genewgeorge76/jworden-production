@@ -39,8 +39,12 @@ def extract_lead_from_email(subject: str, body: str, from_email: str, from_name:
         client = OpenAI(api_key=_OPENAI_KEY)
         
         system_prompt = (
-            "You are a lead data extraction assistant for J. Worden & Sons Asphalt Paving. "
+            "You are a lead data extraction and email triage assistant for J. Worden & Sons Asphalt Paving. "
             "Extract the following from the incoming email and return as JSON:\n"
+            "- is_lead (boolean, true ONLY if the email is a genuine customer asking for services, quotes, or paving work. false for spam, newsletters, receipts, or internal chatter)\n"
+            "- category (string: 'Lead', 'Urgent', 'Vendor', 'General', or 'Junk')\n"
+            "- importance_score (integer 1-10: 1=spam/junk, 5=general/vendor, 8=lead, 10=urgent customer issue)\n"
+            "- body_summary (a concise 1-sentence summary of the email)\n"
             "- name (customer full name or 'Unknown Email Lead')\n"
             "- phone (phone number or null)\n"
             "- email (email address or null)\n"
@@ -94,6 +98,10 @@ def extract_lead_from_email(subject: str, body: str, from_email: str, from_name:
     except Exception as exc:
         logger.error("Email entity extraction error: %s", exc)
         stub = _stub_entities()
+        stub["is_lead"] = False  # Default to false on error to prevent spam
+        stub["category"] = "General"
+        stub["importance_score"] = 3
+        stub["body_summary"] = f"Error extracting: {exc}"
         stub["email"] = from_email
         stub["name"] = from_name or "Unknown Email Lead"
         stub["message"] = f"Subject: {subject}\n\n{body}"[:2000]

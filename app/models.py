@@ -49,6 +49,10 @@ class Lead(Base):
     address = Column(String(300), nullable=True)
     state_code = Column(String(2), nullable=True, index=True)
     message = Column(Text, nullable=True)
+    source = Column(String(100), nullable=True)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    raw_data = Column(JSON, nullable=True)
 
     # Lead scoring
     score_value = Column(Integer, nullable=True)
@@ -88,6 +92,27 @@ class ContactMessage(Base):
 
     def __repr__(self) -> str:
         return f"<ContactMessage id={self.id} name={self.name!r}>"
+
+
+class InboxMessage(Base):
+    """
+    Every email synced from IMAP is logged here, triaged, and ranked by AI.
+    """
+    __tablename__ = "inbox_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email_account = Column(String(254), nullable=False, index=True)
+    sender_name = Column(String(120), nullable=True)
+    sender_email = Column(String(254), nullable=False)
+    subject = Column(String(500), nullable=True)
+    body_summary = Column(Text, nullable=True)
+    category = Column(String(60), nullable=False, default="General") # Lead, Urgent, Vendor, General, Junk
+    importance_score = Column(Integer, nullable=False, default=1) # 1-10
+    is_lead = Column(Boolean, nullable=False, default=False)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<InboxMessage subject={self.subject!r} category={self.category!r}>"
 
 
 class PageContent(Base):
