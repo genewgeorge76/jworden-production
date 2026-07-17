@@ -20,7 +20,9 @@ export default function SiteFactoryPanel() {
   const [error, setError] = useState('');
   const [launched, setLaunched] = useState(null);
 
-  const isPro = tenant?.subscription_tier === 'pro';
+  const isPro = tenant?.subscription_tier === 'pro' ||
+    !!sessionStorage.getItem('OWNER_TOKEN') ||
+    !!localStorage.getItem('owner_token');
 
   const handleLaunch = async (e) => {
     e.preventDefault();

@@ -12,7 +12,9 @@ export default function BlogGeneratorPanel() {
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const isPro = tenant?.subscription_tier === 'pro';
+  const isPro = tenant?.subscription_tier === 'pro' ||
+    !!sessionStorage.getItem('OWNER_TOKEN') ||
+    !!localStorage.getItem('owner_token');
   const hostname = tenant?.hostname || tenant?.domain || window.location.hostname;
 
   const handleGenerate = async (e) => {
