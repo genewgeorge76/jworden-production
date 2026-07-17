@@ -27,6 +27,7 @@ import {
   BarChart3,
   Target,
   Timer,
+  Layers,
 } from 'lucide-react'
 import SiteFactoryPanel from '@/components/SiteFactoryPanel'
 import BlogGeneratorPanel from '@/components/BlogGeneratorPanel'
@@ -61,6 +62,20 @@ function isToday(dateStr) {
     d.getMonth() === now.getMonth() &&
     d.getDate() === now.getDate()
   )
+}
+
+function btnStyle(color) {
+  return {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    padding: '5px 8px',
+    background: `${color}22`,
+    border: `1px solid ${color}55`,
+    borderRadius: 8,
+    color: color === '#16a34a' ? '#22c55e' : color === '#2563eb' ? '#60a5fa' : color === '#0891b2' ? '#22d3ee' : color === '#7c3aed' ? '#a78bfa' : '#fbbf24',
+    fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
+    textDecoration: 'none', letterSpacing: '0.04em',
+    whiteSpace: 'nowrap',
+  }
 }
 
 // ── Status Dot ───────────────────────────────────────────────────────────────
@@ -327,10 +342,12 @@ function QuickJarvis({ leads }) {
   }, [input])
 
   const quickChips = [
-    'What\'s our status today?',
-    'Any hot leads to call?',
-    'Asphalt paving price per sqft in VA?',
-    'Draft a follow-up for a warm lead',
+    'Give me a morning briefing — what do I need to do today?',
+    'Draft a follow-up text for my most recent lead',
+    'What should I charge for a 2,000 sqft driveway repave in VA?',
+    'Write me a professional estimate email to send a customer',
+    'Any Diamond jobs near me worth bidding?',
+    'How do I close a warm lead who hasn\'t responded in 3 days?',
   ]
 
   return (
@@ -581,8 +598,14 @@ export default function CockpitHome() {
 
   // ── Load KPI data ────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
+    const token = sessionStorage.getItem('OWNER_TOKEN') || localStorage.getItem('owner_token') || ''
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
+
     const [leadsResult, jobsResult, estimatesResult] = await Promise.allSettled([
-      api.entities.Lead.list(),
+      // Use CRM endpoint which has phone, email, address
+      fetch(`${BASE}/api/v1/crm/leads?limit=50`, { headers })
+        .then(r => r.json())
+        .then(d => d.leads || d || []),
       api.listJobs(),
       api.listEstimates(),
     ])
@@ -597,6 +620,7 @@ export default function CockpitHome() {
     }
     setDataLoaded(true)
   }, [])
+
 
   useEffect(() => {
     loadData()
@@ -848,6 +872,13 @@ export default function CockpitHome() {
                 accent="#3b82f6"
               />
               <NavTile
+                to="/diamond"
+                icon={Layers}
+                label="Diamond Jobs"
+                sublabel="Scraped active & available"
+                accent="#ec4899"
+              />
+              <NavTile
                 to="/command-center"
                 icon={Activity}
                 label="Full CC"
@@ -887,34 +918,58 @@ export default function CockpitHome() {
                   {dataLoaded ? 'No leads yet.' : 'Loading…'}
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {leads.slice(0, 5).map((lead, i) => {
-                    const isHot = lead.score_label === 'hot' ||
-                      (lead.created_at && (Date.now() - new Date(lead.created_at).getTime()) < 86400000)
+                    const phone = (lead.phone || lead.phone_number || '').replace(/\s/g, '')
+                    const email = lead.email || lead.email_address || ''
+                    const address = lead.address || lead.project_address || ''
+                    const name = lead.name || lead.client_name || 'Unknown'
+                    const service = lead.service_type || 'New lead'
+                    const sqft = lead.project_size_sqft ? `${lead.project_size_sqft.toLocaleString()} sqft` : ''
+                    const jarvisPrompt = `Lead: ${name}, service: ${service}${address ? ', address: ' + address : ''}${sqft ? ', size: ' + sqft : ''}. Draft a short, professional follow-up message to book a free estimate. Make it personal and direct.`
+                    const cleanPhone = phone.replace(/\D/g, '')
+                    const mapsUrl = address ? `https://maps.google.com/?q=${encodeURIComponent(address)}` : null
+                    const emailUrl = email ? `mailto:${email}?subject=Your Asphalt Paving Estimate - J. Worden %26 Sons&body=Hi ${encodeURIComponent(name)},%0A%0AThank you for reaching out to J. Worden %26 Sons Asphalt Paving! We received your inquiry about ${service} and would love to schedule a free estimate.%0A%0APlease reply with your availability or call us directly.%0A%0ABest regards,%0AJ. Worden %26 Sons Asphalt Paving` : null
+                    const smsUrl = cleanPhone ? `sms:${cleanPhone}?body=Hi ${encodeURIComponent(name)}, this is J. Worden %26 Sons Asphalt Paving. We got your ${service} inquiry — when's a good time for a free estimate?` : null
+
                     return (
                       <div key={lead.id || i} style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        padding: '6px 10px',
-                        background: '#060a14',
-                        border: `1px solid ${isHot ? '#ef444430' : '#0f172a'}`,
-                        borderLeft: `3px solid ${isHot ? '#ef4444' : '#1e293b'}`,
-                        borderRadius: 8,
-                      }}>
-                        <div>
-                          <div style={{ color: 'white', fontSize: 13, fontWeight: 600 }}>
-                            {lead.name || lead.client_name || 'Unknown'}
-                          </div>
-                          <div style={{ color: '#64748b', fontSize: 11 }}>
-                            {lead.service_type || lead.status || 'New lead'}
-                          </div>
+                              href={`tel:${phone.replace(/\D/g,'')}`}
+                              style={{
+                                flex: 1, textAlign: 'center', padding: '5px 0',
+                                background: '#16a34a20', border: '1px solid #16a34a40',
+                                borderRadius: 8, color: '#22c55e',
+                                fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
+                                textDecoration: 'none', letterSpacing: '0.05em',
+                              }}
+                            >📞 CALL</a>
+                          )}
+                          {phone && (
+                            <a
+                              href={`sms:${phone.replace(/\D/g,'')}?body=Hi ${encodeURIComponent(name)}, this is J. Worden %26 Sons Asphalt Paving. We received your inquiry — when is a good time for a free estimate?`}
+                              style={{
+                                flex: 1, textAlign: 'center', padding: '5px 0',
+                                background: '#1d4ed820', border: '1px solid #3b82f640',
+                                borderRadius: 8, color: '#60a5fa',
+                                fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
+                                textDecoration: 'none', letterSpacing: '0.05em',
+                              }}
+                            >💬 TEXT</a>
+                          )}
+                          <button
+                            onClick={() => {
+                              const el = document.querySelector('textarea[placeholder], input[placeholder*="Jarvis"]')
+                              if (el) { el.value = jarvisPrompt; el.dispatchEvent(new Event('input', {bubbles:true})); el.focus() }
+                            }}
+                            style={{
+                              flex: 1, padding: '5px 0',
+                              background: '#7c3aed20', border: '1px solid #7c3aed40',
+                              borderRadius: 8, color: '#a78bfa',
+                              fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
+                              cursor: 'pointer', letterSpacing: '0.05em',
+                            }}
+                          >🤖 JARVIS</button>
                         </div>
-                        {isHot && (
-                          <span style={{
-                            background: '#ef444420', color: '#ef4444',
-                            borderRadius: 20, padding: '2px 8px',
-                            fontFamily: 'monospace', fontSize: 10, fontWeight: 700,
-                          }}>HOT</span>
-                        )}
                       </div>
                     )
                   })}
