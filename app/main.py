@@ -81,22 +81,24 @@ from dotenv import (  # noqa: E402 — must run before other imports
 
 # Load local env files from repo root in deterministic order.
 # In production (Railway/Render), environment variables are injected directly.
-_REPO_ROOT = Path(__file__).resolve().parents[1]
-_base_env = _REPO_ROOT / ".env"
-if _base_env.exists():
-    load_dotenv(dotenv_path=_base_env, override=False)
+# Skip this when running in a test environment to preserve test configuration.
+if not os.getenv("PYTEST_CURRENT_TEST"):
+    _REPO_ROOT = Path(__file__).resolve().parents[1]
+    _base_env = _REPO_ROOT / ".env"
+    if _base_env.exists():
+        load_dotenv(dotenv_path=_base_env, override=False)
 
-for _name in (".env.local", ".env.ops.local"):
-    _path = _REPO_ROOT / _name
-    if not _path.exists():
-        continue
-    for _key, _raw in dotenv_values(_path).items():
-        if _raw is None:
+    for _name in (".env.local", ".env.ops.local"):
+        _path = _REPO_ROOT / _name
+        if not _path.exists():
             continue
-        _value = str(_raw).strip()
-        if not _value:
-            continue
-        os.environ[_key] = _value
+        for _key, _raw in dotenv_values(_path).items():
+            if _raw is None:
+                continue
+            _value = str(_raw).strip()
+            if not _value:
+                continue
+            os.environ[_key] = _value
 
 # ── Structured logging ────────────────────────────────────────────────────────
 # Use JSON formatter in production (LOG_FORMAT=json) for log aggregation.
@@ -218,6 +220,7 @@ from .routers import admin as admin_router
 from .routers import admin_2fa as admin_2fa_router
 from .routers import admin_integrations as admin_integrations_router
 from .routers import admin_vector as admin_vector_router
+from .routers import owner_auth as owner_auth_router
 from .routers import ads_intelligence as ads_intelligence_router
 from .routers import advisor as advisor_router
 from .routers import ai as ai_router
@@ -320,6 +323,7 @@ from .services.monitoring_service import monitoring
 from .services.quantum_orchestrator import global_quantum_orchestrator
 from .services.state_data import verify_state_logic_integrity
 from .services.telemetry import FleetOperations
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 logger = logging.getLogger(__name__)
 
@@ -381,7 +385,28 @@ async def lifespan(app: FastAPI):
             "Set SENDGRID_API_KEY and SENDGRID_FROM_EMAIL to enable email delivery."
         )
 
+    # ── Email sync scheduler (runs every 45 minutes) ──────────────────────────
+    scheduler = AsyncIOScheduler()
+
+    async def _run_email_sync():
+        try:
+            from .services.email_sync import sync_all_accounts
+            from .database import SessionLocal
+            db = SessionLocal()
+            try:
+                result = await sync_all_accounts(db)
+                logger.info("Scheduled email sync complete: %s", result)
+            finally:
+                db.close()
+        except Exception as exc:
+            logger.error("Scheduled email sync failed: %s", exc, exc_info=True)
+
+    scheduler.add_job(_run_email_sync, "interval", minutes=45, id="email_sync", replace_existing=True)
+    scheduler.start()
+    logger.info("Email sync scheduler started — running every 45 minutes")
+
     yield
+    scheduler.shutdown(wait=False)
     logger.info("JWordenAI backend shutting down")
 
 
@@ -639,6 +664,7 @@ app.include_router(admin_2fa_router.router)
 # Twilio Verify (SMS OTP for 2FA fallback + lead phone verification)
 app.include_router(twilio_verify_router.router)
 app.include_router(admin_integrations_router.router)
+app.include_router(owner_auth_router.router)
 app.include_router(features_router.router)
 app.include_router(crew_wearables_router.public_router)
 app.include_router(crew_wearables_router.admin_router)
