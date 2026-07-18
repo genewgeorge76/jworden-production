@@ -28,16 +28,16 @@ class SiteResolution(BaseModel):
     subscription_tier: str
     hostname: str
     route_mode: str
-    site_title: Optional[str]
-    site_description: Optional[str]
-    primary_color: Optional[str]
-    accent_color: Optional[str]
-    hero_headline: Optional[str]
-    hero_subheadline: Optional[str]
-    local_weather_copy: Optional[str]
-    phone_override: Optional[str]
-    branding_tier: Optional[str]   # 'jarvis' | 'worden_standard' | 'white_label'
-    logo_url: Optional[str]
+    site_title: Optional[str] = None
+    site_description: Optional[str] = None
+    primary_color: Optional[str] = None
+    accent_color: Optional[str] = None
+    hero_headline: Optional[str] = None
+    hero_subheadline: Optional[str] = None
+    local_weather_copy: Optional[str] = None
+    phone_override: Optional[str] = None
+    branding_tier: Optional[str] = None   # 'jarvis' | 'worden_standard' | 'white_label'
+    logo_url: Optional[str] = None
     market: Optional[dict] = None
 
 MARKET_PROFILES = {
