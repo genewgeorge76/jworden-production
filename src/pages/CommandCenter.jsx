@@ -3,6 +3,7 @@ import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, 
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
 import CockpitHome from '../components/CockpitHome'
+import SiteBuilderStudio from '../components/SiteBuilderStudio'
 import OwnerConfirmModal from '../components/OwnerConfirmModal'
 import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
@@ -26,6 +27,7 @@ function isCommandCenterPath() {
 }
 
 const TABS = [
+  { id: 'site-factory', label: 'Site Factory Studio' },
   { id: 'jarvis', label: 'Jarvis' },
   { id: 'richmond-grid', label: 'Richmond Grid' },
   { id: 'triage', label: 'Inbox Triage' },
