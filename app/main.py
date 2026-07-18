@@ -247,6 +247,7 @@ from .routers import lms as lms_router
 from .routers import portal as portal_router
 from .routers import billing as billing_router
 from .webhooks import stripe_webhook
+from .routers import abilities as abilities_router
 from .routers import authority as authority_router
 from .routers import autonomy as autonomy_router
 from .routers import bid_intelligence as bid_intelligence_router
@@ -538,6 +539,7 @@ async def log_requests(request, call_next):
 
 
 # ── Routers ───────────────────────────────────────────────────────────────────
+app.include_router(abilities_router.router)
 app.include_router(leads.router)
 app.include_router(reviews.router)
 app.include_router(schema_ld.router)
