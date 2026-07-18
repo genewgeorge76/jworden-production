@@ -2,11 +2,12 @@
 bid_hunter_router.py — Commercial Construction Bid Hunter Router for Jarvis OS
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from typing import List, Optional
 import logging
 
 from ..services.commercial_bid_hunter import run_commercial_bid_hunt
+from ..services.planhub_scraper import scrape_planhub_commercial_bids
 
 logger = logging.getLogger(__name__)
 
@@ -21,4 +22,14 @@ async def get_commercial_bids(
     """
     state_list = [s.strip().upper() for s in states.split(",") if s.strip()]
     results = await run_commercial_bid_hunt(states=state_list)
+    return results
+
+@router.post("/scrape-planhub", summary="Trigger automated PlanHub commercial bid scraper")
+async def trigger_planhub_scraper(
+    keywords: List[str] = Body(["asphalt", "paving", "milling", "sealcoating"])
+):
+    """
+    Launches Playwright headless scraper to extract private subcontractor commercial RFPs from PlanHub.
+    """
+    results = await scrape_planhub_commercial_bids(keywords=keywords)
     return results
