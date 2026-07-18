@@ -58,12 +58,15 @@ MARKET_PROFILES = {
         "primary_color": "#f97316" # Georgia Peach
     },
     "blueridgeasphaltpaving.com": {
-        "marketName": "Blue Ridge Asphalt",
-        "primaryRegion": "Blue Ridge & Appalachia",
-        "primaryMetro": "Roanoke / Asheville",
-        "heroKicker": "Elevation & Grade Certified",
-        "heroHeadline": "Mountain-Resilient Paving For The Blue Ridge",
-        "primary_color": "#475569" # Mountain Slate
+        "marketName": "Blue Ridge Estate & Mountain Paving",
+        "primaryRegion": "Blue Ridge, Shenandoah Valley & Appalachian Highlands",
+        "primaryMetro": "Roanoke / Charlottesville / Winchester",
+        "heroKicker": "Deep Highland Access & Elevation Certified",
+        "heroHeadline": "Premium Asphalt Engineered To Survive The Mountains",
+        "heroBody": "Flawless structural-grade driveways and commercial parking lots engineered to eliminate drainage issues, prevent washouts, and easily withstand extreme Appalachian freeze-thaw cycles. Serving Monterey to Charlottesville, and Roanoke to Winchester, VA.",
+        "primary_color": "#dc2626", # Powerhouse Red
+        "phoneDisplay": "(804) 446-1296",
+        "proofHeadline": "Paved 100+ KFC Locations & Deep Mountain Estates"
     },
     "jwordenuniversity.com": {
         "marketName": "J. Worden University",
