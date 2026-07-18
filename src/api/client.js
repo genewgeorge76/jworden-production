@@ -993,6 +993,8 @@ export const api = {
   integrations: integrationsClient,
 }
 
+export default api;
+
 // ── GA4 / Google Ads event helpers ────────────────────────────────────────────
 // Map of internal event names → Netlify env vars holding the matching
 // Google Ads conversion label (format "AbCdEf12-3"). When set, the event
