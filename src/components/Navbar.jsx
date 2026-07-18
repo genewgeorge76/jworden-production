@@ -5,14 +5,13 @@ import { trackPhoneClick } from '@/lib/analytics';
 import { PRIMARY_LOGO_URL } from '@/lib/branding';
 
 const NAV_LINKS = [
-  { label: 'Paving', href: '/paving' },
-  { label: 'Visualizer', href: '/visualizer' },
-  { label: 'Worden Standard', href: '/worden-standard' },
-  { label: 'Commercial', href: '/parking-lots' },
-  { label: 'Hardscapes', href: '/hardscapes' },
-  { label: 'GC', href: '/general-contracting' },
-  { label: 'About', href: '/about' },
+  { label: 'Commercial', href: '/richmond-commercial' },
+  { label: 'Residential', href: '/residential-asphalt' },
+  { label: 'Services', href: '/services' },
+  { label: 'Locations', href: '/locations' },
+  { label: 'Worden U', href: '/worden-university' },
   { label: 'Reviews', href: '/reviews' },
+  { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
 
