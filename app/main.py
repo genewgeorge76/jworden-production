@@ -249,6 +249,8 @@ from .routers import billing as billing_router
 from .webhooks import stripe_webhook
 from .routers import abilities as abilities_router
 from .routers import authority as authority_router
+from .routers import market_orchestration as market_orchestration_router
+from .routers import b2g_bids as b2g_bids_router
 from .routers import autonomy as autonomy_router
 from .routers import bid_intelligence as bid_intelligence_router
 from .routers import blog as blog_router
@@ -540,6 +542,8 @@ async def log_requests(request, call_next):
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(abilities_router.router)
+app.include_router(market_orchestration_router.router)
+app.include_router(b2g_bids_router.router)
 app.include_router(leads.router)
 app.include_router(reviews.router)
 app.include_router(schema_ld.router)

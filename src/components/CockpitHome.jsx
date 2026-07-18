@@ -28,6 +28,8 @@ const STATES={
 
 import OmniPanel from "./OmniPanel";
 import VoiceCalls from "../pages/VoiceCalls";
+import SatelliteMailerPanel from "./SatelliteMailerPanel";
+import B2GBidHunterPanel from "./B2GBidHunterPanel";
 import React, { Component } from "react";
 class SafeBoundary extends Component {
   constructor(props) {
@@ -168,13 +170,13 @@ function CockpitHomeInner({ onEnterFullCC }) {
   };
 
   const nav=[
-    {id:"home",icon:"◉",l:"Home"},{id:"jarvis",icon:"⚡",l:"Jarvis"},{id:"omni",icon:"∞",l:"Omni-Engine"},{id:"voice",icon:"📞",l:"AI Voice"},{id:"leads",icon:"👥",l:"Leads",b:leads.length||null},{id:"estimate",icon:"◇",l:"Estimate"},
+    {id:"home",icon:"◉",l:"Home"},{id:"jarvis",icon:"⚡",l:"Jarvis"},{id:"omni",icon:"∞",l:"Omni-Engine"},{id:"satellite",icon:"🛰",l:"Satellite Mailer"},{id:"b2g",icon:"🏛",l:"B2G Bids"},{id:"voice",icon:"📞",l:"AI Voice"},{id:"leads",icon:"👥",l:"Leads",b:leads.length||null},{id:"estimate",icon:"◇",l:"Estimate"},
     {id:"jobs",icon:"☰",l:"Jobs",b:aJ.length||null},{id:"crew",icon:"◎",l:"Crew",b:crew.length||null},
     {id:"equipment",icon:"▣",l:"Equipment",b:eqp.length||null},{id:"weather",icon:"☁",l:"Weather"},
     {id:"banking",icon:"$",l:"Banking"},{id:"legal",icon:"§",l:"Legal"},
   ];
   const pending=[{icon:"→",l:"Routing"},{icon:"°",l:"Thermal"},{icon:"♡",l:"Wearables"},{icon:"◈",l:"Marketing"}];
-  const viewTitle={home:"Home",jarvis:"Jarvis",omni:"Sovereign Omni-Router",voice:"24/7 AI Voice Receptionist",estimate:"New Estimate",jobs:"Jobs",crew:"Crew",equipment:"Equipment",weather:"Weather",banking:"Banking",legal:"Legal / Compliance"};
+  const viewTitle={home:"Home",jarvis:"Jarvis",omni:"Sovereign Omni-Router",satellite:"Autonomous Satellite Mailer Engine",b2g:"SAM.gov & USGS Geotechnical B2G Hunter",voice:"24/7 AI Voice Receptionist",estimate:"New Estimate",jobs:"Jobs",crew:"Crew",equipment:"Equipment",weather:"Weather",banking:"Banking",legal:"Legal / Compliance"};
 
   return(
     <div className="app-container" style={{background:"#08090e",color:"#c9cdd8",fontFamily:"'IBM Plex Mono',monospace",overflow:"hidden"}}>
@@ -291,6 +293,12 @@ function CockpitHomeInner({ onEnterFullCC }) {
 
           {/* OMNI PANEL */}
           {v==="omni"&&(<OmniPanel onClose={() => setV("home")} />)}
+
+          {/* SATELLITE MAILER */}
+          {v==="satellite"&&(<SatelliteMailerPanel />)}
+
+          {/* B2G BIDS */}
+          {v==="b2g"&&(<B2GBidHunterPanel />)}
 
           {/* VOICE CALLS */}
           {v==="voice"&&(<VoiceCalls />)}

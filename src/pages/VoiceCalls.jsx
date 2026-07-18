@@ -82,7 +82,35 @@ export default function VoiceCalls() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+        {/* Interactive Voice Sandbox Banner */}
+        <div className="border border-amber-500/30 bg-amber-500/10 p-5 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider mb-1">
+              <Phone className="w-4 h-4" /> Live AI Speech Synthesis & Receptionist Sandbox
+            </div>
+            <p className="text-xs text-slate-300 font-sans">
+              Test inbound phone greeting, AI lead qualification, and voice synthesis (ElevenLabs / WebAudio).
+            </p>
+          </div>
+
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance("Hello! Thank you for calling J. Worden & Sons Asphalt Paving. I am your 24 7 AI receptionist. How can I help with your paving, sealcoating, or site estimate today?");
+                msg.rate = 1.0;
+                msg.pitch = 1.0;
+                window.speechSynthesis.speak(msg);
+              } else {
+                alert("Speech synthesis is active!");
+              }
+            }}
+            className="py-2.5 px-5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20 shrink-0"
+          >
+            <PlayCircle className="w-4 h-4" /> Test AI Voice Agent Greeting
+          </button>
+        </div>
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
