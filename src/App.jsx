@@ -106,6 +106,7 @@ const AdvisoryTaxCompliance = lazy(() => import('./pages/advisory/TaxComplianceA
 const PrintableOnboardingPacket = lazy(() => import('./components/PrintableOnboardingPacket'));
 const AiPublicRelationsDept = lazy(() => import('./pages/AiPublicRelationsDept'));
 const WordenUniversity = lazy(() => import('./pages/WordenUniversity'));
+const SaaSPlatformPortal = lazy(() => import('./components/SaaSPlatformPortal'));
 const WordenStandardHub = lazy(() => import('./pages/WordenStandardHub'));
 const DiamondPortal = lazy(() => import('./pages/DiamondPortal'));
 const ClientPortal = lazy(() => import('./components/ClientPortal'));
@@ -342,6 +343,7 @@ const AuthenticatedApp = () => {
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
         <Route path="/client-portal" element={<ClientPortal />} />
         <Route path="/client-lite" element={<ClientLitePortal />} />
+        <Route path="/saas" element={<Suspense fallback={<RouteLoader />}><SaaSPlatformPortal /></Suspense>} />
         <Route path="/portal" element={<ClientPortal />} />
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
