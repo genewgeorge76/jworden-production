@@ -24,7 +24,7 @@ export const TenantProvider = ({ children }) => {
   useEffect(() => {
     const fetchTenant = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://jworden-api.fly.dev';
         const hostname = window.location.hostname;
         const response = await fetch(`${baseUrl}/api/v1/factory/resolve?hostname=${hostname}`);
         
