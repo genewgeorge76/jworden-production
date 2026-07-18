@@ -38,6 +38,7 @@ class SiteResolution(BaseModel):
     phone_override: Optional[str]
     branding_tier: Optional[str]   # 'jarvis' | 'worden_standard' | 'white_label'
     logo_url: Optional[str]
+    market: Optional[dict] = None
 
 MARKET_PROFILES = {
     "asphaltpavingkansascity.com": {
