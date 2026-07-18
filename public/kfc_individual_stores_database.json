@@ -1,0 +1,302 @@
+[
+  {
+    "store_id": "kfc_store_01",
+    "folder": "store_01_richmond_broad",
+    "name": "KFC Store #1042 \u2014 Richmond W Broad St",
+    "city": "Richmond",
+    "state": "VA",
+    "address": "4801 W Broad St, Richmond, VA 23230",
+    "scope": "Full Depth Asphalt Pavement Reconstruction & ADA Ramp Realignment",
+    "sqft": 18500,
+    "photos_public": [
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_1.jpg",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_2.webp",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_3.jpg",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_4.webp",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_5.jpg",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_6.webp",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_7.jpg",
+      "/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_8.webp"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_1.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_2.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_3.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_4.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_5.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_6.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_7.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_01_photo_8.webp"
+    ]
+  },
+  {
+    "store_id": "kfc_store_02",
+    "folder": "store_02_chester_route1",
+    "name": "KFC Store #1105 \u2014 Chester Route 1",
+    "city": "Chester",
+    "state": "VA",
+    "address": "12800 Jefferson Davis Hwy, Chester, VA 23831",
+    "scope": "Drive-Thru Reinforced Concrete Pad Tie-In & Night Milling",
+    "sqft": 22000,
+    "photos_public": [
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_1.jpg",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_2.webp",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_3.jpg",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_4.webp",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_5.jpg",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_6.webp",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_7.jpg",
+      "/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_8.webp"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_1.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_2.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_3.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_4.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_5.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_6.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_7.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_02_photo_8.webp"
+    ]
+  },
+  {
+    "store_id": "kfc_store_03",
+    "folder": "store_03_petersburg_crater",
+    "name": "KFC Store #1188 \u2014 Petersburg Crater Rd",
+    "city": "Petersburg",
+    "state": "VA",
+    "address": "3333 S Crater Rd, Petersburg, VA 23805",
+    "scope": "Parking Lot Surface Overlay, Catch Basin Restoration & Line Striping",
+    "sqft": 16200,
+    "photos_public": [
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_1.jpg",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_2.webp",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_3.jpg",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_4.webp",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_5.jpg",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_6.webp",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_7.JPG",
+      "/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_1.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_2.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_3.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_4.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_5.jpg",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_6.webp",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_03_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_04",
+    "folder": "store_04_atlanta_peachtree",
+    "name": "KFC Store #2014 \u2014 Atlanta Peachtree Rd",
+    "city": "Atlanta",
+    "state": "GA",
+    "address": "2600 Peachtree Rd NW, Atlanta, GA 30305",
+    "scope": "Georgia Red Clay Heavy Stabilization & High-Volume Asphalt Overlay",
+    "sqft": 24500,
+    "photos_public": [
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_1.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_2.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_3.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_4.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_5.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_6.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_7.JPG",
+      "/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_04_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_05",
+    "folder": "store_05_marietta_cobb",
+    "name": "KFC Store #2099 \u2014 Marietta Cobb Pkwy (The Big Chicken)",
+    "city": "Marietta",
+    "state": "GA",
+    "address": "1150 Cobb Pkwy N, Marietta, GA 30062",
+    "scope": "Fast-Track Night Milling, Landmark Drive-Thru Paving & Industrial Sealcoating",
+    "sqft": 19800,
+    "photos_public": [
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_1.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_2.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_3.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_4.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_5.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_6.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_7.JPG",
+      "/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_05_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_06",
+    "folder": "store_06_savannah_abercorn",
+    "name": "KFC Store #2140 \u2014 Savannah Abercorn St",
+    "city": "Savannah",
+    "state": "GA",
+    "address": "7804 Abercorn St, Savannah, GA 31406",
+    "scope": "Salt-Spray Oxidation Protection, Heavy Aggregate Base & Stencil Striping",
+    "sqft": 21000,
+    "photos_public": [
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_1.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_2.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_3.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_4.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_5.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_6.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_7.JPG",
+      "/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_06_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_07",
+    "folder": "store_07_orlando_idrive",
+    "name": "KFC Store #3055 \u2014 Orlando International Dr",
+    "city": "Orlando",
+    "state": "FL",
+    "address": "7400 International Dr, Orlando, FL 32819",
+    "scope": "High-Durability Polymer Modified Binder Course & Overnight Resurfacing",
+    "sqft": 28000,
+    "photos_public": [
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_1.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_2.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_3.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_4.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_5.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_6.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_7.JPG",
+      "/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_07_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_08",
+    "folder": "store_08_houston_westheimer",
+    "name": "KFC Store #4012 \u2014 Houston Westheimer Rd",
+    "city": "Houston",
+    "state": "TX",
+    "address": "6200 Westheimer Rd, Houston, TX 77057",
+    "scope": "Heavy Compaction Subgrade, High-Traffic Drive-Thru Paving",
+    "sqft": 26000,
+    "photos_public": [
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_1.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_2.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_3.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_4.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_5.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_6.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_7.JPG",
+      "/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_08_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_09",
+    "folder": "store_09_detroit_woodward",
+    "name": "KFC Store #5088 \u2014 Detroit Woodward Ave",
+    "city": "Detroit",
+    "state": "MI",
+    "address": "12500 Woodward Ave, Detroit, MI 48203",
+    "scope": "Sub-Zero Freeze-Thaw RAP Asphalt Specification & Heavy Duty Edge Seal",
+    "sqft": 23000,
+    "photos_public": [
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_1.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_2.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_3.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_4.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_5.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_6.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_7.JPG",
+      "/images/kfc_stores/store_09_detroit_woodward/kfc_store_09_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_09_photo_8.JPG"
+    ]
+  },
+  {
+    "store_id": "kfc_store_10",
+    "folder": "store_10_neworleans_veterans",
+    "name": "KFC Store #6022 \u2014 New Orleans Veterans Blvd",
+    "city": "Metairie",
+    "state": "LA",
+    "address": "3200 Veterans Memorial Blvd, Metairie, LA 70002",
+    "scope": "High-Moisture Subgrade Stabilization & Catch Basin Drain Assembly",
+    "sqft": 21500,
+    "photos_public": [
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_1.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_2.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_3.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_4.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_5.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_6.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_7.JPG",
+      "/images/kfc_stores/store_10_neworleans_veterans/kfc_store_10_photo_8.JPG"
+    ],
+    "photos_artifact": [
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_1.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_2.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_3.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_4.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_5.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_6.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_7.JPG",
+      "C:/Users/genew/.gemini/antigravity/brain/d269bbc9-aa2c-4d1a-a0b7-f6bff6efd656/kfc_store_groups/kfc_store_10_photo_8.JPG"
+    ]
+  }
+]
