@@ -8,6 +8,7 @@ import { PHONE_E164, PHONE_DISPLAY, SMS_E164, SMS_PREFILL } from '@/lib/business
 import { trackPhoneClick } from '@/lib/analytics';
 import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
+import CommercialClientAuthority from '../components/CommercialClientAuthority';
 import EstimateForm from '../components/EstimateForm';
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
@@ -361,6 +362,7 @@ export default function Home() {
               Recent Projects
             </h2>
           </div>
+          <CommercialClientAuthority />
           <CustomerProofGallery />
         </div>
       </section>

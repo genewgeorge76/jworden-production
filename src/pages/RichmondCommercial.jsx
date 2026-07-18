@@ -7,6 +7,7 @@ import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
 import { trackPhoneClick } from '@/lib/analytics'
 import { RICHMOND_COMMERCIAL_PROOF } from '@/lib/richmondCommercialProof'
+import CommercialClientAuthority from '@/components/CommercialClientAuthority'
 
 const COMMERCIAL_CHECKLIST = [
   'Written line-item scope and asphalt section depth',
@@ -166,6 +167,8 @@ export default function RichmondCommercial() {
           </div>
         </div>
       </section>
+
+      <CommercialClientAuthority />
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
