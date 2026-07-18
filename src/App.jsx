@@ -58,6 +58,7 @@ const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
 const CommandCenter = lazy(() => import('./pages/CommandCenter'));
+const ClientLitePortal = lazy(() => import('./components/ClientLitePortal'));
 const CockpitHome = lazy(() => import('./pages/CockpitHome'));
 const EstimatePage = lazy(() => import('./pages/EstimatePage'));
 const JarvisPage = lazy(() => import('./pages/JarvisPage'));
@@ -340,6 +341,7 @@ const AuthenticatedApp = () => {
         {!isOperationsSite && <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />}
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
         <Route path="/client-portal" element={<ClientPortal />} />
+        <Route path="/client-lite" element={<ClientLitePortal />} />
         <Route path="/portal" element={<ClientPortal />} />
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
