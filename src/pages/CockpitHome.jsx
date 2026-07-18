@@ -933,42 +933,28 @@ export default function CockpitHome() {
                     const smsUrl = cleanPhone ? `sms:${cleanPhone}?body=Hi ${encodeURIComponent(name)}, this is J. Worden %26 Sons Asphalt Paving. We got your ${service} inquiry — when's a good time for a free estimate?` : null
 
                     return (
-                      <div key={lead.id || i} style={{
-                              href={`tel:${phone.replace(/\D/g,'')}`}
-                              style={{
-                                flex: 1, textAlign: 'center', padding: '5px 0',
-                                background: '#16a34a20', border: '1px solid #16a34a40',
-                                borderRadius: 8, color: '#22c55e',
-                                fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
-                                textDecoration: 'none', letterSpacing: '0.05em',
-                              }}
-                            >📞 CALL</a>
-                          )}
-                          {phone && (
-                            <a
-                              href={`sms:${phone.replace(/\D/g,'')}?body=Hi ${encodeURIComponent(name)}, this is J. Worden %26 Sons Asphalt Paving. We received your inquiry — when is a good time for a free estimate?`}
-                              style={{
-                                flex: 1, textAlign: 'center', padding: '5px 0',
-                                background: '#1d4ed820', border: '1px solid #3b82f640',
-                                borderRadius: 8, color: '#60a5fa',
-                                fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
-                                textDecoration: 'none', letterSpacing: '0.05em',
-                              }}
-                            >💬 TEXT</a>
-                          )}
+                      <div key={lead.id || i} style={{ padding: '10px 12px', background: '#060a14', border: '1px solid #1e293b', borderRadius: 12 }}>
+                        <div style={{ marginBottom: 5 }}>
+                          <div style={{ color: 'white', fontSize: 13, fontWeight: 700 }}>{name}</div>
+                          <div style={{ color: '#94a3b8', fontSize: 11 }}>{service}{sqft ? ` · ${sqft}` : ''}</div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
+                          {phone && <div style={{ color: '#64748b', fontSize: 11, fontFamily: 'monospace' }}>📞 {phone}</div>}
+                          {email && <div style={{ color: '#64748b', fontSize: 11, fontFamily: 'monospace' }}>✉️ {email}</div>}
+                          {address && <div style={{ color: '#64748b', fontSize: 11 }}>📍 {address}</div>}
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                          {cleanPhone && <a href={`tel:${cleanPhone}`} style={btnStyle('#16a34a')}>📞 Call</a>}
+                          {smsUrl && <a href={smsUrl} style={btnStyle('#2563eb')}>💬 Text</a>}
+                          {emailUrl && <a href={emailUrl} style={btnStyle('#0891b2')}>✉️ Email</a>}
+                          {mapsUrl && <a href={mapsUrl} target="_blank" rel="noreferrer" style={btnStyle('#7c3aed')}>🗺 Maps</a>}
                           <button
                             onClick={() => {
-                              const el = document.querySelector('textarea[placeholder], input[placeholder*="Jarvis"]')
-                              if (el) { el.value = jarvisPrompt; el.dispatchEvent(new Event('input', {bubbles:true})); el.focus() }
+                              const el = document.querySelector('input[placeholder*="Jarvis"], textarea[placeholder]')
+                              if (el) { el.value = jarvisPrompt; el.dispatchEvent(new Event('input', { bubbles: true })); el.focus() }
                             }}
-                            style={{
-                              flex: 1, padding: '5px 0',
-                              background: '#7c3aed20', border: '1px solid #7c3aed40',
-                              borderRadius: 8, color: '#a78bfa',
-                              fontSize: 11, fontWeight: 700, fontFamily: 'monospace',
-                              cursor: 'pointer', letterSpacing: '0.05em',
-                            }}
-                          >🤖 JARVIS</button>
+                            style={{ ...btnStyle('#b45309'), border: '1px solid #b4530955', cursor: 'pointer' }}
+                          >🤖 Jarvis</button>
                         </div>
                       </div>
                     )
