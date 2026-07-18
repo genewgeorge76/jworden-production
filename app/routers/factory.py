@@ -447,3 +447,41 @@ async def generate_seo_blog(
     db.refresh(post)
     
     return {"status": "success", "post_id": post.id, "slug": post.slug}
+
+
+class IndexNowSubmitRequest(BaseModel):
+    host: str
+    urls: List[str]
+
+@router.post("/indexnow/submit", summary="Submit URLs to IndexNow for instant search engine indexing")
+@limiter.limit("10/minute")
+async def submit_indexnow_urls(
+    request: Request,
+    req: IndexNowSubmitRequest,
+    auth_data: dict = Depends(verify_premium_security),
+):
+    """
+    Submits newly generated pages to IndexNow API for immediate crawling by Bing, Yandex, and partners.
+    """
+    import httpx
+    
+    key = "7e492211ca9f4a95a8e0cb20e98031d2" # Standard IndexNow key
+    endpoint = "https://api.indexnow.org/indexnow"
+    
+    payload = {
+        "host": req.host,
+        "key": key,
+        "keyLocation": f"https://{req.host}/{key}.txt",
+        "urlList": req.urls
+    }
+    
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        res = await client.post(endpoint, json=payload)
+        
+    return {
+        "status": "submitted",
+        "http_code": res.status_code,
+        "submitted_urls_count": len(req.urls),
+        "host": req.host
+    }
+
