@@ -12,9 +12,9 @@ import EstimateForm from '../components/EstimateForm';
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
 
-const HERO_IMAGE = '/work/portfolio/portfolio-010.jpg';
+const HERO_IMAGE = '/hero-paving-4k.png';
 const RESIDENTIAL_IMAGE = '/work/portfolio/portfolio-017.jpg';
-const COMMERCIAL_IMAGE = '/work/imported/KFC/IMG_9499-COLLAGE.jpg';
+const COMMERCIAL_IMAGE = '/images/commercial_paving_hero.png';
 
 const STATS = [
   { value: '40+', label: 'Years in Business' },
