@@ -25,6 +25,9 @@ src/
 *.gif
 
 # Other repos and large directories
+apps/
+scavenged-assets/
+jworden_leads.db
 jwordenai operation system/
 external-repos/
 jwordenasphaltpaving/
