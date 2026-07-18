@@ -107,6 +107,10 @@ const PrintableOnboardingPacket = lazy(() => import('./components/PrintableOnboa
 const AiPublicRelationsDept = lazy(() => import('./pages/AiPublicRelationsDept'));
 const WordenUniversity = lazy(() => import('./pages/WordenUniversity'));
 const SaaSPlatformPortal = lazy(() => import('./components/SaaSPlatformPortal'));
+const AIResearchHub = lazy(() => import('./pages/AIResearchHub'));
+const DrivewayAI = lazy(() => import('./pages/DrivewayAI'));
+const JwordenAI = lazy(() => import('./pages/JwordenAI'));
+const SaaSMarketing = lazy(() => import('./pages/SaaSMarketing'));
 const WordenStandardHub = lazy(() => import('./pages/WordenStandardHub'));
 const DiamondPortal = lazy(() => import('./pages/DiamondPortal'));
 const ClientPortal = lazy(() => import('./components/ClientPortal'));
@@ -344,6 +348,10 @@ const AuthenticatedApp = () => {
         <Route path="/client-portal" element={<ClientPortal />} />
         <Route path="/client-lite" element={<ClientLitePortal />} />
         <Route path="/saas" element={<Suspense fallback={<RouteLoader />}><SaaSPlatformPortal /></Suspense>} />
+        <Route path="/ai-research" element={<Suspense fallback={<RouteLoader />}><AIResearchHub /></Suspense>} />
+        <Route path="/driveway-ai" element={<Suspense fallback={<RouteLoader />}><DrivewayAI /></Suspense>} />
+        <Route path="/jworden-ai" element={<Suspense fallback={<RouteLoader />}><JwordenAI /></Suspense>} />
+        <Route path="/saas-marketing" element={<Suspense fallback={<RouteLoader />}><SaaSMarketing /></Suspense>} />
         <Route path="/portal" element={<ClientPortal />} />
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />

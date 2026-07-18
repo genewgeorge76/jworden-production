@@ -215,3 +215,25 @@ def _test_sendgrid() -> dict:
 def _test_vapi() -> dict:
     key = runtime_config.get("VAPI_API_KEY")
     return {"ok": bool(key), "detail": "key present" if key else "VAPI_API_KEY not set"}
+
+
+@router.get("/gce/instances", summary="List Google Compute Engine VM Instances")
+def list_gce_vms(user: str = Depends(_require_owner)):
+    from ..services.gce_service import list_gce_instances
+    instances = list_gce_instances()
+    return {"ok": True, "count": len(instances), "instances": instances}
+
+
+@router.get("/google-photos/albums", summary="List Google Photos Albums")
+def list_photos_albums(user: str = Depends(_require_owner)):
+    from ..services.google_photos import list_albums
+    albums = list_albums()
+    return {"ok": True, "albums": albums}
+
+
+@router.get("/google-sheets/sync", summary="Sync live pricing to Google Sheets")
+def sync_sheets(sheet_id: Optional[str] = None, user: str = Depends(_require_owner)):
+    from ..services.google_sheets import sync_pricing_sheet
+    res = sync_pricing_sheet(sheet_id=sheet_id)
+    return {"ok": True, "result": res}
+
