@@ -2,6 +2,7 @@ import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } fro
 import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
+import CockpitHome from '../components/CockpitHome'
 import OwnerConfirmModal from '../components/OwnerConfirmModal'
 import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
@@ -6357,6 +6358,7 @@ function StrategicOpsPilotPanel() {
 }
 
 export default function CommandCenter() {
+  const [showCockpit, setShowCockpit] = useState(true)
   const [activeTab, setActiveTab] = useState('jarvis')
   const [radarAreaId, setRadarAreaId] = useState('richmond-va')
   const [radarProviderId, setRadarProviderId] = useState('windy')
@@ -6441,6 +6443,8 @@ export default function CommandCenter() {
   useEffect(() => {
     autoSelectRadarArea()
   }, [autoSelectRadarArea])
+
+  if (showCockpit) return <CockpitHome onEnterFullCC={() => setShowCockpit(false)} />
 
   return (
     <div className="min-h-screen bg-brand-navy text-white">

@@ -106,6 +106,9 @@ const PrintableOnboardingPacket = lazy(() => import('./components/PrintableOnboa
 const AiPublicRelationsDept = lazy(() => import('./pages/AiPublicRelationsDept'));
 const WordenUniversity = lazy(() => import('./pages/WordenUniversity'));
 const WordenStandardHub = lazy(() => import('./pages/WordenStandardHub'));
+const DiamondPortal = lazy(() => import('./pages/DiamondPortal'));
+const ClientPortal = lazy(() => import('./components/ClientPortal'));
+const ClientCockpit = lazy(() => import('./components/ClientCockpit'));
 // Add page imports here
 
 // Initialise GA4 once — silently skipped when the measurement ID is not set.
@@ -149,8 +152,8 @@ const AdminPinGate = () => {
   const submitPin = async (event) => {
     event.preventDefault();
     setError('');
-    if (!/^\d{4}$/.test(pin)) {
-      setError('Enter the 4-digit admin PIN.');
+    if (!/^\d{4,8}$/.test(pin)) {
+      setError('Enter your 4 to 8-digit admin PIN.');
       return;
     }
     setSubmitting(true);
@@ -173,10 +176,10 @@ const AdminPinGate = () => {
           autoFocus
           inputMode="numeric"
           pattern="[0-9]*"
-          maxLength={4}
+          maxLength={8}
           type="password"
           value={pin}
-          onChange={(event) => setPin(event.target.value.replace(/\D/g, '').slice(0, 4))}
+          onChange={(event) => setPin(event.target.value.replace(/\D/g, '').slice(0, 8))}
           aria-label="Admin PIN"
           className="h-12 text-center text-xl tracking-widest"
         />
@@ -234,10 +237,11 @@ const PublicLayout = ({ children }) => (
 const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
   const tenant = useTenant();
-  const routeMode = tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE;
+  const routeMode = tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE;
   const isMarketLandingSite = routeMode === SITE_ROUTE_MODES.MARKET_LANDING;
   const isOperationsSite = routeMode === SITE_ROUTE_MODES.OPERATIONS;
   const isUniversitySite = routeMode === SITE_ROUTE_MODES.UNIVERSITY;
+  const isSaasSite = routeMode === SITE_ROUTE_MODES.SAAS_CLIENT;
 
   const OperationsHome = () => (
     <RequireAuth>
@@ -301,6 +305,22 @@ const AuthenticatedApp = () => {
     );
   }
 
+  // SaaS white-label client mode — limited route tree isolated per tenant.
+  if (isSaasSite) {
+    return (
+      <Suspense fallback={<RouteLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/login" element={<AdminPinGate />} />
+          <Route path="/dashboard" element={<RequireAuth><ClientCockpit /></RequireAuth>} />
+          <Route path="/portal/:public_token" element={<EstimatePortal />} />
+          <Route path="/client-portal" element={<ClientPortal />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
   return (
     <Suspense fallback={<RouteLoader />}>
       <HelmetProvider>
@@ -312,12 +332,14 @@ const AuthenticatedApp = () => {
         {isOperationsSite && <Route path="/register" element={<Register />} />}
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
+        <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
 
         {/* Public Local Market Routes */}
         {!isOperationsSite && <Route path="/" element={<Home />} />}
         {!isOperationsSite && <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />}
         {!isOperationsSite && <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />}
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
+        <Route path="/client-portal" element={<ClientPortal />} />
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
@@ -384,6 +406,24 @@ const AuthenticatedApp = () => {
                 homeHref="/dashboard"
                 homeLabel="Open Dashboard"
                 secondaryHref="/command-center"
+                secondaryLabel="Retry Cockpit"
+              >
+                <CockpitHome />
+              </ErrorBoundary>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/mobile"
+          element={
+            <RequireAuth>
+              <ErrorBoundary
+                kicker="Cockpit Safe Mode"
+                title="Cockpit Recovered"
+                message="The operations cockpit hit an unexpected issue."
+                homeHref="/dashboard"
+                homeLabel="Open Dashboard"
+                secondaryHref="/mobile"
                 secondaryLabel="Retry Cockpit"
               >
                 <CockpitHome />
