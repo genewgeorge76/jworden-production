@@ -1,0 +1,381 @@
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f5f7;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --powerhouse-red: #d32f2f; /* The Rose Paving Red */
+  --powerhouse-red-hover: #b71c1c;
+  --carbon-black: #111111;
+  --pure-white: #ffffff;
+  --border-light: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 800;
+  color: var(--carbon-black);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* 
+========================================
+THE TOP BAR (UPGRADE: Frosted Glass)
+========================================
+*/
+.top-bar {
+  background: var(--carbon-black);
+  color: var(--pure-white);
+  padding: 10px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--powerhouse-red);
+  padding: 20px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--carbon-black);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: var(--powerhouse-red);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: var(--carbon-black);
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--powerhouse-red);
+}
+
+/* 
+========================================
+BUTTONS
+========================================
+*/
+.btn-primary {
+  background: var(--powerhouse-red);
+  color: var(--pure-white) !important;
+  padding: 16px 32px;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  transition: all 0.3s ease !important;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--powerhouse-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(211, 47, 47, 0.5);
+}
+
+/* 
+========================================
+THE HERO
+========================================
+*/
+.hero {
+  position: relative;
+  height: 85vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  background: url('https://images.unsplash.com/photo-1584988292850-928cc5d5a7d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(17,17,17,0.95) 0%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 60px;
+  color: var(--pure-white);
+}
+
+.hero-content h1 {
+  font-size: 6rem;
+  color: var(--pure-white);
+  margin-bottom: 20px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.hero-content h1 span {
+  color: var(--powerhouse-red);
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 40px;
+  font-weight: 500;
+  max-width: 600px;
+  color: #ddd;
+}
+
+/* 
+========================================
+SUBPAGE HERO (Shorter for Inner Pages)
+========================================
+*/
+.subpage-hero {
+  position: relative;
+  height: 50vh;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.subpage-hero .hero-overlay {
+  background: linear-gradient(90deg, rgba(17,17,17,0.95) 0%, rgba(17,17,17,0.8) 60%, rgba(17,17,17,0) 100%);
+}
+
+.subpage-hero h1 {
+  font-size: 4rem;
+}
+
+/* 
+========================================
+TRUST STRIP
+========================================
+*/
+.trust-strip {
+  background: var(--powerhouse-red);
+  color: var(--pure-white);
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* 
+========================================
+THE GRID (The Rose Clone + Upgrade)
+========================================
+*/
+.services-section {
+  padding: 100px 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.section-header p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.massive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 0; /* Rose Paving uses flush grids for maximum impact */
+}
+
+.grid-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.grid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17, 17, 17, 0.6);
+  transition: background 0.4s ease;
+}
+
+.grid-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px;
+  transform: translateY(20px);
+  transition: transform 0.4s ease;
+}
+
+.grid-content h3 {
+  color: var(--pure-white);
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.grid-content p {
+  color: var(--pure-white);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  font-weight: 500;
+}
+
+/* The Grid Hover Upgrade */
+.grid-item:hover .grid-bg {
+  transform: scale(1.1);
+}
+
+.grid-item:hover .grid-overlay {
+  background: rgba(211, 47, 47, 0.85); /* Heavy Red Hover */
+}
+
+.grid-item:hover .grid-content {
+  transform: translateY(0);
+}
+
+.grid-item:hover .grid-content p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 
+========================================
+FOOTER
+========================================
+*/
+.footer {
+  background: var(--carbon-black);
+  color: var(--pure-white);
+  padding: 100px 40px 40px;
+}
+
+.footer h3 {
+  color: var(--pure-white);
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+}
+
+.footer-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 80px;
+  margin-bottom: 80px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  color: #aaaaaa;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 40px;
+  border-top: 1px solid #333;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
