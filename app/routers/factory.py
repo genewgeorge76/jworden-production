@@ -36,6 +36,8 @@ class SiteResolution(BaseModel):
     hero_subheadline: Optional[str]
     local_weather_copy: Optional[str]
     phone_override: Optional[str]
+    branding_tier: Optional[str]   # 'jarvis' | 'worden_standard' | 'white_label'
+    logo_url: Optional[str]
 
 MARKET_PROFILES = {
     "asphaltpavingkansascity.com": {
@@ -133,7 +135,7 @@ async def resolve_hostname(request: Request, hostname: str, db: Session = Depend
             "company_name": "J. Worden & Sons",
             "subscription_tier": "pro",
             "hostname": safe_hostname,
-            "route_mode": "operations", # Operations dashboard
+            "route_mode": "operations",
             "site_title": "The Worden Standard",
             "site_description": "Asphalt Paving Command Center",
             "primary_color": "#050810",
@@ -141,8 +143,35 @@ async def resolve_hostname(request: Request, hostname: str, db: Session = Depend
             "hero_headline": None,
             "hero_subheadline": None,
             "local_weather_copy": None,
-            "phone_override": None
+            "phone_override": None,
+            "branding_tier": None,
+            "logo_url": None,
         }
+
+    # Check for SaaS subdomain pattern: <slug>.thewordenstandard.com
+    if safe_hostname.endswith(".thewordenstandard.com") and safe_hostname != "thewordenstandard.com":
+        subdomain_slug = safe_hostname.replace(".thewordenstandard.com", "")
+        saas_tenant = db.query(Tenant).filter(
+            Tenant.subdomain_slug == subdomain_slug
+        ).first() if hasattr(Tenant, 'subdomain_slug') else None
+        if saas_tenant:
+            return {
+                "tenant_id": saas_tenant.tenant_id,
+                "company_name": saas_tenant.company_name,
+                "subscription_tier": getattr(saas_tenant, "subscription_tier", "pro"),
+                "hostname": safe_hostname,
+                "route_mode": "saas-client",
+                "site_title": saas_tenant.company_name,
+                "site_description": f"{saas_tenant.company_name} — Powered by Jarvis",
+                "primary_color": getattr(saas_tenant, "primary_color", "#f59e0b"),
+                "accent_color": None,
+                "hero_headline": None,
+                "hero_subheadline": None,
+                "local_weather_copy": None,
+                "phone_override": getattr(saas_tenant, "contact_phone", None),
+                "branding_tier": getattr(saas_tenant, "branding_tier", "jarvis"),
+                "logo_url": getattr(saas_tenant, "logo_url", None),
+            }
 
     # Match regional market profiles
     profile = None
@@ -210,7 +239,110 @@ async def resolve_hostname(request: Request, hostname: str, db: Session = Depend
         "hero_subheadline": site.hero_subheadline or (profile["heroKicker"] if profile else None),
         "local_weather_copy": site.local_weather_copy or (profile["primaryMetro"] if profile else None),
         "phone_override": site.phone_override or tenant.contact_phone,
-        "market": profile if profile else None
+        "market": profile if profile else None,
+        "branding_tier": None,
+        "logo_url": None,
+    }
+
+
+# ── SaaS Tenant Provisioning ──────────────────────────────────────────────────
+
+class SaasProvisionRequest(BaseModel):
+    company_name: str
+    contact_email: str
+    contact_phone: Optional[str] = None
+    custom_domain: Optional[str] = None      # e.g. smithpaving.com
+    subdomain_slug: Optional[str] = None     # e.g. smith  →  smith.thewordenstandard.com
+    primary_color: Optional[str] = "#f59e0b"
+    branding_tier: Optional[str] = "jarvis" # jarvis | worden_standard | white_label
+    logo_url: Optional[str] = None
+    subscription_tier: Optional[str] = "pro"
+
+@router.post("/saas/provision", summary="Provision a new SaaS white-label tenant")
+@limiter.limit("5/minute")
+async def provision_saas_tenant(
+    request: Request,
+    req: SaasProvisionRequest,
+    db: Session = Depends(get_db),
+    auth_data: dict = Depends(verify_premium_security),
+):
+    """
+    Provision a brand-new SaaS client.
+    - Creates a Tenant row.
+    - Registers their custom domain AND/OR subdomain as MarketSite rows
+      with route_mode='saas-client'.
+    - Returns the tenant_id and all registered hostnames.
+    """
+    import uuid
+    from datetime import datetime, timezone
+
+    caller_tenant_id = auth_data.get("tenant_id", "default")
+    # Only the master Worden Standard account can provision SaaS tenants.
+    if caller_tenant_id != "default":
+        raise HTTPException(status_code=403, detail="Only the platform owner can provision tenants.")
+
+    if not req.custom_domain and not req.subdomain_slug:
+        raise HTTPException(status_code=422, detail="Provide at least one of: custom_domain or subdomain_slug.")
+
+    # Slug validation
+    slug = req.subdomain_slug or req.company_name.lower().replace(" ", "-")
+    safe_slug = "".join(c for c in slug if c.isalnum() or c == "-")[:40]
+
+    new_tenant_id = str(uuid.uuid4())
+
+    tenant_kwargs = dict(
+        tenant_id=new_tenant_id,
+        company_name=req.company_name,
+        contact_email=req.contact_email,
+        contact_phone=req.contact_phone,
+        subscription_tier=req.subscription_tier,
+        primary_color=req.primary_color,
+    )
+    # Inject optional columns only if the model has them (future-safe)
+    for col, val in [("branding_tier", req.branding_tier), ("logo_url", req.logo_url), ("subdomain_slug", safe_slug)]:
+        if hasattr(Tenant, col):
+            tenant_kwargs[col] = val
+
+    tenant = Tenant(**tenant_kwargs)
+    db.add(tenant)
+
+    registered_hostnames = []
+
+    def _add_site(hostname: str):
+        existing = db.query(MarketSite).filter(MarketSite.hostname == hostname).first()
+        if existing:
+            return  # idempotent
+        site = MarketSite(
+            tenant_id=new_tenant_id,
+            hostname=hostname,
+            route_mode="saas-client",
+            site_title=req.company_name,
+            primary_color=req.primary_color,
+        )
+        db.add(site)
+        registered_hostnames.append(hostname)
+
+    # Custom domain
+    if req.custom_domain:
+        _add_site(req.custom_domain.lower().strip())
+
+    # Subdomain on thewordenstandard.com
+    subdomain_hostname = f"{safe_slug}.thewordenstandard.com"
+    _add_site(subdomain_hostname)
+
+    db.commit()
+
+    logger.info(f"[SaaS] Provisioned tenant {new_tenant_id} ({req.company_name}) → {registered_hostnames}")
+
+    return {
+        "status": "provisioned",
+        "tenant_id": new_tenant_id,
+        "company_name": req.company_name,
+        "subdomain": subdomain_hostname,
+        "custom_domain": req.custom_domain,
+        "registered_hostnames": registered_hostnames,
+        "cockpit_url": f"https://{subdomain_hostname}/dashboard",
+        "branding_tier": req.branding_tier,
     }
 
 class MarketSiteCreate(BaseModel):
