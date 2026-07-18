@@ -32,6 +32,8 @@ function storeAuthToken(token, expiresAtSeconds) {
   authState.token = token
   authState.expiresAt = (expiresAtSeconds || 0) * 1000
   if (typeof window === 'undefined') return
+  window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token)
+  window.localStorage.setItem(AUTH_EXPIRES_STORAGE_KEY, String(expiresAtSeconds || 0))
   window.sessionStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token)
   window.sessionStorage.setItem(AUTH_EXPIRES_STORAGE_KEY, String(expiresAtSeconds || 0))
 }
@@ -40,6 +42,8 @@ function clearStoredAuthToken() {
   authState.token = null
   authState.expiresAt = 0
   if (typeof window === 'undefined') return
+  window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+  window.localStorage.removeItem(AUTH_EXPIRES_STORAGE_KEY)
   window.sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
   window.sessionStorage.removeItem(AUTH_EXPIRES_STORAGE_KEY)
 }
@@ -57,8 +61,10 @@ function handleAuthRejection(status, detail) {
 
 function restoreStoredAuthToken() {
   if (typeof window === 'undefined') return false
-  const token = window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
-  const expiresAtSeconds = Number(window.sessionStorage.getItem(AUTH_EXPIRES_STORAGE_KEY) || 0)
+  const token = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
+  const expiresAtSeconds = Number(
+    window.localStorage.getItem(AUTH_EXPIRES_STORAGE_KEY) || window.sessionStorage.getItem(AUTH_EXPIRES_STORAGE_KEY) || 0
+  )
   if (!token || expiresAtSeconds * 1000 - Date.now() <= 60_000) {
     clearStoredAuthToken()
     return false
@@ -349,8 +355,8 @@ function normalizeProjectDocumentRecord(record) {
 }
 
 async function listBackendLeads(limit = 200) {
-  const response = await protectedRequest('GET', `/api/v1/crm/leads${buildQS({ limit })}`)
-  const leads = Array.isArray(response?.leads) ? response.leads : []
+  const response = await protectedRequest('GET', `/api/v1/leads${buildQS({ limit })}`)
+  const leads = Array.isArray(response) ? response : Array.isArray(response?.leads) ? response.leads : []
   return leads.map(normalizeLeadRecord)
 }
 
@@ -524,6 +530,24 @@ const entityAdapters = {
       return subscribeToEntity('BlogPost', callback)
     },
   },
+  Estimate: {
+    async list(sort = '-created_at', limit = 200) {
+      const response = await protectedRequest('GET', '/api/v1/operations/estimates')
+      const estimates = Array.isArray(response?.estimates) ? response.estimates : []
+      return sortEntityRecords(estimates, sort).slice(0, limit)
+    },
+    async filter(filter = {}, sort = '-created_at', limit = 200) {
+      const estimates = await this.list(sort, limit)
+      return estimates.filter((est) => matchesEntityFilter(est, filter)).slice(0, limit)
+    },
+    async get(id) {
+      const estimates = await this.list()
+      return estimates.find((est) => est.id === Number(id)) || null
+    },
+    subscribe(callback) {
+      return subscribeToEntity('Estimate', callback)
+    },
+  },
   Job: {
     async list(sort = '-scheduled_date', limit = 200) {
       const response = await protectedRequest('GET', `/api/v1/operations/jobs${buildQS()}`)
@@ -649,6 +673,7 @@ const integrationsClient = {
 export const api = {
   getAuthStatus: () => request('GET', '/api/v1/auth/status'),
   authenticateWithPin,
+  getDiamondJobs: () => protectedRequest('GET', '/api/v1/operations/diamond-jobs'),
   listAuditEvents: (params = {}) => protectedRequest('GET', `/api/v1/admin/audit/events${buildQS(params)}`),
   listRecentOperationalLeads: (limit = 12) => protectedRequest('GET', `/api/v1/operations/leads/recent${buildQS({ limit })}`),
   submitQuote: (data) => request('POST', '/api/v1/leads/quote', data),
@@ -955,6 +980,9 @@ export const api = {
   },
   uploadGalleryImage: (form) => protectedFormRequest('/api/v1/gallery/upload', form),
   deleteGalleryImage: (imageId) => protectedRequest('DELETE', `/api/v1/gallery/images/${imageId}`),
+  searchAbilities: (query = '') => request('GET', `/api/v1/abilities/search?q=${encodeURIComponent(query)}`),
+  executeAbility: (moduleId, params = {}) => request('POST', '/api/v1/abilities/execute', { module_id: moduleId, params }),
+  createStripeCheckoutSession: (payload) => request('POST', '/api/v1/billing/checkout', payload),
   entities,
   functions: functionsClient,
   integrations: integrationsClient,

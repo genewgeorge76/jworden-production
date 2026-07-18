@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTenant } from '@/lib/TenantContext';
+import api from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -140,8 +141,17 @@ export default function SiteFactoryPanel() {
           </p>
           <Button
             variant="default"
-            className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold border-0"
-            onClick={() => window.open('mailto:support@thewordenstandard.com?subject=Upgrade to Pro SaaS', '_blank')}
+            className="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold border-0 cursor-pointer"
+            onClick={async () => {
+              try {
+                const res = await api.createStripeCheckoutSession({ plan: 'pro', tenant_id: 'default' });
+                if (res?.url) {
+                  window.open(res.url, '_blank');
+                }
+              } catch {
+                window.open('mailto:support@thewordenstandard.com?subject=Upgrade to Pro SaaS', '_blank');
+              }
+            }}
           >
             Upgrade to Pro SaaS
           </Button>

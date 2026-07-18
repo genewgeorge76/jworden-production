@@ -340,6 +340,7 @@ const AuthenticatedApp = () => {
         {!isOperationsSite && <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />}
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
         <Route path="/client-portal" element={<ClientPortal />} />
+        <Route path="/portal" element={<ClientPortal />} />
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
