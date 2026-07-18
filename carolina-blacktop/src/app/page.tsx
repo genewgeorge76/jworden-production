@@ -28,6 +28,8 @@ export default function Home() {
 
           <ul className="grid gap-3 text-left text-zinc-700 dark:text-zinc-300">
             <li>&#9679; Commercial Parking Lots</li>
+            <li>&#9679; Tar &amp; Chip Estate Lanes</li>
+            <li>&#9679; Subdivision Asphalt Resurfacing</li>
             <li>&#9679; Residential Driveways</li>
             <li>&#9679; Sealcoating &amp; Repairs</li>
             <li>&#9679; Line Striping</li>
