@@ -1,7 +1,7 @@
 /**
  * siteProfiles.js
  * 
- * Provides constants for site routing modes.
+ * Provides constants and helpers for site & subdomain routing modes.
  */
 
 export const SITE_ROUTE_MODES = {
@@ -12,22 +12,28 @@ export const SITE_ROUTE_MODES = {
   SAAS_CLIENT: 'saas-client',
 };
 
-/**
- * SAAS_CLIENT branding tiers.
- * - 'jarvis'         → "Powered by Jarvis"
- * - 'worden_standard' → "Powered by The Worden Standard"
- * - 'white_label'   → No branding (enterprise tier)
- */
+export const SUBDOMAIN_MODES = {
+  ADMIN: 'admin',         // admin.thewordenstandard.com -> /command-center
+  CREW: 'crew',           // crew.jwordenasphaltpaving.com -> /staff
+  BIDS: 'bids',           // bids.jwordenasphaltpaving.com -> /subcontractors
+  PORTAL: 'portal',       // portal.jwordenasphaltpaving.com -> /client-lite
+};
+
+export function detectSubdomainMode(hostname = window.location.hostname) {
+  const host = hostname.toLowerCase();
+  if (host.startsWith('admin.') || host.startsWith('command.')) return SUBDOMAIN_MODES.ADMIN;
+  if (host.startsWith('crew.') || host.startsWith('staff.')) return SUBDOMAIN_MODES.CREW;
+  if (host.startsWith('bids.') || host.startsWith('vendors.')) return SUBDOMAIN_MODES.BIDS;
+  if (host.startsWith('portal.') || host.startsWith('myquote.')) return SUBDOMAIN_MODES.PORTAL;
+  return null;
+}
+
 export const SAAS_BRANDING_TIERS = {
   JARVIS: 'jarvis',
   WORDEN_STANDARD: 'worden_standard',
   WHITE_LABEL: 'white_label',
 };
 
-/**
- * Resolve the "Powered by" footer label for a given tenant.
- * Falls back to 'jarvis' if no branding_tier is specified.
- */
 export function getSaasBrandingLabel(tenant) {
   const tier = tenant?.branding_tier || SAAS_BRANDING_TIERS.JARVIS;
   if (tier === SAAS_BRANDING_TIERS.WORDEN_STANDARD) return 'Powered by The Worden Standard';

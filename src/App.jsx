@@ -18,7 +18,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MobileCallBar from '@/components/MobileCallBar';
 import { publicAIPages, internalAIPages } from '@/generated/aiPageRegistry';
-import { SITE_ROUTE_MODES } from '@/lib/siteProfiles';
+import { SITE_ROUTE_MODES, detectSubdomainMode, SUBDOMAIN_MODES } from '@/lib/siteProfiles';
 import { TenantProvider, useTenant } from '@/lib/TenantContext';
 // Add programmatic SEO blog routes
 import { aiBlogRegistry } from '@/generated/aiBlogRegistry';
@@ -244,6 +244,21 @@ const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
   const tenant = useTenant();
   const routeMode = tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE;
+  const subdomainMode = detectSubdomainMode();
+
+  if (subdomainMode === SUBDOMAIN_MODES.ADMIN) {
+    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<CommandCenter />} /></Routes></Suspense>;
+  }
+  if (subdomainMode === SUBDOMAIN_MODES.CREW) {
+    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<CrewFieldApp />} /></Routes></Suspense>;
+  }
+  if (subdomainMode === SUBDOMAIN_MODES.BIDS) {
+    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<Subcontractors />} /></Routes></Suspense>;
+  }
+  if (subdomainMode === SUBDOMAIN_MODES.PORTAL) {
+    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<ClientLitePortal />} /></Routes></Suspense>;
+  }
+
   const isMarketLandingSite = routeMode === SITE_ROUTE_MODES.MARKET_LANDING;
   const isOperationsSite = routeMode === SITE_ROUTE_MODES.OPERATIONS;
   const isUniversitySite = routeMode === SITE_ROUTE_MODES.UNIVERSITY;
