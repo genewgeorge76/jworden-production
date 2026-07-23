@@ -250,7 +250,14 @@ const AuthenticatedApp = () => {
   const isWordenStandardDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().includes('thewordenstandard.com');
 
   if (subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) {
-    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<RequireAuth><CommandCenter /></RequireAuth>} /></Routes></Suspense>;
+    return (
+      <Suspense fallback={<RouteLoader />}>
+        <Routes>
+          <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
+          <Route path="*" element={<RequireAuth><CommandCenter /></RequireAuth>} />
+        </Routes>
+      </Suspense>
+    );
   }
   if (subdomainMode === SUBDOMAIN_MODES.CREW) {
     return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<CrewFieldApp />} /></Routes></Suspense>;
