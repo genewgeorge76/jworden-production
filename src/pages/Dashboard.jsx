@@ -12,6 +12,7 @@ const HUB_SECTIONS = [
     icon: '⚙️',
     color: 'border-l-green-500',
     links: [
+      { to: '/diamond',     icon: '💎', label: 'Diamond Jobs Portal',sub: 'Active & available scraped jobs',    badge: 'NEW' },
       { to: '/revenue',     icon: '💰', label: 'Revenue Dashboard',  sub: 'Invoices · P&L · pipeline',        badge: null },
       { to: '/leads',       icon: '📬', label: 'Lead Inbox',         sub: 'Quotes · follow-ups · new leads',  badge: 'HOT' },
       { to: '/voice-calls', icon: '📞', label: 'Voice Calls',        sub: 'VAPI call log · AI answered calls', badge: null },
@@ -36,11 +37,15 @@ const HUB_SECTIONS = [
     icon: '🤖',
     color: 'border-l-cyan-500',
     links: [
-      { to: '/jwordenai',       icon: '🤖', label: 'JWordenAI',              sub: 'Construction intelligence suite',     badge: 'AI' },
-      { to: '/command-center',  icon: '🦾', label: "Tony Stark's Dashboard", sub: 'Command Center · system keys · API health',  badge: 'PREMIUM' },
-      { to: '/autonomy',        icon: '⚡', label: 'Autonomy Dashboard',     sub: 'Automated task status',               badge: null },
-      { to: '/contractor-ai',   icon: '🏗️', label: 'Contractor AI Platform', sub: 'Bid analysis · scope generation',    badge: null },
-      { to: '/virginia-statewide', icon: '🗺️', label: 'Virginia Statewide', sub: 'Market coverage + region metrics',   badge: null },
+      { to: '/jwordenai',          icon: '🤖', label: 'JWordenAI',              sub: 'Construction intelligence suite',     badge: 'AI' },
+      { to: '/diamond',            icon: '💎', label: 'Diamond Jobs Portal',     sub: 'Scraped active & available jobs',    badge: 'NEW' },
+      { to: '/scanner',            icon: '📷', label: 'Driveway AI Scanner',    sub: 'GPS EXIF & satellite scope calc',    badge: 'AI' },
+      { to: '/takeoff',            icon: '🛩️', label: 'Drone Takeoff & LiDAR',  sub: '3D point cloud & site volumetric grading', badge: 'PRO' },
+      { to: '/command-center',     icon: '🦾', label: "Tony Stark's Dashboard", sub: 'Command Center · system keys · API health', badge: 'PREMIUM' },
+      { to: '/autonomy',           icon: '⚡', label: 'Autonomy Dashboard',     sub: 'Automated task status & schedules',  badge: null },
+      { to: '/contractor-ai',      icon: '🏗️', label: 'Contractor AI Platform', sub: 'Bid analysis · scope generation',    badge: null },
+      { to: '/virginia-statewide', icon: '🗺️', label: 'Virginia Statewide',     sub: 'Market coverage + county tax metrics', badge: null },
+      { to: '/university',         icon: '🎓', label: 'Worden University LMS',  sub: 'OSHA safety & paving training portal', badge: 'LMS' },
     ],
   },
   {
@@ -134,13 +139,12 @@ const Dashboard = () => {
     setPostStatus('posting');
     setTweetError(null);
     try {
-      const res = await fetch('/.netlify/functions/auto-post-tweet', { method: 'POST' });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok) {
+      const res = await api.jarvisCommand("Generate and post daily operational update tweet", "JARVIS");
+      if (res) {
         setPostStatus('success');
       } else {
         setPostStatus('error');
-        setTweetError(data.details || data.error || `HTTP ${res.status}`);
+        setTweetError('Failed to trigger daily post');
       }
     } catch (err) {
       setPostStatus('error');

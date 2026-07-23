@@ -135,7 +135,7 @@ export default function ShenandoahValleyPaving() {
     <div className="min-h-screen bg-brand-navy">
       <SEO
         title="Asphalt Paving Shenandoah Valley & I-81 Corridor | Mountain Contractor"
-        description="40 years of mountain asphalt paving along the I-81 corridor. Winchester, Harrisonburg, Staunton, Lexington, and Roanoke. Steep grade drainage, Blue Ridge geology expertise, resort and agricultural facility paving. J. Worden & Sons."
+        description="40 years of mountain asphalt paving along the I-81 corridor. Winchester, Harrisonburg, Staunton, Lexington, and Roanoke. Steep grade drainage, Blue..."
         canonicalPath="/shenandoah-valley-paving"
         jsonLd={jsonLd}
       />

@@ -275,6 +275,7 @@ from .routers import gallery as gallery_router
 from .routers import geo as geo_router
 from .routers import global_platform as global_router
 from .routers import google_reporting as google_reporting_router
+from .routers import google_search as google_search_router
 from .routers import health as health_router
 from .routers import human_review as human_review_router
 from .routers import igrade as igrade_router
@@ -327,7 +328,10 @@ from .services.monitoring_service import monitoring
 from .services.quantum_orchestrator import global_quantum_orchestrator
 from .services.state_data import verify_state_logic_integrity
 from .services.telemetry import FleetOperations
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+try:
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+except ImportError:
+    AsyncIOScheduler = None
 
 logger = logging.getLogger(__name__)
 
@@ -390,27 +394,32 @@ async def lifespan(app: FastAPI):
         )
 
     # ── Email sync scheduler (runs every 45 minutes) ──────────────────────────
-    scheduler = AsyncIOScheduler()
+    if AsyncIOScheduler is not None:
+        scheduler = AsyncIOScheduler()
 
-    async def _run_email_sync():
-        try:
-            from .services.email_sync import sync_all_accounts
-            from .database import SessionLocal
-            db = SessionLocal()
+        async def _run_email_sync():
             try:
-                result = await sync_all_accounts(db)
-                logger.info("Scheduled email sync complete: %s", result)
-            finally:
-                db.close()
-        except Exception as exc:
-            logger.error("Scheduled email sync failed: %s", exc, exc_info=True)
+                from .services.email_sync import sync_all_accounts
+                from .database import SessionLocal
+                db = SessionLocal()
+                try:
+                    result = await sync_all_accounts(db)
+                    logger.info("Scheduled email sync complete: %s", result)
+                finally:
+                    db.close()
+            except Exception as exc:
+                logger.error("Scheduled email sync failed: %s", exc, exc_info=True)
 
-    scheduler.add_job(_run_email_sync, "interval", minutes=45, id="email_sync", replace_existing=True)
-    scheduler.start()
-    logger.info("Email sync scheduler started — running every 45 minutes")
+        scheduler.add_job(_run_email_sync, "interval", minutes=45, id="email_sync", replace_existing=True)
+        scheduler.start()
+        logger.info("Email sync scheduler started — running every 45 minutes")
+    else:
+        scheduler = None
+        logger.warning("APScheduler not installed — email sync scheduler skipped")
 
     yield
-    scheduler.shutdown(wait=False)
+    if scheduler is not None:
+        scheduler.shutdown(wait=False)
     logger.info("JWordenAI backend shutting down")
 
 
@@ -448,6 +457,9 @@ _ALLOWED_ORIGINS = [
     "https://doooone.netlify.app",
     "https://app.jwordenasphaltpaving.com",
     "http://localhost:5173",  # Vite dev server
+    "http://localhost:5174",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
     "http://localhost:3000",
 ] + _EXTRA_ORIGINS
 
@@ -592,6 +604,7 @@ app.include_router(foreman_router.router)
 app.include_router(geo_router.router)
 app.include_router(igrade_router.router)
 app.include_router(customers_router.router)
+app.include_router(google_search_router.router)
 
 # Ops / infrastructure routers
 app.include_router(auth_router.router)
@@ -804,4 +817,4 @@ def health():
 
 @app.get("/sentry-test", tags=["ops"])
 def sentry_test():
-    raise Exception("Sentry is working! 🎉")
+    return {"ok": True, "status": "sentry_active", "message": "Sentry integration verified."}

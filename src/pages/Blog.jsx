@@ -106,7 +106,7 @@ export default function Blog() {
     <div className="min-h-screen bg-background font-body">
       <SEO
         title="Asphalt Paving Blog | Expert Guides & Maintenance Tips | J. Worden & Sons"
-        description="Expert asphalt paving guides — driveway maintenance, sealcoating timing, commercial parking lot longevity, Virginia climate impact, and more. 40+ years of paving wisdom."
+        description="Expert asphalt paving guides — driveway maintenance, sealcoating timing, commercial parking lot longevity, Virginia climate impact, and more. 40+..."
         canonicalPath="/blog"
         jsonLd={jsonLd}
       />

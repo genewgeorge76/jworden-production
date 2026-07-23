@@ -50,7 +50,13 @@ JARVIS_SYSTEM_PROMPT = (
     "For legal/compliance/licensing/civil/criminal questions, treat outputs as advisory guidance, "
     "not legal advice, and clearly recommend jurisdiction-specific verification. "
     "Refuse to send, schedule, or modify anything autonomously when the master autonomy switch is OFF — "
-    "in that case, propose the action and ask the operator to confirm."
+    "in that case, propose the action and ask the operator to confirm. "
+    "When the operator asks you to navigate to an address, restaurant, or location, provide a Google Maps URL in this exact markdown format: `[NAVIGATE: <Destination Name>](https://www.google.com/maps/dir/?api=1&destination=<URL_Encoded_Destination>)`. If they specify 'with equipment', 'commercial', or 'heavy', add a prominent warning that Google Maps does not provide commercial routing and they must verify bridge heights and weight limits. "
+    "You have access to the Jarvis OS — a library of 162 specialized AI engines covering Real Estate, Ground Scanning, Age Decay Simulation, DOT Compliance, Legal, Finance, Supply Chain, Crew Dispatch, Vision Intelligence, and more. "
+    "When the user's request matches a specialized domain, FIRST call search_os_abilities to find the right module, THEN call execute_os_ability to run it and return results. "
+    "Do NOT attempt to fake results — always actually invoke the tools. "
+    "For truck routing, heavy equipment, DOT enforcement zones or weigh stations, ALWAYS call check_dynamic_route. "
+    "For fleet/paving train status, call check_fleet_status. For asphalt cooling warnings, call check_thermal_mix."
 )
 
 # Tool definitions Claude can choose to invoke.
@@ -154,12 +160,78 @@ JARVIS_TOOLS = [
             "required": ["subject", "body"],
         },
     },
+    {
+        "name": "search_os_abilities",
+        "description": (
+            "Search the Jarvis OS ability registry (162 specialized AI engines) by natural-language query. "
+            "Returns the top matching module IDs and their descriptions and parameter lists. "
+            "ALWAYS call this first when the user asks about specialized topics: ground scanning, age decay, "
+            "real estate underwriting, DOT compliance, supply chain, legal compliance, satellite scanning, etc. "
+            "Then call execute_os_ability with the best matching module_id."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Natural-language description of what you need"},
+                "top_k": {"type": "integer", "description": "Number of results to return (default 6)"}
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "name": "execute_os_ability",
+        "description": (
+            "Execute a specific Jarvis OS AI engine by its module_id (obtained from search_os_abilities). "
+            "The system will dynamically load and run the engine, returning real operational data. "
+            "Pass any relevant parameters the user provided (location, tonnage, conditions, truck IDs, etc.)."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "module_id": {"type": "string", "description": "The module_id from search_os_abilities, e.g. 'VisionAndIntelligence.age_decay_simulator'"},
+                "params":    {"type": "object", "description": "Parameters dict to pass to the ability engine"}
+            },
+            "required": ["module_id"]
+        }
+    },
+    {
+        "name": "check_dynamic_route",
+        "description": "Check routes for heavy equipment and dump trucks, including 51-state DOT compliance, weight scales, and active enforcement zones.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "truck_id": {"type": "string", "description": "Optional ID of the truck or equipment"}
+            }
+        }
+    },
+    {
+        "name": "check_fleet_status",
+        "description": "Check platoon sequence and gap detection for active heavy haulers to prevent paving halts.",
+        "input_schema": {
+            "type": "object",
+            "properties": {}
+        }
+    },
+    {
+        "name": "check_thermal_mix",
+        "description": "Calculate asphalt temperature decay based on transit time, ambient temp, and wind.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "start_temp": {"type": "number", "description": "Starting temp in F"},
+                "transit_minutes": {"type": "number", "description": "Transit time in minutes"},
+                "ambient_temp": {"type": "number", "description": "Ambient air temp in F"},
+                "wind_speed_mph": {"type": "number", "description": "Wind speed in MPH"}
+            },
+            "required": ["start_temp", "transit_minutes", "ambient_temp", "wind_speed_mph"]
+        }
+    }
 ]
 
 _SENSITIVE_TOOL_NAMES = {"make_phone_call", "send_email", "run_npm"}
 _ROLE_TOOLS: dict[str, set[str]] = {
-    ROLE_PUBLIC_CONCIERGE: {"web_search"},
-    ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm"},
+    ROLE_PUBLIC_CONCIERGE: {"web_search", "search_os_abilities"},
+    ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm", "search_os_abilities", "execute_os_ability", "check_dynamic_route", "check_fleet_status", "check_thermal_mix"},
     ROLE_OWNER_ROOT: {t["name"] for t in JARVIS_TOOLS},
 }
 
@@ -489,10 +561,59 @@ async def _run_tool(
         q = args.get("query") or ""
         plan = _planner.plan(q, {"run_npm": True, "code_search": True, "open_file": True})
         return _finalize({"ok": True, "plan": plan})
+        
+    if name == "search_os_abilities":
+        from app.services.os_ability_service import search_os_abilities as _search
+        q      = args.get("query", "")
+        top_k  = int(args.get("top_k") or 6)
+        result = _search(q, top_k=top_k)
+        return _finalize(result)
+    if name == "execute_os_ability":
+        from app.services.os_ability_service import execute_os_ability as _execute
+        mod_id = args.get("module_id", "")
+        params = args.get("params") or {}
+        result = _execute(mod_id, params)
+        return _finalize(result)
+    if name in ["check_dynamic_route", "check_fleet_status", "check_thermal_mix"]:
+        from app.core.tenant_contract import profiles_by_key
+        profiles = profiles_by_key()
+        tenant = profiles.get(tenant_id)
+        tier = getattr(tenant, "subscriptionTier", "lite") if tenant else "lite"
+        
+        # Free-tier default bypass if it's the root JWORDEN_HQ for demo
+        if tenant_id != "JWORDEN_HQ" and tier not in ["pro", "enterprise"]:
+            return _finalize({"ok": False, "error": "This feature requires a PRO or ENTERPRISE license tier. Please upgrade."})
+            
+        try:
+            if name == "check_dynamic_route":
+                from app.jarvis_os.abilities.OperationalAndDispatch.dynamic_routing_engine import DynamicRoutingEngine
+                engine = DynamicRoutingEngine()
+                res = engine.execute({"truck_id": args.get("truck_id")})
+                return _finalize({"ok": True, "result": res})
+                
+            elif name == "check_fleet_status":
+                from app.jarvis_os.abilities.OperationalAndDispatch.heavy_fleet_router import HeavyFleetRouterEngine
+                engine = HeavyFleetRouterEngine()
+                res = engine.execute()
+                return _finalize({"ok": True, "result": res})
+                
+            elif name == "check_thermal_mix":
+                from app.jarvis_os.abilities.OperationalAndDispatch.thermal_mix_optimizer import ThermalMixOptimizer
+                engine = ThermalMixOptimizer()
+                res = engine.calculate_decay(
+                    start_temp=float(args.get("start_temp", 300.0)),
+                    transit_minutes=float(args.get("transit_minutes", 30.0)),
+                    ambient_temp=float(args.get("ambient_temp", 70.0)),
+                    wind_speed_mph=float(args.get("wind_speed_mph", 5.0))
+                )
+                return _finalize({"ok": True, "result": res})
+        except Exception as exc:
+            return _finalize({"ok": False, "error": str(exc)})
+
     return _finalize({"ok": False, "error": f"Unknown tool: {name}"})
 
 
-async def _ask_claude(
+async def _ask_claude_internal(
     query: str,
     persona: str,
     autonomy: dict,
@@ -604,6 +725,147 @@ async def _ask_claude(
 
     return {"text": "(tool loop exceeded)", "tool_calls": tool_calls}
 
+
+
+async def _ask_openai(
+    query: str,
+    persona: str,
+    autonomy: dict,
+    *,
+    confirmed: bool = False,
+    role: str = ROLE_PUBLIC_CONCIERGE,
+    tenant_id: str = "default",
+) -> Optional[dict]:
+    api_key = os.getenv("OPENAI_API_KEY", "")
+    if not api_key: return None
+    try:
+        from openai import AsyncOpenAI
+        import json
+    except ImportError:
+        return None
+
+    client = AsyncOpenAI(api_key=api_key)
+    tools = _toolset_for_session(confirmed=confirmed, role=role)
+    
+    # Translate to OpenAI schema
+    openai_tools = []
+    for t in tools:
+        openai_tools.append({
+            "type": "function",
+            "function": {
+                "name": t.get("name"),
+                "description": t.get("description", ""),
+                "parameters": t.get("input_schema", {})
+            }
+        })
+    
+    advisory_context = _build_advisory_context(query)
+    system = JARVIS_SYSTEM_PROMPT + "\n\n" + ("Adopt the Mr. Worden Sales persona" if persona == "MR_WORDEN_SALES" else "Maintain JARVIS persona")
+    if advisory_context:
+        system += "\n" + advisory_context
+    
+    messages = [{"role": "system", "content": system}, {"role": "user", "content": query}]
+    tool_calls_result = []
+
+    for _round in range(2):
+        try:
+            resp = await client.chat.completions.create(
+                model="gpt-4o",
+                messages=messages,
+                tools=openai_tools if openai_tools else None,
+                max_tokens=600,
+            )
+        except Exception as exc:
+            logger.warning("[JARVIS] OpenAI fallback call failed: %s", exc)
+            return None
+        
+        msg = resp.choices[0].message
+        
+        if msg.tool_calls:
+            # Add assistant message
+            messages.append(msg)
+            
+            for tc in msg.tool_calls:
+                name = tc.function.name
+                args = json.loads(tc.function.arguments)
+                result = await _run_tool(name, args, confirmed=confirmed, role=role, tenant_id=tenant_id)
+                tool_calls_result.append({"name": name, "args": args, "result": result})
+                
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tc.id,
+                    "name": name,
+                    "content": str(result)[:4000]
+                })
+            continue # next round
+        
+        return {"text": msg.content or "(no response)", "tool_calls": tool_calls_result}
+    
+    return {"text": "(tool loop exceeded)", "tool_calls": tool_calls_result}
+
+async def _ask_gemini(
+    query: str,
+    persona: str,
+    autonomy: dict,
+    *,
+    confirmed: bool = False,
+    role: str = ROLE_PUBLIC_CONCIERGE,
+    tenant_id: str = "default",
+) -> Optional[dict]:
+    # Google schema is tricky, falling back to chat-only mode for Gemini to guarantee no crashing
+    from app.services import llm_client as _llm
+    system = JARVIS_SYSTEM_PROMPT + "\n\n" + ("Adopt Mr. Worden Sales persona" if persona == "MR_WORDEN_SALES" else "Maintain JARVIS persona")
+    import asyncio
+    resp = await asyncio.to_thread(
+        _llm.chat,
+        task="jarvis_fast",
+        system=system,
+        user=query,
+        max_tokens=500,
+        provider_override="google",
+        model_override="gemini-2.5-pro"
+    )
+    if resp and resp.text:
+        return {"text": resp.text + "\n\n*(Note: Executed in Gemini degraded mode without tool access)*", "tool_calls": []}
+    return None
+
+async def _ask_claude(
+    query: str,
+    persona: str,
+    autonomy: dict,
+    *,
+    confirmed: bool = False,
+    role: str = ROLE_PUBLIC_CONCIERGE,
+    tenant_id: str = "default",
+) -> Optional[dict]:
+    try:
+        res = await _ask_claude_internal(query, persona, autonomy, confirmed=confirmed, role=role, tenant_id=tenant_id)
+        if res and not "(tool loop exceeded)" in res.get("text", ""):
+            return res
+    except Exception as e:
+        logger.warning(f"[JARVIS] Claude tool-engine failed: {e}")
+        
+    logger.info("[JARVIS] Falling back to OpenAI tool-engine...")
+    try:
+        res = await _ask_openai(query, persona, autonomy, confirmed=confirmed, role=role, tenant_id=tenant_id)
+        if res:
+            res["model"] = "gpt-4o"
+            res["engine"] = "openai-fallback"
+            return res
+    except Exception as e:
+        logger.warning(f"[JARVIS] OpenAI tool-engine failed: {e}")
+        
+    logger.info("[JARVIS] Falling back to Gemini tool-engine (degraded)...")
+    try:
+        res = await _ask_gemini(query, persona, autonomy, confirmed=confirmed, role=role, tenant_id=tenant_id)
+        if res:
+            res["model"] = "gemini-2.5-pro"
+            res["engine"] = "gemini-fallback"
+            return res
+    except Exception as e:
+        logger.warning(f"[JARVIS] Gemini tool-engine failed: {e}")
+        
+    return None
 
 class JarvisAI:
     """

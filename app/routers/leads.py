@@ -14,10 +14,21 @@ from ..services.notifications import send_lead_notification
 from ..services.pricing import estimate_price
 from ..services.state_data import normalize_state_code
 from ..services.email_service import send_quote_confirmation, send_admin_notification, send_contact_response
+from ..services.google_sheets import sync_lead_to_sheets
+from ..services.geocoding import geocode_address
 
 router = APIRouter(prefix="/api/v1/leads", tags=["leads"])
 
 logger = logging.getLogger(__name__)
+
+def get_tenant_id(request: Request) -> str:
+    origin = request.headers.get("origin")
+    host = request.headers.get("host")
+    if origin:
+        return origin.replace("http://", "").replace("https://", "").split(":")[0]
+    if host:
+        return host.split(":")[0]
+    return "default"
 
 
 class QuoteRequest(BaseModel):
@@ -106,6 +117,13 @@ async def submit_quote(
     scoring = score_lead(lead_data)
     lead_data["score"] = scoring
 
+    # Geocode lead address
+    lat, lng = None, None
+    if req.address:
+        coords = geocode_address(req.address)
+        if coords:
+            lat, lng = coords
+
     # Persist to database
     db_lead = Lead(
         name=req.name,
@@ -121,6 +139,11 @@ async def submit_quote(
         score_value=scoring["score"],
         score_label=scoring["label"],
         score_priority=scoring["priority"],
+        source="web_form",
+        latitude=lat,
+        longitude=lng,
+        raw_data=lead_data,
+        tenant_id=get_tenant_id(request),
     )
     db.add(db_lead)
     db.commit()
@@ -144,6 +167,7 @@ async def submit_quote(
     )
 
     background_tasks.add_task(send_lead_notification, lead_data)
+    background_tasks.add_task(sync_lead_to_sheets, lead_data)
 
     # SendGrid: send confirmation to customer + admin notification
     background_tasks.add_task(send_quote_confirmation, db_lead)
@@ -220,6 +244,7 @@ async def submit_contact(
         email=req.email,
         phone=req.phone,
         message=req.message,
+        tenant_id=get_tenant_id(request),
     )
     db.add(db_msg)
     db.commit()
@@ -238,6 +263,7 @@ async def submit_contact(
 
     lead_data = {**req.model_dump(), "type": "contact"}
     background_tasks.add_task(send_lead_notification, lead_data)
+    background_tasks.add_task(sync_lead_to_sheets, lead_data)
 
     # SendGrid: send auto-reply to customer
     background_tasks.add_task(send_contact_response, db_msg)
@@ -308,6 +334,7 @@ async def submit_website_lead(
         email=email,
         phone=req.phone,
         message=message_body,
+        tenant_id=get_tenant_id(request),
     )
     db.add(db_msg)
     db.commit()
@@ -331,6 +358,7 @@ async def submit_website_lead(
 
     payload = {**req.model_dump(), "type": "website"}
     background_tasks.add_task(send_lead_notification, payload)
+    background_tasks.add_task(sync_lead_to_sheets, payload)
     if req.email:
         background_tasks.add_task(send_contact_response, db_msg)
 
@@ -368,6 +396,14 @@ async def email_ingest(
     # 2. Score the lead natively
     scoring = score_lead(parsed)
     
+    # Geocode lead address
+    lat, lng = None, None
+    addr_str = parsed.get("address")
+    if addr_str:
+        coords = geocode_address(addr_str)
+        if coords:
+            lat, lng = coords
+
     # 3. Create Lead in DB
     db_lead = Lead(
         name=parsed.get("name", "Unknown Email Lead"),
@@ -377,12 +413,16 @@ async def email_ingest(
         property_type=parsed.get("property_type", "residential"),
         urgency=parsed.get("urgency", "flexible"),
         project_size_sqft=parsed.get("project_size_sqft"),
-        address=parsed.get("address"),
+        address=addr_str,
         state_code=normalize_state_code(parsed.get("state_code")),
         message=f"[EMAIL LEAD via {req.source_account}] {parsed.get('message', req.body[:500])}",
         score_value=scoring["score"],
         score_label=scoring["label"],
         score_priority=scoring["priority"],
+        source=f"gmail:{req.source_account}",
+        latitude=lat,
+        longitude=lng,
+        raw_data=parsed,
     )
     
     db.add(db_lead)
@@ -407,6 +447,7 @@ async def email_ingest(
         "type": "email_ingest"
     }
     background_tasks.add_task(send_lead_notification, lead_data)
+    background_tasks.add_task(sync_lead_to_sheets, lead_data)
     
     return {
         "status": "success",
@@ -415,3 +456,10 @@ async def email_ingest(
         "score": scoring["label"],
         "confidence": parsed.get("confidence", 0.0)
     }
+
+@router.get("", summary="List all leads")
+async def list_leads(request: Request, db: Session = Depends(get_db)):
+    """Return all leads (God Mode cockpit gets everything)."""
+    leads = db.query(Lead).order_by(Lead.created_at.desc()).limit(200).all()
+    # Also fetch contact messages if we want a unified inbox, but for now just Leads
+    return leads

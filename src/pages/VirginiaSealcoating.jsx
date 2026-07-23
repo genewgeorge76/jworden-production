@@ -1,4 +1,4 @@
-﻿import React from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, Zap, Droplets, Target, Award, Construction, Star, Trophy } from 'lucide-react'
 import Navbar from '@/components/Navbar'
@@ -40,7 +40,7 @@ const SEALCOATING_ADVANTAGES = [
 ]
 
 const AWARDS = [
-  { label: 'Houzz Pro', detail: 'Multiple Best Of Houzz Awards — Service & Design', href: 'https://www.houzz.com/jwordenandsons' },
+  { label: 'Houzz Pro', detail: 'Multiple Best Of Houzz Awards — Service & Design', href: 'https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484' },
   { label: 'Pavement Magazine', detail: 'Top 75 Contractor — 4 Categories', href: '#' },
   { label: 'Family Business', detail: 'Founded 1984 — 40+ Years Virginia Paving', href: '#' },
 ]
@@ -77,7 +77,7 @@ export default function VirginiaSealcoating() {
           url: 'https://www.jwordenasphaltpaving.com/',
           telephone: '+18044461296',
           award: ['Best Of Houzz 2022', 'Best Of Houzz 2023', 'Pavement Magazine Top 75'],
-          sameAs: ['https://www.houzz.com/jwordenandsons'],
+          sameAs: ['https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484'],
         },
         areaServed: { '@type': 'State', name: 'Virginia' },
         hasOfferCatalog: {
@@ -166,7 +166,7 @@ export default function VirginiaSealcoating() {
           {/* Award badges */}
           <div className="flex flex-wrap gap-3 mb-8">
             <a
-              href="https://www.houzz.com/jwordenandsons"
+              href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-primary/20 border border-primary/50 text-primary px-4 py-2 text-xs font-display font-black uppercase tracking-widest hover:bg-primary/30 transition-colors"

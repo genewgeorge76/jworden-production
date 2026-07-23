@@ -220,14 +220,13 @@ export default function Reviews() {
           </div>
           <div className="rounded-2xl overflow-hidden shadow-xl border border-border">
             <iframe
-              src="https://maps.google.com/maps?q=J+Worden+%26+Sons+Asphalt+Paving+Chester+VA&output=embed"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-77.4800%2C37.3300%2C-77.3800%2C37.3900&layer=mapnik&marker=37.3565%2C-77.4322"
               width="100%"
               height="400"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="J. Worden & Sons Paving LLC on Google Maps"
+              title="J. Worden & Sons Paving LLC Location Map"
             />
           </div>
           <div className="flex flex-wrap justify-center gap-4 mt-6">

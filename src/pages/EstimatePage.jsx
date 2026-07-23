@@ -323,6 +323,10 @@ export default function EstimatePage() {
     const c = searchParams.get('condition')
     return c && CONDITIONS.includes(c) ? c : 'Fair'
   })
+  
+  const [lat] = useState(() => searchParams.get('lat') || '')
+  const [lng] = useState(() => searchParams.get('lng') || '')
+
   const [notes, setNotes] = useState('')
   const [customerName, setCustomerName] = useState('')
   const [customerEmail, setCustomerEmail] = useState('')
@@ -412,6 +416,8 @@ export default function EstimatePage() {
         project_size_sqft: sqftNum,
         notes: `Condition: ${condition}. ${notes || ''}`.trim(),
         estimated_total: finalTotal,
+        geo_lat: lat ? parseFloat(lat) : null,
+        geo_lng: lng ? parseFloat(lng) : null,
       }
       await api.entities.Lead.create(payload)
 

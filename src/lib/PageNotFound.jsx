@@ -36,11 +36,11 @@ export default function PageNotFound({}) {
                     
                     {/* Main Message */}
                     <div className="space-y-4">
-                        <h2 className="text-3xl font-bold text-white tracking-tight">
-                            Road Closed
+                        <h2 className="text-3xl font-bold text-white tracking-tight font-display uppercase">
+                            Page Not Found
                         </h2>
-                        <p className="text-white/60 leading-relaxed text-lg">
-                            The route <span className="font-mono text-primary/80">/{pageName}</span> is under construction or doesn't exist.
+                        <p className="text-slate-300 leading-relaxed text-base">
+                            The requested page <span className="font-mono text-orange-400 font-bold">/{pageName || ''}</span> could not be found. Return to our homepage or request a free estimate.
                         </p>
                     </div>
                     

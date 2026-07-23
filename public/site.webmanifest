@@ -1,15 +1,17 @@
 {
   "name": "J. Worden & Sons Asphalt Paving",
-  "short_name": "J. Worden & Sons",
-  "description": "4th-generation asphalt paving, sealcoating, and parking-lot construction across Virginia since 1984.",
+  "short_name": "Worden Paving",
+  "description": "Richmond VA's 4th-generation asphalt paving contractor since 1984.",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
-  "background_color": "#fafaf8",
-  "theme_color": "#1a1a1a",
-  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
   "icons": [
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
-    { "src": "/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }

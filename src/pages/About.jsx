@@ -281,7 +281,24 @@ export default function About() {
       {/* Timeline */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="section-heading text-center mb-16">The Real History</h2>
+          <div className="text-center mb-12">
+            <h2 className="section-heading mb-4">The Real History</h2>
+            <p className="text-brand-navy/70 max-w-2xl mx-auto mb-8 font-sans text-base">
+              Four generations of asphalt paving expertise across Virginia, North Carolina, and national QSR store buildouts.
+            </p>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-12 max-h-[360px]">
+              <img 
+                src="/images/hero_paving_commercial.png" 
+                alt="J. Worden & Sons Asphalt Paving Heavy Operations" 
+                className="w-full h-full object-cover brightness-95 hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
+                <span className="text-amber-400 font-display font-bold text-sm tracking-widest uppercase bg-slate-900/80 px-4 py-1.5 rounded-full border border-amber-500/30">
+                  EST. 1984 — 40+ YEARS OF EXCELLENCE
+                </span>
+              </div>
+            </div>
+          </div>
           <div className="relative">
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-brand-amber/30" />
             <div className="space-y-12">

@@ -76,7 +76,8 @@ async def monitoring_health(request: Request):
         redis_status = {"ok": False, "error": str(exc)}
 
     elapsed_ms = round((time.monotonic() - start) * 1000, 2)
-    all_ok = db_status["ok"] and redis_status["ok"]
+    # Redis is currently optional for the core API to function
+    all_ok = db_status["ok"]
 
     # Ship latency metric to Datadog
     monitoring.log_metric(

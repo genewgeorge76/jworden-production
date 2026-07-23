@@ -16,9 +16,13 @@ import {
   X,
   Zap,
   FileSearch,
+  Map as MapIcon,
 } from 'lucide-react'
 import { useTenant } from '@/lib/TenantContext'
 import { Button } from '@/components/ui/button'
+import exifr from 'exifr'
+import JobScopeMap from '@/components/JobScopeMap'
+import turfArea from '@turf/area'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -102,9 +106,14 @@ export default function ScannerPage() {
   const [analyzing, setAnalyzing] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
+  const [geoData, setGeoData] = useState(null)
+  const [mapSqft, setMapSqft] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef(null)
-  const parsed = result ? parseAnalysis(result) : null
+  
+  // Use mapSqft if drawn, otherwise fallback to parsed sqft
+  const rawParsed = result ? parseAnalysis(result) : null
+  const parsed = rawParsed ? { ...rawParsed, sqft: mapSqft || rawParsed.sqft } : null
 
   const { tenant } = useTenant()
   const isLocked = !['max', 'JWORDEN_HQ', 'default'].includes(tenant?.subscription_tier) && tenant?.tenant_id !== 'default';
@@ -122,8 +131,18 @@ export default function ScannerPage() {
     setFile(f)
     setResult(null)
     setError(null)
+    setGeoData(null)
     const url = URL.createObjectURL(f)
     setPreview(url)
+    
+    try {
+      const gps = await exifr.gps(f)
+      if (gps && gps.latitude && gps.longitude) {
+        setGeoData({ lat: gps.latitude, lng: gps.longitude })
+      }
+    } catch (e) {
+      console.log('No EXIF GPS data found')
+    }
   }, [])
 
   const handleDrop = useCallback((e) => {
@@ -182,6 +201,25 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
 
       if (!reply) throw new Error('No response from AI. Please try again.')
       setResult(reply)
+      
+      // Sync to Google Photos via backend
+      try {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('job_name', 'Driveway Scanner: ' + (geoData ? `${geoData.lat.toFixed(4)}, ${geoData.lng.toFixed(4)}` : file.name))
+        formData.append('description', reply)
+        
+        await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/gallery/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
+          },
+          body: formData
+        })
+      } catch(err) {
+        console.error('Failed to sync to Google Photos', err)
+      }
+      
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.')
     }
@@ -194,6 +232,10 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
     if (parsed.sqft) params.set('sqft', parsed.sqft)
     if (parsed.condition) params.set('condition', parsed.condition)
     if (parsed.service) params.set('service', parsed.service)
+    if (geoData) {
+      params.set('lat', geoData.lat)
+      params.set('lng', geoData.lng)
+    }
     navigate(`/estimate?${params.toString()}`)
   }
 
@@ -202,6 +244,8 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
     setPreview(null)
     setResult(null)
     setError(null)
+    setGeoData(null)
+    setMapSqft(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -395,6 +439,7 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
                   <Image size={14} color='#64748b' />
                   <span style={{ color: '#64748b', fontSize: 12, fontFamily: 'monospace' }}>
                     {file.name} • {formatFileSize(file.size)}
+                    {geoData && ` • GPS: ${geoData.lat.toFixed(4)}, ${geoData.lng.toFixed(4)}`}
                   </span>
                 </div>
               </div>
@@ -526,6 +571,41 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
                       <ResultField label="Cost Range" value={parsed.costRange} highlight={Boolean(parsed.costRange)} />
                     </div>
                   </div>
+                  
+                  {/* Location & Scope Map */}
+                  {geoData && (
+                    <div style={{
+                      background: '#0a0f1e', border: '1px solid #1e293b',
+                      borderRadius: 16, overflow: 'hidden',
+                    }}>
+                      <div style={{
+                        background: '#060a14', padding: '12px 20px',
+                        borderBottom: '1px solid #0f172a',
+                        display: 'flex', alignItems: 'center', gap: 8,
+                      }}>
+                        <MapIcon size={15} color='#64748b' />
+                        <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#475569', letterSpacing: '0.12em' }}>
+                          SATELLITE SCOPE (GPS EXTRACTED)
+                        </span>
+                      </div>
+                      <div style={{ padding: '16px' }}>
+                        <JobScopeMap job={{ geo_lat: geoData.lat, geo_lng: geoData.lng }} onSave={(data) => {
+                            if (data?.scope_geojson) {
+                              const squareMeters = turfArea(data.scope_geojson)
+                              const squareFeet = Math.round(squareMeters * 10.7639)
+                              if (squareFeet > 0) {
+                                setMapSqft(squareFeet)
+                                alert(`Polygon area calculated: ${squareFeet.toLocaleString()} sqft. Using this for estimate.`)
+                              } else {
+                                alert('Scope saved to session memory! No valid polygon drawn.')
+                              }
+                            } else {
+                              alert('Scope saved to session memory!')
+                            }
+                        }} />
+                      </div>
+                    </div>
+                  )}
 
                   {/* Build Estimate Button */}
                   <button

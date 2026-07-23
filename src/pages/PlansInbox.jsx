@@ -125,7 +125,7 @@ export default function PlansInbox() {
     <div className="min-h-screen bg-background font-body text-foreground">
       <SEO
         title="Plans Inbox — Email or Drop Your Plans for an Instant Estimate | J. Worden & Sons"
-        description="Upload civil site plans, GC blueprints, permits, or hand sketches. Our AI parses the scope and returns a priced estimate covering asphalt, concrete, curb, drainage, and striping."
+        description="Upload civil site plans, GC blueprints, permits, or hand sketches. Our AI parses the scope and returns a priced estimate covering asphalt, concrete,..."
         canonicalPath="/plans-inbox"
       />
       <Navbar />

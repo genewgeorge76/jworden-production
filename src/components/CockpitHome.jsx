@@ -131,9 +131,9 @@ function CockpitHomeInner({ onEnterFullCC }) {
   const saveJob=()=>{if(!est)return;setJobs(p=>[{id:est.pid,trade:est.trade,city:est.city,qty:est.q,bid:est.bid,status:"Estimated",ts:new Date().toISOString(),em:est.em},...p]);setV("jobs")};
 
   // Jarvis
-  const sendJ=async()=>{const m=jI.trim();if(!m||jW)return;setJI("");setJL(p=>[...p,{r:"u",t:m}]);setJW(true);try{const r=await api.jarvisCommand(m, "JARVIS", {confirmed:true});setJL(p=>[...p,{r:"j",t:r?.text||r?.message||"No response."}])}catch(e){setJL(p=>[...p,{r:"j",t:`Error: ${e.message}`}])}setJW(false)};
+  const sendJ=async()=>{const m=jI.trim();if(!m||jW)return;setJI("");setJL(p=>[...p,{r:"u",t:m}]);setJW(true);try{if(["jarvis","jasrvis","hi jarvis","hello jarvis","hey jarvis"].includes(m.toLowerCase().trim())){setJL(p=>[...p,{r:"j",t:"Jarvis online. Ready for business commands — leads, estimates, scheduling, and site operations."}]);setJW(false);return;}const r=await api.jarvisCommand(m, "JARVIS", {confirmed:true});setJL(p=>[...p,{r:"j",t:r?.text||r?.message||"No response."}])}catch(e){setJL(p=>[...p,{r:"j",t:`Error: ${e.message}`}])}setJW(false)};
 
-  const cmdX=q=>{setCmd(false);const c=q.replace("/","").toLowerCase();const map={home:"home",jarvis:"jarvis",estimate:"estimate",jobs:"jobs",crew:"crew",equipment:"equipment",weather:"weather",banking:"banking",legal:"legal"};if(map[c]){setV(map[c]);return}setJI(q);setV("jarvis");setTimeout(sendJ,100)};
+  const cmdX=q=>{setCmd(false);const c=q.replace("/","").trim().toLowerCase();const map={home:"home",jarvis:"jarvis",jasrvis:"jarvis",j:"jarvis",jarv:"jarvis",jarvisai:"jarvis",ai:"jarvis",estimate:"estimate",jobs:"jobs",crew:"crew",equipment:"equipment",weather:"weather",banking:"banking",legal:"legal"};if(map[c]){setV(map[c]);return}setJI(q);setV("jarvis");setTimeout(sendJ,100)};
 
   const acl=auto==="auto"?"#22c55e":auto==="hybrid"?"#eab308":"#6b7280";
   const aJ=jobs.filter(j=>!["Paid","Archived"].includes(j.status));

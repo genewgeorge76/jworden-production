@@ -121,7 +121,7 @@ export default function ParkingLots() {
     <div className="min-h-screen bg-brand-navy">
       <SEO
         title="Commercial Parking Lot Paving Richmond VA | KFC, Taco Bell & Arby's Proof"
-        description="Commercial asphalt paving, parking lot resurfacing, drive-thru lanes, ADA striping, sealcoating, and repairs for Richmond, Chesterfield, Henrico, and Central Virginia. Proven restaurant and retail work."
+        description="Commercial asphalt paving, parking lot resurfacing, drive-thru lanes, ADA striping, sealcoating, and repairs for Richmond, Chesterfield, Henrico, and..."
         canonicalPath="/parking-lots"
         jsonLd={jsonLd}
       />

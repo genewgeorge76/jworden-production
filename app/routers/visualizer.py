@@ -279,9 +279,17 @@ async def submit_visual_proposal(
         from ..database import get_db     # noqa: PLC0415
         from ..models import Lead         # noqa: PLC0415
         from sqlalchemy.orm import Session  # noqa: PLC0415
+        from ..services.geocoding import geocode_address  # noqa: PLC0415
 
         db: Session = next(get_db())
         try:
+            # Geocode lead address
+            lat, lng = None, None
+            if req.address:
+                coords = geocode_address(req.address)
+                if coords:
+                    lat, lng = coords
+
             lead = Lead(
                 name            = req.name,
                 email           = req.email,
@@ -297,6 +305,9 @@ async def submit_visual_proposal(
                     f"Roof: {req.roof_color or 'N/A'}"
                 ).strip(),
                 source          = "3d_visualizer",
+                latitude        = lat,
+                longitude       = lng,
+                raw_data        = req.model_dump(),
                 pipeline_stage  = "new",
             )
             db.add(lead)

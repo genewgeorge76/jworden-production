@@ -112,7 +112,7 @@ export default function NorthernVirginiaPaving() {
     <div className="min-h-screen bg-brand-navy">
       <SEO
         title="Asphalt Paving Northern Virginia | Fairfax, Loudoun & Prince William"
-        description="Commercial and residential asphalt paving in Fairfax County, Loudoun County, and Prince William County. Data center campus roads, HOA maintenance, retail lot paving. VDOT prequalified. 40 years Virginia expertise."
+        description="Commercial and residential asphalt paving in Fairfax County, Loudoun County, and Prince William County. Data center campus roads, HOA maintenance,..."
         canonicalPath="/northern-virginia-paving"
         jsonLd={jsonLd}
       />

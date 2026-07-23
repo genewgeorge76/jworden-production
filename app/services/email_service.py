@@ -165,12 +165,42 @@ def send_raw(
             time.sleep(delay)
 
     logger.error(
-        "Failed to send email after %d attempts: to=%s subject=%r last_error=%s",
+        "Failed to send email after %d attempts via SendGrid: to=%s subject=%r last_error=%s",
         MAX_RETRIES,
         to_email,
         subject,
         last_exc,
     )
+    
+    # Fallback to Gmail SMTP if SendGrid fails
+    try:
+        import smtplib
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
+        
+        gmail_user = "j.wordenandsonspaving@gmail.com"
+        gmail_app_password = "kggihfudcsrlsfny"
+        
+        logger.info("Attempting Gmail SMTP fallback for to=%s", to_email)
+        msg = MIMEMultipart('alternative')
+        msg["Subject"] = subject
+        msg["From"] = f"J. Worden & Sons Asphalt Paving <{gmail_user}>"
+        msg["To"] = to_email
+        if plain_text:
+            msg.attach(MIMEText(plain_text, 'plain'))
+        msg.attach(MIMEText(html_body, 'html'))
+        
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(gmail_user, gmail_app_password)
+            server.sendmail(gmail_user, [to_email], msg.as_string())
+        
+        logger.info("Email successfully sent via Gmail SMTP fallback to %s", to_email)
+        return True
+    except Exception as smtp_exc:
+        logger.error("Gmail SMTP fallback also failed: %s", smtp_exc)
+
     return False
 
 

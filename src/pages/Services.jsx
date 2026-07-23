@@ -155,7 +155,7 @@ const SERVICES = [
   {
     id: 'cobblestone-pavers',
     icon: '🪨',
-    title: 'Cobblestone & Brick Paver Patios',
+    title: 'Cobblestone & brick_paver_patios',
     tagline: 'Timeless hardscapes that elevate outdoor living',
     priceRange: 'Brick pavers from $15–$30 per sq ft installed; cobblestone from $25–$55 per sq ft',
     description:
@@ -317,7 +317,7 @@ const SERVICE_FAQS = [
       'We start with a consultation to understand your style, budget, and functional needs. From there our designers produce digital mood boards and material palettes for your approval. Once the design is locked, we manage all vendor sourcing, procurement, and installation coordination through to the final reveal.',
   },
   {
-    question: 'How long do brick paver patios last compared to poured concrete?',
+    question: 'How long do brick_paver_patios last compared to poured concrete?',
     answer:
       'A properly installed brick or cobblestone paver patio outlasts poured concrete by decades. Individual units can be lifted and replaced if they settle or crack — unlike concrete which requires full demolition. With a quality compacted base and polymeric sand joints, paver patios routinely last 25–50 years.',
   },

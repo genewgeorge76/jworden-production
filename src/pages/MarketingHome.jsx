@@ -43,8 +43,8 @@ export default function MarketingHome() {
           <div className="flex items-center gap-6">
             <a href="#features" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Features</a>
             <a href="#pricing" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Pricing</a>
-            <Link to="/operations/login" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Sign In</Link>
-            <Link to="/operations/register">
+            <Link to="/login" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Sign In</Link>
+            <Link to="/register">
               <Button className="bg-amber-500 hover:bg-amber-400 text-[#020408] font-bold px-6">
                 Get Started
               </Button>
@@ -103,7 +103,7 @@ export default function MarketingHome() {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
-            <Link to="/operations/login">
+            <Link to="/login">
               <Button variant="outline" className="h-14 px-8 text-lg border-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl">
                 Access Cockpit
               </Button>

@@ -16,7 +16,7 @@ export const RICHMOND_ZIP_PAGES = {
       "Brick-to-asphalt transition detailing",
       "Commercial access lane and lot resurfacing"
     ],
-    image: "/work/imported/va cars photos and videos for website/IMG_8724.JPG"
+    image: "/work/imported/va_cars_photos_and_videos_for_website/IMG_8724.JPG"
   },
   "23220": {
     zip: "23220",
@@ -35,7 +35,7 @@ export const RICHMOND_ZIP_PAGES = {
       "Pothole and base-failure correction",
       "Sealcoating and crack-sealing maintenance"
     ],
-    image: "/work/imported/va cars photos and videos for website/IMG_8733.JPG"
+    image: "/work/imported/va_cars_photos_and_videos_for_website/IMG_8733.JPG"
   },
   "23226": {
     zip: "23226",
@@ -92,7 +92,7 @@ export const RICHMOND_ZIP_PAGES = {
       "Drainage correction and grade tuning",
       "Sealcoating and crack management"
     ],
-    image: "/work/imported/va cars photos and videos for website/IMG_8718.JPG"
+    image: "/work/imported/va_cars_photos_and_videos_for_website/IMG_8718.JPG"
   },
   "23224": {
     zip: "23224",
@@ -111,7 +111,7 @@ export const RICHMOND_ZIP_PAGES = {
       "Pothole and structural patching",
       "Preservation and maintenance planning"
     ],
-    image: "/work/imported/va cars photos and videos for website/IMG_8721.JPG"
+    image: "/work/imported/va_cars_photos_and_videos_for_website/IMG_8721.JPG"
   },
   "23228": {
     zip: "23228",
@@ -187,7 +187,7 @@ export const RICHMOND_ZIP_PAGES = {
       "Base repair and edge correction",
       "Sealcoating and crack-filling"
     ],
-    image: "/work/imported/va cars photos and videos for website/IMG_8735.JPG"
+    image: "/work/imported/va_cars_photos_and_videos_for_website/IMG_8735.JPG"
   }
 };
 

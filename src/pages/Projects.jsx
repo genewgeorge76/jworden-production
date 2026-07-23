@@ -33,14 +33,14 @@ const PROJECTS = [
     ],
     highlight: 'Owner-provided project image added to the portfolio.',
     emoji: '🛣',
-    imageUrl: '/work/commercial-access-road.jpg',
-    imageWebp: '/work/commercial-access-road.webp',
+    imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
+    imageWebp: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
     imageAlt:
       'Commercial asphalt access road beside a fenced industrial facility with fresh pavement and clean edge detail',
     caseStudy: {
       pagePath: '/projects#commercial-asphalt-access-road-photo',
       headline: 'Commercial Asphalt Paving & Striping Completion in Chester',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Freshly paved and striped commercial parking lot in Chester, VA completed by J. Worden & Sons.',
       city: 'Chester',
@@ -74,7 +74,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#va-coastal-corridor',
       headline: 'Regional Commercial Paving Program Across Virginia Coastal Corridor',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Representative commercial asphalt work documented by J. Worden & Sons for Virginia corridor projects.',
       placeName: 'Virginia Beach, Virginia',
@@ -109,7 +109,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#kfc-virginia-initial',
       headline: 'Initial KFC Franchise Asphalt Program in Virginia',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Franchise-grade paving and documentation standards used by J. Worden & Sons in Virginia KFC programs.',
       placeName: 'Virginia, US',
@@ -141,7 +141,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#kfc-north-carolina',
       headline: 'KFC Franchise Expansion Case Study in North Carolina',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Documented lot resurfacing and franchise-compliant closeout process for North Carolina locations.',
       placeName: 'North Carolina, US',
@@ -240,7 +240,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#kfc-new-build-texas',
       headline: 'Ground-Up KFC New Build Asphalt Program in Texas',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Civil-through-finish paving standards applied on Texas new store build scope by J. Worden & Sons.',
       placeName: 'Texas, US',
@@ -294,7 +294,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#kfc-kansas-kc',
       headline: 'Cross-State Franchise Remodel Program in Kansas City Metro',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Documented asphalt and concrete remodel operations coordinated across Kansas and Missouri locations.',
       placeName: 'Kansas City Metro, US',
@@ -387,7 +387,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#kfc-ny-nj',
       headline: 'Urban-Market KFC Remodel Case Study in New York and New Jersey',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Urban franchise site execution pattern for paving, concrete, and ADA upgrades across NY/NJ locations.',
       placeName: 'New York and New Jersey, US',
@@ -442,7 +442,7 @@ const PROJECTS = [
     caseStudy: {
       pagePath: '/projects#private-commercial-current',
       headline: 'Active Private Commercial Asphalt Program in Virginia',
-      imageUrl: '/work/commercial-access-road.jpg',
+      imageUrl: '/images/real_jobs/COMMERCIALPAVING 2026.jpg',
       imageCaption:
         'Current private commercial paving work delivered under franchise-level quality controls and documentation.',
       placeName: 'Virginia, US',
@@ -485,7 +485,7 @@ export default function Projects() {
           {
             '@context': 'https://schema.org',
             '@type': 'ImageObject',
-            contentUrl: `https://www.jwordenasphaltpaving.com/work/commercial-access-road.jpg`,
+            contentUrl: `https://www.jwordenasphaltpaving.com/images/real_jobs/COMMERCIALPAVING 2026.jpg`,
             name: 'Commercial Asphalt Access Road & Gated Facility',
             description:
               'Commercial asphalt access road beside a fenced industrial facility with fresh pavement and clean edge detail.',

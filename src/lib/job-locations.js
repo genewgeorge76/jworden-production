@@ -1,4 +1,4 @@
-﻿// Master list of completed commercial job locations
+// Master list of completed commercial job locations
 // Add/remove entries here. Photos array: just paste image URLs.
 // Tip: upload photos via Base44 UploadFile and paste the returned file_url.
 
@@ -17,8 +17,8 @@ export const JOB_LOCATIONS = [
       '/work/imported/KFC/IMG_9507.JPG',
       '/work/imported/KFC/IMG_9507.JPG',
       '/work/imported/KFC/IMG_9510.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8711.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8717.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8711.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8717.JPG',
     ],
   },
   {
@@ -32,10 +32,10 @@ export const JOB_LOCATIONS = [
     sqft: 62000,
     year: 2023,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8838.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8728.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8728.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8711.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8838.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8728.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8728.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8711.JPG',
     ],
   },
   {
@@ -49,8 +49,8 @@ export const JOB_LOCATIONS = [
     sqft: 4200,
     year: 2019,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8721.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8732.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8721.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8732.JPG',
       '/work/imported/KFC/IMG_9509.JPG',
     ],
   },
@@ -65,8 +65,8 @@ export const JOB_LOCATIONS = [
     sqft: 2800,
     year: 2017,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8735.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8839.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8735.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8839.JPG',
     ],
   },
   {
@@ -80,7 +80,7 @@ export const JOB_LOCATIONS = [
     sqft: 22000,
     year: 2017,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8724.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8724.JPG',
     ],
   },
   {
@@ -94,7 +94,7 @@ export const JOB_LOCATIONS = [
     sqft: 85000,
     year: 2020,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8733.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8733.JPG',
     ],
   },
   {
@@ -122,8 +122,8 @@ export const JOB_LOCATIONS = [
     sqft: 5126,
     year: 2017,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8729.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8732.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8729.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8732.JPG',
     ],
   },
   {
@@ -151,11 +151,11 @@ export const JOB_LOCATIONS = [
     sqft: 34000,
     year: 2017,
     photos: [
-      '/work/imported/va cars photos and videos for website/IMG_8713.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8717.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8713.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8730.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8721.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8713.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8717.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8713.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8730.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8721.JPG',
       '/work/imported/KFC/IMG_9499-COLLAGE.jpg',
       '/work/imported/KFC/IMG_9509.JPG',
     ],
@@ -196,13 +196,13 @@ export const JOB_LOCATIONS = [
       '/work/imported/KFC/IMG_9500.JPG',
       '/work/imported/KFC/IMG_9514.JPG',
       '/work/imported/KFC/IMG_9519.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8729.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8718.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8729.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8718.JPG',
       '/work/imported/KFC/IMG_9499.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8724.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8724.JPG',
       '/work/imported/KFC/IMG_9512.JPG',
       '/work/imported/KFC/IMG_9500.JPG',
-      '/work/imported/va cars photos and videos for website/IMG_8718.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8718.JPG',
     ],
   },
   {

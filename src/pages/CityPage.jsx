@@ -371,13 +371,12 @@ export default function CityPage() {
               <div className="aspect-[4/3] rounded-lg overflow-hidden relative bg-slate-200">
                 <iframe
                   title={`Map showing ${area.city}, ${area.stateCode}`}
-                  src={`https://www.google.com/maps?q=${area.city},${area.stateCode}&t=m&z=11&output=embed&iwloc=near`}
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=-78.5000%2C36.8000%2C-76.8000%2C37.8000&layer=mapnik`}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen=""
                   loading="lazy"
-                  referrerPolicy="no-referrer"
                 ></iframe>
               </div>
             </div>

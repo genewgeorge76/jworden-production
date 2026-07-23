@@ -12,7 +12,7 @@ async def get_revenue_loop():
     """
     return GlobalRevenueLoop(
         total_ecosystem_revenue=1250000.00,
-        paving_operations_reserve=450000.00,
+        jwordenai_project_reserve=450000.00,
         reinvestment_rate=0.15,
         nodes=[
             PageRevenueNode(

@@ -638,68 +638,59 @@ export default function AIConciergeBubble() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 1.5 }}
-            className="absolute bottom-5 right-4 sm:bottom-8 sm:right-8 z-40"
+            transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.5 }}
+            className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-center gap-3"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
-            <motion.div
-              animate={{ y: [0, -7, 0], rotate: [0, -0.5, 0.5, 0] }}
-              transition={{ repeat: Infinity, duration: 4.6, ease: 'easeInOut' }}
-              className="relative"
-            >
-              <div className="absolute inset-0 rounded-2xl bg-primary/24 blur-2xl scale-110 pointer-events-none" />
-              <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-primary/14 via-transparent to-accent/18 blur-xl pointer-events-none" />
+            {/* Tooltip on hover only */}
+            {hovered && (
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="hidden sm:flex items-center gap-2 bg-black/90 border border-primary/50 text-foreground px-3 py-1.5 rounded-full text-xs font-display tracking-wider uppercase shadow-xl backdrop-blur-md"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span>Ask Mr. Worden AI</span>
+              </motion.div>
+            )}
 
-              <button type="button" onClick={handleOpen} aria-label="Open AI consultant chat" className="relative z-10">
-                <div className="w-[116px] h-[148px] rounded-2xl border border-primary/65 bg-black/65 overflow-hidden shadow-[0_26px_56px_rgba(0,0,0,0.58)]">
-                  {useModelRender ? (
-                    <Suspense fallback={null}>
-                      <WebGLPersonaAvatar
-                        mode={avatarState}
-                        speechPulse={speechPulse}
-                        speechIntensity={speaking ? 0.9 : 0.55}
-                        onModelModeChange={setModelMode}
-                        className="w-full h-full"
-                      />
-                    </Suspense>
-                  ) : (
-                    <SmartImage
-                      src={AVATAR_POSTER_URL}
-                      alt="J. Worden concierge portrait"
-                      width={512}
-                      height={512}
-                      className="w-full h-full object-cover quality-premium"
-                      sizes="116px"
+            {/* Compact circular bubble trigger */}
+            <button
+              type="button"
+              onClick={handleOpen}
+              aria-label="Open AI consultant chat"
+              className="group relative w-14 h-14 rounded-full bg-gradient-to-tr from-black via-zinc-900 to-amber-950 border-2 border-primary/80 shadow-[0_10px_30px_rgba(250,204,21,0.25)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-colors" />
+              <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center p-0.5">
+                {useModelRender ? (
+                  <Suspense fallback={<Bot className="w-6 h-6 text-primary" />}>
+                    <WebGLPersonaAvatar
+                      mode={avatarState}
+                      speechPulse={speechPulse}
+                      speechIntensity={speaking ? 0.9 : 0.55}
+                      onModelModeChange={setModelMode}
+                      className="w-full h-full"
                     />
-                  )}
-                  <div className="absolute inset-x-0 bottom-0 px-2 py-1.5 bg-gradient-to-t from-black/85 to-transparent text-center pointer-events-none">
-                    <p className="font-display text-[9px] tracking-[0.16em] uppercase text-primary">Mr. Worden</p>
-                  </div>
-                </div>
-              </button>
-              <span className="absolute top-4 right-3 w-3 h-3 bg-green-500 rounded-full border-2 border-black shadow-[0_0_12px_rgba(34,197,94,.8)]" />
-              <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-[9px] font-display font-bold tracking-[0.14em] uppercase border border-primary/40">
+                  </Suspense>
+                ) : (
+                  <SmartImage
+                    src={AVATAR_POSTER_URL}
+                    alt="J. Worden concierge"
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover rounded-full"
+                    sizes="56px"
+                  />
+                )}
+              </div>
+              <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-black shadow-[0_0_8px_rgba(34,197,94,.9)]" />
+              <div className="absolute -bottom-0.5 bg-primary text-black px-1.5 py-0.2 rounded-full text-[8px] font-display font-black tracking-tighter uppercase">
                 AI
               </div>
-            </motion.div>
-
-            <div className="absolute right-[6rem] bottom-4 sm:bottom-6 text-left leading-none bg-black/85 border border-primary/45 px-3 py-2 backdrop-blur-md whitespace-nowrap rounded-lg shadow-[0_10px_28px_rgba(0,0,0,0.42)]">
-              <button
-                type="button"
-                onClick={handleOpen}
-                className="text-left"
-                aria-label="Open AI consultant chat"
-              >
-                <p className="font-display font-black text-[11px] tracking-[0.15em] uppercase text-primary flex items-center gap-1.5">
-                  <Sparkles className="w-3 h-3" />
-                  Meet Mr. Worden
-                </p>
-                <p className="font-display text-[9px] tracking-[0.2em] uppercase opacity-80 mt-0.5 text-foreground">
-                  Live Build 60a4ef7+ · Realism Mode
-                </p>
-              </button>
-            </div>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -712,7 +703,7 @@ export default function AIConciergeBubble() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute bottom-6 right-4 sm:right-8 left-4 sm:left-auto z-50 w-auto sm:w-[480px] h-[680px] max-h-[86vh] bg-card/95 border border-primary/40 shadow-[0_30px_72px_rgba(0,0,0,0.58)] rounded-2xl flex flex-col overflow-hidden backdrop-blur-md"
+            className="fixed bottom-6 right-4 sm:right-6 left-4 sm:left-auto z-50 w-auto sm:w-[460px] h-[640px] max-h-[85vh] bg-card/95 border border-primary/40 shadow-[0_30px_72px_rgba(0,0,0,0.58)] rounded-2xl flex flex-col overflow-hidden backdrop-blur-md"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-black via-zinc-900 to-black text-foreground p-4 flex items-center justify-between border-b border-primary/30">

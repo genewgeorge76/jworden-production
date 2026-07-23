@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 // ─── STYLES ───
 // SpaceX Theme: Deep Space Black (#000000), Slate Dark (#111111), and Titanium accents
@@ -37,8 +36,13 @@ export default function WordenUniversity() {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get(`${apiBase}/api/v1/lms/courses?tenant_id=default`);
-      setCourses(res.data);
+      const res = await fetch(`${apiBase}/api/v1/lms/courses?tenant_id=default`);
+      if (res.ok) {
+        const data = await res.json();
+        setCourses(data);
+      } else {
+        console.error("Failed to fetch courses, status:", res.status);
+      }
     } catch (err) {
       console.error("Failed to fetch courses", err);
     } finally {

@@ -117,7 +117,7 @@ export default function VirginiaConcrete() {
     <div className="min-h-screen bg-brand-navy">
       <SEO
         title="Concrete Contractor in Virginia | Aprons, Sidewalks & Industrial Slabs | J. Worden & Sons"
-        description="Concrete contractor serving Richmond, Chesterfield, Henrico, and Central Virginia. Driveway aprons, ADA sidewalks, loading dock slabs, stamped concrete, and concrete repair. Licensed, insured, written estimates."
+        description="Concrete contractor serving Richmond, Chesterfield, Henrico, and Central Virginia. Driveway aprons, ADA sidewalks, loading dock slabs, stamped..."
         canonicalPath="/concrete"
         jsonLd={jsonLd}
       />

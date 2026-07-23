@@ -4,7 +4,7 @@ async def test_auth_status_defaults_to_required(client):
     body = res.json()
     assert body["auth_required"] is True
     assert body["auth_mode"] == "required"
-    assert body["token_endpoint"] == "/.netlify/functions/get-token"
+    assert body["token_endpoint"] == "/api/v1/auth/pin-token"
 
 
 async def test_token_issuance_writes_audit_event(client, app_modules):

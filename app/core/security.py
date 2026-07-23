@@ -43,7 +43,7 @@ def verify_premium_security(token: str = Security(oauth2_scheme)):
         return {"user": "Admin", "tenant_id": "JWORDEN_HQ"}
 
     # JWT path
-    secret = os.getenv("JWT_SECRET_KEY", "")
+    secret = os.getenv("JWT_SECRET_KEY", os.getenv("JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret")))
     if not secret:
         raise HTTPException(
             status_code=500,

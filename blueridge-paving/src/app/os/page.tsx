@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
-import OrbitalMap from '@/components/os/OrbitalMap'
+import dynamic from 'next/dynamic'
+
+const OrbitalMap = dynamic(() => import('@/components/os/OrbitalMap'), { ssr: false })
 
 export const metadata: Metadata = {
   title: 'Command Center | JWorden OS',

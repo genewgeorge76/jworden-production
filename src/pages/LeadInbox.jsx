@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '@/api/client';
 import { useNavigate } from 'react-router-dom';
-import { Phone, Mail, MapPin, Clock, Loader2, DollarSign, Sparkles, RefreshCw } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Loader2, DollarSign, Sparkles, RefreshCw, Map } from 'lucide-react';
 import LeadScoreBadge from '@/components/LeadScoreBadge';
+import LeadMap from '@/components/LeadMap';
 
 const TIER_ORDER = { hot: 0, warm: 1, cool: 2, cold: 3 };
 
@@ -18,14 +19,28 @@ const FILTERS = [
 export default function LeadInbox() {
   const navigate = useNavigate();
   const [leads, setLeads] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [estimates, setEstimates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [rescoring, setRescoring] = useState(null);
+  const [viewMode, setViewMode] = useState('list'); // 'list' | 'map'
 
   useEffect(() => {
     const load = async () => {
-      const all = await api.entities.Lead.list('-created_date', 200);
-      setLeads(Array.isArray(all) ? all : []);
+      setLoading(true);
+      try {
+        const [allLeads, allJobs, allEstimates] = await Promise.all([
+          api.entities.Lead.list('-created_date', 200),
+          api.entities.Job.list('-scheduled_date', 200),
+          api.entities.Estimate.list('-created_at', 200)
+        ]);
+        setLeads(Array.isArray(allLeads) ? allLeads : []);
+        setJobs(Array.isArray(allJobs) ? allJobs : []);
+        setEstimates(Array.isArray(allEstimates) ? allEstimates : []);
+      } catch (e) {
+        console.error("Failed to load Leads page collections", e);
+      }
       setLoading(false);
     };
     load();
@@ -99,6 +114,32 @@ export default function LeadInbox() {
               {leads.length} total leads · Claude Sonnet scores every new inquiry by close probability + project value
             </p>
           </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg ml-auto mr-4">
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={`px-4 py-2 text-xs font-mono font-bold uppercase rounded-md tracking-wider transition-all ${
+                viewMode === 'list'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              List View
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('map')}
+              className={`px-4 py-2 text-xs font-mono font-bold uppercase rounded-md tracking-wider transition-all flex items-center gap-1.5 ${
+                viewMode === 'map'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Map className="w-3.5 h-3.5" /> Map View
+            </button>
+          </div>
           <div className="border border-primary/30 bg-primary/5 px-5 py-3">
             <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase">
               Active Pipeline Value
@@ -142,6 +183,8 @@ export default function LeadInbox() {
           <div className="flex items-center justify-center h-64">
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>
+        ) : viewMode === 'map' ? (
+          <LeadMap leads={leads} jobs={jobs} estimates={estimates} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-border">
             <p className="font-display text-muted-foreground text-sm tracking-wider uppercase">

@@ -3,32 +3,32 @@ import SmartImage from '@/components/SmartImage'
 
 const proofImages = [
   {
-    src: '/work/portfolio/portfolio-019.jpg',
+    src: '/work/portfolio/portfolio-019.webp',
     alt: 'Before condition of weathered commercial asphalt lot in Central Virginia',
     label: 'Before: oxidized lot surface',
   },
   {
-    src: '/work/portfolio/portfolio-017.jpg',
+    src: '/work/portfolio/portfolio-017.webp',
     alt: 'After resurfacing condition for residential asphalt driveway in Richmond by J. Worden and Sons',
     label: 'After: premium driveway finish',
   },
   {
-    src: '/work/portfolio/portfolio-010.jpg',
+    src: '/work/portfolio/portfolio-010.webp',
     alt: 'Before condition of mixed-use access lane with visible wear and patching',
     label: 'Before: access-lane failure signs',
   },
   {
-    src: '/work/portfolio/portfolio-030.jpg',
+    src: '/work/portfolio/portfolio-030.webp',
     alt: 'After paving condition showing large estate driveway restoration in Chesterfield',
     label: 'After: estate driveway restoration',
   },
   {
-    src: '/work/kfc/kfc-job-001.jpg',
+    src: '/work/kfc/kfc-job-001.webp',
     alt: 'Before condition at restaurant parking lot with aged pavement and striping wear',
     label: 'Before: restaurant lot deterioration',
   },
   {
-    src: '/work/imported/KFC/IMG_9499-COLLAGE.jpg',
+    src: '/work/imported/KFC/IMG_9499-COLLAGE.webp',
     alt: 'After condition at quick-service restaurant lot with fresh asphalt and defined striping',
     label: 'After: completed restaurant lot',
   },
@@ -88,14 +88,14 @@ export default function CustomerProofGallery() {
         <div className="grid gap-4 md:grid-cols-3">
           {proofImages.map((image) => (
             <figure key={image.src} className="group overflow-hidden rounded-lg border border-border bg-card shadow-[0_18px_42px_-34px_rgba(15,48,68,0.34)]">
-              <div className="aspect-[4/3] overflow-hidden bg-muted">
+              <div className="aspect-[4/3] overflow-hidden bg-slate-950 p-1 flex items-center justify-center">
                 <SmartImage
                   src={image.src}
                   alt={image.alt}
                   width={900}
                   height={675}
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-contain rounded-md transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <figcaption className="border-t border-border px-4 py-3 font-display text-xs uppercase tracking-[0.18em] text-muted-foreground">

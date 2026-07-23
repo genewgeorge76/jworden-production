@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 
@@ -13,7 +13,7 @@ const LANDMARKS = [
     description:
       'At J. Worden & Sons Paving LLC, we\'ve completed parking lot paving, asphalt repairs, sealcoating, and line striping for major brands including KFC, Taco Bell, Arby\'s, and Wendy\'s across multiple states. Our team understands the demands of high-traffic commercial properties and delivers durable, professional results that meet strict standards.\n\nWe were also selected to perform asphalt patching, sealcoating, and precision line striping at one of America\'s most recognizable roadside landmarks—home to the iconic 56-foot steel rooster listed on the National Register. This high-traffic site required careful scheduling, attention to detail, and a clean, long-lasting finish while keeping the property fully operational.',
     image:
-      '/work/imported/va cars photos and videos for website/IMG_8730.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8730.JPG',
     badge: 'National Landmark',
     details: [
       { label: 'Location', value: 'Marietta, Georgia' },
@@ -30,7 +30,7 @@ const LANDMARKS = [
     description:
       'Executed every square foot of concrete and asphalt work on this flagship "3-in-1" combo restaurant — one of the most complex QSR builds in the country, combining three major brands under one roof. 34,000 sq ft of paved surface, drive-thru lanes, and engineered drainage — delivered on spec, on time.',
     image:
-      '/work/imported/va cars photos and videos for website/IMG_8713.JPG',
+      '/work/imported/va_cars_photos_and_videos_for_website/IMG_8713.JPG',
     badge: 'Flagship Build',
     details: [
       { label: 'Location', value: 'Overland Park, KS' },

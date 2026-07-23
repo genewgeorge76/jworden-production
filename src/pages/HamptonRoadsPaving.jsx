@@ -114,7 +114,7 @@ export default function HamptonRoadsPaving() {
     <div className="min-h-screen bg-brand-navy">
       <SEO
         title="Asphalt Paving Virginia Beach & Hampton Roads | Commercial Contractor"
-        description="40 years of commercial paving in Hampton Roads. Virginia Beach, Norfolk, Chesapeake, Newport News, and Hampton. Hotel lots, military base contracts, retail corridors. Coastal-spec asphalt that outlasts salt air and sand."
+        description="40 years of commercial paving in Hampton Roads, Virginia Beach, Norfolk, Chesapeake, and Newport News. Coastal-spec asphalt contractors."
         canonicalPath="/hampton-roads-paving"
         jsonLd={jsonLd}
       />

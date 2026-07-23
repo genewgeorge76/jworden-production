@@ -17,7 +17,7 @@ from typing import List, Dict, Optional
 logger = logging.getLogger(__name__)
 
 # PlanHub login credentials from environment or runtime_config
-PLANHUB_EMAIL = os.getenv("PLANHUB_EMAIL", "genewgeorge76@gmail.com")
+PLANHUB_EMAIL = os.getenv("PLANHUB_EMAIL", "genewgeorge@gmail.com")
 PLANHUB_PASSWORD = os.getenv("PLANHUB_PASSWORD")
 
 async def scrape_planhub_commercial_bids(keywords: List[str] = ["asphalt", "paving", "milling", "sealcoating"]) -> Dict:

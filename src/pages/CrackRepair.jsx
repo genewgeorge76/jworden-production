@@ -102,7 +102,7 @@ export default function CrackRepair() {
     <div className="min-h-screen bg-brand-navy">
       <SEO
         title="Asphalt Crack Repair in Virginia | Richmond, Chesterfield & Henrico"
-        description="Professional asphalt crack sealing and repair in Richmond VA, Chesterfield, Henrico, and Midlothian. Hot-pour rubberized crack filling. Stop pothole formation before it starts. 40+ years of Virginia pavement expertise."
+        description="Professional asphalt crack sealing and repair in Richmond VA, Chesterfield, Henrico, and Midlothian. Hot-pour rubberized crack filling. Stop pothole..."
         canonicalPath="/crack-repair"
         jsonLd={jsonLd}
       />

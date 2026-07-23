@@ -2,6 +2,9 @@
   "name": "jworden-luxury-paving",
   "description": "J. Worden Luxury Paving - Professional Asphalt Paving and Maintenance across Virginia",
   "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -11,7 +14,7 @@
     "dev:backend": "powershell -ExecutionPolicy Bypass -File scripts/dev-backend.ps1",
     "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs && node scripts/prune-local-media.mjs",
+    "postbuild": "node scripts/normalize-meta-quality.mjs && node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs && node scripts/prune-local-media.mjs",
     "ai:blog-factory": "node scripts/ai-blog-factory.mjs",
     "ai:authority": "node scripts/ai-authority-factory.mjs",
     "ai:authority:force": "node scripts/ai-authority-factory.mjs --force",
@@ -136,12 +139,14 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.84.1",
     "@tremor/react": "^3.18.7",
+    "@turf/area": "^7.3.5",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.5.2",
+    "exifr": "^7.1.3",
     "framer-motion": "^11.16.4",
     "html2canvas": "^1.4.1",
     "input-otp": "^1.4.2",

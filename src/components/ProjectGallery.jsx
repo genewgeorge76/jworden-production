@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Ruler, Loader2 } from 'lucide-react';
 import { api } from '@/api/client';
@@ -73,7 +73,7 @@ const CATEGORIES = [
 
 // Specific images that were captured sideways and need a 90° clockwise rotation.
 const ROTATE_90_URLS = new Set([
-  '/work/imported/va cars photos and videos for website/IMG_8724.JPG',
+  '/work/imported/va_cars_photos_and_videos_for_website/IMG_8724.JPG',
 ]);
 
 export default function ProjectGallery() {

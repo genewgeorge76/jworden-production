@@ -22,6 +22,14 @@ export default function JobScopeMap({ job, onSave }) {
     const defaultLat = job?.geo_lat || 37.5407;
     const defaultZoom = job?.geo_lat ? 18 : 10;
 
+    if (!mapboxgl.accessToken) {
+      console.error("Mapbox token missing - cannot load map.");
+      if (mapContainer.current) {
+        mapContainer.current.innerHTML = "<div style='padding:20px; color:red;'>Mapbox token missing</div>";
+      }
+      return;
+    }
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/satellite-streets-v12',

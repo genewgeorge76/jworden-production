@@ -156,13 +156,6 @@ export default function SmartImage({
           sizes={sizes}
         />
       </picture>
-      {/* Editorial Title Overlay for Real Images */}
-      {label && (
-        <div className="absolute bottom-10 left-10 z-20 pointer-events-none opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-100">
-          <p className="font-display text-primary text-[10px] tracking-[0.5em] uppercase mb-1">{sublabel || 'Project Gallery'}</p>
-          <h4 className="font-editorial italic text-white text-3xl">{label}</h4>
-        </div>
-      )}
     </div>
   )
 }

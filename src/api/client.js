@@ -138,13 +138,15 @@ export async function request(method, path, body, options = {}) {
   const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS)
 
   const headers = { 'Content-Type': 'application/json' }
-  // Attach owner token when present in sessionStorage so frontend can prove operator consent
+  // Attach owner token and bearer token when present so backend identifies staff_operator / owner_root
   try {
     if (typeof window !== 'undefined') {
       const owner = window.sessionStorage.getItem('OWNER_TOKEN') || window.localStorage.getItem('OWNER_TOKEN')
       if (owner) headers['X-OWNER-TOKEN'] = owner
       const sess = window.sessionStorage.getItem('OWNER_SESSION_ID') || null
       if (sess) headers['X-SESSION-TOKEN'] = sess
+      const authToken = authState.token || window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
+      if (authToken) headers['Authorization'] = `Bearer ${authToken}`
     }
   } catch {
     // ignore storage errors
@@ -181,6 +183,22 @@ async function protectedRequest(method, path, body, options = {}) {
   const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS)
   const headers = { 'Content-Type': 'application/json' }
   if (token) headers.Authorization = `Bearer ${token}`
+  try {
+    if (typeof window !== 'undefined') {
+      const owner = window.sessionStorage.getItem('OWNER_TOKEN') || window.localStorage.getItem('OWNER_TOKEN')
+      if (owner) {
+        headers['x-owner-token'] = owner
+        headers['X-OWNER-TOKEN'] = owner
+      }
+      const sess = window.sessionStorage.getItem('OWNER_SESSION_ID') || null
+      if (sess) {
+        headers['x-session-token'] = sess
+        headers['X-SESSION-TOKEN'] = sess
+      }
+    }
+  } catch {
+    // ignore
+  }
 
   const opts = {
     method,
@@ -674,6 +692,8 @@ export const api = {
   getAuthStatus: () => request('GET', '/api/v1/auth/status'),
   authenticateWithPin,
   getDiamondJobs: () => protectedRequest('GET', '/api/v1/operations/diamond-jobs'),
+  syncDiamondJobs: () => protectedRequest('POST', '/api/v1/operations/sync-diamond'),
+  searchGoogle: (q, num = 8) => protectedRequest('GET', `/api/v1/google-search?q=${encodeURIComponent(q)}&num=${num}`),
   listAuditEvents: (params = {}) => protectedRequest('GET', `/api/v1/admin/audit/events${buildQS(params)}`),
   listRecentOperationalLeads: (limit = 12) => protectedRequest('GET', `/api/v1/operations/leads/recent${buildQS({ limit })}`),
   submitQuote: (data) => request('POST', '/api/v1/leads/quote', data),
@@ -708,8 +728,21 @@ export const api = {
   getForemanStatus: () => request('GET', '/api/v1/foreman/status'),
   getVisionResult: (jobId) => request('GET', `/api/v1/ai/vision-result/${jobId}`),
   // ── JARVIS Command Interface ───────────────────────────────────────────────
-  jarvisCommand: (query, persona = "JARVIS", { confirmed = false } = {}) =>
-    request('POST', '/api/v1/jarvis/command', { query, persona, confirmed }),
+  jarvisCommand: async (query, persona = "JARVIS", { confirmed = false } = {}) => {
+    try {
+      return await request('POST', '/api/v1/jarvis/command', { query, persona, confirmed })
+    } catch (err) {
+      const msg = String(err?.message || '').toLowerCase()
+      if (msg.includes('403') || msg.includes('required') || msg.includes('unauthorized') || msg.includes('401')) {
+        try {
+          return await request('POST', '/api/v1/jarvis/chat', { query, persona, confirmed: false })
+        } catch {
+          return await request('POST', '/api/v1/public/chat', { message: query, persona })
+        }
+      }
+      throw err
+    }
+  },
   jarvisStatus: () => request('GET', '/api/v1/jarvis/status'),
   jarvisReadiness: () => request('GET', '/api/v1/jarvis/readiness'),
   jarvisMetrics: () => protectedRequest('GET', '/api/v1/metrics/jarvis'),

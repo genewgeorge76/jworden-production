@@ -48,7 +48,7 @@ export default function AIResearchHub() {
     <>
       <SEO
         title="AI Research Hub | Live Technology Intelligence"
-        description="Live AI research engine powered by the repo tech radar, with automatically ingested innovation updates relevant to scanning, field AI, and construction operations."
+        description="Live AI research engine powered by the repo tech radar, with automatically ingested innovation updates relevant to scanning, field AI, and..."
         canonicalPath="/ai-research"
         jsonLd={schema}
       />

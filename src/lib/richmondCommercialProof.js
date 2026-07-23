@@ -1,4 +1,4 @@
-﻿export const RICHMOND_COMMERCIAL_PROOF = [
+export const RICHMOND_COMMERCIAL_PROOF = [
   {
     id: 'richmond-proof-1',
     title: 'QSR Lot Rebuild - South Richmond Corridor',
@@ -93,7 +93,7 @@
     id: 'richmond-proof-10',
     title: 'Shopping Center Lot Restoration - Southside',
     description: 'Targeted base repair, resurfacing, and line striping for retail turnover flow.',
-    image_url: '/work/imported/va cars photos and videos for website/IMG_8729.JPG',
+    image_url: '/work/imported/va_cars_photos_and_videos_for_website/IMG_8729.JPG',
     location: 'Richmond, VA',
     sqft: 33500,
     year: 2020,

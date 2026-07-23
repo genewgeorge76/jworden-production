@@ -11,6 +11,8 @@
  *   className  — extra classes on the wrapper
  */
 
+import { useTenant } from '@/lib/TenantContext'
+import { getRegionalMarketProfile } from '@/data/regionalMarketProfiles'
 import { SOCIAL_PROFILES, SOCIAL_DISPLAY_ORDER } from '../lib/social'
 
 /* ── SVG icon paths ──────────────────────────────────────────────────── */
@@ -96,14 +98,30 @@ export default function SocialLinks({
   size = 'md',
   variant = 'icon',
   className = '',
+  overrides = {},
 }) {
   const s = SIZES[size] || SIZES.md
+  const tenant = typeof useTenant === 'function' ? useTenant() : null
+  const localProfile = typeof window !== 'undefined' ? getRegionalMarketProfile(window.location.hostname) : null
+  const siteSocials = {
+    ...(tenant?.socials || {}),
+    ...(localProfile?.socials || {}),
+    ...overrides
+  }
 
   return (
     <div className={`flex flex-wrap items-center gap-2 ${className}`}>
       {platforms.map((key) => {
-        const profile = SOCIAL_PROFILES[key]
-        if (!profile) return null
+        const baseProfile = SOCIAL_PROFILES[key]
+        if (!baseProfile) return null
+        
+        // Merge the profile with the override URL if provided
+        const profile = {
+          ...baseProfile,
+          url: siteSocials[key] !== undefined ? siteSocials[key] : baseProfile.url
+        }
+
+        if (!profile.url) return null
         const Icon = ICONS[key]
 
         if (variant === 'badge') {

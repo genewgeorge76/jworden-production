@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { trackPhoneClick } from '@/lib/analytics';
 import { PRIMARY_LOGO_URL } from '@/lib/branding';
@@ -6,7 +7,13 @@ import SocialLinks from './SocialLinks';
 import { LOCATIONS } from '@/lib/locations';
 
 export default function Footer() {
+  const navigate = useNavigate();
+
   const scrollTo = (href) => {
+    if (window.location.pathname !== '/') {
+      navigate('/' + href);
+      return;
+    }
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };

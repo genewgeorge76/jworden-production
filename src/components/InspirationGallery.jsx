@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
  *
  * Displays curated project categories with style cards for:
  *   • Interior design styles
- *   • Outdoor living / cobblestone & brick paver patios
+ *   • Outdoor living / cobblestone & brick_paver_patios
  *   • Stone masonry features
  *   • General construction project types
  *
@@ -86,7 +86,7 @@ const INSPIRATION_ITEMS = [
   // Outdoor Living
   {
     category: 'outdoor',
-    title: 'Herringbone Brick Paver Patio',
+    title: 'Herringbone brick_paver_patio',
     description:
       'Classic 45° herringbone tumbled brick pattern with soldier-course border, built on an 8" engineered base.',
     tags: ['Brick Pavers', 'Herringbone', 'Patio', 'Tumbled Brick'],

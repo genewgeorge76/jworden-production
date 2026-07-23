@@ -28,18 +28,18 @@ export default function QuoteForm({ className }) {
     try {
       const apiUrl = import.meta.env.VITE_API_BASE_URL
       if (apiUrl) {
-        await fetch(`${apiUrl}/api/v1/leads/quote`, {
+        await fetch(`${apiUrl}/api/v1/leads/website`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: data.name,
-            email: data.email,
+            firstName: data.name,
+            lastName: '',
             phone: data.phone,
-            address: data.address,
-            service: data.service,
-            serviceArea: data.serviceArea,
-            message: data.message,
+            email: data.email,
+            serviceAddress: data.address,
+            jobDescription: `Requested Service: ${data.service}\nService Area: ${data.serviceArea}\nMessage: ${data.message}`,
             source: 'obx-paving-website',
+            path: '/quote',
           }),
         })
       }

@@ -3,7 +3,9 @@ import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, 
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
 import CockpitHome from '../components/CockpitHome'
-import SiteBuilderStudio from '../components/SiteBuilderStudio'
+
+import GoogleSearchPanel from '../components/GoogleSearchPanel'
+import AgenticConstructionWorkspace from '../components/AgenticConstructionWorkspace'
 import OwnerConfirmModal from '../components/OwnerConfirmModal'
 import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
@@ -18,6 +20,7 @@ import { recommendStrategy, rankStatesByDispute, DISPUTE_TYPES, ROLES } from '..
 import { optimizeLicenseStates, getLienLeverageByState, rankContractorBids } from '../lib/contractorRanker'
 
 const RichmondGrid = lazy(() => import('../components/RichmondGrid'))
+
 const INTERNAL_STRATEGY_ENABLED = true
 
 function isCommandCenterPath() {
@@ -27,6 +30,7 @@ function isCommandCenterPath() {
 }
 
 const TABS = [
+  { id: 'agentic-workspace', label: 'Agentic Construction Workspace' },
   { id: 'site-factory', label: 'Site Factory Studio' },
   { id: 'jarvis', label: 'Jarvis' },
   { id: 'richmond-grid', label: 'Richmond Grid' },
@@ -37,11 +41,13 @@ const TABS = [
   { id: 'civil-intel', label: 'Civil Intel' },
   { id: 'integrations', label: 'Integrations' },
   { id: 'search-pulse', label: 'Search Pulse' },
+  { id: 'google-search', label: 'Google Search' },
   { id: 'dispatch', label: 'Dispatch' },
   { id: 'thermal', label: 'Thermal' },
   { id: 'drone', label: 'Drone' },
   { id: 'lidar', label: 'LiDAR' },
   { id: 'roller', label: 'Roller' },
+  { id: 'precon-omni-node', label: 'PreCon OmniNode' },
 ]
 
 const WEATHER_RADAR_AREAS = [
@@ -321,10 +327,18 @@ function HubLinkPanel() {
       color: 'text-purple-400',
       bg: 'bg-purple-400/10',
     },
+    {
+      title: 'Diamond Jobs Portal',
+      desc: 'Active & Available Scraped Bids',
+      path: '/diamond',
+      icon: Briefcase,
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-400/10',
+    },
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
       {hubs.map((hub) => (
         <Link
           key={hub.path}
@@ -719,6 +733,17 @@ function CrmTable() {
   const [_note, _setNote] = useState('')
   const [_errorNote, setErrorNote] = useState('')
 
+  // pending owner modal state
+  const [_pendingOwnerAction, setPendingOwnerAction] = useState(null)
+  const [_showUnlockModal, setShowUnlockModal] = useState(false)
+  const [_sessionUnlocked, setSessionUnlocked] = useState(() => {
+    try {
+      return Boolean(sessionStorage.getItem('OWNER_PIN_HASH'))
+    } catch {
+      return false
+    }
+  })
+
   const reload = useCallback(async () => {
     setLoading(true)
     try {
@@ -747,17 +772,6 @@ function CrmTable() {
     if (!lead?.email) { setErrorNote(`No email on file for ${lead.name || 'lead'}`); return }
     setPendingOwnerAction({ kind: 'email', lead })
   }, [])
-
-  // pending owner modal state
-  const [_pendingOwnerAction, setPendingOwnerAction] = useState(null)
-  const [_showUnlockModal, setShowUnlockModal] = useState(false)
-  const [_sessionUnlocked, setSessionUnlocked] = useState(() => {
-    try {
-      return Boolean(sessionStorage.getItem('OWNER_PIN_HASH'))
-    } catch {
-      return false
-    }
-  })
 
   const askJarvisDraft = useCallback((lead) => {
     if (typeof window === 'undefined') return
@@ -6628,6 +6642,14 @@ export default function CommandCenter() {
 
             {activeTab === 'search-pulse' && (
               <SearchPulsePanel />
+            )}
+
+            {activeTab === 'agentic-workspace' && (
+              <AgenticConstructionWorkspace />
+            )}
+
+            {activeTab === 'google-search' && (
+              <GoogleSearchPanel />
             )}
 
             {activeTab === 'dispatch' && (

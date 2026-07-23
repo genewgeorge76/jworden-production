@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const root = process.cwd();
 const distDir = path.join(root, 'dist');
-const manifestPath = path.join(root, 'src', 'config', 'siteFactoryManifest.json');
+const profilesPath = path.join(root, 'src', 'data', 'regionalMarketProfiles.js');
 
 const defaultTenant = {
   key: 'jworden',
@@ -12,163 +13,118 @@ const defaultTenant = {
   market: { primaryRegion: 'Virginia' },
 };
 
-const manifest = fs.existsSync(manifestPath)
-  ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : { profiles: [defaultTenant], hostnames: {} };
-
-const profilesByKey = new Map(
-  (manifest.profiles || [])
-    .filter((p) => p && p.key)
-    .map((p) => [String(p.key).toLowerCase(), p]),
-);
-
-if (!profilesByKey.has(defaultTenant.key)) {
-  profilesByKey.set(defaultTenant.key, defaultTenant);
-}
-
-const hostToTenant = Object.fromEntries(
-  Object.entries(manifest.hostnames || {}).map(([host, key]) => [
-    String(host).toLowerCase(),
-    String(key).toLowerCase(),
-  ]),
-);
-
-function tenantForHost(host) {
-  const key = hostToTenant[String(host || '').toLowerCase()] || defaultTenant.key;
-  return profilesByKey.get(key) || profilesByKey.get(defaultTenant.key);
-}
-
-function listFilesRecursive(dir) {
-  if (!fs.existsSync(dir)) return [];
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const out = [];
-  for (const entry of entries) {
-    const p = path.join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...listFilesRecursive(p));
-    else out.push(p);
-  }
-  return out;
-}
-
-function routeFromPath(filePath) {
-  const rel = path.relative(distDir, filePath).replace(/\\/g, '/');
-  if (rel === 'index.html') return '/';
-  return `/${rel.replace(/index\.html$/, '').replace(/\.html$/, '')}`.replace(/\/$/, '') || '/';
-}
-
 function normalizeWhitespace(s) {
   return String(s || '').replace(/\s+/g, ' ').trim();
 }
 
-function fitRange(text, min, max, fallback) {
-  let out = normalizeWhitespace(text);
-  if (!out) out = fallback;
-  if (out.length < min) {
-    const suffix = ' | Premium Asphalt Services';
-    while (out.length < min) {
-      out = `${out}${suffix}`;
-      if (out.length > max) break;
+function upsertTitle(html, nextTitle) {
+  const titleTag = `<title>${nextTitle}</title>`;
+  if (/<title>.*?<\/title>/i.test(html)) {
+    return html.replace(/<title>.*?<\/title>/i, titleTag);
+  }
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${titleTag}`);
+}
+
+function upsertDescription(html, nextDesc) {
+  const descTag = `<meta name="description" content="${nextDesc}">`;
+  const descRegex = /<meta[^>]+name=["']description["'][^>]*>/i;
+  if (descRegex.test(html)) {
+    return html.replace(descRegex, descTag);
+  }
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${descTag}`);
+}
+
+function upsertCanonical(html, canonicalBase) {
+  const canonicalTag = `<link rel="canonical" href="${canonicalBase}">`;
+  const canonicalRegex = /<link[^>]+rel=["']canonical["'][^>]*>/i;
+  if (canonicalRegex.test(html)) {
+    return html.replace(canonicalRegex, canonicalTag);
+  }
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${canonicalTag}`);
+}
+
+function upsertSchema(html, tenant, canonicalBase) {
+  if (/@context"\s*:\s*"https:\/\/schema\.org"/i.test(html)) return html;
+  
+  const brand = tenant?.marketName || tenant?.label || defaultTenant.label;
+  
+  const schemaObj = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": brand,
+    "url": canonicalBase,
+    "telephone": tenant?.phoneDisplay || "+1-804-830-7933",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": tenant?.primaryMetro?.split(',')[0] || "Richmond",
+      "addressRegion": "VA",
+      "postalCode": "23230",
+      "addressCountry": "US"
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "07:00",
+      "closes": "19:00"
     }
-  }
-  if (out.length > max) {
-    out = out.slice(0, max + 1);
-    const lastSpace = out.lastIndexOf(' ');
-    if (lastSpace > min) out = out.slice(0, lastSpace);
-    out = out.slice(0, max).trim();
-  }
-  return out;
+  };
+  const schemaScript = `\n<script type="application/ld+json">\n${JSON.stringify(schemaObj, null, 2)}\n</script>`;
+  return html.replace(/<\/head>/i, `${schemaScript}\n</head>`);
 }
 
-function routeLabel(route) {
-  const slug = route.split('/').filter(Boolean).slice(-1)[0] || 'Service';
-  return slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (m) => m.toUpperCase());
-}
-
-function servicePhrase(tenant) {
-  const region = tenant?.market?.primaryRegion || 'regional';
-  if (tenant?.key === 'wordenstandard') {
-    return 'Operations systems, compliance, and execution advisory';
+async function run() {
+  if (!fs.existsSync(distDir)) {
+    console.log('[meta-normalizer] dist not found, skipping.');
+    process.exit(0);
   }
-  return `Premium asphalt paving, sealcoating, and repair in ${region}`;
-}
-
-function titleFallback(route, tenant) {
-  const brand = tenant?.label || defaultTenant.label;
-  if (route === '/') {
-    return `${servicePhrase(tenant)} | ${brand}`;
+  
+  const indexHtmlPath = path.join(distDir, 'index.html');
+  if (!fs.existsSync(indexHtmlPath)) {
+    console.log('[meta-normalizer] dist/index.html not found, skipping.');
+    process.exit(0);
   }
-  const label = routeLabel(route);
-  return `${label} | ${brand}`;
-}
+  
+  const rawHtml = fs.readFileSync(indexHtmlPath, 'utf8');
 
-function descriptionFallback(route, tenant) {
-  const brand = tenant?.label || defaultTenant.label;
-  const region = tenant?.market?.primaryRegion || 'your market';
-  const opsPhrase = tenant?.key === 'wordenstandard'
-    ? 'operator playbooks, onboarding systems, and compliance-led execution'
-    : 'verified project proof, technical scope clarity, and high-accountability field execution';
-  const base = `${brand} delivers enterprise-grade outcomes with ${opsPhrase} across ${region}.`;
-  if (route === '/') {
-    return `${base} Request a premium estimate and launch your project with production-level confidence.`;
-  }
-  return `${base} Explore ${route} and request a project estimate backed by a measurable delivery standard.`;
-}
-
-function detectCanonicalHost(html) {
-  const canonicalMatch = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["'][^>]*>/i);
-  if (!canonicalMatch || !canonicalMatch[1]) return null;
+  // Load regionalMarketProfiles
+  let REGIONAL_MARKET_PROFILES = {};
   try {
-    return new URL(canonicalMatch[1]).hostname.toLowerCase();
-  } catch {
-    return null;
+      // Dynamic import
+      const module = await import(pathToFileURL(profilesPath));
+      REGIONAL_MARKET_PROFILES = module.REGIONAL_MARKET_PROFILES || {};
+  } catch (err) {
+      console.warn('[meta-normalizer] Error importing regionalMarketProfiles.js. Falling back to default.', err);
   }
-}
+  
+  const domains = Object.keys(REGIONAL_MARKET_PROFILES);
+  let generatedCount = 0;
 
-function upsertTitle(html, newTitle) {
-  if (/<title>[\s\S]*?<\/title>/i.test(html)) {
-    return html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${newTitle}</title>`);
+  for (const domain of domains) {
+    const tenant = REGIONAL_MARKET_PROFILES[domain];
+    const canonicalBase = `https://www.${domain}`;
+    const title = `${tenant.heroHeadline || tenant.marketName} | ${tenant.marketName}`;
+    const desc = `${tenant.heroBody || ''} Contact us at ${tenant.phoneDisplay || ''}`.substring(0, 160).trim();
+
+    let html = upsertTitle(rawHtml, title);
+    html = upsertDescription(html, desc);
+    html = upsertCanonical(html, canonicalBase);
+    html = upsertSchema(html, tenant, canonicalBase);
+    
+    fs.writeFileSync(path.join(distDir, `${domain}.html`), html, 'utf8');
+    generatedCount++;
   }
-  return html.replace(/<head[^>]*>/i, (m) => `${m}\n<title>${newTitle}</title>`);
+  
+  // Update index.html for jwordenasphaltpaving.com
+  const defaultCanonical = 'https://www.jwordenasphaltpaving.com';
+  let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');
+  defaultHtml = upsertDescription(defaultHtml, 'Premium asphalt paving, sealcoating, and repair in Virginia. Contact J. Worden Asphalt Paving today.');
+  defaultHtml = upsertCanonical(defaultHtml, defaultCanonical);
+  defaultHtml = upsertSchema(defaultHtml, defaultTenant, defaultCanonical);
+  fs.writeFileSync(indexHtmlPath, defaultHtml, 'utf8');
+  generatedCount++;
+
+  console.log(`[meta-normalizer] generated ${generatedCount} domain-specific HTML files for multi-tenant SEO.`);
 }
 
-function upsertDescription(html, description) {
-  const metaRegex = /<meta[^>]+name=["']description["'][^>]*>/i;
-  const newTag = `<meta name="description" content="${description.replace(/"/g, '&quot;')}">`;
-  if (metaRegex.test(html)) {
-    return html.replace(metaRegex, newTag);
-  }
-  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${newTag}`);
-}
-
-if (!fs.existsSync(distDir)) {
-  console.log('[meta-normalizer] dist not found, skipping.');
-  process.exit(0);
-}
-
-const htmlFiles = listFilesRecursive(distDir).filter((f) => f.endsWith('.html'));
-let updated = 0;
-
-for (const filePath of htmlFiles) {
-  const route = routeFromPath(filePath);
-  let html = fs.readFileSync(filePath, 'utf8');
-  const canonicalHost = detectCanonicalHost(html) || new URL(defaultTenant.canonicalUrl).hostname;
-  const tenant = tenantForHost(canonicalHost);
-
-  const titleMatch = html.match(/<title>([\s\S]*?)<\/title>/i);
-  const existingTitle = normalizeWhitespace(titleMatch?.[1] || '');
-  const nextTitle = fitRange(existingTitle, 20, 70, titleFallback(route, tenant));
-
-  const descMatch = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["'][^>]*>/i);
-  const existingDesc = normalizeWhitespace(descMatch?.[1] || '');
-  const nextDesc = fitRange(existingDesc, 70, 180, descriptionFallback(route, tenant));
-
-  const nextHtml = upsertDescription(upsertTitle(html, nextTitle), nextDesc);
-  if (nextHtml !== html) {
-    fs.writeFileSync(filePath, nextHtml, 'utf8');
-    updated += 1;
-  }
-}
-
-console.log(`[meta-normalizer] processed ${htmlFiles.length} HTML files; updated ${updated}.`);
+run();

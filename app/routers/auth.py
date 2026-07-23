@@ -12,6 +12,7 @@ import os
 import secrets
 from datetime import datetime, timedelta, timezone
 
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from jose import jwt, JWTError
 from pydantic import BaseModel, EmailStr
@@ -56,14 +57,24 @@ class PinTokenRequest(BaseModel):
 class AuthStatusResponse(BaseModel):
     auth_required: bool
     auth_mode: str
+    token_endpoint: str | None = None
+    admin_configured: bool = False
 
 
 @router.get("/status", summary="Check authentication requirements")
 def auth_status() -> AuthStatusResponse:
     master_key = os.getenv("JWORDEN_MASTER_KEY", "").strip()
+    admin_pin = os.getenv("ADMIN_PIN", "").strip()
+    auth_required = bool(master_key or admin_pin)
+    admin_configured = bool(
+        admin_pin
+        or (os.getenv("ADMIN_USERNAME") and os.getenv("ADMIN_PASSWORD"))
+    )
     return AuthStatusResponse(
-        auth_required=bool(master_key),
-        auth_mode="jwt_exchange" if master_key else "open",
+        auth_required=auth_required,
+        auth_mode="required" if auth_required else "open",
+        token_endpoint="/api/v1/auth/pin-token" if auth_required else None,
+        admin_configured=admin_configured,
     )
 
 
@@ -125,8 +136,9 @@ def issue_token(
         except Exception:
             raise HTTPException(status_code=400, detail="Invalid Basic auth format")
 
-        expected_username = "admin"
-        if provided_username != expected_username or provided_password != master_key:
+        admin_username = os.getenv("ADMIN_USERNAME", "admin")
+        admin_password = os.getenv("ADMIN_PASSWORD", master_key)
+        if provided_username != admin_username or provided_password != admin_password:
             logger.warning(
                 "Failed token exchange — invalid Basic credentials (user=%s)",
                 provided_username or "<empty>",
@@ -180,8 +192,8 @@ def issue_pin_token(
             detail="PIN authentication is not configured. Set ADMIN_PIN.",
         )
 
-    if not request.pin or not request.pin.isdigit() or len(request.pin) != 4:
-        raise HTTPException(status_code=400, detail="A 4-digit PIN is required.")
+    if not request.pin or not request.pin.isdigit() or len(request.pin) < 4 or len(request.pin) > 8:
+        raise HTTPException(status_code=400, detail="A 4 to 8 digit PIN is required.")
 
     if request.pin != admin_pin:
         logger.warning(

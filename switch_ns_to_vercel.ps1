@@ -7,6 +7,8 @@ $GD_HEADERS = @{
 
 # These are on external (Netlify) nameservers - switch them to Vercel NS
 $SWITCH_TO_VERCEL_NS = @(
+    "jwordenasphaltpaving.com",
+    "jwordenandsonspaving.com",
     "asphaltpavingkansascity.com",
     "atlantaasphaltpavingpros.com",
     "blueridgeasphaltpaving.com",

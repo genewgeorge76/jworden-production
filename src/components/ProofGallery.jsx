@@ -1,9 +1,9 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-const BEFORE_AFTER_IMG = '/work/imported/va cars photos and videos for website/IMG_8721.JPG';
-const CREW_IMG = '/work/imported/va cars photos and videos for website/IMG_8713.JPG';
-const TEXTURE_IMG = '/work/imported/va cars photos and videos for website/IMG_8724.JPG';
+const BEFORE_AFTER_IMG = '/work/imported/va_cars_photos_and_videos_for_website/IMG_8721.JPG';
+const CREW_IMG = '/work/imported/va_cars_photos_and_videos_for_website/IMG_8713.JPG';
+const TEXTURE_IMG = '/work/imported/va_cars_photos_and_videos_for_website/IMG_8724.JPG';
 const COMMERCIAL_IMG = '/work/imported/KFC/IMG_9496.JPG';
 
 const PROJECTS = [

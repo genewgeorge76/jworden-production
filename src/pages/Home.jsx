@@ -13,9 +13,9 @@ import EstimateForm from '../components/EstimateForm';
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
 
-const HERO_IMAGE = '/hero-paving-4k.png';
-const RESIDENTIAL_IMAGE = '/work/portfolio/portfolio-017.jpg';
-const COMMERCIAL_IMAGE = '/images/commercial_paving_hero.png';
+const HERO_IMAGE = '/images/real_jobs/great big driveway paving photo.JPG';
+const RESIDENTIAL_IMAGE = '/images/real_jobs/asphalt driveways goochland va.jpg';
+const COMMERCIAL_IMAGE = '/images/real_jobs/COMMERCIALPAVING 2026.jpg';
 
 const STATS = [
   { value: '40+', label: 'Years in Business' },
@@ -235,12 +235,14 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <img
-                src={RESIDENTIAL_IMAGE}
-                alt="Residential asphalt driveway paving in Virginia by J. Worden and Sons"
-                className="w-full aspect-[4/3] object-cover"
-              />
-              <div className="absolute -bottom-5 -left-5 bg-[#ff7a00] text-black p-5 hidden md:block">
+              <div className="aspect-[4/3] w-full bg-slate-950 p-2 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
+                <img
+                  src={RESIDENTIAL_IMAGE}
+                  alt="Residential asphalt driveway paving in Virginia by J. Worden and Sons"
+                  className="w-full h-full object-contain rounded-xl"
+                />
+              </div>
+              <div className="absolute -bottom-5 -left-5 bg-[#ff7a00] text-black p-5 hidden md:block rounded-xl shadow-xl">
                 <p className="font-display text-3xl font-bold">20–30</p>
                 <p className="font-display text-xs uppercase tracking-wide">Year Expected Lifespan</p>
               </div>
@@ -254,11 +256,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="order-2 lg:order-1">
-              <img
-                src={COMMERCIAL_IMAGE}
-                alt="Commercial parking lot paving by J. Worden and Sons"
-                className="w-full aspect-[4/3] object-cover"
-              />
+              <div className="aspect-[4/3] w-full bg-slate-950 p-2 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
+                <img
+                  src={COMMERCIAL_IMAGE}
+                  alt="Commercial parking lot paving by J. Worden and Sons"
+                  className="w-full h-full object-contain rounded-xl"
+                />
+              </div>
             </div>
             <div className="order-1 lg:order-2">
               <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Commercial</p>

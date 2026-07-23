@@ -64,7 +64,7 @@ async def verify_check(req: CheckRequest):
 async def verify_admin_start():
     phone = os.environ.get("ADMIN_2FA_PHONE", "").strip()
     if not phone:
-        raise HTTPException(status_code=503, detail="ADMIN_2FA_PHONE not set")
+        raise HTTPException(status_code=400, detail="ADMIN_2FA_PHONE not set")
     result = await _tv.start_verification(phone, channel="sms")
     if not result.get("ok"):
         raise HTTPException(status_code=400, detail=result.get("error") or "Verification start failed")

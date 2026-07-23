@@ -16,12 +16,13 @@ import uuid
 from datetime import timezone
 from typing import Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import GalleryImage
+from ..services.google_photos import sync_photo_to_google_photos
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ def _serialize_image(img: GalleryImage) -> dict:
 
 @router.post("/upload", summary="Upload a job photo")
 async def upload_image(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     job_name: str = Form(...),
     description: Optional[str] = Form(None),
@@ -102,6 +104,9 @@ async def upload_image(
         image.filename,
         security.get("user"),
     )
+    
+    background_tasks.add_task(sync_photo_to_google_photos, data, image.filename, f"Job: {image.job_name} - {description or ''}")
+    
     return {"status": "uploaded", "image": _serialize_image(image)}
 
 

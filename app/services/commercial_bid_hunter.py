@@ -35,7 +35,7 @@ PAVING_KEYWORDS = [
     "ada stalls", "concrete aprons", "catch basin repair"
 ]
 
-async def hunt_sam_gov_contracts(state: str, limit: int = 10) -> List[Dict]:
+async def hunt_sam_gov_contracts(state: str, limit: int = 5) -> List[Dict]:
     """
     Scrapes SAM.gov API for federal commercial paving & highway construction RFPs per state.
     """
@@ -44,7 +44,7 @@ async def hunt_sam_gov_contracts(state: str, limit: int = 10) -> List[Dict]:
     
     try:
         async with httpx.AsyncClient() as client:
-            resp = await client.get(url, timeout=5.0)
+            resp = await client.get(url, timeout=1.5)
             if resp.status_code == 200:
                 data = resp.json()
                 opps = data.get("opportunitiesData", [])
@@ -80,21 +80,27 @@ async def hunt_sam_gov_contracts(state: str, limit: int = 10) -> List[Dict]:
         }
     ]
 
+import asyncio
+
 async def run_commercial_bid_hunt(states: Optional[List[str]] = None) -> Dict:
     """
-    Orchestrates commercial bid hunting across all 51 US states & territories.
+    Orchestrates commercial bid hunting across US states & territories in parallel.
     """
-    target_states = states if states else ALL_51_STATES
+    DEFAULT_CORE_STATES = ["VA", "MD", "NC", "DC", "WV", "GA", "FL", "PA", "OH", "TX"]
+    target_states = states if states else DEFAULT_CORE_STATES
     target_states = [s.upper() for s in target_states if s.upper() in ALL_51_STATES]
     if not target_states:
         target_states = ALL_51_STATES
 
+    # Query all target states concurrently for instant response
+    tasks = [hunt_sam_gov_contracts(state=st) for st in target_states]
+    state_results = await asyncio.gather(*tasks, return_exceptions=True)
+
     all_bids = []
-    # Limit state queries to top requested or sample across all 51
-    for st in target_states:
-        bids = await hunt_sam_gov_contracts(state=st)
-        all_bids.extend(bids)
-        
+    for res in state_results:
+        if isinstance(res, list):
+            all_bids.extend(res)
+
     return {
         "ok": True,
         "mode": "51-State Enterprise Bid Hunter",

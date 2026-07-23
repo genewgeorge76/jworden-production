@@ -14,7 +14,7 @@
  */
 
 // ── Real portfolio photos — grouped by state ──────────────────────────────────
-import importedData from '../../public/work/imported/project-import.json';
+import importedData from './project-import.json';
 
 // ── Real portfolio photos — generated from local ingest ────────────────────────
 export const portfolioPhotos = importedData.map((item, i) => {

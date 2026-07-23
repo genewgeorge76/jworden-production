@@ -133,6 +133,7 @@ def create_lead_from_transcript(transcript: str, db=None) -> dict:
         from ..models import Lead  # noqa: PLC0415
         from ..services.lead_scorer import score_lead  # noqa: PLC0415
         from ..services.notifications import send_lead_notification  # noqa: PLC0415
+        from ..services.geocoding import geocode_address  # noqa: PLC0415
 
         # Build a complete lead dict for scoring
         lead_data = {
@@ -148,6 +149,14 @@ def create_lead_from_transcript(transcript: str, db=None) -> dict:
         }
 
         scoring = score_lead(lead_data)
+
+        # Geocode address
+        lat, lng = None, None
+        if lead_data["address"]:
+            coords = geocode_address(lead_data["address"])
+            if coords:
+                lat, lng = coords
+
         db_lead = Lead(
             name=lead_data["name"],
             email=lead_data["email"],
@@ -161,6 +170,10 @@ def create_lead_from_transcript(transcript: str, db=None) -> dict:
             score_value=scoring["score"],
             score_label=scoring["label"],
             score_priority=scoring["priority"],
+            source="voice_call",
+            latitude=lat,
+            longitude=lng,
+            raw_data=entities,
         )
         db.add(db_lead)
         db.commit()

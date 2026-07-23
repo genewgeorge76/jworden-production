@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { trackPhoneClick } from '@/lib/analytics';
 import { PRIMARY_LOGO_URL } from '@/lib/branding';
+import SocialLinks from './SocialLinks';
 
 const NAV_LINKS = [
-  { label: 'Commercial', href: '/richmond-commercial' },
-  { label: 'Residential', href: '/residential-asphalt' },
+  { label: 'Commercial', href: '/commercial' },
+  { label: 'Residential', href: '/residential' },
   { label: 'Services', href: '/services' },
   { label: 'Locations', href: '/locations' },
   { label: 'Worden U', href: '/worden-university' },
@@ -19,6 +21,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showMiniLogo, setShowMiniLogo] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,7 +36,12 @@ export default function Navbar() {
   const scrollTo = (href) => {
     setIsOpen(false);
     if (href.startsWith('/')) {
-      window.location.href = href;
+      navigate(href);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (window.location.pathname !== '/') {
+      navigate('/' + href);
       return;
     }
     const el = document.querySelector(href);
@@ -95,6 +103,12 @@ export default function Navbar() {
                 {link.label}
               </button>
             )}
+            
+            <SocialLinks 
+              size="sm" 
+              className="hidden xl:flex ml-2 mr-1 [&>a]:!bg-slate-100 [&>a]:!text-slate-600 hover:[&>a]:!bg-primary hover:[&>a]:!text-white" 
+            />
+
             <button
               onClick={() => scrollTo('#quote')}
               className="premium-cta flex items-center gap-2 text-primary-foreground px-5 py-3 font-display font-bold text-sm tracking-[0.16em] uppercase transition-all min-h-[48px]">
@@ -134,9 +148,16 @@ export default function Navbar() {
                   {link.label}
                 </button>
             )}
+              <div className="mt-4 flex justify-center pb-2">
+                <SocialLinks 
+                  size="md" 
+                  className="[&>a]:!bg-slate-100 [&>a]:!text-slate-600 hover:[&>a]:!bg-primary hover:[&>a]:!text-white" 
+                />
+              </div>
+
               <button
               onClick={() => scrollTo('#quote')}
-              className="w-full mt-4 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-5 py-4 font-display font-bold text-sm tracking-wider uppercase min-h-[48px]">
+              className="w-full mt-2 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-5 py-4 font-display font-bold text-sm tracking-wider uppercase min-h-[48px]">
               
                 <Phone className="w-4 h-4" />
                 Free Estimate

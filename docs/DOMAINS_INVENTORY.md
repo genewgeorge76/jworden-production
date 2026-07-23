@@ -26,6 +26,8 @@ None of these domains are to be added to active infrastructure, CORS lists, or d
 17. `carolinablacktop.com`
 18. `asphaltpavingkansascity.com`
 19. `carolinaasphaltpavingpros.com`
+20. `atlantapavingandsealing.com` (In Progress - Re-adding)
+21. `jwordenandsonspaving.com` (In Progress - Re-adding Legacy Domain)
 
 ## GoDaddy Status Snapshot (Owner-Provided)
 

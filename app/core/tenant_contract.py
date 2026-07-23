@@ -49,6 +49,7 @@ class TenantProfile(BaseModel):
     accentColor: str | None = None
     routeMode: str | None = None
     enableChatWidget: bool | None = None
+    subscriptionTier: str | None = None
     market: MarketConfig | None = None
 
 

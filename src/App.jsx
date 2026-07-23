@@ -45,6 +45,7 @@ const Services = lazy(() => import('./pages/Services'));
 const ServiceAreas = lazy(() => import('./pages/ServiceAreas'));
 const CityPage = lazy(() => import('./pages/CityPage'));
 const StatePavingPage = lazy(() => import('./pages/StatePavingPage'));
+const TradePage = lazy(() => import('./pages/TradePage'));
 const LocationsIndex = lazy(() => import('./pages/LocationsIndex'));
 const LocationPage = lazy(() => import('./pages/LocationPage'));
 const RichmondZipLanding = lazy(() => import('./pages/RichmondZipLanding'));
@@ -246,8 +247,10 @@ const AuthenticatedApp = () => {
   const routeMode = tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE;
   const subdomainMode = detectSubdomainMode();
 
-  if (subdomainMode === SUBDOMAIN_MODES.ADMIN) {
-    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<CommandCenter />} /></Routes></Suspense>;
+  const isWordenStandardDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().includes('thewordenstandard.com');
+
+  if (subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) {
+    return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<RequireAuth><CommandCenter /></RequireAuth>} /></Routes></Suspense>;
   }
   if (subdomainMode === SUBDOMAIN_MODES.CREW) {
     return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<CrewFieldApp />} /></Routes></Suspense>;
@@ -376,11 +379,13 @@ const AuthenticatedApp = () => {
         <Route path="/service-areas" element={<PublicLayout><ServiceAreas /></PublicLayout>} />
         <Route path="/service-areas/:slug" element={<PublicLayout><CityPage /></PublicLayout>} />
         <Route path="/states/:stateSlug" element={<PublicLayout><StatePavingPage /></PublicLayout>} />
+        <Route path="/trades/:tradeSlug" element={<PublicLayout><TradePage /></PublicLayout>} />
         <Route path="/locations" element={<LocationsIndex />} />
         <Route path="/locations/richmond-va/:zip" element={<RichmondZipLanding />} />
         <Route path="/locations/:slug" element={<LocationPage />} />
         <Route path="/paving" element={<AsphaltPaving />} />
         <Route path="/residential" element={<ResidentialAsphalt />} />
+        <Route path="/residential-asphalt" element={<ResidentialAsphalt />} />
         <Route path="/home-services" element={<HomeServices />} />
         <Route path="/hardscapes" element={<Hardscapes />} />
         <Route path="/sealcoating" element={<VirginiaSealcoating />} />
@@ -397,7 +402,10 @@ const AuthenticatedApp = () => {
         <Route path="/millings-fines" element={<MillingsAndFines />} />
         <Route path="/tar-and-chip" element={<TarAndChip />} />
         <Route path="/driveway-ai" element={<Navigate to="/quote" replace />} />
+        <Route path="/commercial" element={<RichmondCommercial />} />
+        <Route path="/richmond-commercial" element={<RichmondCommercial />} />
         <Route path="/commercial/richmond-va" element={<RichmondCommercial />} />
+        <Route path="/worden-university" element={<WordenUniversity />} />
         <Route path="/jwordenai" element={<Navigate to="/quote" replace />} />
         <Route path="/ai-research" element={<Navigate to="/blog" replace />} />
         <Route path="/general-contracting" element={<GeneralContracting />} />

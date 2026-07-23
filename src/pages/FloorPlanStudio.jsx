@@ -391,7 +391,7 @@ export default function FloorPlanStudio() {
     <div className="min-h-screen bg-zinc-950 text-white flex flex-col">
       <SEO
         title="4D Interior Design Studio | Kitchen Remodels, Additions & Floor Plans"
-        description="A premium JWORDENAI floor plan and interior design studio for kitchen remodels, additions, room planning, live cost ranges, and future-ready GC decision support."
+        description="A premium JWORDENAI floor plan and interior design studio for kitchen remodels, additions, room planning, live cost ranges, and future-ready GC..."
         canonicalPath="/floor-plan-studio"
       />
       {/* Header */}
