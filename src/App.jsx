@@ -249,16 +249,7 @@ const AuthenticatedApp = () => {
 
   const isWordenStandardDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().includes('thewordenstandard.com');
 
-  if (subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) {
-    return (
-      <Suspense fallback={<RouteLoader />}>
-        <Routes>
-          <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
-          <Route path="*" element={<RequireAuth><CommandCenter /></RequireAuth>} />
-        </Routes>
-      </Suspense>
-    );
-  }
+
   if (subdomainMode === SUBDOMAIN_MODES.CREW) {
     return <Suspense fallback={<RouteLoader />}><Routes><Route path="*" element={<CrewFieldApp />} /></Routes></Suspense>;
   }
@@ -359,14 +350,17 @@ const AuthenticatedApp = () => {
         {/* Public Operations / SaaS Routes */}
         {isOperationsSite && <Route path="/super-admin" element={<SuperAdmin />} />}
         {isOperationsSite && <Route path="/super-admin/apis" element={<ApiDashboard />} />}
-        {isOperationsSite && <Route path="/" element={<MarketingHome />} />}
+        {(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && (
+          <Route path="/" element={<RequireAuth><CommandCenter /></RequireAuth>} />
+        )}
+        {isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<MarketingHome />} />}
         {isOperationsSite && <Route path="/register" element={<Register />} />}
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
 
         {/* Public Local Market Routes */}
-        {!isOperationsSite && <Route path="/" element={<Home />} />}
+        {!isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<Home />} />}
         {!isOperationsSite && <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />}
         {!isOperationsSite && <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />}
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />

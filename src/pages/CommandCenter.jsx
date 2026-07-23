@@ -322,7 +322,7 @@ function HubLinkPanel() {
     {
       title: 'Enterprise AI Platform',
       desc: 'Licensed L4 Controls & Agent Registry',
-      path: '/jwordenai',
+      path: '/jworden-ai',
       icon: Layout,
       color: 'text-purple-400',
       bg: 'bg-purple-400/10',
