@@ -1,1 +1,3 @@
-
+# Rule: Multi-Tenant Vercel SEO Invariants
+1. **Dynamic Sitemaps:** Never hardcode a single domain into a static `public/sitemap.xml` or `public/robots.txt` when a repository serves multiple domains. Always generate host-specific sitemaps (e.g., `/sitemaps/sitemap-{domain}.xml`) and use Vercel host-based rewrites (`has: [{ "type": "host" }]`) to map `/sitemap.xml` to the correct file dynamically.
+2. **Environment Agnostic Scripts:** Automation scripts (like IndexNow or GSC submissions) must check for both Netlify (`NETLIFY === 'true'`) and Vercel (`VERCEL_ENV === 'production'`) before deciding to skip execution.

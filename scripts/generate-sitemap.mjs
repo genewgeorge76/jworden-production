@@ -15,7 +15,7 @@
  * Hooked into npm run build via "prebuild" in package.json.
  * ---------------------------------------------------------------
  */
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -232,121 +232,115 @@ try {
 
 // ── 3. Build URL list ─────────────────────────────────────────────────────────
 const today = new Date().toISOString().slice(0, 10);
-const urls = [];
+const DOMAINS = [
+  'richmondasphaltpaving.com',
+  'blueridgeasphaltpaving.com',
+  'minnesotaasphaltpaving.com',
+  'obxpaving.com',
+  'atlantaasphaltpavingpros.com',
+  'michiganasphaltpavingpros.com',
+  'asphaltpavingkansascity.com',
+  'savannahasphaltpaving.com',
+  'carolinablacktop.com',
+  'www.jwordenasphaltpaving.com',
+  'thewordenstandard.com'
+];
 
-for (const r of STATIC_ROUTES) {
-  urls.push({ loc: SITE + r.path, lastmod: today, changefreq: r.changefreq, priority: r.priority });
-}
+try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch (e) {}
 
-for (const loc of LOCATIONS) {
-  if (!loc?.slug) continue;
-  urls.push({
-    loc: `${SITE}/locations/${loc.slug}`,
-    lastmod: today,
-    changefreq: 'monthly',
-    priority: '0.9',
+let totalUrls = 0;
+
+for (const domain of DOMAINS) {
+  const SITE = `https://${domain}`;
+  const urls = [];
+
+  for (const r of STATIC_ROUTES) {
+    urls.push({ loc: SITE + r.path, lastmod: today, changefreq: r.changefreq, priority: r.priority });
+  }
+
+  for (const loc of LOCATIONS) {
+    if (!loc?.slug) continue;
+    urls.push({ loc: `${SITE}/locations/${loc.slug}`, lastmod: today, changefreq: 'monthly', priority: '0.9' });
+  }
+
+  for (const a of SERVICE_AREAS) {
+    if (!a?.slug) continue;
+    urls.push({ loc: `${SITE}/service-areas/${a.slug}`, lastmod: today, changefreq: 'monthly', priority: '0.85' });
+  }
+
+  for (const lp of LANDING_PAGES) {
+    if (!lp?.slug) continue;
+    urls.push({ loc: `${SITE}/lp/${lp.slug}`, lastmod: today, changefreq: 'monthly', priority: '0.9' });
+  }
+
+  for (const bp of BLOG_POSTS) {
+    if (!bp?.slug) continue;
+    urls.push({ loc: `${SITE}/blog/${bp.slug}`, lastmod: bp.date || today, changefreq: 'monthly', priority: '0.75' });
+  }
+
+  for (const blogPath of GENERATED_BLOG_PATHS) {
+    urls.push({ loc: `${SITE}${blogPath}`, lastmod: today, changefreq: 'monthly', priority: '0.72' });
+  }
+
+  for (const zip of Object.keys(RICHMOND_ZIP_PAGES)) {
+    urls.push({ loc: `${SITE}/locations/richmond-va/${zip}`, lastmod: today, changefreq: 'monthly', priority: '0.88' });
+  }
+
+  const stateCodesForSitemap = INCLUDE_ALL_STATES ? Object.keys(STATE_MAP).sort() : WORDEN_ACTIVE_STATES;
+  for (const abbr of stateCodesForSitemap) {
+    const st = STATE_MAP[abbr];
+    if (!st) continue;
+    urls.push({ loc: `${SITE}/states/${stateSlug(st)}`, lastmod: today, changefreq: 'monthly', priority: '0.7' });
+  }
+
+  const seen = new Set();
+  const deduped = urls.filter((u) => {
+    if (seen.has(u.loc)) return false;
+    seen.add(u.loc);
+    return true;
   });
-}
+  assertValidSitemapEntries(deduped);
 
-for (const a of SERVICE_AREAS) {
-  if (!a?.slug) continue;
-  urls.push({
-    loc: `${SITE}/service-areas/${a.slug}`,
-    lastmod: today,
-    changefreq: 'monthly',
-    priority: '0.85',
-  });
-}
+  // ── 4. Emit sitemap.xml & robots.txt ──────────────────────────────────────────
+  const xmlBody = deduped
+    .map(
+      (u) => `  <url>
+      <loc>${escapeXml(u.loc)}</loc>
+      <lastmod>${escapeXml(u.lastmod)}</lastmod>
+      <changefreq>${escapeXml(u.changefreq)}</changefreq>
+      <priority>${escapeXml(u.priority)}</priority>
+    </url>`
+    )
+    .join('\n');
 
-for (const lp of LANDING_PAGES) {
-  if (!lp?.slug) continue;
-  urls.push({
-    loc: `${SITE}/lp/${lp.slug}`,
-    lastmod: today,
-    changefreq: 'monthly',
-    priority: '0.9',
-  });
-}
-
-for (const bp of BLOG_POSTS) {
-  if (!bp?.slug) continue;
-  urls.push({
-    loc: `${SITE}/blog/${bp.slug}`,
-    lastmod: bp.date || today,
-    changefreq: 'monthly',
-    priority: '0.75',
-  });
-}
-
-for (const blogPath of GENERATED_BLOG_PATHS) {
-  urls.push({
-    loc: `${SITE}${blogPath}`,
-    lastmod: today,
-    changefreq: 'monthly',
-    priority: '0.72',
-  });
-}
-
-for (const zip of Object.keys(RICHMOND_ZIP_PAGES)) {
-  urls.push({
-    loc: `${SITE}/locations/richmond-va/${zip}`,
-    lastmod: today,
-    changefreq: 'monthly',
-    priority: '0.88',
-  });
-}
-
-const stateCodesForSitemap = INCLUDE_ALL_STATES
-  ? Object.keys(STATE_MAP).sort()
-  : WORDEN_ACTIVE_STATES;
-
-for (const abbr of stateCodesForSitemap) {
-  const st = STATE_MAP[abbr];
-  if (!st) continue;
-  urls.push({
-    loc: `${SITE}/states/${stateSlug(st)}`,
-    lastmod: today,
-    changefreq: 'monthly',
-    priority: '0.7',
-  });
-}
-
-// Dedupe (in case static and dynamic overlap)
-const seen = new Set();
-const deduped = urls.filter((u) => {
-  if (seen.has(u.loc)) return false;
-  seen.add(u.loc);
-  return true;
-});
-assertValidSitemapEntries(deduped);
-
-// ── 4. Emit sitemap.xml ───────────────────────────────────────────────────────
-const xmlBody = deduped
-  .map(
-    (u) => `  <url>
-    <loc>${escapeXml(u.loc)}</loc>
-    <lastmod>${escapeXml(u.lastmod)}</lastmod>
-    <changefreq>${escapeXml(u.changefreq)}</changefreq>
-    <priority>${escapeXml(u.priority)}</priority>
-  </url>`
-  )
-  .join('\n');
-
-const xml = `<?xml version="1.0" encoding="utf-8"?>
+  const xml = `<?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${xmlBody}
-</urlset>
+</urlset>\n`;
+
+  writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.xml`), xml, 'utf8');
+  writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.txt`), deduped.map((u) => u.loc).join('\n') + '\n', 'utf8');
+  
+  const robots = `User-agent: *
+Allow: /
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /netlify.toml
+Disallow: /replace.js
+Disallow: /fix_links.js
+Disallow: /fix_newlines.js
+Disallow: /update_site.js
+Disallow: /add_new_pages.js
+Disallow: /add_remaining_pages.js
+Disallow: /pull_request_23_status.txt
+Allow: /.netlify/images
+Disallow: /.netlify/
+
+Sitemap: ${SITE}/sitemap.xml
 `;
+  writeFileSync(resolve(ROOT, `public/sitemaps/robots-${domain}.txt`), robots, 'utf8');
 
-writeFileSync(resolve(ROOT, 'public/sitemap.xml'), xml, 'utf8');
-writeFileSync(
-  resolve(ROOT, 'public/sitemap.txt'),
-  deduped.map((u) => u.loc).join('\n') + '\n',
-  'utf8'
-);
+  totalUrls += deduped.length;
+}
 
-console.log(
-  `[sitemap] wrote ${deduped.length} URLs ` +
-    `(${STATIC_ROUTES.length} static, ${LOCATIONS.length} locations, ` +
-    `${SERVICE_AREAS.length} service-areas, ${LANDING_PAGES.length} landing pages, ${BLOG_POSTS.length} blogs, ${GENERATED_BLOG_PATHS.length} generated-blogs, ${Object.keys(RICHMOND_ZIP_PAGES).length} zip-pages, ${stateCodesForSitemap.length} states, mode=${INCLUDE_ALL_STATES ? 'all_51' : 'active_only'})`
-);
+console.log(`[sitemap] wrote ${totalUrls} URLs across ${DOMAINS.length} domains`);

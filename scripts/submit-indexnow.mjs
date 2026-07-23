@@ -30,54 +30,65 @@ function log(msg) {
   console.log(`[indexnow] ${msg}`);
 }
 
-// Only ping on Netlify production deploys — skip local builds, deploy previews,
+// Only ping on production deploys — skip local builds, deploy previews,
 // and branch builds so we don't spam IndexNow with non-public URLs.
-// Override with INDEXNOW_FORCE=1 to run anywhere (e.g. `npm run indexnow`).
-const isNetlifyProd = process.env.NETLIFY === 'true' && process.env.CONTEXT === 'production';
+// Override with INDEXNOW_FORCE=1 to run anywhere.
+const isProdDeploy = (process.env.NETLIFY === 'true' && process.env.CONTEXT === 'production') || (process.env.VERCEL_ENV === 'production');
 const isManualRun = process.argv.includes('--force') || process.env.INDEXNOW_FORCE === '1';
-if (!isNetlifyProd && !isManualRun) {
-  log('skipping (not a Netlify production deploy; use INDEXNOW_FORCE=1 to override)');
+if (!isProdDeploy && !isManualRun) {
+  log('skipping (not a production deploy; use INDEXNOW_FORCE=1 to override)');
   process.exit(0);
 }
 
-if (!existsSync(SITEMAP_PATH)) {
-  log(`sitemap not found at ${SITEMAP_PATH} — skipping`);
+const SITEMAPS_DIR = resolve(ROOT, 'public/sitemaps');
+if (!existsSync(SITEMAPS_DIR)) {
+  log(`sitemaps dir not found at ${SITEMAPS_DIR} — skipping`);
   process.exit(0);
 }
 
-const xml = readFileSync(SITEMAP_PATH, 'utf8');
-const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+const files = readdirSync(SITEMAPS_DIR).filter(f => f.startsWith('sitemap-') && f.endsWith('.xml'));
 
-if (urls.length === 0) {
-  log('no URLs found in sitemap — skipping');
+if (files.length === 0) {
+  log('no sitemaps found — skipping');
   process.exit(0);
 }
 
-// IndexNow API caps batches at 10,000 URLs; we're well under.
-const body = {
-  host: HOST,
-  key: KEY,
-  keyLocation: KEY_FILE,
-  urlList: urls,
-};
+for (const file of files) {
+  const hostMatch = file.match(/sitemap-(.+)\.xml/);
+  if (!hostMatch) continue;
+  const HOST = hostMatch[1];
+  
+  const xml = readFileSync(resolve(SITEMAPS_DIR, file), 'utf8');
+  const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
 
-log(`submitting ${urls.length} URLs to IndexNow for ${HOST}`);
+  if (urls.length === 0) continue;
 
-try {
-  const res = await fetch('https://api.indexnow.org/IndexNow', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
-    body: JSON.stringify(body),
-  });
-  const txt = await res.text();
-  if (res.ok || res.status === 202) {
-    log(`success (HTTP ${res.status})`);
-  } else {
-    log(`HTTP ${res.status}: ${txt.slice(0, 200)}`);
-    // Don't fail the build on IndexNow errors — they're advisory.
-    process.exit(0);
+  const KEY = process.env.INDEXNOW_KEY || '3ef8a81ce186414ca3235bebb5072f22';
+  const KEY_FILE = `https://${HOST}/${KEY}.txt`;
+  
+  const body = {
+    host: HOST,
+    key: KEY,
+    keyLocation: KEY_FILE,
+    urlList: urls,
+  };
+
+  log(`submitting ${urls.length} URLs to IndexNow for ${HOST}`);
+
+  try {
+    const res = await fetch('https://api.indexnow.org/IndexNow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify(body),
+    });
+    const txt = await res.text();
+    if (res.ok || res.status === 202) {
+      log(`success (HTTP ${res.status}) for ${HOST}`);
+    } else {
+      log(`HTTP ${res.status} for ${HOST}: ${txt.slice(0, 200)}`);
+    }
+  } catch (e) {
+    log(`network error (non-fatal) for ${HOST}: ${e.message}`);
   }
-} catch (e) {
-  log(`network error (non-fatal): ${e.message}`);
-  process.exit(0);
 }
+

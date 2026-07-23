@@ -13,4 +13,4 @@ Disallow: /pull_request_23_status.txt
 Allow: /.netlify/images
 Disallow: /.netlify/
 
-Sitemap: https://jwordenasphaltpaving.com/sitemap.xml
+Sitemap: https://asphaltpavingkansascity.com/sitemap.xml

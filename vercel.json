@@ -3,11 +3,7 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "redirects": [
-    {
-      "source": "/sitemap.txt",
-      "destination": "/sitemap.txt",
-      "permanent": true
-    },
+
     {
       "source": "/3ef8a81ce186414ca3235bebb5072f22.txt",
       "destination": "/3ef8a81ce186414ca3235bebb5072f22.txt",
@@ -96,11 +92,18 @@
     },
     {
       "source": "/robots.txt",
-      "destination": "/api/robots"
+      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "destination": "/sitemaps/robots-:domain.txt"
     },
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
+      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "destination": "/sitemaps/sitemap-:domain.xml"
+    },
+    {
+      "source": "/sitemap.txt",
+      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "destination": "/sitemaps/sitemap-:domain.txt"
     },
     {
       "source": "/(.*)",

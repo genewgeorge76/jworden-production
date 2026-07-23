@@ -37,13 +37,13 @@ function log(msg) {
   console.log(`[gsc] ${msg}`);
 }
 
-const isNetlifyProd =
-  process.env.NETLIFY === 'true' && process.env.CONTEXT === 'production';
+const isProdDeploy =
+  (process.env.NETLIFY === 'true' && process.env.CONTEXT === 'production') || (process.env.VERCEL_ENV === 'production');
 const isManualRun =
   process.argv.includes('--force') || process.env.GSC_FORCE === '1';
 
-if (!isNetlifyProd && !isManualRun) {
-  log('skipping (not a Netlify production deploy; use GSC_FORCE=1 to override)');
+if (!isProdDeploy && !isManualRun) {
+  log('skipping (not a production deploy; use GSC_FORCE=1 to override)');
   process.exit(0);
 }
 
@@ -173,9 +173,9 @@ async function getAccessToken() {
   return j.access_token;
 }
 
-async function submitSitemap(token, sitemapUrl) {
+async function submitSitemap(token, sitemapUrl, propertyUrl) {
   // PUT https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}
-  const siteEnc = encodeURIComponent(PROPERTY_SITE_URL);
+  const siteEnc = encodeURIComponent(propertyUrl);
   const feedEnc = encodeURIComponent(sitemapUrl);
   const url = `https://www.googleapis.com/webmasters/v3/sites/${siteEnc}/sitemaps/${feedEnc}`;
   const res = await fetch(url, {
@@ -184,7 +184,7 @@ async function submitSitemap(token, sitemapUrl) {
   });
   // 200 or 204 = success. Google returns 204 No Content on resubmit.
   if (res.status === 200 || res.status === 204) {
-    log(`success (HTTP ${res.status}) — submitted ${sitemapUrl}`);
+    log(`success (HTTP ${res.status}) — submitted ${sitemapUrl} for ${propertyUrl}`);
     return true;
   }
   const txt = await res.text().catch(() => '');
@@ -196,20 +196,38 @@ async function submitSitemap(token, sitemapUrl) {
 try {
   log(`requesting OAuth token for ${creds.client_email}`);
   const token = await getAccessToken();
-  log(`using Search Console property ${PROPERTY_SITE_URL}`);
-  const sitemapUrls = await resolveSitemapUrls(SITE_URL);
-  if (!sitemapUrls.length) {
+  
+  const { readdirSync, existsSync } = await import('node:fs');
+  const { resolve } = await import('node:path');
+  const SITEMAPS_DIR = resolve(process.cwd(), 'public/sitemaps');
+  let sitemapTargets = [];
+  
+  if (existsSync(SITEMAPS_DIR)) {
+    const files = readdirSync(SITEMAPS_DIR).filter(f => f.startsWith('sitemap-') && f.endsWith('.xml'));
+    for (const file of files) {
+      const match = file.match(/sitemap-(.+)\.xml/);
+      if (match) {
+        sitemapTargets.push({ url: `https://${match[1]}/sitemap.xml`, propertyUrl: `https://${match[1]}/` });
+      }
+    }
+  } else {
+    log(`using Search Console property ${PROPERTY_SITE_URL}`);
+    const resolvedUrls = await resolveSitemapUrls(SITE_URL);
+    sitemapTargets = resolvedUrls.map(u => ({ url: u, propertyUrl: PROPERTY_SITE_URL }));
+  }
+
+  if (!sitemapTargets.length) {
     log('no sitemap URLs resolved — skipping');
     process.exit(0);
   }
 
-  log(`submitting ${sitemapUrls.length} sitemap URL(s) to Google Search Console`);
+  log(`submitting ${sitemapTargets.length} sitemap URL(s) to Google Search Console`);
   let successCount = 0;
-  for (const sitemapUrl of sitemapUrls) {
-    const ok = await submitSitemap(token, sitemapUrl);
+  for (const item of sitemapTargets) {
+    const ok = await submitSitemap(token, item.url, item.propertyUrl);
     if (ok) successCount += 1;
   }
-  log(`done — ${successCount}/${sitemapUrls.length} sitemap URL(s) accepted by Google`);
+  log(`done — ${successCount}/${sitemapTargets.length} sitemap URL(s) accepted by Google`);
 } catch (e) {
   log(`error: ${e.message}`);
   process.exit(0); // advisory — never fail the build
