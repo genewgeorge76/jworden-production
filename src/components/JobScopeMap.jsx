@@ -59,31 +59,37 @@ export default function JobScopeMap({ job, onSave }) {
   }, [job]);
 
   const handleSave = async () => {
-    if (!draw.current || !job?.id) return;
+    if (!draw.current) return;
     
     setSaving(true);
     try {
       const data = draw.current.getAll();
       const center = map.current.getCenter();
       
-      // We will hit the raw endpoint using fetch or api client if it supports raw paths.
-      // Since we just added this to operations.py (which handles /api/v1/jobs), we can do:
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/jobs/${job.id}/scope`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
-        },
-        body: JSON.stringify({
-            geo_lat: center.lat,
-            geo_lng: center.lng,
-            scope_geojson: data
-        })
-      });
+      const updatedData = {
+          geo_lat: center.lat,
+          geo_lng: center.lng,
+          scope_geojson: data
+      };
       
-      if (!res.ok) throw new Error('Failed to save scope');
-      const updatedJob = await res.json();
-      if (onSave) onSave(updatedJob);
+      if (job?.id) {
+          // Hit the raw endpoint using fetch
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/jobs/${job.id}/scope`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
+            },
+            body: JSON.stringify(updatedData)
+          });
+          
+          if (!res.ok) throw new Error('Failed to save scope');
+          const updatedJob = await res.json();
+          if (onSave) onSave(updatedJob);
+      } else {
+          // If no job ID, just bubble up the data (used by Scanner)
+          if (onSave) onSave(updatedData);
+      }
       
     } catch (err) {
       console.error(err);

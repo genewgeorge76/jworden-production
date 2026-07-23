@@ -612,6 +612,7 @@ class Job(Base):
     progress_percent = Column(Integer, nullable=False, default=0)
     progress_notes = Column(Text, nullable=True)
     completed_at = Column(DateTime(timezone=True), nullable=True)
+    price = Column(Float, nullable=True)
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
     
     # ── Job Scope Map Fields ──
