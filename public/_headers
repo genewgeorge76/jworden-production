@@ -1,0 +1,7 @@
+# Service worker scripts must never be cached by the browser, otherwise a stale
+# copy prevents the kill-switch below from ever being fetched. Netlify already
+# serves .js with an application/javascript content-type.
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+/service-worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
