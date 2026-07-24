@@ -102,6 +102,11 @@ export default function Contact() {
       setStatus('error')
       return
     }
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setErrorMsg('Please enter a valid email address.')
+      setStatus('error')
+      return
+    }
     setStatus('submitting')
     setErrorMsg('')
 
@@ -234,7 +239,7 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-brand-navy mb-1.5">
@@ -281,6 +286,7 @@ export default function Contact() {
                       autoComplete="email"
                       value={form.email}
                       onChange={handleChange}
+                      aria-invalid={status === 'error' ? 'true' : undefined}
                       placeholder="you@example.com"
                       className="w-full border border-gray-200 rounded-lg px-4 py-3 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-amber/50 focus:border-brand-amber transition-colors"
                     />
@@ -353,7 +359,7 @@ export default function Contact() {
                 </details>
 
                 {status === 'error' && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm space-y-2">
+                  <div data-invalid className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm space-y-2">
                     <p>
                       {errorMsg || 'Something went wrong sending your message.'}
                     </p>

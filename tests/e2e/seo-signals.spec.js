@@ -112,11 +112,16 @@ test('dashboard: is noindexed (protected page)', async ({ page }) => {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ auth_required: false }) })
   })
   await page.goto('/dashboard')
-  const robots = await getMeta(page, 'name="robots"')
   // Either explicit noindex OR the page is behind auth (redirect)
   const url = page.url()
   const isRedirectedAway = !url.includes('/dashboard')
   if (!isRedirectedAway) {
+    // NoindexMeta sets content via useEffect — wait for it to fire
+    await page.waitForFunction(
+      () => (document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '').includes('noindex'),
+      { timeout: 5000 }
+    ).catch(() => {})
+    const robots = await getMeta(page, 'name="robots"')
     expect(robots).toMatch(/noindex/)
   }
 })

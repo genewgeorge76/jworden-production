@@ -1,5 +1,14 @@
 import nodemailer from 'nodemailer';
 
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export const handler = async (event) => {
   // Only allow POST
   if (event.httpMethod !== 'POST') {
@@ -29,6 +38,13 @@ export const handler = async (event) => {
       }
     });
 
+    const safeName = escapeHtml(name);
+    const safePhone = escapeHtml(phone);
+    const safeEmail = escapeHtml(email);
+    const safeService = escapeHtml(service);
+    const safeDetails = escapeHtml(projectDetails || 'Not provided');
+    const safeTiming = escapeHtml(timing || 'Not provided');
+
     // Email to J. Worden & Sons owners
     const ownerEmailContent = `
 <!DOCTYPE html>
@@ -48,37 +64,37 @@ export const handler = async (event) => {
 <body>
   <div class="container">
     <div class="header">
-      <h2>🎯 NEW CHAT LEAD - J. Worden & Sons</h2>
+      <h2>🎯 NEW CHAT LEAD - J. Worden &amp; Sons</h2>
     </div>
-    
+
     <div class="field">
       <div class="label">Name:</div>
-      <div class="value">${name}</div>
+      <div class="value">${safeName}</div>
     </div>
 
     <div class="field">
       <div class="label">Phone:</div>
-      <div class="value"><a href="tel:${phone}">${phone}</a></div>
+      <div class="value"><a href="tel:${safePhone}">${safePhone}</a></div>
     </div>
 
     <div class="field">
       <div class="label">Email:</div>
-      <div class="value"><a href="mailto:${email}">${email}</a></div>
+      <div class="value"><a href="mailto:${safeEmail}">${safeEmail}</a></div>
     </div>
 
     <div class="field">
       <div class="label">Service Interested In:</div>
-      <div class="value">${service}</div>
+      <div class="value">${safeService}</div>
     </div>
 
     <div class="field">
       <div class="label">Project Details:</div>
-      <div class="value">${projectDetails || 'Not provided'}</div>
+      <div class="value">${safeDetails}</div>
     </div>
 
     <div class="field">
       <div class="label">Project Timing:</div>
-      <div class="value">${timing || 'Not provided'}</div>
+      <div class="value">${safeTiming}</div>
     </div>
 
     <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #999; font-size: 12px;">
@@ -109,7 +125,7 @@ export const handler = async (event) => {
       <h2>Thanks for contacting J. Worden & Sons! 🎉</h2>
     </div>
     
-    <p>Hi ${name},</p>
+    <p>Hi ${safeName},</p>
 
     <p>We received your request for a free driveway paving estimate. Our team will contact you within 24 hours to discuss your project and answer any questions.</p>
 
@@ -123,7 +139,7 @@ export const handler = async (event) => {
     <ul>
       <li>Free, no-obligation in-person estimate</li>
       <li>Detailed written quote within 24 hours</li>
-      <li>Expert consultation on your ${service.toLowerCase()}</li>
+      <li>Expert consultation on your ${escapeHtml(service.toLowerCase())}</li>
       <li>40+ years of trusted Richmond-area paving experience</li>
     </ul>
 
