@@ -5,11 +5,6 @@
   "redirects": [
 
     {
-      "source": "/3ef8a81ce186414ca3235bebb5072f22.txt",
-      "destination": "/3ef8a81ce186414ca3235bebb5072f22.txt",
-      "permanent": true
-    },
-    {
       "source": "/owner",
       "destination": "/leads",
       "permanent": false
