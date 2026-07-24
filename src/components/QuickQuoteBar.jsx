@@ -66,7 +66,7 @@ export default function QuickQuoteBar({
     // backend or SendGrid is misbehaving.
     const promises = [
       api.submitQuote(payload).catch((e) => ({ __error: e })),
-      fetch('/.netlify/functions/lead-fallback-notify', {
+      fetch('/api/lead-fallback-notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

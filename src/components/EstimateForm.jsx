@@ -33,7 +33,7 @@ export default function EstimateForm({ source = 'homepage' }) {
 
     setBusy(true)
     try {
-      const res = await fetch('/.netlify/functions/estimate-request', {
+      const res = await fetch('/api/estimate-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...fields, source }),

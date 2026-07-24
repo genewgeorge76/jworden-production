@@ -45,7 +45,6 @@ const Services = lazy(() => import('./pages/Services'));
 const ServiceAreas = lazy(() => import('./pages/ServiceAreas'));
 const CityPage = lazy(() => import('./pages/CityPage'));
 const StatePavingPage = lazy(() => import('./pages/StatePavingPage'));
-const TradePage = lazy(() => import('./pages/TradePage'));
 const LocationsIndex = lazy(() => import('./pages/LocationsIndex'));
 const LocationPage = lazy(() => import('./pages/LocationPage'));
 const RichmondZipLanding = lazy(() => import('./pages/RichmondZipLanding'));
@@ -380,7 +379,6 @@ const AuthenticatedApp = () => {
         <Route path="/service-areas" element={<PublicLayout><ServiceAreas /></PublicLayout>} />
         <Route path="/service-areas/:slug" element={<PublicLayout><CityPage /></PublicLayout>} />
         <Route path="/states/:stateSlug" element={<PublicLayout><StatePavingPage /></PublicLayout>} />
-        <Route path="/trades/:tradeSlug" element={<PublicLayout><TradePage /></PublicLayout>} />
         <Route path="/locations" element={<LocationsIndex />} />
         <Route path="/locations/richmond-va/:zip" element={<RichmondZipLanding />} />
         <Route path="/locations/:slug" element={<LocationPage />} />

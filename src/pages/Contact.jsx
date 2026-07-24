@@ -107,7 +107,7 @@ export default function Contact() {
 
     // Always-on Netlify fallback so Gene gets an email even if backend
     // or SendGrid is misconfigured. Non-blocking.
-    fetch('/.netlify/functions/lead-fallback-notify', {
+    fetch('/api/lead-fallback-notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
