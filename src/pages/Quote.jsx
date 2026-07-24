@@ -135,7 +135,7 @@ export default function Quote() {
     // Fire the always-on Netlify fallback in parallel with the primary
     // backend POST. Even if the backend or SendGrid is broken, this
     // guarantees Gene gets an email about every lead.
-    fetch('/.netlify/functions/lead-fallback-notify', {
+    fetch('/api/lead-fallback-notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...payload, source: 'quote_page' }),

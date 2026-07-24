@@ -32,7 +32,7 @@ export default function LeadCaptureForm() {
     const payload = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch('/.netlify/functions/chat-lead-capture', {
+      const response = await fetch('/api/chat-lead-capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
