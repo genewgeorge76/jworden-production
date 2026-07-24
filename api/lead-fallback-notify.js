@@ -10,6 +10,10 @@
 // LEAD_EMAIL in the Vercel project's Environment Variables.
 import nodemailer from 'nodemailer';
 
+// Escape user-supplied values before interpolating them into the HTML email body.
+const esc = (s) =>
+  String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -49,7 +53,7 @@ export default async function handler(req, res) {
     });
 
     const rows = Object.entries(safe)
-      .map(([k, v]) => `<tr><td style="padding:6px 16px 6px 0;font-weight:700;color:#333;text-transform:capitalize;">${k}</td><td style="padding:6px 0;color:#555;white-space:pre-wrap;">${v || '<em>—</em>'}</td></tr>`)
+      .map(([k, v]) => `<tr><td style="padding:6px 16px 6px 0;font-weight:700;color:#333;text-transform:capitalize;">${esc(k)}</td><td style="padding:6px 0;color:#555;white-space:pre-wrap;">${esc(v) || '<em>—</em>'}</td></tr>`)
       .join('');
 
     await transporter.sendMail({

@@ -4,6 +4,11 @@
 // GMAIL_RECIPIENTS to be set in the Vercel project's Environment Variables.
 import nodemailer from 'nodemailer';
 
+// Escape user-supplied values before interpolating them into HTML email bodies,
+// so a crafted field (e.g. name = "<script>…") cannot inject markup.
+const esc = (s) =>
+  String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -40,12 +45,12 @@ export default async function handler(req, res) {
 <body>
   <div class="container">
     <div class="header"><h2>🎯 NEW CHAT LEAD - J. Worden & Sons</h2></div>
-    <div class="field"><div class="label">Name:</div><div class="value">${name}</div></div>
-    <div class="field"><div class="label">Phone:</div><div class="value"><a href="tel:${phone}">${phone}</a></div></div>
-    <div class="field"><div class="label">Email:</div><div class="value"><a href="mailto:${email}">${email}</a></div></div>
-    <div class="field"><div class="label">Service Interested In:</div><div class="value">${service}</div></div>
-    <div class="field"><div class="label">Project Details:</div><div class="value">${projectDetails || 'Not provided'}</div></div>
-    <div class="field"><div class="label">Project Timing:</div><div class="value">${timing || 'Not provided'}</div></div>
+    <div class="field"><div class="label">Name:</div><div class="value">${esc(name)}</div></div>
+    <div class="field"><div class="label">Phone:</div><div class="value"><a href="tel:${esc(phone)}">${esc(phone)}</a></div></div>
+    <div class="field"><div class="label">Email:</div><div class="value"><a href="mailto:${esc(email)}">${esc(email)}</a></div></div>
+    <div class="field"><div class="label">Service Interested In:</div><div class="value">${esc(service)}</div></div>
+    <div class="field"><div class="label">Project Details:</div><div class="value">${esc(projectDetails) || 'Not provided'}</div></div>
+    <div class="field"><div class="label">Project Timing:</div><div class="value">${esc(timing) || 'Not provided'}</div></div>
     <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #999; font-size: 12px;">
       <p>This lead came from the chat widget on your website. Follow up promptly to convert!</p>
     </div>
@@ -68,7 +73,7 @@ export default async function handler(req, res) {
 <body>
   <div class="container">
     <div class="header"><h2>Thanks for contacting J. Worden & Sons! 🎉</h2></div>
-    <p>Hi ${name},</p>
+    <p>Hi ${esc(name)},</p>
     <p>We received your request for a free driveway paving estimate. Our team will contact you within 24 hours to discuss your project and answer any questions.</p>
     <div class="highlight">
       <strong>In the meantime, feel free to call us:</strong><br>
@@ -79,7 +84,7 @@ export default async function handler(req, res) {
     <ul>
       <li>Free, no-obligation in-person estimate</li>
       <li>Detailed written quote within 24 hours</li>
-      <li>Expert consultation on your ${String(service).toLowerCase()}</li>
+      <li>Expert consultation on your ${esc(String(service).toLowerCase())}</li>
       <li>40+ years of trusted Richmond-area paving experience</li>
     </ul>
     <p><strong>Have questions in the meantime?</strong> Visit us at:
