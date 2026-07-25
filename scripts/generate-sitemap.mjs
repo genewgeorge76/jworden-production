@@ -250,8 +250,22 @@ try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch 
 
 let totalUrls = 0;
 
+// thewordenstandard.com is the internal Operations/Command Center domain,
+// not a public marketing site — it must never be crawled or submitted to
+// search engines. Disallow everything and skip URL generation entirely.
+const NOINDEX_DOMAINS = new Set(['thewordenstandard.com']);
+
 for (const domain of DOMAINS) {
   const SITE = `https://${domain}`;
+
+  if (NOINDEX_DOMAINS.has(domain)) {
+    writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.xml`),
+      `<?xml version="1.0" encoding="utf-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>\n`, 'utf8');
+    writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.txt`), '', 'utf8');
+    writeFileSync(resolve(ROOT, `public/sitemaps/robots-${domain}.txt`), `User-agent: *\nDisallow: /\n`, 'utf8');
+    continue;
+  }
+
   const urls = [];
 
   for (const r of STATIC_ROUTES) {
