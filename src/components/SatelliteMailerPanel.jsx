@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Satellite, Mail, Search, CheckCircle2, RefreshCw, Sparkles, MapPin, Send, AlertTriangle } from 'lucide-react'
+import { Satellite, Search, CheckCircle2, RefreshCw, Sparkles, MapPin, Send } from 'lucide-react'
 import api from '@/api/client'
 
 export default function SatelliteMailerPanel() {

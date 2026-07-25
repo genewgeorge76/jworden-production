@@ -3,17 +3,12 @@ import { Link } from 'react-router-dom'
 import { api } from '@/api/client'
 import {
   Bot,
-  Sparkles,
   Send,
   Mic,
   MicOff,
   RotateCw,
   ArrowLeft,
-  ChevronRight,
   Trash2,
-  Clock,
-  Search,
-  Globe,
   Copy,
   CheckCheck,
   MessageSquare,

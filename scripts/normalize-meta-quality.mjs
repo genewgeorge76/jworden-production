@@ -76,15 +76,23 @@ function upsertSchema(html, tenant, canonicalBase) {
       "closes": "19:00"
     }
   };
-  const schemaScript = `<script type="application/ld+json">\n${JSON.stringify(schemaObj, null, 2)}\n</script>`;
+  // Escape "</" so a tenant field (or a future data-entry typo) can never
+  // prematurely close the <script> tag and break out into raw HTML.
+  const safeJson = JSON.stringify(schemaObj, null, 2).replace(/<\//g, '<\\/');
+  const schemaScript = `<script type="application/ld+json">\n${safeJson}\n</script>`;
 
   // Every domain-specific page needs its OWN schema (own city/region), so
   // strip whatever ld+json LocalBusiness schema the base index.html already
   // carries rather than skipping injection just because some schema block
   // is present — that previously left Atlanta/Kansas City/Savannah/Carolina
-  // pages declaring a Richmond, VA address in their structured data.
-  const existingLdJsonRegex = /<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi;
-  const strippedHtml = html.replace(existingLdJsonRegex, '');
+  // pages declaring a Richmond, VA address in their structured data. Only
+  // ever one such block exists in the source index.html (verified), and
+  // the id below scopes removal to exactly that block rather than a bare
+  // "any <script>...</script>" scan.
+  const strippedHtml = html.replace(
+    /<script id="local-business-schema"[^>]*>[^<]*<\/script>\s*/i,
+    ''
+  );
   return strippedHtml.replace(/<\/head>/i, `${schemaScript}\n</head>`);
 }
 

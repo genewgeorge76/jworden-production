@@ -1,24 +1,16 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '@/api/client'
 import {
   Calculator,
-  ChevronDown,
   Copy,
   CheckCheck,
-  Send,
-  Bot,
   Sparkles,
   RotateCw,
-  Clock,
-  User,
-  Building2,
   FileText,
-  Download,
   History,
   ArrowLeft,
   Zap,
-  DollarSign,
   Plus,
 } from 'lucide-react'
 

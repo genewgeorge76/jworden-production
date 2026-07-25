@@ -3,8 +3,7 @@ import { useTenant } from '@/lib/TenantContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  PenTool, Lock, ExternalLink, Copy, CheckCheck, Sparkles,
-  Zap, FileText, Search, Send, ShieldCheck, RefreshCw, Layers
+  PenTool, Lock, ExternalLink, Copy, CheckCheck, Sparkles, ShieldCheck, RefreshCw
 } from 'lucide-react';
 
 const BLOG_PRESETS = [

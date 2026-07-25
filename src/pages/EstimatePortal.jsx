@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { CheckCheck, CreditCard, PenTool, Building2, Landmark, Wallet, AlertCircle } from 'lucide-react'
+import { CheckCheck, CreditCard, PenTool, Landmark, Wallet, AlertCircle } from 'lucide-react'
 import { useTenant } from '../lib/TenantContext'
 
 export default function EstimatePortal() {

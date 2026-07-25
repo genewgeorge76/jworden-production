@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Award, Building2, CheckCircle2, Star } from 'lucide-react';
+import { Shield, Award, Building2, Star } from 'lucide-react';
 import SmartImage from '@/components/SmartImage';
 
 export default function CommercialClientAuthority() {

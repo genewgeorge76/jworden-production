@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Shield, Server, Key, Activity, DollarSign, Database, Phone, CheckCircle, XCircle } from 'lucide-react';
+import { Server, Key, Activity, DollarSign, Database, Phone, CheckCircle, XCircle } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 

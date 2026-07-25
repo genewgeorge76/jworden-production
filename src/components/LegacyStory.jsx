@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Award, Shield, ArrowRight, Building2, Home as HomeIcon, Utensils, Sparkles } from 'lucide-react'
+import { ArrowRight, Building2, Home as HomeIcon, Utensils } from 'lucide-react'
 import SmartImage from './SmartImage'
 
 const residentialPhotos = [
