@@ -12,7 +12,16 @@ export default function InboxTriagePanel() {
   const fetchTriageSummary = async () => {
     try {
       setLoading(true);
-      const token = sessionStorage.getItem('OWNER_TOKEN') || 'master_worden_2025_sec';
+      // SECURITY: never hardcode a fallback credential here. Anything in this
+      // file is compiled into the public JS bundle and is readable by anyone
+      // who views source on the live site. A literal master token previously
+      // sat on this line and shipped publicly; if there is no owner session,
+      // make no request rather than authenticating with a baked-in secret.
+      const token = sessionStorage.getItem('OWNER_TOKEN');
+      if (!token) {
+        setMessages([]);
+        return;
+      }
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://jworden-api.fly.dev';
       const res = await fetch(`${baseUrl}/api/v1/email/triage`, {
         headers: { 'Authorization': `Bearer ${token}` }
