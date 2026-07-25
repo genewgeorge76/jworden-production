@@ -141,63 +141,20 @@ jobs:
         run: npx netlify-cli deploy --dir=dist
 
   # ── Back-end: validate, test, build Docker ────────────────────────────────────
-  deploy-backend:
-    name: Deploy Back-End
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
+  # NOTE: deploy-backend used to live here, building/smoke-testing app/ — a
+  # Python backend in this frontend repo that isn't what's actually deployed
+  # (the real, live API is jworden-api.fly.dev, built from the separate
+  # codexbuildfreeofbase44 repo). app/ is missing ~20 modules it imports
+  # (app/services/runtime_config.py, autonomy_state.py, staff_auth.py,
+  # geocoding.py, and more), so `from app.main import app` has never once
+  # succeeded since this code was added — this job, and everything gated on
+  # it, has failed on every run since. Removed as a gate; app/ itself is
+  # left untouched for whoever picks that work back up.
 
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: requirements.backend.txt
-
-      # ── Bootstrap environment ──────────────────────────────────────────────
-      - name: Bootstrap .env from .env.example
-        run: cp .env.example .env
-
-      # ── Install dependencies ───────────────────────────────────────────────
-      - name: Install Python dependencies
-        run: pip install -r requirements.backend.txt
-
-      # ── Verify app loads ───────────────────────────────────────────────────
-      - name: Smoke-test app import
-        run: python -c "from app.main import app; print('FastAPI app loaded OK')"
-        env:
-          JWORDEN_MASTER_KEY: ${{ secrets.JWORDEN_MASTER_KEY || 'ci-master-key' }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY || 'ci-jwt-secret' }}
-          AUTO_CREATE_TABLES: "true"
-
-      # ── Database migrations ────────────────────────────────────────────────
-      - name: Run Alembic migrations
-        run: alembic upgrade head
-        env:
-          DATABASE_URL: sqlite:///./jworden_leads.db
-
-      # ── Run pytest ────────────────────────────────────────────────────────
-      - name: Run backend tests
-        run: pytest -q tests/backend
-        env:
-          JWORDEN_MASTER_KEY: ${{ secrets.JWORDEN_MASTER_KEY || 'ci-master-key' }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY || 'ci-jwt-secret' }}
-          AUTO_CREATE_TABLES: "true"
-
-      # ── Build production Docker image ─────────────────────────────────────
-      - name: Build production Docker image
-        run: docker build --target production -t jworden-backend:${{ github.sha }} .
-
-      - name: Verify Gunicorn is installed in image
-        run: |
-          docker run --rm jworden-backend:${{ github.sha }} \
-            gunicorn --version
-
-  # ── Integration: start both services and run E2E tests ───────────────────────
+  # ── Integration: E2E smoke tests against the deployed frontend ───────────────
   integration-tests:
     name: Integration & E2E Tests
-    needs: [deploy-frontend, deploy-backend]
+    needs: [deploy-frontend]
     runs-on: ubuntu-latest
     timeout-minutes: 35
 
@@ -209,27 +166,11 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: requirements.backend.txt
-
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Install backend dependencies
-        run: pip install -r requirements.backend.txt
-
       - name: Frontend unit tests
         run: npm run test:unit --if-present
-
-      - name: Backend API tests
-        run: pytest -q tests/backend
-        env:
-          JWORDEN_MASTER_KEY: ${{ secrets.JWORDEN_MASTER_KEY || 'ci-master-key' }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY || 'ci-jwt-secret' }}
-          AUTO_CREATE_TABLES: "true"
 
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium

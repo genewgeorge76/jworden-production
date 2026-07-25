@@ -230,6 +230,21 @@ try {
   console.warn('[sitemap] could not load src/data/richmondZipPages.js:', e.message);
 }
 
+// Domains that vercel.json rewrites to a single pre-rendered <domain>.html
+// for every path (see normalize-meta-quality.mjs) serve identical content
+// with the same root canonical no matter which sitemap URL is requested.
+// Advertising the full deep-URL set for those domains tells Google about
+// hundreds of "distinct" pages that all collapse to one canonical — so
+// their sitemap is restricted to just the root URL until real per-path
+// generation exists.
+let SINGLE_PAGE_DOMAINS = new Set();
+try {
+  const profilesMod = await importDataModule('src/data/regionalMarketProfiles.js');
+  SINGLE_PAGE_DOMAINS = new Set(Object.keys(profilesMod.REGIONAL_MARKET_PROFILES || {}));
+} catch (e) {
+  console.warn('[sitemap] could not load src/data/regionalMarketProfiles.js:', e.message);
+}
+
 // ── 3. Build URL list ─────────────────────────────────────────────────────────
 const today = new Date().toISOString().slice(0, 10);
 const DOMAINS = [
@@ -268,6 +283,9 @@ for (const domain of DOMAINS) {
 
   const urls = [];
 
+  if (SINGLE_PAGE_DOMAINS.has(domain)) {
+    urls.push({ loc: SITE + '/', lastmod: today, changefreq: 'weekly', priority: '1.0' });
+  } else {
   for (const r of STATIC_ROUTES) {
     urls.push({ loc: SITE + r.path, lastmod: today, changefreq: r.changefreq, priority: r.priority });
   }
@@ -299,12 +317,15 @@ for (const domain of DOMAINS) {
   for (const zip of Object.keys(RICHMOND_ZIP_PAGES)) {
     urls.push({ loc: `${SITE}/locations/richmond-va/${zip}`, lastmod: today, changefreq: 'monthly', priority: '0.88' });
   }
+  }
 
+  if (!SINGLE_PAGE_DOMAINS.has(domain)) {
   const stateCodesForSitemap = INCLUDE_ALL_STATES ? Object.keys(STATE_MAP).sort() : WORDEN_ACTIVE_STATES;
   for (const abbr of stateCodesForSitemap) {
     const st = STATE_MAP[abbr];
     if (!st) continue;
     urls.push({ loc: `${SITE}/states/${stateSlug(st)}`, lastmod: today, changefreq: 'monthly', priority: '0.7' });
+  }
   }
 
   const seen = new Set();

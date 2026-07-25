@@ -53,10 +53,9 @@ function upsertRobotsMeta(html, content) {
 }
 
 function upsertSchema(html, tenant, canonicalBase) {
-  if (/@context"\s*:\s*"https:\/\/schema\.org"/i.test(html)) return html;
-  
   const brand = tenant?.marketName || tenant?.label || defaultTenant.label;
-  
+  const [metroCity, metroRegion] = (tenant?.primaryMetro || 'Richmond, VA').split(',').map((s) => s.trim());
+
   const schemaObj = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -66,9 +65,8 @@ function upsertSchema(html, tenant, canonicalBase) {
     "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": tenant?.primaryMetro?.split(',')[0] || "Richmond",
-      "addressRegion": "VA",
-      "postalCode": "23230",
+      "addressLocality": metroCity || "Richmond",
+      "addressRegion": metroRegion || "VA",
       "addressCountry": "US"
     },
     "openingHoursSpecification": {
@@ -78,8 +76,16 @@ function upsertSchema(html, tenant, canonicalBase) {
       "closes": "19:00"
     }
   };
-  const schemaScript = `\n<script type="application/ld+json">\n${JSON.stringify(schemaObj, null, 2)}\n</script>`;
-  return html.replace(/<\/head>/i, `${schemaScript}\n</head>`);
+  const schemaScript = `<script type="application/ld+json">\n${JSON.stringify(schemaObj, null, 2)}\n</script>`;
+
+  // Every domain-specific page needs its OWN schema (own city/region), so
+  // strip whatever ld+json LocalBusiness schema the base index.html already
+  // carries rather than skipping injection just because some schema block
+  // is present — that previously left Atlanta/Kansas City/Savannah/Carolina
+  // pages declaring a Richmond, VA address in their structured data.
+  const existingLdJsonRegex = /<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi;
+  const strippedHtml = html.replace(existingLdJsonRegex, '');
+  return strippedHtml.replace(/<\/head>/i, `${schemaScript}\n</head>`);
 }
 
 async function run() {
@@ -142,7 +148,9 @@ async function run() {
   let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');
   defaultHtml = upsertDescription(defaultHtml, 'Premium asphalt paving, sealcoating, and repair in Virginia. Contact J. Worden Asphalt Paving today.');
   defaultHtml = upsertCanonical(defaultHtml, defaultCanonical);
-  defaultHtml = upsertSchema(defaultHtml, defaultTenant, defaultCanonical);
+  // No upsertSchema call here — index.html already ships its own, richer
+  // Virginia LocalBusiness schema (with @id, sameAs, aggregateRating, etc.)
+  // that shouldn't be replaced by upsertSchema's smaller generated version.
   fs.writeFileSync(indexHtmlPath, defaultHtml, 'utf8');
   generatedCount++;
 

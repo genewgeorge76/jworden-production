@@ -102,7 +102,7 @@
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "(?<tenantSlug>.+)\\.thewordenstandard\\.com" }],
+      "has": [{ "type": "host", "value": "(?!www\\.)(?<tenantSlug>.+)\\.thewordenstandard\\.com" }],
       "destination": "/index.html"
     },
     {
@@ -130,50 +130,10 @@
       "has": [
         {
           "type": "host",
-          "value": "(www\\.)?blueridgeasphaltpaving\\.com"
-        }
-      ],
-      "destination": "/blueridgeasphaltpaving.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?minnesotaasphaltpaving\\.com"
-        }
-      ],
-      "destination": "/minnesotaasphaltpaving.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?obxpaving\\.com"
-        }
-      ],
-      "destination": "/obxpaving.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
           "value": "(www\\.)?atlantaasphaltpavingpros\\.com"
         }
       ],
       "destination": "/atlantaasphaltpavingpros.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?michiganasphaltpavingpros\\.com"
-        }
-      ],
-      "destination": "/michiganasphaltpavingpros.com.html"
     },
     {
       "source": "/(.*)",
