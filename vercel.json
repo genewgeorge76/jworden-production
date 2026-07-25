@@ -102,6 +102,21 @@
     },
     {
       "source": "/(.*)",
+      "has": [{ "type": "host", "value": "(?<tenantSlug>.+)\\.thewordenstandard\\.com" }],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "thewordenstandard.com"
+        }
+      ],
+      "destination": "/thewordenstandard.com.html"
+    },
+    {
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
