@@ -82,7 +82,12 @@ export const config = {
   // Deliberately narrow: only the paths that collide with a real static
   // file. Everything else already routes correctly via vercel.json, and a
   // wider matcher would add cost and latency to every asset request.
-  matcher: ['/', '/robots.txt', '/sitemap.xml', '/sitemap.txt'],
+  //
+  // `/index.html` is included because it is the same static file as `/`:
+  // without it, requesting https://<regional-domain>/index.html directly
+  // would still be served the generic main-site page carrying the wrong
+  // canonical, re-opening the duplicate-content hole this fix closes.
+  matcher: ['/', '/index.html', '/robots.txt', '/sitemap.xml', '/sitemap.txt'],
 };
 
 export default function middleware(request) {
@@ -91,7 +96,10 @@ export default function middleware(request) {
     const host = canonicalHost(request.headers.get('host') || url.hostname);
     const pathname = url.pathname;
 
-    if (pathname === '/') {
+    // `/index.html` resolves to the same static file as `/`, so both must be
+    // handled identically or the bare filename becomes a duplicate-content
+    // back door on every regional domain.
+    if (pathname === '/' || pathname === '/index.html') {
       // The main site's homepage is index.html, which is what the
       // filesystem already serves — leave it alone.
       if (HOMEPAGE_BY_HOST.has(host)) {

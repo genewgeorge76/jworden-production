@@ -91,7 +91,7 @@
     "qa:markets": "node scripts/qa-market-artifacts.mjs",
     "preview": "vite preview",
     "test": "npm run test:unit",
-    "test:unit": "echo \"No frontend unit tests configured\"",
+    "test:unit": "node --test tests/unit/*.test.mjs",
     "test:e2e": "npx playwright test",
     "guard:deploy-mode": "node scripts/verify-deploy-mode.mjs"
   },
