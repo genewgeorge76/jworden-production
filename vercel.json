@@ -110,7 +110,7 @@
       "has": [
         {
           "type": "host",
-          "value": "thewordenstandard.com"
+          "value": "(www\\.)?thewordenstandard\\.com"
         }
       ],
       "destination": "/thewordenstandard.com.html"
@@ -120,17 +120,7 @@
       "has": [
         {
           "type": "host",
-          "value": "thewordenstandard.com"
-        }
-      ],
-      "destination": "/thewordenstandard.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "richmondasphaltpaving.com"
+          "value": "(www\\.)?richmondasphaltpaving\\.com"
         }
       ],
       "destination": "/richmondasphaltpaving.com.html"
@@ -140,7 +130,7 @@
       "has": [
         {
           "type": "host",
-          "value": "blueridgeasphaltpaving.com"
+          "value": "(www\\.)?blueridgeasphaltpaving\\.com"
         }
       ],
       "destination": "/blueridgeasphaltpaving.com.html"
@@ -150,7 +140,7 @@
       "has": [
         {
           "type": "host",
-          "value": "minnesotaasphaltpaving.com"
+          "value": "(www\\.)?minnesotaasphaltpaving\\.com"
         }
       ],
       "destination": "/minnesotaasphaltpaving.com.html"
@@ -160,7 +150,7 @@
       "has": [
         {
           "type": "host",
-          "value": "obxpaving.com"
+          "value": "(www\\.)?obxpaving\\.com"
         }
       ],
       "destination": "/obxpaving.com.html"
@@ -170,7 +160,7 @@
       "has": [
         {
           "type": "host",
-          "value": "atlantaasphaltpavingpros.com"
+          "value": "(www\\.)?atlantaasphaltpavingpros\\.com"
         }
       ],
       "destination": "/atlantaasphaltpavingpros.com.html"
@@ -180,7 +170,7 @@
       "has": [
         {
           "type": "host",
-          "value": "michiganasphaltpavingpros.com"
+          "value": "(www\\.)?michiganasphaltpavingpros\\.com"
         }
       ],
       "destination": "/michiganasphaltpavingpros.com.html"
@@ -190,7 +180,7 @@
       "has": [
         {
           "type": "host",
-          "value": "asphaltpavingkansascity.com"
+          "value": "(www\\.)?asphaltpavingkansascity\\.com"
         }
       ],
       "destination": "/asphaltpavingkansascity.com.html"
@@ -200,7 +190,7 @@
       "has": [
         {
           "type": "host",
-          "value": "savannahasphaltpaving.com"
+          "value": "(www\\.)?savannahasphaltpaving\\.com"
         }
       ],
       "destination": "/savannahasphaltpaving.com.html"
@@ -210,7 +200,7 @@
       "has": [
         {
           "type": "host",
-          "value": "carolinablacktop.com"
+          "value": "(www\\.)?carolinablacktop\\.com"
         }
       ],
       "destination": "/carolinablacktop.com.html"
