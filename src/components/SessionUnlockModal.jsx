@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { request } from '@/api/client'
+import { authenticateWithPin } from '@/api/client'
 
 export default function SessionUnlockModal({ open, defaultPin = '', defaultToken = '', onCancel, onUnlock }) {
   const [pin, setPin] = useState(defaultPin || '')
@@ -8,20 +8,21 @@ export default function SessionUnlockModal({ open, defaultPin = '', defaultToken
   const [busy, setBusy] = useState(false)
   if (!open) return null
   const handleUnlock = async () => {
-    if (!pin) { setError('Enter a PIN to unlock for this session'); return }
+    if (!pin) { setError('Enter your PIN to unlock this session'); return }
     setBusy(true)
     setError('')
     try {
-      const res = await request('POST', '/api/v1/admin/owner/unlock', { owner_token: token, pin })
-      if (res?.session_id) {
-        try {
-          sessionStorage.setItem('OWNER_SESSION_ID', res.session_id)
-          if (token) sessionStorage.setItem('OWNER_TOKEN', token)
-        } catch {}
-        onUnlock({ pin, token, session_id: res.session_id })
-      } else {
-        setError('Unlock failed')
-      }
+      // This previously POSTed to /api/v1/admin/owner/unlock, which does not
+      // exist in the backend — verified 404 against production and absent from
+      // every router. So this modal failed 100% of the time. The real, working
+      // exchange is /api/v1/auth/pin-token via authenticateWithPin().
+      await authenticateWithPin(pin.trim())
+      try {
+        // The owner token is an optional extra credential for owner-scoped
+        // endpoints; it is NOT what authorises ordinary panels (the JWT is).
+        if (token) sessionStorage.setItem('OWNER_TOKEN', token)
+      } catch { /* storage unavailable — non-fatal */ }
+      onUnlock({ pin, token })
     } catch (err) {
       setError(err?.message || String(err))
     } finally {
@@ -33,7 +34,7 @@ export default function SessionUnlockModal({ open, defaultPin = '', defaultToken
       <div className="absolute inset-0 bg-black/60" onClick={onCancel} />
       <div className="relative max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white">
         <h3 className="font-bold text-lg mb-2">Unlock Owner Session</h3>
-        <p className="text-sm text-white/70 mb-3">Enter a short PIN for this browser session and paste your owner token. Unlocking creates a short-lived server session.</p>
+        <p className="text-sm text-white/70 mb-3">Enter your admin PIN to unlock this session. The owner token is optional and only needed for owner-scoped tools.</p>
         <div className="mb-3">
           <label className="block text-[12px] text-white/60 mb-1">Session PIN</label>
           <input type="password" value={pin} onChange={(e) => setPin(e.target.value)} className="w-full bg-white/[0.03] border border-white/10 rounded px-3 py-2 text-white/80" />
