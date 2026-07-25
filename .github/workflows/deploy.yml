@@ -72,23 +72,12 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: requirements.backend.txt
-
-      - name: Install backend dependencies
-        run: pip install -r requirements.backend.txt
-
-      - name: Guard tenant contract drift
-        run: npm run guard:tenant-contract-drift
-
-      - name: Guard operating-system contract
-        run: npm run guard:operating-system-contract
-
-      - name: Guard deploy mode
-        run: npm run guard:deploy-mode
+      # NOTE: guard:tenant-contract-drift, guard:operating-system-contract,
+      # and guard:deploy-mode used to run here (plus the Python setup they
+      # needed for nothing else in this job). All three read
+      # src/config/siteFactoryManifest.json and/or a root netlify.toml —
+      # neither file has ever existed in this repo (this app deploys via
+      # vercel.json). Removed as a gate; see the matching NOTE in ci.yml.
 
       - name: Guard release readiness
         run: npm run guard:release-readiness

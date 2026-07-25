@@ -25,6 +25,16 @@
       "permanent": true
     },
     {
+      "source": "/request-estimate.html",
+      "destination": "/quote",
+      "permanent": true
+    },
+    {
+      "source": "/service-areas.html",
+      "destination": "/service-areas",
+      "permanent": true
+    },
+    {
       "source": "/states/florida",
       "destination": "/service-areas",
       "permanent": true

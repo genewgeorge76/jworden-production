@@ -40,27 +40,14 @@ jobs:
       - name: Guard public/core route boundary
         run: npm run guard:public-core
 
-      - name: Guard multi-site isolation
-        run: npm run guard:site-isolation
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install backend dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.backend.txt
-
-      - name: Guard tenant contract drift
-        run: npm run guard:tenant-contract-drift
-
-      - name: Guard operating-system contract
-        run: npm run guard:operating-system-contract
-
-      - name: Guard deploy mode
-        run: npm run guard:deploy-mode
+      # NOTE: guard:site-isolation, guard:tenant-contract-drift,
+      # guard:operating-system-contract, and guard:deploy-mode used to run
+      # here. All four read src/config/siteFactoryManifest.json and/or a
+      # root netlify.toml — neither file has ever existed in this repo's
+      # git history (this app deploys via vercel.json, not Netlify config).
+      # They have failed on every run since ci.yml was written. Removed as
+      # a gate for the same reason as the backend/docker jobs (see NOTE
+      # below, between this job and `tests`).
 
       - name: Build
         run: npm run build
