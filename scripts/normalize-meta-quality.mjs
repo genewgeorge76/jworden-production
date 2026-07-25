@@ -43,6 +43,15 @@ function upsertCanonical(html, canonicalBase) {
   return html.replace(/<head[^>]*>/i, (m) => `${m}\n${canonicalTag}`);
 }
 
+function upsertRobotsMeta(html, content) {
+  const tag = `<meta id="robots-meta" name="robots" content="${content}">`;
+  const regex = /<meta[^>]+name=["']robots["'][^>]*>/i;
+  if (regex.test(html)) {
+    return html.replace(regex, tag);
+  }
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
+}
+
 function upsertSchema(html, tenant, canonicalBase) {
   if (/@context"\s*:\s*"https:\/\/schema\.org"/i.test(html)) return html;
   
@@ -115,6 +124,19 @@ async function run() {
     generatedCount++;
   }
   
+  // thewordenstandard.com — internal Operations/Command Center domain, not a
+  // public marketing site. Give it its own static HTML with noindex baked in
+  // (rather than relying on the client-side SEO component to set it after JS
+  // runs) so crawlers never index or list internal admin URLs.
+  const opsTitle = 'J. Worden & Sons — Command Center';
+  const opsCanonical = 'https://thewordenstandard.com';
+  let opsHtml = upsertTitle(rawHtml, opsTitle);
+  opsHtml = upsertDescription(opsHtml, 'Internal operations dashboard. Not for public access.');
+  opsHtml = upsertCanonical(opsHtml, opsCanonical);
+  opsHtml = upsertRobotsMeta(opsHtml, 'noindex, nofollow');
+  fs.writeFileSync(path.join(distDir, 'thewordenstandard.com.html'), opsHtml, 'utf8');
+  generatedCount++;
+
   // Update index.html for jwordenasphaltpaving.com
   const defaultCanonical = 'https://www.jwordenasphaltpaving.com';
   let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');

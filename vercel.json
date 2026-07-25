@@ -105,6 +105,16 @@
       "has": [
         {
           "type": "host",
+          "value": "thewordenstandard.com"
+        }
+      ],
+      "destination": "/thewordenstandard.com.html"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
           "value": "richmondasphaltpaving.com"
         }
       ],
