@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Zap, CheckCircle, Rocket, Layers, Globe, DollarSign, Cpu, ArrowRight } from 'lucide-react';
+import { Zap, CheckCircle, ArrowRight } from 'lucide-react';
 
 export default function SaaSPlatformPortal() {
   const [formData, setFormData] = useState({

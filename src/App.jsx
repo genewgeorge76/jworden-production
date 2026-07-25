@@ -243,14 +243,12 @@ const PublicLayout = ({ children }) => (
 const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
   const tenant = useTenant();
-  const isWordenStandardDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().includes('thewordenstandard.com');
-  // The backend's tenant-resolve endpoint the useTenant() hook depends on
-  // (GET /api/v1/factory/resolve) doesn't exist server-side, so tenant is
-  // always null/default and routeMode always falls back to FULL_SITE — which
-  // silently hid the Operations/Command Center experience behind the public
-  // marketing site on this domain. isWordenStandardDomain is derived purely
-  // from window.location.hostname, so it's reliable independent of that API
-  // call; use it to force Operations mode for this domain regardless.
+  // Exact-match only (not .includes) — provisioned SaaS tenant subdomains
+  // like smithpaving.thewordenstandard.com must NOT be caught here, or
+  // they'd be forced into Operations mode instead of honoring the
+  // saas-client route_mode /api/v1/factory/resolve returns for them.
+  const wordenStandardHostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+  const isWordenStandardDomain = wordenStandardHostname === 'thewordenstandard.com' || wordenStandardHostname === 'www.thewordenstandard.com';
   const routeMode = isWordenStandardDomain
     ? SITE_ROUTE_MODES.OPERATIONS
     : (tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE);

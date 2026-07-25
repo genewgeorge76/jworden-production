@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Calculator, Camera, MessageSquare, Sparkles, CheckCircle2,
-  ShieldCheck, ArrowRight, Phone, MapPin, Zap, RefreshCw, Star
+  Calculator, Camera, MessageSquare, Phone, RefreshCw
 } from 'lucide-react';
 import { useTenant } from '@/lib/TenantContext';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Box, Layers, Settings2, MessageSquare, Cpu, 
+  Box, Layers, MessageSquare, Cpu, 
   Camera, Maximize2, ChevronRight, ShieldCheck, 
   CheckCircle2, Sparkles, RefreshCcw, Search,
   SlidersHorizontal, Sun, Moon, CloudRain, Droplets,

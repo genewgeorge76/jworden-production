@@ -11,10 +11,8 @@ import {
   AlertCircle,
   CheckCircle2,
   Calculator,
-  ChevronRight,
   Image,
   X,
-  Zap,
   FileSearch,
   Map as MapIcon,
 } from 'lucide-react'

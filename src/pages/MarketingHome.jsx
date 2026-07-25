@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Shield, Brain, Zap, Camera, CloudRain, CheckCircle, ArrowRight, BarChart } from 'lucide-react';
+import { Shield, Brain, Zap, Camera, CloudRain, CheckCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function MarketingHome() {

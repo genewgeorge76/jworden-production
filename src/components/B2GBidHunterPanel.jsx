@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Landmark, FileText, CheckCircle2, RefreshCw, Sparkles, Filter, ExternalLink, ShieldCheck, Layers } from 'lucide-react'
+import { Landmark, RefreshCw, ExternalLink, ShieldCheck, Layers } from 'lucide-react'
 import api from '@/api/client'
 
 export default function B2GBidHunterPanel() {
