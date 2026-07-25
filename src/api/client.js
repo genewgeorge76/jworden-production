@@ -118,12 +118,12 @@ export async function getAccessToken() {
 }
 
 export async function authenticateWithPin(pin) {
-  const localPin = import.meta.env.VITE_ADMIN_PIN
-  if (localPin && pin === localPin) {
-    const fakeToken = `local_${Date.now()}`
-    storeAuthToken(fakeToken, Math.floor(Date.now() / 1000) + 86_400 * 30)
-    return fakeToken
-  }
+  // NOTE: there was previously a VITE_ADMIN_PIN short-circuit here that minted
+  // a synthetic `local_<timestamp>` token and stored it as if it were real.
+  // The backend rejects that string on every request, so the result was a
+  // login that appeared to succeed followed by a dashboard where every panel
+  // silently 403'd — indistinguishable from "the app is broken". A client can
+  // never mint its own credential; the server is the only thing that can.
   const response = await request('POST', '/api/v1/auth/pin-token', { pin })
   storeAuthToken(response.access_token, Math.floor(Date.now() / 1000) + (response.expires_in || 86_400))
   return authState.token
