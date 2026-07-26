@@ -278,10 +278,7 @@ async function prerender() {
         console.log(`[prerender] launched via ${cand.name}`
           + ` (${resolved.executablePath ?? 'puppeteer default'})`)
         break
-      } catch (err) {
-        attempts.push({ candidate: cand.name, stage: 'launch', error: err?.message?.slice(0, 200) })
-        console.warn(`[prerender] ${cand.name} did not start: ${err?.message?.split('\n')[0]}`)
-      }
+        console.warn(`[prerender] ${cand.name} did not start: ${err?.message?.split('\n')?.[0] ?? String(err).split('\n')[0]}`)
     }
     if (!browser) throw new Error(`no browser could be launched (tried ${attempts.length})`)
   } catch (err) {
