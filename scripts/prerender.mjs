@@ -184,6 +184,44 @@ async function browserDiagnostics(puppeteerNs) {
   return diag
 }
 
+const BASE_LAUNCH_ARGS = [
+  '--no-sandbox',
+  '--disable-setuid-sandbox',
+  '--disable-dev-shm-usage',
+  '--disable-gpu',
+  '--no-first-run',
+  '--no-zygote',
+  // --single-process removed: crashes Chrome 120+ (Puppeteer 24+)
+]
+
+// Browsers to attempt, in priority order. Each entry only RESOLVES a path here;
+// whether it works is decided by actually launching it (see the loop below).
+function browserCandidates() {
+  const list = []
+  const override = process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN
+  if (override) {
+    list.push({ name: 'env-override', resolve: async () => ({ executablePath: override, args: BASE_LAUNCH_ARGS }) })
+  }
+  // puppeteer's own download — correct on developer machines and CI images that
+  // carry Chrome's shared libraries.
+  list.push({ name: 'puppeteer-bundled', resolve: async () => ({ executablePath: undefined, args: BASE_LAUNCH_ARGS }) })
+  // Statically-linked Chromium for image-based builders (Vercel, Lambda) whose
+  // base image has no libnspr4/libnss3. Optional dependency: if it is absent
+  // this candidate is skipped rather than failing the run.
+  list.push({
+    name: '@sparticuz/chromium',
+    resolve: async () => {
+      const mod = await import('@sparticuz/chromium')
+      const chromium = mod.default ?? mod
+      return {
+        executablePath: await chromium.executablePath(),
+        args: [...new Set([...(chromium.args ?? []), ...BASE_LAUNCH_ARGS])],
+      }
+    },
+  })
+  return list
+}
+
 async function prerender() {
   if (!fs.existsSync(DIST_DIR)) { console.error('[prerender] dist/ not found.'); process.exit(1) }
 
@@ -197,6 +235,8 @@ async function prerender() {
 
   let browser
   let diag = null
+  let launchedVia = null
+  const attempts = []
   try {
     const puppeteer = await import('puppeteer')
     diag = await browserDiagnostics(puppeteer)
@@ -204,24 +244,46 @@ async function prerender() {
       + ` · exportsLaunch=${diag.exportsLaunch}`
       + ` · chrome=${diag.envOverride ?? diag.bundledExecutablePath ?? 'none'}`
       + ` (exists=${diag.executableExists})`)
-    browser = await puppeteer.default.launch({
-      headless: 'new',
-      // Honour an explicitly provided browser (CI images, this repo's own
-      // sandbox) and otherwise fall back to the copy that `npm run
-      // prerender:browser` downloads into puppeteer's cache during postbuild.
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
-        || process.env.CHROME_BIN
-        || undefined,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-first-run',
-        '--no-zygote',
-        // --single-process removed: crashes Chrome 120+ (Puppeteer 24+)
-      ],
-    })
+
+    // Try each browser in turn and keep the first that actually STARTS.
+    //
+    // A downloaded Chrome that exists on disk is not the same as a Chrome that
+    // runs. Vercel's build image ships without Chrome's shared libraries, so
+    // puppeteer's own download failed there with:
+    //
+    //   Code: 127 — error while loading shared libraries: libnspr4.so:
+    //   cannot open shared object file
+    //
+    // while the identical binary launches fine on GitHub's runners and locally.
+    // That is why this is a fallback CHAIN rather than a single choice: probing
+    // by platform would guess, whereas attempting a launch is the actual test.
+    // Order matters — the platform-native browser is preferred where it works,
+    // and @sparticuz/chromium (which statically bundles those libraries) is the
+    // backstop for image-based builders.
+    for (const cand of browserCandidates()) {
+      let resolved
+      try {
+        resolved = await cand.resolve()
+      } catch (err) {
+        attempts.push({ candidate: cand.name, stage: 'resolve', error: err?.message?.slice(0, 200) })
+        continue
+      }
+      try {
+        browser = await puppeteer.default.launch({
+          headless: 'new',
+          executablePath: resolved.executablePath,
+          args: resolved.args,
+        })
+        launchedVia = cand.name
+        console.log(`[prerender] launched via ${cand.name}`
+          + ` (${resolved.executablePath ?? 'puppeteer default'})`)
+        break
+      } catch (err) {
+        attempts.push({ candidate: cand.name, stage: 'launch', error: err?.message?.slice(0, 200) })
+        console.warn(`[prerender] ${cand.name} did not start: ${err?.message?.split('\n')[0]}`)
+      }
+    }
+    if (!browser) throw new Error(`no browser could be launched (tried ${attempts.length})`)
   } catch (err) {
     const msg = `[prerender] FAILED TO LAUNCH CHROME — every page will ship as an
   empty shell with no indexable content. Cause: ${err?.message}`
@@ -232,6 +294,7 @@ async function prerender() {
       cause: err?.message?.slice(0, 400) ?? String(err),
       rendered: 0,
       failed: routes.length,
+      attempts,
       diagnostics: diag ?? { note: 'puppeteer import itself failed' },
     })
     server.close()
@@ -271,6 +334,8 @@ async function prerender() {
     rendered: results.ok.length,
     failed: results.failed.length,
     failedRoutes: results.failed.slice(0, 25),
+    launchedVia,
+    attempts,
     diagnostics: diag,
   })
 
