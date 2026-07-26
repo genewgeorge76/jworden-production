@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import http from 'http'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 import express from 'express'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -128,6 +129,61 @@ async function renderWithRetry(browser, baseUrl, route) {
   }
 }
 
+// Publish the outcome INTO the build output, at /prerender-status.json.
+//
+// WHY: this step fails soft on purpose — a browser problem must not take the
+// whole site offline. The cost of that choice is that a failed prerender and a
+// successful one produce byte-identical deploy status, and the only evidence
+// lives in a build log. Reading Vercel's build log requires dashboard access,
+// which cost this project an entire day of "merged, deployed, still 395
+// characters" with no way to tell which layer was lying.
+//
+// Writing the result as a deployed file makes the answer curl-able from
+// anywhere, forever, with no credentials:
+//
+//     curl https://www.jwordenasphaltpaving.com/prerender-status.json
+//
+// It is a few hundred bytes and carries no secrets.
+function writeStatus(status) {
+  try {
+    fs.mkdirSync(DIST_DIR, { recursive: true })
+    fs.writeFileSync(
+      path.join(DIST_DIR, 'prerender-status.json'),
+      JSON.stringify({ generatedAt: new Date().toISOString(), ...status }, null, 2),
+      'utf-8',
+    )
+  } catch (err) {
+    console.error('[prerender] could not write prerender-status.json:', err?.message)
+  }
+}
+
+// Distinguishes "puppeteer is missing/stubbed" from "Chrome will not start".
+// Both surface as a launch() throw, but they need opposite fixes, and a stale
+// node_modules restored from build cache is a real failure mode here: the
+// `fake-puppeteer` stub that used to be pinned in package-lock.json exports no
+// launch(), so importing it succeeds and only launching fails.
+async function browserDiagnostics(puppeteerNs) {
+  const diag = {
+    puppeteerVersion: null,
+    exportsLaunch: typeof puppeteerNs?.default?.launch === 'function',
+    bundledExecutablePath: null,
+    executableExists: false,
+    envOverride: process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN || null,
+    cacheDir: process.env.PUPPETEER_CACHE_DIR || null,
+  }
+  try {
+    const req = createRequire(import.meta.url)
+    diag.puppeteerVersion = req('puppeteer/package.json').version
+  } catch { /* not resolvable — leave null */ }
+  try {
+    diag.bundledExecutablePath = puppeteerNs?.default?.executablePath?.() ?? null
+    if (diag.bundledExecutablePath) diag.executableExists = fs.existsSync(diag.bundledExecutablePath)
+  } catch (err) {
+    diag.bundledExecutablePath = `unavailable: ${err?.message?.slice(0, 120)}`
+  }
+  return diag
+}
+
 async function prerender() {
   if (!fs.existsSync(DIST_DIR)) { console.error('[prerender] dist/ not found.'); process.exit(1) }
 
@@ -140,8 +196,14 @@ async function prerender() {
   console.log(`[prerender] Server ready on ${baseUrl}`)
 
   let browser
+  let diag = null
   try {
     const puppeteer = await import('puppeteer')
+    diag = await browserDiagnostics(puppeteer)
+    console.log(`[prerender] puppeteer ${diag.puppeteerVersion ?? 'unknown'}`
+      + ` · exportsLaunch=${diag.exportsLaunch}`
+      + ` · chrome=${diag.envOverride ?? diag.bundledExecutablePath ?? 'none'}`
+      + ` (exists=${diag.executableExists})`)
     browser = await puppeteer.default.launch({
       headless: 'new',
       // Honour an explicitly provided browser (CI images, this repo's own
@@ -164,6 +226,14 @@ async function prerender() {
     const msg = `[prerender] FAILED TO LAUNCH CHROME — every page will ship as an
   empty shell with no indexable content. Cause: ${err?.message}`
     console.error('\n' + '='.repeat(72) + '\n' + msg + '\n' + '='.repeat(72) + '\n')
+    writeStatus({
+      ok: false,
+      stage: 'browser-launch',
+      cause: err?.message?.slice(0, 400) ?? String(err),
+      rendered: 0,
+      failed: routes.length,
+      diagnostics: diag ?? { note: 'puppeteer import itself failed' },
+    })
     server.close()
     if (process.env.PRERENDER_REQUIRED === '1') process.exit(1)
     return
@@ -194,6 +264,15 @@ async function prerender() {
 
   console.log(`\n[prerender] ✓ ${results.ok.length} succeeded · ✗ ${results.failed.length} failed`)
   if (results.failed.length) console.log('Failed:', results.failed.join(', '))
+
+  writeStatus({
+    ok: results.failed.length === 0,
+    stage: 'complete',
+    rendered: results.ok.length,
+    failed: results.failed.length,
+    failedRoutes: results.failed.slice(0, 25),
+    diagnostics: diag,
+  })
 
   const criticalFailures = results.failed.filter(r => CRITICAL_ROUTES.has(r))
   if (criticalFailures.length > 0) {
