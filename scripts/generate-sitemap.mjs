@@ -245,13 +245,25 @@ try {
 
 // ── 3. Build URL list ─────────────────────────────────────────────────────────
 const today = new Date().toISOString().slice(0, 10);
+// ONLY domains this project actually serves. Generating sitemaps here for
+// sites hosted by other projects invents URLs from THIS repo's route table
+// and then submits them to IndexNow on every production deploy.
+//
+// Removed 2026-07-26, each verified live:
+//   blueridgeasphaltpaving.com   separate Next.js project -> hard 404s
+//                                (e.g. /quote -> 404)
+//   minnesotaasphaltpaving.com   separate project -> hard 404s
+//   michiganasphaltpavingpros.com  DNS does not resolve (NXDOMAIN)
+//   obxpaving.com                separate SPA whose catch-all returns 200 for
+//                                ANY path, so invented routes became soft 404s
+//                                all rendering the homepage — worse than a 404
+//                                because Google sees mass duplicate content
+//
+// If one of these should be part of this network, add it back only once this
+// project actually serves it and its routes resolve.
 const DOMAINS = [
   'richmondasphaltpaving.com',
-  'blueridgeasphaltpaving.com',
-  'minnesotaasphaltpaving.com',
-  'obxpaving.com',
   'atlantaasphaltpavingpros.com',
-  'michiganasphaltpavingpros.com',
   'asphaltpavingkansascity.com',
   'savannahasphaltpaving.com',
   'carolinablacktop.com',
