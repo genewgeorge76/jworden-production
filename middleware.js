@@ -47,9 +47,15 @@ const HOMEPAGE_BY_HOST = new Set([
   'thewordenstandard.com',
 ]);
 
-// Hosts that have their own robots-<host>.txt / sitemap-<host>.{xml,txt}
-// in public/sitemaps/. Includes domains currently served by other Vercel
-// projects — harmless if they never reach this deployment, correct if they do.
+// Hosts that have their own robots-<host>.txt / sitemap-<host>.{xml,txt} in
+// public/sitemaps/. Must stay in sync with DOMAINS in
+// scripts/generate-sitemap.mjs — rewriting to a file the build no longer
+// produces turns a working page into a 404.
+//
+// blueridge / minnesota / michigan / obxpaving were removed on 2026-07-26
+// along with their generated files: they are served by other projects, so
+// this repo was inventing their URLs from its own route table. Unknown hosts
+// fall through to next(), which is the correct behaviour for them.
 const SITEMAP_HOSTS = new Set([
   MAIN_HOST,
   'richmondasphaltpaving.com',
@@ -58,10 +64,6 @@ const SITEMAP_HOSTS = new Set([
   'savannahasphaltpaving.com',
   'carolinablacktop.com',
   'thewordenstandard.com',
-  'blueridgeasphaltpaving.com',
-  'michiganasphaltpavingpros.com',
-  'minnesotaasphaltpaving.com',
-  'obxpaving.com',
 ]);
 
 /**
