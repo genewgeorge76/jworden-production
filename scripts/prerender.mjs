@@ -32,7 +32,15 @@ function getRoutesFromSitemap() {
   const paths = urls.map(u => { try { return new URL(u).pathname } catch { return '/' } })
   return [...new Set(paths)].filter(p => {
     const base = '/' + p.split('/')[1]
-    return !SKIP_ROUTES.has(p) && !SKIP_ROUTES.has(base)
+    if (SKIP_ROUTES.has(p) || SKIP_ROUTES.has(base)) return false
+    // Routes ending in .html are prebuilt static pages, not SPA routes — they
+    // ship with their content already in the file (5,000-7,000 chars each).
+    // Loading one in the browser waits for a React app that will never boot,
+    // so every single one burned the full 30s page timeout and reported
+    // FAILED. That is 36 of the 262 sitemap entries: a 30-minute stall and a
+    // wall of red on a run where nothing was actually wrong.
+    if (p.endsWith('.html')) return false
+    return true
   })
 }
 
@@ -136,6 +144,10 @@ async function prerender() {
     const puppeteer = await import('puppeteer')
     browser = await puppeteer.default.launch({
       headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
+        || process.env.CHROME_BIN
+        || undefined,
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN || undefined,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -147,8 +159,11 @@ async function prerender() {
       ],
     })
   } catch (err) {
-    console.warn('[prerender] Chrome not available — skipping prerender:', err?.message)
+    const msg = `[prerender] FAILED TO LAUNCH CHROME — every page will ship as an
+  empty shell with no indexable content. Cause: ${err?.message}`
+    console.error('\n' + '='.repeat(72) + '\n' + msg + '\n' + '='.repeat(72) + '\n')
     server.close()
+    if (process.env.PRERENDER_REQUIRED === '1') process.exit(1)
     return
   }
 
