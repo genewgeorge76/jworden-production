@@ -144,10 +144,12 @@ async function prerender() {
     const puppeteer = await import('puppeteer')
     browser = await puppeteer.default.launch({
       headless: 'new',
+      // Honour an explicitly provided browser (CI images, this repo's own
+      // sandbox) and otherwise fall back to the copy that `npm run
+      // prerender:browser` downloads into puppeteer's cache during postbuild.
       executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
         || process.env.CHROME_BIN
         || undefined,
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN || undefined,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
