@@ -14,7 +14,7 @@
     "dev:backend": "powershell -ExecutionPolicy Bypass -File scripts/dev-backend.ps1",
     "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/normalize-meta-quality.mjs && node scripts/prerender.mjs && node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs && node scripts/prune-local-media.mjs",
+    "postbuild": "node scripts/normalize-meta-quality.mjs && npm run prerender:browser && node scripts/prerender.mjs && node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs && node scripts/prune-local-media.mjs",
     "ai:blog-factory": "node scripts/ai-blog-factory.mjs",
     "ai:authority": "node scripts/ai-authority-factory.mjs",
     "ai:authority:force": "node scripts/ai-authority-factory.mjs --force",
@@ -94,7 +94,8 @@
     "test:unit": "node --test tests/unit/*.test.mjs",
     "test:e2e": "npx playwright test",
     "guard:deploy-mode": "node scripts/verify-deploy-mode.mjs",
-    "prerender": "node scripts/prerender.mjs"
+    "prerender": "node scripts/prerender.mjs",
+    "prerender:browser": "puppeteer browsers install chrome"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.940.0",
