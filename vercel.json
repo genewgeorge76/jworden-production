@@ -3,7 +3,28 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "redirects": [
-
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.richmondasphaltpros.com"
+        }
+      ],
+      "destination": "https://www.richmondasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "richmondasphaltpros.com"
+        }
+      ],
+      "destination": "https://www.richmondasphaltpaving.com/$1",
+      "permanent": true
+    },
     {
       "source": "/owner",
       "destination": "/leads",
@@ -97,22 +118,42 @@
     },
     {
       "source": "/robots.txt",
-      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<domain>.*)"
+        }
+      ],
       "destination": "/sitemaps/robots-:domain.txt"
     },
     {
       "source": "/sitemap.xml",
-      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<domain>.*)"
+        }
+      ],
       "destination": "/sitemaps/sitemap-:domain.xml"
     },
     {
       "source": "/sitemap.txt",
-      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<domain>.*)"
+        }
+      ],
       "destination": "/sitemaps/sitemap-:domain.txt"
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "(?!www\\.)(?<tenantSlug>.+)\\.thewordenstandard\\.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?!www\\.)(?<tenantSlug>.+)\\.thewordenstandard\\.com"
+        }
+      ],
       "destination": "/index.html"
     },
     {

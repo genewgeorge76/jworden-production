@@ -144,6 +144,9 @@ async function prerender() {
     const puppeteer = await import('puppeteer')
     browser = await puppeteer.default.launch({
       headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
+        || process.env.CHROME_BIN
+        || undefined,
       executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN || undefined,
       args: [
         '--no-sandbox',
@@ -156,8 +159,11 @@ async function prerender() {
       ],
     })
   } catch (err) {
-    console.warn('[prerender] Chrome not available — skipping prerender:', err?.message)
+    const msg = `[prerender] FAILED TO LAUNCH CHROME — every page will ship as an
+  empty shell with no indexable content. Cause: ${err?.message}`
+    console.error('\n' + '='.repeat(72) + '\n' + msg + '\n' + '='.repeat(72) + '\n')
     server.close()
+    if (process.env.PRERENDER_REQUIRED === '1') process.exit(1)
     return
   }
 
