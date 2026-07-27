@@ -1,5 +1,5 @@
 /**
- * Generates route-manifest.generated.json from the router in src/App.jsx.
+ * Generates route-manifest.generated.js from the router in src/App.jsx.
  *
  * WHY THIS IS GENERATED AND NOT HAND-WRITTEN
  *
@@ -33,6 +33,24 @@ const OUT = path.join(ROOT, 'route-manifest.generated.js')
 
 const src = fs.readFileSync(APP, 'utf-8')
 const declared = [...src.matchAll(/path="([^"]+)"/g)].map(m => m[1])
+
+// Not every route is a literal path="..." in App.jsx. publicAIPages and
+// internalAIPages are registered programmatically:
+//
+//     {[...filteredPublicAIPages].map(({ path, Component }) => (
+//       <Route key={path} path={path} element={<Component />} />
+//     ))}
+//
+// so a regex over App.jsx alone misses all of them — /background-checks,
+// /employee-handbook, /payroll-compliance and the rest. They are absent from
+// the sitemaps too, which means the sitemap-coverage guard cannot see them
+// either. Left out, middleware would have returned 404 for every one of these
+// live pages. Any future registry of the same shape must be added here.
+const REGISTRY = path.join(ROOT, 'src', 'generated', 'aiPageRegistry.jsx')
+if (fs.existsSync(REGISTRY)) {
+  const reg = fs.readFileSync(REGISTRY, 'utf-8')
+  for (const m of reg.matchAll(/path:\s*['"]([^'"]+)['"]/g)) declared.push(m[1])
+}
 
 const exact = new Set()
 const prefixes = new Set()

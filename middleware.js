@@ -143,9 +143,13 @@ export const config = {
   // would still be served the generic main-site page carrying the wrong
   // canonical, re-opening the duplicate-content hole this fix closes.
   // The four filesystem-colliding paths above, PLUS every extensionless path,
-  // which is what the soft-404 check needs to see. Requests carrying a file
-  // extension, /api/*, /assets/* and Vercel internals are excluded so static
-  // assets never pay for a middleware invocation.
+  // which is what the soft-404 check needs to see.
+  //
+  // Excluded from the catch-all, so static assets never pay for a middleware
+  // invocation: anything containing a file extension, /api/*, /assets/*,
+  // /work/*, /images/*, /sitemaps/* and Vercel internals (/_vercel/*). Keep
+  // this list and the pattern below in step — dropping an exclusion silently
+  // adds a middleware call to every request for that prefix.
   matcher: [
     '/', '/index.html', '/robots.txt', '/sitemap.xml', '/sitemap.txt',
     '/((?!api/|assets/|_vercel/|work/|images/|sitemaps/|.*\\.).*)',

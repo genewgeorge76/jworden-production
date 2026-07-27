@@ -106,3 +106,20 @@ test('manifest is derived from the router, not hand-maintained', () => {
   const missing = declared.filter(p => !ROUTES.exact.includes(p))
   assert.deepEqual(missing, [], `router declares routes absent from the manifest: ${missing}`)
 })
+
+test('programmatically registered AI pages are in the manifest', () => {
+  // These are rendered as <Route path={path}> from publicAIPages /
+  // internalAIPages, so scanning App.jsx for literal path="..." never sees
+  // them. They are also absent from the sitemaps, so the sitemap-coverage
+  // guard above cannot catch them either — this is the only test standing
+  // between /background-checks and a 404.
+  const registry = path.join(ROOT, 'src/generated/aiPageRegistry.jsx')
+  if (!fs.existsSync(registry)) return
+
+  const declared = [...fs.readFileSync(registry, 'utf-8').matchAll(/path:\s*['"]([^'"]+)['"]/g)]
+    .map(m => m[1])
+  assert.ok(declared.length > 0, 'registry parsed as empty — the regex has drifted')
+
+  const missing = declared.filter(p => !isKnownRoute(p))
+  assert.deepEqual(missing, [], `these live pages would return 404:\n${missing.join('\n')}`)
+})
