@@ -12,7 +12,7 @@
     "dev:all": "node scripts/dev-all.mjs",
     "dev:web": "vite --host 127.0.0.1 --port 5173",
     "dev:backend": "powershell -ExecutionPolicy Bypass -File scripts/dev-backend.ps1",
-    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs",
+    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-route-manifest.mjs",
     "build": "vite build",
     "postbuild": "node scripts/normalize-meta-quality.mjs && npm run prerender:browser && node scripts/prerender.mjs && node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs && node scripts/prune-local-media.mjs",
     "ai:blog-factory": "node scripts/ai-blog-factory.mjs",
