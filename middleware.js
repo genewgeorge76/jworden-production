@@ -28,6 +28,7 @@
 // `curl https://richmondasphaltpaving.com/` returned the generic page.
 
 import { next, rewrite } from '@vercel/functions';
+import ROUTES from './route-manifest.generated.js';
 
 // The main site's sitemap/robots files are named with the `www.` prefix;
 // the regional ones are not. This map is derived from the real filenames in
@@ -80,6 +81,58 @@ function canonicalHost(rawHost) {
   return host.startsWith('www.') ? host.slice(4) : host;
 }
 
+// ── Soft-404 suppression ─────────────────────────────────────────────────────
+//
+// Every unknown URL used to return 200 with the full homepage, because
+// vercel.json ends in a catch-all rewrite to /index.html. To a crawler that is
+// an infinite supply of duplicate pages, and it dilutes the 217 real pages the
+// prerenderer now publishes.
+//
+// The rule is deliberately lopsided: return 404 ONLY when the path matches
+// nothing we know about. Anything uncertain keeps serving the SPA. A false 404
+// on a live money page costs far more than a soft 200 on a junk URL, so every
+// ambiguous case fails open.
+//
+// ROUTES is generated from src/App.jsx on every build, so it cannot drift out
+// of sync with the router the way a hand-kept list would.
+function isKnownRoute(pathname) {
+  // Anything file-like (.html, .txt, .xml, .png …) is left to the filesystem,
+  // which answers correctly on its own. This is load-bearing: 45 prebuilt
+  // .html landing pages are in the sitemaps and are NOT React routes, so
+  // running them through the manifest would 404 real indexed pages.
+  const lastSegment = pathname.slice(pathname.lastIndexOf('/') + 1);
+  if (lastSegment.includes('.')) return true;
+
+  const p = pathname.length > 1 && pathname.endsWith('/')
+    ? pathname.slice(0, -1)
+    : pathname;
+
+  if (ROUTES.exact.includes(p)) return true;
+  return ROUTES.prefixes.some((prefix) => pathname.startsWith(prefix));
+}
+
+const NOT_FOUND_HTML = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Page Not Found | J. Worden &amp; Sons</title>
+<style>
+:root{color-scheme:light dark}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0d0d0f;color:#f2f2f2;
+text-align:center;padding:2rem}
+main{max-width:34rem}h1{font-size:clamp(1.6rem,5vw,2.4rem);margin:0 0 .5rem}
+p{opacity:.75;margin:0 0 1.75rem}
+a{display:inline-block;padding:.75rem 1.5rem;border-radius:.5rem;background:#f2b705;color:#0d0d0f;
+font-weight:600;text-decoration:none}
+</style></head>
+<body><main>
+<h1>That page isn't here</h1>
+<p>The link may be out of date. Everything we do &mdash; paving, sealcoating, parking lots
+and concrete &mdash; is a click away.</p>
+<a href="/">Back to J. Worden &amp; Sons</a>
+</main></body></html>`;
+
 export const config = {
   // Deliberately narrow: only the paths that collide with a real static
   // file. Everything else already routes correctly via vercel.json, and a
@@ -89,7 +142,18 @@ export const config = {
   // without it, requesting https://<regional-domain>/index.html directly
   // would still be served the generic main-site page carrying the wrong
   // canonical, re-opening the duplicate-content hole this fix closes.
-  matcher: ['/', '/index.html', '/robots.txt', '/sitemap.xml', '/sitemap.txt'],
+  // The four filesystem-colliding paths above, PLUS every extensionless path,
+  // which is what the soft-404 check needs to see.
+  //
+  // Excluded from the catch-all, so static assets never pay for a middleware
+  // invocation: anything containing a file extension, /api/*, /assets/*,
+  // /work/*, /images/*, /sitemaps/* and Vercel internals (/_vercel/*). Keep
+  // this list and the pattern below in step — dropping an exclusion silently
+  // adds a middleware call to every request for that prefix.
+  matcher: [
+    '/', '/index.html', '/robots.txt', '/sitemap.xml', '/sitemap.txt',
+    '/((?!api/|assets/|_vercel/|work/|images/|sitemaps/|.*\\.).*)',
+  ],
 };
 
 export default function middleware(request) {
@@ -120,6 +184,19 @@ export default function middleware(request) {
     }
     if (pathname === '/sitemap.txt') {
       return rewrite(new URL(`/sitemaps/sitemap-${host}.txt`, request.url));
+    }
+
+    // Everything below here is an ordinary page request. Unknown paths get a
+    // real 404 instead of the homepage with a 200.
+    if (!isKnownRoute(pathname)) {
+      return new Response(NOT_FOUND_HTML, {
+        status: 404,
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          'x-robots-tag': 'noindex, follow',
+          'cache-control': 'public, max-age=0, must-revalidate',
+        },
+      });
     }
 
     return next();

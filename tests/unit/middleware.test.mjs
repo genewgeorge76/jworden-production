@@ -32,11 +32,24 @@ const REGIONALS = [
   'savannahasphaltpaving.com',
 ];
 
-test('matcher covers exactly the static files that shadow host rewrites', () => {
-  assert.deepEqual(
-    [...config.matcher].sort(),
-    ['/', '/index.html', '/robots.txt', '/sitemap.xml', '/sitemap.txt'].sort(),
-  );
+test('matcher still covers the static files that shadow host rewrites', () => {
+  // These four (plus /) are the paths that exist as real files in the build
+  // output, so Vercel serves them before consulting vercel.json host rules.
+  // They must stay explicitly listed: the catch-all pattern added for soft-404
+  // handling excludes anything containing a dot, which is all of them.
+  for (const p of ['/', '/index.html', '/robots.txt', '/sitemap.xml', '/sitemap.txt']) {
+    assert.ok(config.matcher.includes(p), `${p} dropped from matcher`);
+  }
+});
+
+test('matcher also sees extensionless paths, for soft-404 handling', () => {
+  const catchAll = config.matcher.find((m) => m.includes('(?!'));
+  assert.ok(catchAll, 'no catch-all pattern — unknown URLs would still return 200');
+  // Static assets must not pay for a middleware invocation on every request.
+  for (const excluded of ['api/', 'assets/', '_vercel/']) {
+    assert.ok(catchAll.includes(excluded), `${excluded} should be excluded from the matcher`);
+  }
+  assert.ok(catchAll.includes('\\.'), 'file-like paths should be excluded from the matcher');
 });
 
 test('each regional domain gets its own homepage, bare and www', () => {
