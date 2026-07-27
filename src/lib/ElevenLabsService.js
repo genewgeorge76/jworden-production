@@ -85,10 +85,22 @@ class ElevenLabsService {
         })
 
         if (streamResp.ok) {
-          const streamed = await this._playStreamResponse(streamResp)
-          if (streamed) return
+          // /tts/stream is NOT chunked today — it returns the whole MP3 with a
+          // Content-Length, identical in size to /tts/speak. Feeding a complete
+          // file to MediaSource is fragile, and _playStreamResponse can report
+          // success while nothing is audible; because it "succeeded", the
+          // dependable /tts/speak path below never ran. That is silent voice
+          // with no error in the console.
+          //
+          // So only take the MediaSource route when the body really is
+          // progressive (no Content-Length => chunked/streamed). Otherwise play
+          // the buffered blob, which is the path already proven to work.
+          const declaredLength = streamResp.headers.get('content-length')
+          if (!declaredLength) {
+            const streamed = await this._playStreamResponse(streamResp)
+            if (streamed) return
+          }
 
-          // Older browsers: same endpoint, buffered fallback.
           blob = await streamResp.blob()
         } else {
           // Final fallback endpoint if stream route fails.
