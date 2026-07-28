@@ -400,7 +400,12 @@ for (const domain of DOMAINS) {
   // vercel.json now redirects /states/(.*) to /service-areas. That is a pattern,
   // and loadRedirectSources() deliberately refuses to interpret patterns, so
   // these have to stop being emitted here rather than being filtered out later.
-  // --all-states still forces them for the SaaS site, which is what it is for.
+  //
+  // --all-states (or SITEMAP_INCLUDE_ALL_STATES) still forces them, but note it
+  // cannot produce a sitemap for thewordenstandard.com itself: that domain is in
+  // NOINDEX_DOMAINS and returns before reaching this point. The flag is an
+  // escape hatch for a future paving domain that genuinely serves multiple
+  // states, not a way to restore the SaaS pages here.
   if (!SINGLE_PAGE_DOMAINS.has(domain) && INCLUDE_ALL_STATES) {
     for (const abbr of Object.keys(STATE_MAP).sort()) {
       const st = STATE_MAP[abbr];

@@ -26,37 +26,45 @@ export default function BlogPost() {
   // on screen at that moment, which is how 28 articles shipped as static
   // "Article Not Found" pages.
   const staticPost = getFallbackBlogPostBySlug(slug);
-  const [post, setPost] = useState(staticPost);
-  const [related, setRelated] = useState(() => relatedTo(slug, null));
-  // Only ever "loading" when there is nothing static to show.
-  const [loading, setLoading] = useState(!staticPost);
+
+  // Anything fetched is stored together with the slug it belongs to, and both
+  // the post and the related rail are derived during render rather than held
+  // as free-standing state. /blog/:slug reuses this component across slug
+  // changes, so state seeded in an initialiser (which only runs on mount) or
+  // assigned inside an effect (which runs after paint) would leave the previous
+  // article — and its canonical and og:meta — rendered under the new URL for a
+  // frame. Serving one article's metadata on another's URL is the same defect
+  // this file was just fixed for; it should not be reintroduced through the
+  // client-side path.
+  const [fetched, setFetched] = useState({ slug: null, post: null, related: null, done: false });
+  const forThisSlug = fetched.slug === slug;
+
+  const post = (forThisSlug && fetched.post) || staticPost;
+  const related = (forThisSlug && fetched.related) || relatedTo(slug, null);
+  // Only ever "loading" when there is nothing static to show and the request
+  // for this slug has not settled.
+  const loading = !staticPost && !(forThisSlug && fetched.done);
 
   useEffect(() => {
-    const fromStatic = getFallbackBlogPostBySlug(slug);
-    setPost(fromStatic);
-    setRelated(relatedTo(slug, null));
-    setLoading(!fromStatic);
-
     let cancelled = false;
-    // The API is an enhancement: it can supply posts authored after this build.
-    // It must never blank a post we already rendered.
-    api.entities.BlogPost.filter({ slug })
-      .then((results) => {
-        if (cancelled) return;
-        const found = (Array.isArray(results) ? results : [])[0];
-        if (found) setPost(found);
-        setLoading(false);
-      })
-      .catch(() => {
-        if (!cancelled) setLoading(false);
-      });
 
-    api.entities.BlogPost.list('-published_date', 4)
-      .then((all) => {
-        if (cancelled) return;
-        if (Array.isArray(all) && all.length > 0) setRelated(relatedTo(slug, all));
-      })
-      .catch(() => {});
+    // The API is an enhancement: it can supply posts authored after this build.
+    // It must never blank a post that already rendered.
+    Promise.allSettled([
+      api.entities.BlogPost.filter({ slug }),
+      api.entities.BlogPost.list('-published_date', 4),
+    ]).then(([one, list]) => {
+      if (cancelled) return;
+      const found =
+        one.status === 'fulfilled' ? (Array.isArray(one.value) ? one.value : [])[0] : null;
+      const all = list.status === 'fulfilled' && Array.isArray(list.value) ? list.value : [];
+      setFetched({
+        slug,
+        post: found || null,
+        related: all.length > 0 ? relatedTo(slug, all) : null,
+        done: true,
+      });
+    });
 
     return () => { cancelled = true; };
   }, [slug]);

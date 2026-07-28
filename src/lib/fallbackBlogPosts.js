@@ -17,7 +17,12 @@ import { BLOG_POSTS } from '@/data/blogPosts';
  */
 
 // blogPosts.js predates this shape and uses its own field names.
-const COVER_POOL_SIZE = 31;
+//
+// public/work/portfolio holds portfolio-001.jpg .. portfolio-030.jpg. Keep this
+// at the number of files that actually exist: the modulo below is what stops a
+// 29th seed post from asking for portfolio-031.jpg, which would 404 as an
+// og:image. If more portfolio images are added, raise this to match.
+const COVER_POOL_SIZE = 30;
 
 function normalizeSeedPost(post, index) {
   return {
