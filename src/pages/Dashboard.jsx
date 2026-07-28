@@ -12,6 +12,7 @@ const HUB_SECTIONS = [
     icon: '⚙️',
     color: 'border-l-green-500',
     links: [
+      { to: '/satellite-map', icon: '🛰️', label: 'Satellite Map',      sub: 'Imagery · job, market & bid layers', badge: 'NEW' },
       { to: '/diamond',     icon: '💎', label: 'Diamond Jobs Portal',sub: 'Active & available scraped jobs',    badge: 'NEW' },
       { to: '/revenue',     icon: '💰', label: 'Revenue Dashboard',  sub: 'Invoices · P&L · pipeline',        badge: null },
       { to: '/leads',       icon: '📬', label: 'Lead Inbox',         sub: 'Quotes · follow-ups · new leads',  badge: 'HOT' },

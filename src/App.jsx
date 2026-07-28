@@ -31,6 +31,7 @@ import EstimatePortal from './pages/EstimatePortal';
 import ApiDashboard from './pages/ApiDashboard';
 
 // All other pages are code-split so the initial bundle stays small.
+const SatelliteMap = lazy(() => import('./pages/SatelliteMap'));
 const LeadConsultant = lazy(() => import('./pages/LeadConsultant'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const JobDetail = lazy(() => import('./pages/JobDetail'));
@@ -340,6 +341,7 @@ const AuthenticatedApp = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<AdminPinGate />} />
+          <Route path="/satellite-map" element={<RequireAuth><SatelliteMap /></RequireAuth>} />
           <Route path="/dashboard" element={<RequireAuth><ClientCockpit /></RequireAuth>} />
           <Route path="/portal/:public_token" element={<EstimatePortal />} />
           <Route path="/client-portal" element={<ClientPortal />} />
