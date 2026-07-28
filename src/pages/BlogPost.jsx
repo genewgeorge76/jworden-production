@@ -10,38 +10,55 @@ import { PRIMARY_DOMAIN } from '@/lib/locations';
 import { FALLBACK_BLOG_POSTS, getFallbackBlogPostBySlug } from '@/lib/fallbackBlogPosts';
 import { premiumBlogPostingSchema } from '../components/SchemaMarkup';
 
+function relatedTo(slug, source) {
+  const pool = Array.isArray(source) && source.length > 0 ? source : FALLBACK_BLOG_POSTS;
+  return pool.filter((p) => p.slug !== slug).slice(0, 3);
+}
+
 export default function BlogPost() {
   const { slug } = useParams();
-  const [post, setPost] = useState(null);
-  const [related, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // Resolve from the static set synchronously, during render. The article body
+  // is compiled into the bundle, so there is no reason to wait on the network
+  // to show it — and a very good reason not to: scripts/prerender.mjs waits for
+  // networkidle0, so any pending request gates what Google is served. When this
+  // component only resolved inside an effect, prerender captured whatever was
+  // on screen at that moment, which is how 28 articles shipped as static
+  // "Article Not Found" pages.
+  const staticPost = getFallbackBlogPostBySlug(slug);
+  const [post, setPost] = useState(staticPost);
+  const [related, setRelated] = useState(() => relatedTo(slug, null));
+  // Only ever "loading" when there is nothing static to show.
+  const [loading, setLoading] = useState(!staticPost);
 
   useEffect(() => {
-    setLoading(true);
+    const fromStatic = getFallbackBlogPostBySlug(slug);
+    setPost(fromStatic);
+    setRelated(relatedTo(slug, null));
+    setLoading(!fromStatic);
+
+    let cancelled = false;
+    // The API is an enhancement: it can supply posts authored after this build.
+    // It must never blank a post we already rendered.
     api.entities.BlogPost.filter({ slug })
       .then((results) => {
-        const safeResults = Array.isArray(results) ? results : [];
-        const found = safeResults[0] || getFallbackBlogPostBySlug(slug);
-        setPost(found || null);
-        if (found) {
-          api.entities.BlogPost.list('-published_date', 4)
-            .then((all) => {
-              const safeAll = Array.isArray(all) ? all : [];
-              const merged = safeAll.length > 0 ? safeAll : FALLBACK_BLOG_POSTS;
-              setRelated(merged.filter((p) => p.slug !== found.slug).slice(0, 3));
-            })
-            .catch(() => {
-              setRelated(FALLBACK_BLOG_POSTS.filter((p) => p.slug !== found.slug).slice(0, 3));
-            });
-        }
+        if (cancelled) return;
+        const found = (Array.isArray(results) ? results : [])[0];
+        if (found) setPost(found);
         setLoading(false);
       })
       .catch(() => {
-        const fallback = getFallbackBlogPostBySlug(slug);
-        setPost(fallback);
-        setRelated(FALLBACK_BLOG_POSTS.filter((p) => p.slug !== slug).slice(0, 3));
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       });
+
+    api.entities.BlogPost.list('-published_date', 4)
+      .then((all) => {
+        if (cancelled) return;
+        if (Array.isArray(all) && all.length > 0) setRelated(relatedTo(slug, all));
+      })
+      .catch(() => {});
+
+    return () => { cancelled = true; };
   }, [slug]);
 
   if (loading) {
