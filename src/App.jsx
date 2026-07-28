@@ -383,7 +383,18 @@ const AuthenticatedApp = () => {
         <Route path="/driveway-ai" element={<Suspense fallback={<RouteLoader />}><DrivewayAI /></Suspense>} />
         <Route path="/jworden-ai" element={<Suspense fallback={<RouteLoader />}><JwordenAI /></Suspense>} />
         <Route path="/saas-marketing" element={<Suspense fallback={<RouteLoader />}><SaaSMarketing /></Suspense>} />
-        <Route path="/portal" element={<ClientPortal />} />
+        {/* NOTE: `/portal` is deliberately NOT registered here.
+            8ae84e8 added `<Route path="/portal" element={<ClientPortal />} />` on
+            this line without noticing that `/portal` was already registered
+            further down this same <Routes> block as
+            `<RequireAuth><CustomerPortal /></RequireAuth>`. Two identical paths
+            in one <Routes> means the first one wins, so ClientPortal shadowed
+            CustomerPortal and CustomerPortal became unreachable dead code.
+
+            CustomerPortal is the intended occupant: it sets
+            canonicalPath="/portal" itself, and Dashboard links to /portal under
+            the label "Customer Portal". ClientPortal is unaffected — it keeps
+            its own /client-portal route. */}
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
