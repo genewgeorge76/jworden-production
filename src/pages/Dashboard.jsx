@@ -76,7 +76,6 @@ const HUB_SECTIONS = [
     links: [
       { to: '/admin/documents', icon: '📁', label: 'Document Vault',   sub: 'Contract storage · file manager',    badge: null },
       { to: '/admin/slack',     icon: '💬', label: 'Slack Settings',   sub: 'Notification routing · channels',    badge: null },
-      { to: '/dns-migration',   icon: '🌐', label: 'DNS Migration',    sub: 'Domain · redirect management',       badge: null },
     ],
   },
 ];

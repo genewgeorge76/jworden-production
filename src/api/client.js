@@ -1049,10 +1049,10 @@ export const api = {
 export default api;
 
 // ── GA4 / Google Ads event helpers ────────────────────────────────────────────
-// Map of internal event names → Netlify env vars holding the matching
+// Map of internal event names → build env vars holding the matching
 // Google Ads conversion label (format "AbCdEf12-3"). When set, the event
 // also fires `gtag('event','conversion', { send_to: 'AW-XXX/LABEL', value })`
-// so the click is counted in Google Ads. Set these in Netlify → Site settings
+// so the click is counted in Google Ads. Set these in Vercel → Project settings
 // → Environment variables, then redeploy:
 //   VITE_GADS_CONVERSION_ID            = AW-18031160509   (already in <head>)
 //   VITE_GADS_LABEL_LEAD_FORM          = <label from Google Ads conversion>

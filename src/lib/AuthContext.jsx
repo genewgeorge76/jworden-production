@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    alert("Admin login is disabled in this standalone Netlify build. Public site is active; admin tools need a new auth backend before use.");
+    alert("Admin login is disabled in this build. Public site is active; admin tools need a new auth backend before use.");
   };
 
   return (
