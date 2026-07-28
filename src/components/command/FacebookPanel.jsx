@@ -17,7 +17,9 @@ function relative(iso) {
   if (!iso) return '';
   const then = new Date(iso).getTime();
   if (Number.isNaN(then)) return '';
-  const mins = Math.round((Date.now() - then) / 60000);
+  // Clamp: a Page timestamp can sit slightly in the future through clock
+  // skew, and "-3m ago" is worse than "0m ago".
+  const mins = Math.max(0, Math.round((Date.now() - then) / 60000));
   if (mins < 60) return `${mins}m ago`;
   if (mins < 1440) return `${Math.round(mins / 60)}h ago`;
   return `${Math.round(mins / 1440)}d ago`;
@@ -28,6 +30,7 @@ export default function FacebookPanel() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [postsError, setPostsError] = useState(null);
 
   const [message, setMessage] = useState('');
   const [link, setLink] = useState('');
@@ -37,19 +40,30 @@ export default function FacebookPanel() {
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const [s, p] = await Promise.all([
-        api.getFacebookStatus(),
-        api.getFacebookPosts(15).catch(() => null),
-      ]);
-      setStatus(s);
-      setPosts(p?.posts || []);
-      if (p && p.configured && !p.connected && p.detail) setError(p.detail);
-    } catch (err) {
-      setError(err?.message || 'Could not reach the backend.');
-    } finally {
-      setLoading(false);
+    setPostsError(null);
+    // Settled, not all: a failed posts fetch must not be collapsed into an
+    // empty feed. "No posts" and "we could not ask" are different facts and
+    // the panel exists to keep them apart.
+    const [statusRes, postsRes] = await Promise.allSettled([
+      api.getFacebookStatus(),
+      api.getFacebookPosts(15),
+    ]);
+
+    if (statusRes.status === 'fulfilled') {
+      setStatus(statusRes.value);
+    } else {
+      setError(statusRes.reason?.message || 'Could not reach the backend.');
     }
+
+    if (postsRes.status === 'fulfilled') {
+      const p = postsRes.value;
+      setPosts(p?.posts || []);
+      if (p && p.configured && !p.connected && p.detail) setPostsError(p.detail);
+    } else {
+      // Leave any previously loaded posts alone rather than blanking the feed.
+      setPostsError(postsRes.reason?.message || 'Could not load posts.');
+    }
+    setLoading(false);
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -136,15 +150,21 @@ export default function FacebookPanel() {
 
       {/* Composer */}
       <form onSubmit={publish} className="rounded-lg border border-zinc-800 bg-zinc-900/40 p-4">
-        <label className="mb-2 block text-xs uppercase tracking-wider text-zinc-500">New post</label>
+        <label htmlFor="fb-new-post" className="mb-2 block text-xs uppercase tracking-wider text-zinc-500">
+          New post
+        </label>
         <textarea
+          id="fb-new-post"
           value={message}
           onChange={(e) => setMessage(e.target.value.slice(0, MAX_LEN))}
           rows={4}
           placeholder="Write a post for the Page…"
           className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-sky-500 focus:outline-none"
         />
+        <label htmlFor="fb-post-link" className="sr-only">Optional link to attach</label>
         <input
+          id="fb-post-link"
+          type="url"
           value={link}
           onChange={(e) => setLink(e.target.value)}
           placeholder="Optional link to attach (https://…)"
@@ -172,7 +192,15 @@ export default function FacebookPanel() {
 
         {loading && <p className="px-4 py-6 text-sm text-zinc-500">Loading…</p>}
 
-        {!loading && posts.length === 0 && !notConfigured && (
+        {/* A failed fetch is reported as a failure, never as an empty Page. */}
+        {!loading && postsError && (
+          <p className="border-b border-zinc-800 bg-red-950/30 px-4 py-3 text-xs text-red-300">
+            Could not load posts — {postsError}. This is a request failure, not an
+            empty Page: no conclusion should be drawn about what is published.
+          </p>
+        )}
+
+        {!loading && !postsError && posts.length === 0 && !notConfigured && (
           <p className="px-4 py-6 text-sm text-zinc-500">
             The Page responded and returned no published posts.
           </p>
