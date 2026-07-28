@@ -976,6 +976,16 @@ export const api = {
   verifySccBatch: (entities) => request('POST', '/api/v1/scc/verify-batch', { entities }),
   getSccStatus: () => request('GET', '/api/v1/scc/status'),
 
+  // ── Facebook Page ──────────────────────────────────────────────────────────
+  // Premium-gated on the backend. When FACEBOOK_PAGE_ID / FACEBOOK_PAGE_ACCESS_TOKEN
+  // are unset these return { configured: false, missing: [...] } rather than an
+  // empty feed, so the UI can say why instead of showing nothing.
+  getFacebookStatus: () => protectedRequest('GET', '/api/v1/facebook/status'),
+  getFacebookPosts: (limit = 15) => protectedRequest('GET', `/api/v1/facebook/posts?limit=${limit}`),
+  publishFacebookPost: (message, link) =>
+    protectedRequest('POST', '/api/v1/facebook/posts', link ? { message, link } : { message }),
+  deleteFacebookPost: (id) => protectedRequest('DELETE', `/api/v1/facebook/posts/${encodeURIComponent(id)}`),
+
   // ── VDOT Bid Board ─────────────────────────────────────────────────────────
   getVdotBids: (params) => request('GET', `/api/v1/vdot-bids${buildQS(params)}`),
   getVdotBid: (id) => request('GET', `/api/v1/vdot-bids/${id}`),
