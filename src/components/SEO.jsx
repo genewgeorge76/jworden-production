@@ -60,7 +60,6 @@ export default function SEO({
       '/consultant',
       '/job',
       '/crew-reporting',
-      '/dns-migration',
       '/portal',
       '/admin',
       '/leads',

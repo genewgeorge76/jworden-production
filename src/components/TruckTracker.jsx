@@ -196,7 +196,7 @@ export default function TruckTracker() {
           ws.close()
         }
       } catch {
-        // WebSocket not available (e.g. Netlify static deploy) — polling handles it
+        // WebSocket not available on a static deploy — polling handles it
       }
     }
 

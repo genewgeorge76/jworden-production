@@ -31,6 +31,7 @@ import EstimatePortal from './pages/EstimatePortal';
 import ApiDashboard from './pages/ApiDashboard';
 
 // All other pages are code-split so the initial bundle stays small.
+const SatelliteMap = lazy(() => import('./pages/SatelliteMap'));
 const LeadConsultant = lazy(() => import('./pages/LeadConsultant'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const JobDetail = lazy(() => import('./pages/JobDetail'));
@@ -67,7 +68,6 @@ const JarvisPage = lazy(() => import('./pages/JarvisPage'));
 const ScannerPage = lazy(() => import('./pages/ScannerPage'));
 const Visualizer = lazy(() => import('./pages/Visualizer'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
-const DnsMigration = lazy(() => import('./pages/DnsMigration'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const CustomerPortal = lazy(() => import('./pages/CustomerPortal'));
@@ -341,6 +341,7 @@ const AuthenticatedApp = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<AdminPinGate />} />
+          <Route path="/satellite-map" element={<RequireAuth><SatelliteMap /></RequireAuth>} />
           <Route path="/dashboard" element={<RequireAuth><ClientCockpit /></RequireAuth>} />
           <Route path="/portal/:public_token" element={<EstimatePortal />} />
           <Route path="/client-portal" element={<ClientPortal />} />
@@ -535,7 +536,6 @@ const AuthenticatedApp = () => {
         />
         <Route path="/job" element={<RequireAuth><JobDetail /></RequireAuth>} />
         <Route path="/crew-reporting" element={<RequireAuth><CrewReporting /></RequireAuth>} />
-        <Route path="/dns-migration" element={<RequireAuth><DnsMigration /></RequireAuth>} />
         <Route path="/portal" element={<RequireAuth><CustomerPortal /></RequireAuth>} />
         <Route path="/admin/documents" element={<RequireAuth><AdminDocuments /></RequireAuth>} />
         <Route path="/admin/slack" element={<RequireAuth><AdminSlackSettings /></RequireAuth>} />

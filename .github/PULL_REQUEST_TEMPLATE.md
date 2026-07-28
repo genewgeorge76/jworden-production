@@ -24,4 +24,4 @@
 <!-- How to undo this in <5 minutes if it breaks production -->
 
 ## Screenshots / preview
-<!-- Netlify deploy preview URL or screenshots -->
+<!-- Vercel deploy preview URL or screenshots -->

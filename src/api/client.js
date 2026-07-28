@@ -976,6 +976,16 @@ export const api = {
   verifySccBatch: (entities) => request('POST', '/api/v1/scc/verify-batch', { entities }),
   getSccStatus: () => request('GET', '/api/v1/scc/status'),
 
+  // ── Facebook Page ──────────────────────────────────────────────────────────
+  // Premium-gated on the backend. When FACEBOOK_PAGE_ID / FACEBOOK_PAGE_ACCESS_TOKEN
+  // are unset these return { configured: false, missing: [...] } rather than an
+  // empty feed, so the UI can say why instead of showing nothing.
+  getFacebookStatus: () => protectedRequest('GET', '/api/v1/facebook/status'),
+  getFacebookPosts: (limit = 15) => protectedRequest('GET', `/api/v1/facebook/posts?limit=${limit}`),
+  publishFacebookPost: (message, link) =>
+    protectedRequest('POST', '/api/v1/facebook/posts', link ? { message, link } : { message }),
+  deleteFacebookPost: (id) => protectedRequest('DELETE', `/api/v1/facebook/posts/${encodeURIComponent(id)}`),
+
   // ── VDOT Bid Board ─────────────────────────────────────────────────────────
   getVdotBids: (params) => request('GET', `/api/v1/vdot-bids${buildQS(params)}`),
   getVdotBid: (id) => request('GET', `/api/v1/vdot-bids/${id}`),
@@ -1049,10 +1059,10 @@ export const api = {
 export default api;
 
 // ── GA4 / Google Ads event helpers ────────────────────────────────────────────
-// Map of internal event names → Netlify env vars holding the matching
+// Map of internal event names → build env vars holding the matching
 // Google Ads conversion label (format "AbCdEf12-3"). When set, the event
 // also fires `gtag('event','conversion', { send_to: 'AW-XXX/LABEL', value })`
-// so the click is counted in Google Ads. Set these in Netlify → Site settings
+// so the click is counted in Google Ads. Set these in Vercel → Project settings
 // → Environment variables, then redeploy:
 //   VITE_GADS_CONVERSION_ID            = AW-18031160509   (already in <head>)
 //   VITE_GADS_LABEL_LEAD_FORM          = <label from Google Ads conversion>
