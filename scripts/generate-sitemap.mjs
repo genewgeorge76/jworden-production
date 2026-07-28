@@ -381,13 +381,37 @@ for (const domain of DOMAINS) {
   }
   }
 
-  if (!SINGLE_PAGE_DOMAINS.has(domain)) {
-  const stateCodesForSitemap = INCLUDE_ALL_STATES ? Object.keys(STATE_MAP).sort() : WORDEN_ACTIVE_STATES;
-  for (const abbr of stateCodesForSitemap) {
-    const st = STATE_MAP[abbr];
-    if (!st) continue;
-    urls.push({ loc: `${SITE}/states/${stateSlug(st)}`, lastmod: today, changefreq: 'monthly', priority: '0.7' });
-  }
+  // ── /states/* is not paving inventory ──────────────────────────────────────
+  //
+  // The 50-state pages were built to advertise the thewordenstandard.com SaaS
+  // product, not J. Worden's paving service area. They leaked into the paving
+  // sitemap because WORDEN_ACTIVE_STATES is `STATES.map(s => s.abbr)` — every
+  // state in the union — despite a docstring claiming it holds only states with
+  // verified completed work.
+  //
+  // What shipped was 40 indexable pages, ~80% identical to each other, each
+  // asserting local presence the company does not have ("our specialized crews
+  // understand local zoning laws", "we strictly adhere to Alaska's 4-month
+  // seasonal paving window"), carrying the Virginia homepage meta description,
+  // and every one canonicalising to the homepage. That is the doorway-page
+  // pattern with a false-locality claim on top, on a contractor site whose
+  // credibility is its 40 years in one place.
+  //
+  // vercel.json now redirects /states/(.*) to /service-areas. That is a pattern,
+  // and loadRedirectSources() deliberately refuses to interpret patterns, so
+  // these have to stop being emitted here rather than being filtered out later.
+  //
+  // --all-states (or SITEMAP_INCLUDE_ALL_STATES) still forces them, but note it
+  // cannot produce a sitemap for thewordenstandard.com itself: that domain is in
+  // NOINDEX_DOMAINS and returns before reaching this point. The flag is an
+  // escape hatch for a future paving domain that genuinely serves multiple
+  // states, not a way to restore the SaaS pages here.
+  if (!SINGLE_PAGE_DOMAINS.has(domain) && INCLUDE_ALL_STATES) {
+    for (const abbr of Object.keys(STATE_MAP).sort()) {
+      const st = STATE_MAP[abbr];
+      if (!st) continue;
+      urls.push({ loc: `${SITE}/states/${stateSlug(st)}`, lastmod: today, changefreq: 'monthly', priority: '0.7' });
+    }
   }
 
   const seen = new Set();

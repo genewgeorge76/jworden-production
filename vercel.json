@@ -56,57 +56,7 @@
       "permanent": true
     },
     {
-      "source": "/states/florida",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/georgia",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/iowa",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/kansas",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/michigan",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/minnesota",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/missouri",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/new-jersey",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/new-york",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/north-carolina",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/texas",
+      "source": "/states/(.*)",
       "destination": "/service-areas",
       "permanent": true
     }

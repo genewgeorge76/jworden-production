@@ -10,38 +10,63 @@ import { PRIMARY_DOMAIN } from '@/lib/locations';
 import { FALLBACK_BLOG_POSTS, getFallbackBlogPostBySlug } from '@/lib/fallbackBlogPosts';
 import { premiumBlogPostingSchema } from '../components/SchemaMarkup';
 
+function relatedTo(slug, source) {
+  const pool = Array.isArray(source) && source.length > 0 ? source : FALLBACK_BLOG_POSTS;
+  return pool.filter((p) => p.slug !== slug).slice(0, 3);
+}
+
 export default function BlogPost() {
   const { slug } = useParams();
-  const [post, setPost] = useState(null);
-  const [related, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // Resolve from the static set synchronously, during render. The article body
+  // is compiled into the bundle, so there is no reason to wait on the network
+  // to show it — and a very good reason not to: scripts/prerender.mjs waits for
+  // networkidle0, so any pending request gates what Google is served. When this
+  // component only resolved inside an effect, prerender captured whatever was
+  // on screen at that moment, which is how 28 articles shipped as static
+  // "Article Not Found" pages.
+  const staticPost = getFallbackBlogPostBySlug(slug);
+
+  // Anything fetched is stored together with the slug it belongs to, and both
+  // the post and the related rail are derived during render rather than held
+  // as free-standing state. /blog/:slug reuses this component across slug
+  // changes, so state seeded in an initialiser (which only runs on mount) or
+  // assigned inside an effect (which runs after paint) would leave the previous
+  // article — and its canonical and og:meta — rendered under the new URL for a
+  // frame. Serving one article's metadata on another's URL is the same defect
+  // this file was just fixed for; it should not be reintroduced through the
+  // client-side path.
+  const [fetched, setFetched] = useState({ slug: null, post: null, related: null, done: false });
+  const forThisSlug = fetched.slug === slug;
+
+  const post = (forThisSlug && fetched.post) || staticPost;
+  const related = (forThisSlug && fetched.related) || relatedTo(slug, null);
+  // Only ever "loading" when there is nothing static to show and the request
+  // for this slug has not settled.
+  const loading = !staticPost && !(forThisSlug && fetched.done);
 
   useEffect(() => {
-    setLoading(true);
-    api.entities.BlogPost.filter({ slug })
-      .then((results) => {
-        const safeResults = Array.isArray(results) ? results : [];
-        const found = safeResults[0] || getFallbackBlogPostBySlug(slug);
-        setPost(found || null);
-        if (found) {
-          api.entities.BlogPost.list('-published_date', 4)
-            .then((all) => {
-              const safeAll = Array.isArray(all) ? all : [];
-              const merged = safeAll.length > 0 ? safeAll : FALLBACK_BLOG_POSTS;
-              setRelated(merged.filter((p) => p.slug !== found.slug).slice(0, 3));
-            })
-            .catch(() => {
-              setRelated(FALLBACK_BLOG_POSTS.filter((p) => p.slug !== found.slug).slice(0, 3));
-            });
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        const fallback = getFallbackBlogPostBySlug(slug);
-        setPost(fallback);
-        setRelated(FALLBACK_BLOG_POSTS.filter((p) => p.slug !== slug).slice(0, 3));
-        setLoading(false);
+    let cancelled = false;
+
+    // The API is an enhancement: it can supply posts authored after this build.
+    // It must never blank a post that already rendered.
+    Promise.allSettled([
+      api.entities.BlogPost.filter({ slug }),
+      api.entities.BlogPost.list('-published_date', 4),
+    ]).then(([one, list]) => {
+      if (cancelled) return;
+      const found =
+        one.status === 'fulfilled' ? (Array.isArray(one.value) ? one.value : [])[0] : null;
+      const all = list.status === 'fulfilled' && Array.isArray(list.value) ? list.value : [];
+      setFetched({
+        slug,
+        post: found || null,
+        related: all.length > 0 ? relatedTo(slug, all) : null,
+        done: true,
       });
+    });
+
+    return () => { cancelled = true; };
   }, [slug]);
 
   if (loading) {
