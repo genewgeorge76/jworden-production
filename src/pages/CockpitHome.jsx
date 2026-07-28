@@ -521,8 +521,23 @@ function SystemHealthBar() {
     } catch { next.EMAIL = 'amber' }
 
     // VOICE
-    const hasVoiceKey = Boolean(import.meta.env.VITE_ELEVENLABS_API_KEY)
-    next.VOICE = hasVoiceKey ? 'green' : 'amber'
+    //
+    // This used to read VITE_ELEVENLABS_API_KEY, which never controlled voice
+    // at all — synthesis happens on the backend. The light therefore showed
+    // amber while voice worked fine, and would have shown green only when a
+    // key was exposed in the browser bundle. It reported the wrong thing in
+    // both directions.
+    //
+    // Ask the backend what provider it actually has, the same way every other
+    // light on this board is derived.
+    try {
+      const r = await fetch(`${BASE}/api/v1/jarvis/readiness`, { signal: AbortSignal.timeout(5000) })
+      if (r.ok) {
+        const data = await r.json()
+        const provider = data?.providers?.tts_provider
+        next.VOICE = provider && provider !== 'none' ? 'green' : 'amber'
+      } else next.VOICE = 'amber'
+    } catch { next.VOICE = 'red' }
 
     // PAYMENTS — static green
     next.PAYMENTS = 'green'
