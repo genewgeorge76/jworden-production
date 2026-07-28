@@ -33,6 +33,55 @@ const INCLUDE_ALL_STATES =
 const VALID_CHANGEFREQ = new Set(['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never']);
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
+// ── Paths vercel.json permanently redirects away from ────────────────────────
+//
+// A URL that 308s does not belong in a sitemap: Google files it under
+// "Page with redirect — not indexed" and it burns crawl budget on a page that
+// resolves somewhere else.
+//
+// This mattered in practice. vercel.json redirects 11 /states/* paths to
+// /service-areas — Florida, Georgia, Iowa, Kansas, Michigan, Minnesota,
+// Missouri, New Jersey, New York, North Carolina and Texas — states the
+// company does not serve. But the sitemap was built from WORDEN_ACTIVE_STATES,
+// which is every state in the union despite a docstring claiming it is only
+// states with "verified completed work". So the sitemap advertised all 51 and
+// the site redirected 11 of them. Google noticed before we did.
+//
+// Reading the redirect table rather than hand-keeping a second list is the
+// point: the two can no longer disagree. Any future redirect added to
+// vercel.json drops out of the sitemap automatically, whatever it is for.
+function loadRedirectSources() {
+  try {
+    const cfg = JSON.parse(readFileSync(resolve(ROOT, 'vercel.json'), 'utf8'));
+    const sources = new Set();
+    for (const r of cfg.redirects || []) {
+      const src = typeof r?.source === 'string' ? r.source.trim() : '';
+      // Only literal paths. Vercel patterns (:param, (regex), *) cannot be
+      // matched reliably here, and guessing wrong would silently drop real
+      // pages out of the sitemap — a far worse failure than leaving one in.
+      if (src.startsWith('/') && !/[:*()\[\]{}?]/.test(src)) {
+        sources.add(src.replace(/\/$/, '') || '/');
+      }
+    }
+    return sources;
+  } catch (e) {
+    console.warn('[sitemap] could not read vercel.json redirects:', e.message);
+    return new Set();
+  }
+}
+
+const REDIRECT_SOURCES = loadRedirectSources();
+
+/** True when `loc` points at a path vercel.json permanently redirects. */
+function isRedirected(loc) {
+  try {
+    const path = new URL(loc).pathname.replace(/\/$/, '') || '/';
+    return REDIRECT_SOURCES.has(path);
+  } catch {
+    return false;
+  }
+}
+
 function escapeXml(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -339,11 +388,21 @@ for (const domain of DOMAINS) {
   }
 
   const seen = new Set();
+  let redirectedOut = 0;
   const deduped = urls.filter((u) => {
     if (seen.has(u.loc)) return false;
     seen.add(u.loc);
+    // Applied here rather than at each push site so it covers every URL kind —
+    // states, locations, service areas, blogs — including ones added later.
+    if (isRedirected(u.loc)) {
+      redirectedOut += 1;
+      return false;
+    }
     return true;
   });
+  if (redirectedOut > 0) {
+    console.log(`[sitemap] ${domain}: excluded ${redirectedOut} URL(s) that vercel.json redirects`);
+  }
   assertValidSitemapEntries(deduped);
 
   // ── 4. Emit sitemap.xml & robots.txt ──────────────────────────────────────────
