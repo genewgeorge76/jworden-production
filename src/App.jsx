@@ -58,6 +58,8 @@ const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
 const CommandCenter = lazy(() => import('./pages/CommandCenter'));
+const LienCalendar = lazy(() => import('./pages/LienCalendar'));
+const BidHunter = lazy(() => import('./pages/BidHunter'));
 const ClientLitePortal = lazy(() => import('./components/ClientLitePortal'));
 const CockpitHome = lazy(() => import('./pages/CockpitHome'));
 const EstimatePage = lazy(() => import('./pages/EstimatePage'));
@@ -364,6 +366,11 @@ const AuthenticatedApp = () => {
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
 
+        {/* Contractor operations tools. Both call authenticated backend
+            endpoints, so they sit behind RequireAuth like /diamond. */}
+        <Route path="/lien-calendar" element={<RequireAuth><LienCalendar /></RequireAuth>} />
+        <Route path="/bid-hunter" element={<RequireAuth><BidHunter /></RequireAuth>} />
+
         {/* Public Local Market Routes */}
         {!isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<Home />} />}
         {!isOperationsSite && <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />}
@@ -376,7 +383,18 @@ const AuthenticatedApp = () => {
         <Route path="/driveway-ai" element={<Suspense fallback={<RouteLoader />}><DrivewayAI /></Suspense>} />
         <Route path="/jworden-ai" element={<Suspense fallback={<RouteLoader />}><JwordenAI /></Suspense>} />
         <Route path="/saas-marketing" element={<Suspense fallback={<RouteLoader />}><SaaSMarketing /></Suspense>} />
-        <Route path="/portal" element={<ClientPortal />} />
+        {/* NOTE: `/portal` is deliberately NOT registered here.
+            8ae84e8 added `<Route path="/portal" element={<ClientPortal />} />` on
+            this line without noticing that `/portal` was already registered
+            further down this same <Routes> block as
+            `<RequireAuth><CustomerPortal /></RequireAuth>`. Two identical paths
+            in one <Routes> means the first one wins, so ClientPortal shadowed
+            CustomerPortal and CustomerPortal became unreachable dead code.
+
+            CustomerPortal is the intended occupant: it sets
+            canonicalPath="/portal" itself, and Dashboard links to /portal under
+            the label "Customer Portal". ClientPortal is unaffected — it keeps
+            its own /client-portal route. */}
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />

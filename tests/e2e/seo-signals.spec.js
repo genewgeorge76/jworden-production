@@ -127,23 +127,40 @@ test('dashboard: is noindexed (protected page)', async ({ page }) => {
 })
 
 // ── Houzz canonical links ─────────────────────────────────────────────────────
+//
+// These three tests were written as `goto` followed immediately by `$$eval`.
+// `$$eval` is a one-shot DOM read with no waiting, and every route in this app
+// is a React.lazy chunk — so the assertion could run before the route component
+// had rendered. Nothing made that safe; it passed because the chunk usually won
+// the race.
+//
+// It stopped usually winning. Adding two lazy routes to App.jsx reshuffled the
+// chunk graph enough to tip general-contracting over, and the test reported
+// "0 Houzz links" for a page whose source has two, with the correct slug, right
+// there in GeneralContracting.jsx.
+//
+// `expect(locator)` retries until the timeout, so the wait is the assertion
+// rather than a sleep. Reading hrefs only after that is settled makes the check
+// deterministic instead of dependent on chunk load order.
+async function houzzHrefs(page, minimum) {
+  const links = page.locator('a[href*="houzz.com"]')
+  // Retries until at least `minimum` links exist, then the read below is safe.
+  await expect(links).not.toHaveCount(0)
+  await expect
+    .poll(async () => links.count(), { timeout: 10_000 })
+    .toBeGreaterThanOrEqual(minimum)
+  return links.evaluateAll((els) => els.map((el) => el.href))
+}
+
 test('general-contracting: Houzz profile links are present and correct', async ({ page }) => {
   await page.goto('/general-contracting')
-  const houzzLinks = await page.$$eval(
-    'a[href*="houzz.com"]',
-    (els) => els.map((el) => el.href)
-  )
-  expect(houzzLinks.length).toBeGreaterThanOrEqual(1)
+  const houzzLinks = await houzzHrefs(page, 1)
   expect(houzzLinks[0]).toContain('j-worden-sons')
 })
 
 test('hardscapes: Houzz profile link opens correct URL', async ({ page }) => {
   await page.goto('/hardscapes')
-  const houzzLinks = await page.$$eval(
-    'a[href*="houzz.com"]',
-    (els) => els.map((el) => el.href)
-  )
-  expect(houzzLinks.length).toBeGreaterThanOrEqual(1)
+  const houzzLinks = await houzzHrefs(page, 1)
   expect(houzzLinks[0]).toContain('j-worden-sons')
 })
 
@@ -156,10 +173,6 @@ test('reviews: Houzz profile link opens correct URL', async ({ page }) => {
     })
   })
   await page.goto('/reviews')
-  const houzzLinks = await page.$$eval(
-    'a[href*="houzz.com"]',
-    (els) => els.map((el) => el.href)
-  )
-  expect(houzzLinks.length).toBeGreaterThanOrEqual(2)
+  const houzzLinks = await houzzHrefs(page, 2)
   expect(houzzLinks.some((h) => h.includes('j-worden-sons'))).toBe(true)
 })
