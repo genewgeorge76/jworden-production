@@ -18,6 +18,7 @@ import contractLaw from '../data/legal/contractLaw'
 import roadsAndPavingRegulations from '../data/legal/roadsAndPavingRegulations'
 import { recommendStrategy, rankStatesByDispute, DISPUTE_TYPES, ROLES } from '../lib/lawyerRecommender'
 import { optimizeLicenseStates, getLienLeverageByState, rankContractorBids } from '../lib/contractorRanker'
+const FacebookPanel = lazy(() => import('@/components/command/FacebookPanel'))
 
 const RichmondGrid = lazy(() => import('../components/RichmondGrid'))
 
@@ -39,6 +40,7 @@ const TABS = [
   { id: 'crm', label: 'CRM Leads' },
   { id: 'ops', label: 'Ops Pipeline' },
   { id: 'civil-intel', label: 'Civil Intel' },
+  { id: 'facebook', label: 'Facebook' },
   { id: 'integrations', label: 'Integrations' },
   { id: 'search-pulse', label: 'Search Pulse' },
   { id: 'google-search', label: 'Google Search' },
@@ -6565,6 +6567,11 @@ export default function CommandCenter() {
           {strategyVisible ? <HubLinkPanel /> : null}
 
           {activeTab === 'jarvis' && <JarvisPanel />}
+          {activeTab === 'facebook' && (
+            <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-zinc-900" />}>
+              <FacebookPanel />
+            </Suspense>
+          )}
 
           {activeTab === 'triage' && <InboxTriagePanel />}
 
