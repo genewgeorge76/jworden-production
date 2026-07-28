@@ -12,14 +12,14 @@ const SITEMAPS = [
     label: 'J. Worden Asphalt Paving',
     path: 'public/sitemap.xml',
     expectedOrigin: 'https://www.jwordenasphaltpaving.com',
-    robotsPath: 'public/robots.txt',
+    robotsPath: 'public/sitemaps/robots-www.jwordenasphaltpaving.com.txt',
     txtMirrorPath: 'public/sitemap.txt',
   },
   {
     label: 'J. Worden image sitemap',
     path: 'public/image-sitemap.xml',
     expectedOrigin: 'https://www.jwordenasphaltpaving.com',
-    robotsPath: 'public/robots.txt',
+    robotsPath: 'public/sitemaps/robots-www.jwordenasphaltpaving.com.txt',
     requireUrlMetadata: false,
   },
   {
