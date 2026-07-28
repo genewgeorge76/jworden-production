@@ -58,6 +58,8 @@ const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
 const CommandCenter = lazy(() => import('./pages/CommandCenter'));
+const LienCalendar = lazy(() => import('./pages/LienCalendar'));
+const BidHunter = lazy(() => import('./pages/BidHunter'));
 const ClientLitePortal = lazy(() => import('./components/ClientLitePortal'));
 const CockpitHome = lazy(() => import('./pages/CockpitHome'));
 const EstimatePage = lazy(() => import('./pages/EstimatePage'));
@@ -363,6 +365,11 @@ const AuthenticatedApp = () => {
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
+
+        {/* Contractor operations tools. Both call authenticated backend
+            endpoints, so they sit behind RequireAuth like /diamond. */}
+        <Route path="/lien-calendar" element={<RequireAuth><LienCalendar /></RequireAuth>} />
+        <Route path="/bid-hunter" element={<RequireAuth><BidHunter /></RequireAuth>} />
 
         {/* Public Local Market Routes */}
         {!isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<Home />} />}

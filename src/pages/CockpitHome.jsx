@@ -20,6 +20,8 @@ import {
   BarChart3,
   Target,
   Layers,
+  CalendarClock,
+  Radar,
 } from 'lucide-react'
 import SiteFactoryPanel from '@/components/SiteFactoryPanel'
 import BlogGeneratorPanel from '@/components/BlogGeneratorPanel'
@@ -884,6 +886,20 @@ export default function CockpitHome() {
                 label="Diamond Jobs"
                 sublabel="Scraped active & available"
                 accent="#ec4899"
+              />
+              <NavTile
+                to="/lien-calendar"
+                icon={CalendarClock}
+                label="Lien Calendar"
+                sublabel="Filing deadlines by state"
+                accent="#eab308"
+              />
+              <NavTile
+                to="/bid-hunter"
+                icon={Radar}
+                label="Bid Hunter"
+                sublabel="Federal paving solicitations"
+                accent="#14b8a6"
               />
               <NavTile
                 to="/command-center"

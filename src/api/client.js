@@ -1021,6 +1021,26 @@ export const api = {
   fetchB2GOpportunties: (state = 'VA') => request('GET', `/api/v1/b2g/opportunities?state=${encodeURIComponent(state)}`),
   fetchGeotechnicalSoilData: (payload) => request('POST', '/api/v1/b2g/geotechnical-soil', payload),
   synthesizeVoice: (payload) => request('POST', '/api/v1/voice/synthesize', payload),
+
+  // ── Mechanics lien calendar ────────────────────────────────────────────────
+  // Backed by app/services/lien_calendar.py. Every response carries
+  // `used_default_rules` — true when the requested state has no researched
+  // statute in the table and generic fallback timing was applied instead. The
+  // UI must surface that flag; a lien deadline that is wrong by a day is a
+  // waived claim, so "we don't have this state yet" has to be visible, not
+  // buried behind a confident-looking date.
+  // Public — discloses only which states we have researched statutes for.
+  getLienStateCoverage: () => request('GET', '/api/v1/liens/states'),
+  calculateLienDeadlines: (payload) => protectedRequest('POST', '/api/v1/liens/calculate', payload),
+  trackLienProject: (payload) => protectedRequest('POST', '/api/v1/liens/track', payload),
+  getUpcomingLienDeadlines: (params = {}) =>
+    protectedRequest('GET', `/api/v1/liens/upcoming${buildQS(params)}`),
+  listLienEntries: (params = {}) =>
+    protectedRequest('GET', `/api/v1/liens/entries${buildQS(params)}`),
+
+  // ── Commercial bid hunter ──────────────────────────────────────────────────
+  huntCommercialBids: (states = '') =>
+    protectedRequest('GET', `/api/v1/hunter/commercial-bids${buildQS(states ? { states } : {})}`),
   entities,
   functions: functionsClient,
   integrations: integrationsClient,
