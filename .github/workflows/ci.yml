@@ -43,8 +43,8 @@ jobs:
       # NOTE: guard:site-isolation, guard:tenant-contract-drift,
       # guard:operating-system-contract, and guard:deploy-mode used to run
       # here. All four read src/config/siteFactoryManifest.json and/or a
-      # root netlify.toml — neither file has ever existed in this repo's
-      # git history (this app deploys via vercel.json, not Netlify config).
+      # root deploy-platform config file — neither has ever existed in this
+      # repo's git history (this app deploys via vercel.json).
       # They have failed on every run since ci.yml was written. Removed as
       # a gate for the same reason as the backend/docker jobs (see NOTE
       # below, between this job and `tests`).

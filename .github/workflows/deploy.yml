@@ -22,41 +22,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Front-end: build & deploy to Netlify ─────────────────────────────────────
-  deploy-frontend:
-    name: Deploy Front-End → Netlify
+  # ── Front-end: build & verify ────────────────────────────────────────────────
+  # This job does not deploy. Vercel's Git integration owns deployment and builds
+  # straight from the repo on push; this job exists to fail the run if the build
+  # breaks, and to keep the dist/ artifact available for inspection.
+  build-frontend:
+    name: Build Front-End
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      # Explicit deploy ownership model:
-      # - git-integration: Netlify auto-builds from linked GitHub repo/branch.
-      # - cli: this workflow publishes dist via Netlify CLI.
-      NETLIFY_DEPLOY_MODE: ${{ vars.NETLIFY_DEPLOY_MODE || 'git-integration' }}
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
     steps:
-      - name: Validate Netlify deploy mode
-        id: deploy_mode
-        run: |
-          case "$NETLIFY_DEPLOY_MODE" in
-            git-integration)
-              echo "use_cli=false" >> "$GITHUB_OUTPUT"
-              echo "::notice::NETLIFY_DEPLOY_MODE=git-integration. Netlify Git integration is the deploy source."
-              ;;
-            cli)
-              if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
-                echo "::error::NETLIFY_DEPLOY_MODE=cli requires NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID secrets."
-                exit 1
-              fi
-              echo "use_cli=true" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "::error::Invalid NETLIFY_DEPLOY_MODE '$NETLIFY_DEPLOY_MODE'. Use 'git-integration' or 'cli'."
-              exit 1
-              ;;
-          esac
-
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -75,8 +50,8 @@ jobs:
       # NOTE: guard:tenant-contract-drift, guard:operating-system-contract,
       # and guard:deploy-mode used to run here (plus the Python setup they
       # needed for nothing else in this job). All three read
-      # src/config/siteFactoryManifest.json and/or a root netlify.toml —
-      # neither file has ever existed in this repo (this app deploys via
+      # src/config/siteFactoryManifest.json and/or a deploy-platform config
+      # file that has never existed in this repo (this app deploys via
       # vercel.json). Removed as a gate; see the matching NOTE in ci.yml.
 
       - name: Guard release readiness
@@ -120,15 +95,6 @@ jobs:
           path: dist/
           retention-days: 7
 
-      # ── Deploy to Netlify ──────────────────────────────────────────────────
-      - name: Deploy to Netlify (production)
-        if: steps.deploy_mode.outputs.use_cli == 'true' && github.event.inputs.environment != 'preview'
-        run: npx netlify-cli deploy --dir=dist --prod
-
-      - name: Deploy to Netlify (preview)
-        if: steps.deploy_mode.outputs.use_cli == 'true' && github.event.inputs.environment == 'preview'
-        run: npx netlify-cli deploy --dir=dist
-
   # ── Back-end: validate, test, build Docker ────────────────────────────────────
   # NOTE: deploy-backend used to live here, building/smoke-testing app/ — a
   # Python backend in this frontend repo that isn't what's actually deployed
@@ -143,7 +109,7 @@ jobs:
   # ── Integration: E2E smoke tests against the deployed frontend ───────────────
   integration-tests:
     name: Integration & E2E Tests
-    needs: [deploy-frontend]
+    needs: [build-frontend]
     runs-on: ubuntu-latest
     timeout-minutes: 35
 

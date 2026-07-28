@@ -328,6 +328,9 @@ let totalUrls = 0;
 // not a public marketing site — it must never be crawled or submitted to
 // search engines. Disallow everything and skip URL generation entirely.
 const NOINDEX_DOMAINS = new Set(['thewordenstandard.com']);
+// Only the primary domain ships an image sitemap, so only its robots file
+// should advertise one — pointing crawlers at a 404 on the other six hurts.
+const PRIMARY_DOMAIN = 'www.jwordenasphaltpaving.com';
 
 for (const domain of DOMAINS) {
   const SITE = `https://${domain}`;
@@ -429,7 +432,6 @@ ${xmlBody}
 Allow: /
 Disallow: /package.json
 Disallow: /package-lock.json
-Disallow: /netlify.toml
 Disallow: /replace.js
 Disallow: /fix_links.js
 Disallow: /fix_newlines.js
@@ -437,10 +439,8 @@ Disallow: /update_site.js
 Disallow: /add_new_pages.js
 Disallow: /add_remaining_pages.js
 Disallow: /pull_request_23_status.txt
-Allow: /.netlify/images
-Disallow: /.netlify/
 
-Sitemap: ${SITE}/sitemap.xml
+Sitemap: ${SITE}/sitemap.xml${domain === PRIMARY_DOMAIN ? `\nSitemap: ${SITE}/image-sitemap.xml` : ''}
 `;
   writeFileSync(resolve(ROOT, `public/sitemaps/robots-${domain}.txt`), robots, 'utf8');
 

@@ -12,14 +12,14 @@ const SITEMAPS = [
     label: 'J. Worden Asphalt Paving',
     path: 'public/sitemap.xml',
     expectedOrigin: 'https://www.jwordenasphaltpaving.com',
-    robotsPath: 'public/robots.txt',
+    robotsPath: 'public/sitemaps/robots-www.jwordenasphaltpaving.com.txt',
     txtMirrorPath: 'public/sitemap.txt',
   },
   {
     label: 'J. Worden image sitemap',
     path: 'public/image-sitemap.xml',
     expectedOrigin: 'https://www.jwordenasphaltpaving.com',
-    robotsPath: 'public/robots.txt',
+    robotsPath: 'public/sitemaps/robots-www.jwordenasphaltpaving.com.txt',
     requireUrlMetadata: false,
   },
   {
@@ -37,9 +37,7 @@ const SITEMAPS = [
 ]
 
 const STATIC_ROUTE_EXPECTATIONS = [
-  { file: 'netlify.toml', routes: ['/robots.txt', '/sitemap.xml'] },
-  { file: 'public/_redirects', routes: ['/robots.txt', '/sitemap.xml', '/sitemap.txt', '/image-sitemap.xml'] },
-  { file: 'obx-paving/netlify.toml', routes: ['/robots.txt', '/sitemap.xml'], optional: true },
+  { file: 'vercel.json', routes: ['/robots.txt', '/sitemap.xml'] },
 ]
 
 function readFile(relativePath) {

@@ -2,7 +2,7 @@
  * Central feature-flag registry.
  *
  * Every experimental, AI, or in-progress feature is gated through this file.
- * Default is always OFF in production until explicitly enabled via Netlify env.
+ * Default is always OFF in production until explicitly enabled via a build env var.
  *
  * Conventions:
  *   - All flags are read from import.meta.env.VITE_FEATURE_<NAME>
@@ -13,7 +13,7 @@
  *   echo "VITE_FEATURE_DISPATCH=true" >> .env.local
  *
  * To enable in production:
- *   Netlify → Site settings → Environment variables → add VITE_FEATURE_DISPATCH=true
+ *   Vercel → Project settings → Environment Variables → add VITE_FEATURE_DISPATCH=true
  *
  * To kill-switch in seconds:
  *   Flip the env var to "false" → trigger redeploy → feature is gone.

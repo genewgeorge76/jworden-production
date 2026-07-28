@@ -132,7 +132,7 @@ export default function Quote() {
       project_size_sqft: form.project_size_sqft ? parseFloat(form.project_size_sqft) : null,
     }
 
-    // Fire the always-on Netlify fallback in parallel with the primary
+    // Fire the always-on lead-capture fallback in parallel with the primary
     // backend POST. Even if the backend or SendGrid is broken, this
     // guarantees Gene gets an email about every lead.
     fetch('/api/lead-fallback-notify', {
@@ -383,7 +383,7 @@ export default function Quote() {
           </div>
 
           {/* Primary estimate path — direct-email form. Submissions are
-              delivered to LEAD_EMAIL via Gmail and captured in Netlify Forms. */}
+              delivered to LEAD_EMAIL via Gmail. */}
           <div className="mb-8">
             <EstimateForm source="quote_page" />
           </div>

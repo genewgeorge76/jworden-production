@@ -67,7 +67,6 @@ const JarvisPage = lazy(() => import('./pages/JarvisPage'));
 const ScannerPage = lazy(() => import('./pages/ScannerPage'));
 const Visualizer = lazy(() => import('./pages/Visualizer'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
-const DnsMigration = lazy(() => import('./pages/DnsMigration'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const CustomerPortal = lazy(() => import('./pages/CustomerPortal'));
@@ -535,7 +534,6 @@ const AuthenticatedApp = () => {
         />
         <Route path="/job" element={<RequireAuth><JobDetail /></RequireAuth>} />
         <Route path="/crew-reporting" element={<RequireAuth><CrewReporting /></RequireAuth>} />
-        <Route path="/dns-migration" element={<RequireAuth><DnsMigration /></RequireAuth>} />
         <Route path="/portal" element={<RequireAuth><CustomerPortal /></RequireAuth>} />
         <Route path="/admin/documents" element={<RequireAuth><AdminDocuments /></RequireAuth>} />
         <Route path="/admin/slack" element={<RequireAuth><AdminSlackSettings /></RequireAuth>} />
