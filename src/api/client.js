@@ -813,6 +813,9 @@ export const api = {
   customerCreate: (payload) => protectedRequest('POST', '/api/v1/customers', payload),
   customerUpdate: (id, payload) => protectedRequest('PATCH', `/api/v1/customers/${encodeURIComponent(id)}`, payload),
   customerAddHistory: (id, payload) => protectedRequest('POST', `/api/v1/customers/${encodeURIComponent(id)}/history`, payload),
+  // Bulk import from a CSV (header row) or JSON array file. formData must carry
+  // the file under 'file'. Existing customers are matched on email and skipped.
+  customerImport: (formData) => protectedFormRequest('/api/v1/customers/import?source=crm_import', formData),
   // ── Owner analytics / KPI dashboards (built backends, no UI) ──────────────
   analyticsDashboard: () => protectedRequest('GET', '/api/v1/analytics/dashboard'),
   kpiWall: () => protectedRequest('GET', '/api/v1/kpi-wall'),

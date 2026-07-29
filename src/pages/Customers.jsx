@@ -17,6 +17,8 @@ import {
   TrendingUp,
   ShieldAlert,
   CalendarPlus,
+  Upload,
+  CheckCircle2,
 } from 'lucide-react';
 
 /**
@@ -85,6 +87,7 @@ export default function Customers() {
   const [error, setError] = useState('');
   const [selected, setSelected] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [showImport, setShowImport] = useState(false);
 
   const query = useMemo(
     () => ({
@@ -159,6 +162,14 @@ export default function Customers() {
             >
               <RefreshCw className={`h-4 w-4 ${status === 'loading' ? 'animate-spin' : ''}`} />
               Refresh
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowImport(true)}
+              className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/[0.07]"
+            >
+              <Upload className="h-4 w-4" />
+              Import
             </button>
             <button
               type="button"
@@ -291,6 +302,12 @@ export default function Customers() {
         <CreateCustomerModal
           onClose={() => setShowCreate(false)}
           onCreated={() => { setShowCreate(false); load(query); }}
+        />
+      )}
+      {showImport && (
+        <ImportCustomersModal
+          onClose={() => setShowImport(false)}
+          onImported={() => load(query)}
         />
       )}
     </div>
@@ -533,6 +550,82 @@ function CreateCustomerModal({ onClose, onCreated }) {
           <button type="submit" disabled={busy} className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-bold text-[#070a10] hover:bg-amber-400 disabled:opacity-60">{busy ? 'Saving…' : 'Add customer'}</button>
         </div>
       </form>
+    </div>
+  );
+}
+
+function ImportCustomersModal({ onClose, onImported }) {
+  const [file, setFile] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const [result, setResult] = useState(null);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!file) { setErr('Choose a .csv or .json file to import.'); return; }
+    setBusy(true); setErr(''); setResult(null);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await api.customerImport(fd);
+      setResult(res);
+      if ((res?.imported ?? 0) > 0) onImported();
+    } catch (e2) {
+      const msg = String(e2?.message || e2);
+      setErr(/401|403|unauthor|forbidden|premium/i.test(msg) ? 'Sign in to import customers.' : msg);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f16] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <h2 className="text-lg font-bold text-white">Import customers</h2>
+          <button type="button" onClick={onClose} className="rounded-lg border border-white/10 p-1.5 text-slate-400 hover:bg-white/[0.06]" aria-label="Close"><X className="h-4 w-4" /></button>
+        </div>
+        <form onSubmit={submit} className="space-y-4 px-5 py-4">
+          <p className="text-sm text-slate-400">
+            Upload a <span className="font-medium text-slate-200">.csv</span> (header row) or{' '}
+            <span className="font-medium text-slate-200">.json</span> array. Columns/keys map to
+            <code className="mx-1 rounded bg-white/[0.06] px-1 py-0.5 font-mono text-xs">name, email, phone, company, address, city, state_code, zip_code, customer_type, brand, services, maintenance_agreement, notes</code>.
+            Rows without a name are skipped; existing customers matched on email are skipped (no duplicates).
+          </p>
+
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center hover:border-amber-500/40">
+            <Upload className="h-6 w-6 text-slate-500" />
+            <span className="text-sm text-slate-300">{file ? file.name : 'Choose a CSV or JSON file'}</span>
+            <input type="file" accept=".csv,.json,text/csv,application/json" className="hidden" onChange={(e) => { setFile(e.target.files?.[0] || null); setResult(null); setErr(''); }} />
+          </label>
+
+          {err && (
+            <div className="flex items-start gap-2 rounded-lg border border-red-500/25 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+              <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" /> <span className="break-words">{err}</span>
+            </div>
+          )}
+
+          {result && (
+            <div className="space-y-2 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] p-3 text-sm">
+              <div className="flex items-center gap-2 font-semibold text-emerald-300"><CheckCircle2 className="h-4 w-4" /> Import complete</div>
+              <div className="flex gap-4 text-slate-200">
+                <span><b className="tabular-nums">{result.imported ?? 0}</b> imported</span>
+                <span><b className="tabular-nums">{result.skipped ?? 0}</b> skipped</span>
+                {Array.isArray(result.errors) && <span><b className="tabular-nums">{result.errors.length}</b> errors</span>}
+              </div>
+              {Array.isArray(result.errors) && result.errors.length > 0 && (
+                <ul className="max-h-32 overflow-y-auto text-xs text-amber-300/90">
+                  {result.errors.slice(0, 20).map((x, i) => <li key={i}>• {String(x)}</li>)}
+                </ul>
+              )}
+            </div>
+          )}
+        </form>
+        <div className="flex justify-end gap-2 border-t border-white/10 px-5 py-4">
+          <button type="button" onClick={onClose} className="rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/[0.06]">{result ? 'Done' : 'Cancel'}</button>
+          <button type="button" onClick={submit} disabled={busy || !file} className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-bold text-[#070a10] hover:bg-amber-400 disabled:opacity-60">{busy ? 'Importing…' : 'Import'}</button>
+        </div>
+      </div>
     </div>
   );
 }
