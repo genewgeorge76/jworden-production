@@ -373,7 +373,13 @@ function normalizeProjectDocumentRecord(record) {
 }
 
 async function listBackendLeads(limit = 200) {
-  const response = await protectedRequest('GET', `/api/v1/leads${buildQS({ limit })}`)
+  // The server lead pipeline is served at /api/v1/crm/leads (returns
+  // {total, offset, limit, leads:[...]}). The old path /api/v1/leads has no GET
+  // route — it 404'd, listLeadRecords swallowed the error, and every owner lead
+  // tool (LeadInbox, CommandCenter, Cockpit, LeadConsultant) fell back to
+  // browser-localStorage only. So real inbound leads were saved server-side but
+  // invisible in the app. This repoints to the endpoint that actually exists.
+  const response = await protectedRequest('GET', `/api/v1/crm/leads${buildQS({ limit })}`)
   const leads = Array.isArray(response) ? response : Array.isArray(response?.leads) ? response.leads : []
   return leads.map(normalizeLeadRecord)
 }
