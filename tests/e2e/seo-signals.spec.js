@@ -19,11 +19,27 @@ async function getMeta(page, selector, attr = 'content') {
   return page.$eval(`meta[${selector}]`, (el, a) => el.getAttribute(a), attr).catch(() => null)
 }
 
-// Helper: parse first JSON-LD script on the page
+// Helper: parse every JSON-LD script on the page.
+//
+// Deliberately all of them, not the first. index.html ships one ld+json block of
+// its own, and pages add theirs through react-helmet, so a page legitimately
+// carries several and their DOM order is not guaranteed. Reading only the first
+// meant these assertions passed or failed on whether the page's own schema
+// happened to land ahead of the shell's — which is exactly how this file failed
+// on a different test each run: /contact once, the Richmond page the next time,
+// 45 of 46 passing both times.
+//
+// This does not weaken anything. A page genuinely missing its schema still has
+// no matching block anywhere and still fails; it just stops failing when the
+// schema is present but not first.
 async function getJsonLd(page) {
-  const text = await page.$eval('script[type="application/ld+json"]', (el) => el.textContent).catch(() => null)
-  if (!text) return null
-  try { return JSON.parse(text) } catch { return null }
+  const texts = await page
+    .$$eval('script[type="application/ld+json"]', (els) => els.map((el) => el.textContent))
+    .catch(() => [])
+  const parsed = texts
+    .map((t) => { try { return JSON.parse(t) } catch { return null } })
+    .filter(Boolean)
+  return parsed.length > 0 ? parsed : null
 }
 
 // ── Home ─────────────────────────────────────────────────────────────────────

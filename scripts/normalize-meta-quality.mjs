@@ -155,6 +155,26 @@ async function run() {
   const defaultCanonical = 'https://www.jwordenasphaltpaving.com';
   let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');
   defaultHtml = upsertDescription(defaultHtml, 'Premium asphalt paving, sealcoating, and repair in Virginia. Contact J. Worden Asphalt Paving today.');
+  // KNOWN ISSUE — do not remove this call without reading scripts/verify-seo-readiness.mjs.
+  //
+  // dist/index.html is both the homepage and the SPA fallback that
+  // scripts/prerender.mjs renders all ~209 sitemap routes from, so the canonical
+  // stamped here rides along into every prerendered page. Pages using the SEO
+  // component overwrite it in place and end up correct. Pages using SchemaMarkup
+  // emit theirs through react-helmet, which cannot replace a tag helmet does not
+  // manage, so they ship two — the homepage one first. Google ignores the signal
+  // entirely when a page declares more than one, which currently affects /about,
+  // /contact, /services and the 20 /service-areas/* pages.
+  //
+  // Simply dropping this call does NOT fix it and was tried: verify-seo-readiness
+  // requires a canonical on index.html and on every prerendered route, and /contact
+  // renders no react-helmet tags at all during prerender (full body, but the shell's
+  // title and no canonical), so removing the fallback turns a duplicate-canonical
+  // problem into a missing-canonical one on a money page.
+  //
+  // The real fix is to make SchemaMarkup replace the inherited tag rather than add
+  // to it — and to work out why /contact's helmet output never lands. Both need
+  // more care than a one-line change.
   defaultHtml = upsertCanonical(defaultHtml, defaultCanonical);
   // No upsertSchema call here — index.html already ships its own, richer
   // Virginia LocalBusiness schema (with @id, sameAs, aggregateRating, etc.)
