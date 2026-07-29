@@ -1026,8 +1026,12 @@ export const api = {
   searchAbilities: (query = '') => request('GET', `/api/v1/abilities/search?q=${encodeURIComponent(query)}`),
   executeAbility: (moduleId, params = {}) => request('POST', '/api/v1/abilities/execute', { module_id: moduleId, params }),
   createStripeCheckoutSession: (payload) => request('POST', '/api/v1/billing/checkout', payload),
-  scanSatelliteProperty: (payload) => request('POST', '/api/v1/market-orchestration/satellite-scan', payload),
-  triggerDirectMailCampaign: (payload) => request('POST', '/api/v1/market-orchestration/direct-mail/trigger', payload),
+  // Property scan + direct mail (Regrid parcel data + Lob mailing). Premium-gated
+  // on the backend; returns { configured: false, missing: [...] } when the keys
+  // are unset rather than fabricating a result, and refuses (501) to fake a send.
+  scanSatelliteProperty: (payload) => protectedRequest('POST', '/api/v1/market-orchestration/satellite-scan', payload),
+  scanZipCode: (payload) => protectedRequest('POST', '/api/v1/market-orchestration/zip-scan', payload),
+  triggerDirectMailCampaign: (payload) => protectedRequest('POST', '/api/v1/market-orchestration/direct-mail/trigger', payload),
   fetchB2GOpportunties: (state = 'VA') => request('GET', `/api/v1/b2g/opportunities?state=${encodeURIComponent(state)}`),
   fetchGeotechnicalSoilData: (payload) => request('POST', '/api/v1/b2g/geotechnical-soil', payload),
   synthesizeVoice: (payload) => request('POST', '/api/v1/voice/synthesize', payload),
