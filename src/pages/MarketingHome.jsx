@@ -345,6 +345,27 @@ export default function MarketingHome() {
           </div>
         </section>
 
+        {/* 50-STATE SOFTWARE COVERAGE — a claim about the PRODUCT's data reach,
+            deliberately distinct from J. Worden's own paving footprint (the
+            "12+ states" credential above). The platform ships licensing,
+            prevailing-wage, and regional-pricing data for every state, so this
+            is accurate as a software capability, not a services overclaim. */}
+        <section className="py-16 border-b border-white/5 bg-[#050810]">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500 mb-3">
+              Works wherever you contract
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-balance">
+              Built for contractors in all 50 states&nbsp;+&nbsp;DC
+            </h2>
+            <p className="text-lg text-slate-400 leading-relaxed">
+              State licensing rules, Davis-Bacon and prevailing-wage data, and regional pricing ship
+              inside the platform for every state — so your estimates, compliance checks, and proposals
+              hold up whether you pour in Virginia or bid a federal lot in Texas.
+            </p>
+          </div>
+        </section>
+
         {/* FEATURES */}
         <section id="features" className="py-32 relative scroll-mt-20">
           <div className="max-w-7xl mx-auto px-6">
