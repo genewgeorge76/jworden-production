@@ -152,28 +152,30 @@ async function run() {
   generatedCount++;
 
   // Update index.html for jwordenasphaltpaving.com
+  const defaultCanonical = 'https://www.jwordenasphaltpaving.com';
   let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');
   defaultHtml = upsertDescription(defaultHtml, 'Premium asphalt paving, sealcoating, and repair in Virginia. Contact J. Worden Asphalt Paving today.');
-  // No upsertCanonical here, unlike the per-tenant files above.
+  // KNOWN ISSUE — do not remove this call without reading scripts/verify-seo-readiness.mjs.
   //
-  // Those are single-page sites, so a canonical at their domain root is simply
-  // true. dist/index.html is different: vercel.json rewrites every unmatched
-  // path to it, and scripts/prerender.mjs renders each of the ~209 sitemap
-  // routes from it. A canonical stamped in here is therefore not "the homepage
-  // is the homepage" — it is every page on the site declaring itself the
-  // homepage, which is what put a homepage canonical on /about, /contact,
-  // /services and all 20 /service-areas/* pages.
+  // dist/index.html is both the homepage and the SPA fallback that
+  // scripts/prerender.mjs renders all ~209 sitemap routes from, so the canonical
+  // stamped here rides along into every prerendered page. Pages using the SEO
+  // component overwrite it in place and end up correct. Pages using SchemaMarkup
+  // emit theirs through react-helmet, which cannot replace a tag helmet does not
+  // manage, so they ship two — the homepage one first. Google ignores the signal
+  // entirely when a page declares more than one, which currently affects /about,
+  // /contact, /services and the 20 /service-areas/* pages.
   //
-  // Per-route canonicals come from the SEO component (which sets the tag on the
-  // live document) and from SchemaMarkup via react-helmet. Both create the tag
-  // when none exists, so leaving it out here yields exactly one per page,
-  // self-referential — including on the homepage itself, which the prerenderer
-  // renders through React like any other route.
+  // Simply dropping this call does NOT fix it and was tried: verify-seo-readiness
+  // requires a canonical on index.html and on every prerendered route, and /contact
+  // renders no react-helmet tags at all during prerender (full body, but the shell's
+  // title and no canonical), so removing the fallback turns a duplicate-canonical
+  // problem into a missing-canonical one on a money page.
   //
-  // Title and description are still upserted: those are genuine fallbacks for
-  // the raw shell, and any route that renders SEO or SchemaMarkup overwrites
-  // them. A wrong-but-present title degrades gracefully; a wrong canonical does
-  // not.
+  // The real fix is to make SchemaMarkup replace the inherited tag rather than add
+  // to it — and to work out why /contact's helmet output never lands. Both need
+  // more care than a one-line change.
+  defaultHtml = upsertCanonical(defaultHtml, defaultCanonical);
   // No upsertSchema call here — index.html already ships its own, richer
   // Virginia LocalBusiness schema (with @id, sameAs, aggregateRating, etc.)
   // that shouldn't be replaced by upsertSchema's smaller generated version.
