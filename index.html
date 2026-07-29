@@ -105,12 +105,28 @@
     <meta id="robots-meta" name="robots" content="index, follow" />
     <script>
       /**
-       * SEO PROTECTION:
-       * If this app loads on the internal operations domain, instantly block crawlers
-       * to prevent duplicate content penalties against the main consumer site.
+       * SEO PROTECTION (path-aware):
+       * thewordenstandard.com "/" is the PUBLIC SaaS storefront and must stay
+       * indexable. Only the private Command Center surfaces on this host get a
+       * client-side noindex — belt-and-suspenders on top of the X-Robots-Tag
+       * noindex header (vercel.json) and robots.txt Disallow that already cover
+       * these same paths server-side. A blanket host noindex here previously
+       * made the entire storefront un-indexable.
        */
       if (window.location.hostname.includes("thewordenstandard.com")) {
-        document.getElementById("robots-meta").setAttribute("content", "noindex, nofollow, noarchive");
+        var WS_PRIVATE = [
+          "/command-center", "/leads", "/portal", "/staff", "/dashboard",
+          "/admin", "/super-admin", "/diamond", "/jarvis", "/scanner",
+          "/estimate", "/consultant", "/autonomy", "/mobile", "/register",
+          "/login", "/advisory"
+        ];
+        var wsPath = window.location.pathname.replace(/\/+$/, "") || "/";
+        var wsPrivate = WS_PRIVATE.some(function (pre) {
+          return wsPath === pre || wsPath.indexOf(pre + "/") === 0;
+        });
+        if (wsPrivate) {
+          document.getElementById("robots-meta").setAttribute("content", "noindex, nofollow, noarchive");
+        }
       }
     </script>
     <meta name="facebook-domain-verification" content="ah60peuc3mh9h0r6kp64mf9l9vajbr" />

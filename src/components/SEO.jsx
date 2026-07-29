@@ -68,7 +68,12 @@ export default function SEO({
       '/contractor-ai',
       '/advisory',
     ].some((prefix) => normalizedPath === prefix || normalizedPath.startsWith(`${prefix}/`));
-    const shouldNoindex = Boolean(noindex || isInternalRoute || isOperationsDomain);
+    // thewordenstandard.com "/" is the public SaaS storefront and must stay
+    // indexable, so being on the operations domain no longer forces noindex on
+    // its own — only an explicit noindex prop or a private/internal route does.
+    // isOperationsDomain still drives the canonical base above so storefront
+    // pages canonicalize to thewordenstandard.com, not the paving domain.
+    const shouldNoindex = Boolean(noindex || isInternalRoute);
 
     // Description
     if (description) setMeta('meta[name="description"]', 'content', description);
