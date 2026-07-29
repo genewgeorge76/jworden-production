@@ -69,7 +69,24 @@
 
     <!-- Primary SEO -->
     <title>Virginia Asphalt Paving Contractor | J. Worden & Sons</title>
-    <link rel="canonical" href="https://www.jwordenasphaltpaving.com/" />
+    <!--
+      No hardcoded canonical here.
+
+      This file is the SPA shell served for every route, so a canonical baked in
+      is a canonical claiming every page is the homepage. Pages that render the
+      SEO component overwrote it in place (document.head.querySelector then
+      setAttribute) and were fine. Pages that render SchemaMarkup emit their own
+      <link rel="canonical"> through react-helmet instead, which cannot replace a
+      tag helmet does not manage — so those pages shipped TWO canonicals, the
+      first pointing at the homepage. Google discards rel=canonical entirely when
+      a page declares more than one, so /about, /contact, /services and all 20
+      /service-areas/* pages had no canonical signal at all.
+
+      Both components create the tag when it is absent, so removing it leaves
+      every real page with exactly one, self-referential. Routes that fall
+      through to the raw shell now ship none, and Google self-canonicalises —
+      which is correct, and strictly better than asserting they are the homepage.
+    -->
     <meta name="description" content="Virginia's family-owned asphalt paving contractor — 40+ years. Driveways, parking lots, sealcoating & repair across Richmond, VA Beach, Roanoke. Licensed & insured." />
     <meta name="keywords" content="asphalt paving Virginia, driveway paving Virginia, commercial paving Virginia, asphalt contractor Virginia, Virginia paving company, Richmond VA paving, Virginia Beach paving, Roanoke VA paving, Fredericksburg VA paving, J Worden Sons paving" />
     <meta name="author" content="J. Worden & Sons Paving LLC" />
