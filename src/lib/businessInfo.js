@@ -14,8 +14,16 @@
 const CONFIGURED_SITE_URL =
   import.meta.env?.VITE_SITE_URL || 'https://www.jwordenasphaltpaving.com'
 
+// The lookahead terminates the hostname. Without it the pattern matches any
+// host merely *starting* with jwordenasphaltpaving.com — including
+// jwordenasphaltpaving.com.example.net — and would rewrite an unrelated domain
+// into something that looks like ours. CodeQL flagged this as an incomplete
+// hostname expression, correctly: a host ends at end-of-string, a path, a port,
+// a query or a fragment, and nowhere else.
+const APEX_HOST = /^(https?:\/\/)jwordenasphaltpaving\.com(?=$|[/:?#])/i
+
 export const SITE_URL = CONFIGURED_SITE_URL.replace(
-  /^(https?:\/\/)jwordenasphaltpaving\.com/i,
+  APEX_HOST,
   '$1www.jwordenasphaltpaving.com',
 ).replace(/\/+$/, '')
 
