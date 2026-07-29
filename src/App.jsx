@@ -66,6 +66,9 @@ const Customers = lazy(() => import('./pages/Customers'));
 // Owner analytics dashboard — surfaces /api/v1/analytics/dashboard (pipeline
 // funnel, revenue forecast, 12-month volume) + bid-intelligence summary.
 const Analytics = lazy(() => import('./pages/Analytics'));
+// AI estimators — surfaces /api/v1/math-ai/* (pavement score, cost, maintenance
+// forecast, lead quality) which were built but had no UI.
+const Estimators = lazy(() => import('./pages/Estimators'));
 const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
@@ -542,6 +545,7 @@ const AuthenticatedApp = () => {
         <Route path="/takeoff" element={<RequireAuth><TakeoffMap /></RequireAuth>} />
         <Route path="/customers" element={<RequireAuth><Customers /></RequireAuth>} />
         <Route path="/analytics" element={<RequireAuth><Analytics /></RequireAuth>} />
+        <Route path="/estimators" element={<RequireAuth><Estimators /></RequireAuth>} />
         <Route path="/jarvis" element={<RequireAuth><JarvisPage /></RequireAuth>} />
         <Route path="/scanner" element={<RequireAuth><ScannerPage /></RequireAuth>} />
         <Route path="/virginia-statewide" element={<RequireAuth><VirginiaStatewide /></RequireAuth>} />

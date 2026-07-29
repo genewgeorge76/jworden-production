@@ -817,6 +817,11 @@ export const api = {
   analyticsDashboard: () => protectedRequest('GET', '/api/v1/analytics/dashboard'),
   kpiWall: () => protectedRequest('GET', '/api/v1/kpi-wall'),
   bidSummary: () => protectedRequest('GET', '/api/v1/bid-intelligence/summary'),
+  // ── Math-AI estimators (built backends, no UI) ───────────────────────────
+  mathPavementScore: (payload) => request('POST', '/api/v1/math-ai/pavement-score', payload),
+  mathCostEstimate: (payload) => request('POST', '/api/v1/math-ai/cost-estimate', payload),
+  mathMaintenanceForecast: (payload) => request('POST', '/api/v1/math-ai/maintenance-forecast', payload),
+  mathLeadQuality: (payload) => protectedRequest('POST', '/api/v1/math-ai/lead-quality', payload),
   // ── Asphalt thermal lay-down window (Ship E) ─────────────────────────────
   thermalWindow: (params) => {
     const q = new URLSearchParams(params).toString();

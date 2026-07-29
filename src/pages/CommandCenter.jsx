@@ -322,6 +322,14 @@ function HubLinkPanel() {
       bg: 'bg-orange-400/10',
     },
     {
+      title: 'AI Estimators',
+      desc: 'Pavement score, cost, maintenance & lead quality',
+      path: '/estimators',
+      icon: Sparkles,
+      color: 'text-fuchsia-400',
+      bg: 'bg-fuchsia-400/10',
+    },
+    {
       title: 'Level 4 Autonomy',
       desc: 'Cognitive Digital Twin & Drift Remediation',
       path: '/autonomy',
