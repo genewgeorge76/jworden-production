@@ -88,6 +88,7 @@ export default function Customers() {
   const [selected, setSelected] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [editing, setEditing] = useState(null);
 
   const query = useMemo(
     () => ({
@@ -296,6 +297,14 @@ export default function Customers() {
           data={selected}
           onClose={() => setSelected(null)}
           onLogged={() => { openCustomer(selected.customer); load(query); }}
+          onEdit={(c) => { setSelected(null); setEditing(c); }}
+        />
+      )}
+      {editing && (
+        <CreateCustomerModal
+          existing={editing}
+          onClose={() => setEditing(null)}
+          onCreated={() => { setEditing(null); load(query); }}
         />
       )}
       {showCreate && (
@@ -329,7 +338,7 @@ function Banner({ tone, title, body }) {
   );
 }
 
-function CustomerDrawer({ data, onClose, onLogged }) {
+function CustomerDrawer({ data, onClose, onLogged, onEdit }) {
   const { customer: c, history, loading } = data;
   const [logging, setLogging] = useState(false);
   const [logForm, setLogForm] = useState({ service_type: '', revenue: '', job_date: '', scope_summary: '' });
@@ -365,7 +374,10 @@ function CustomerDrawer({ data, onClose, onLogged }) {
             <h2 className="text-xl font-bold text-white">{c.name || 'Customer'}</h2>
             <p className="text-sm text-slate-400">{c.company || c.email || ''}</p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-lg border border-white/10 p-1.5 text-slate-400 hover:bg-white/[0.06]" aria-label="Close"><X className="h-4 w-4" /></button>
+          <div className="flex flex-none items-center gap-2">
+            <button type="button" onClick={() => onEdit(c)} className="rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/[0.06]">Edit</button>
+            <button type="button" onClick={onClose} className="rounded-lg border border-white/10 p-1.5 text-slate-400 hover:bg-white/[0.06]" aria-label="Close"><X className="h-4 w-4" /></button>
+          </div>
         </div>
 
         {/* Value signals */}
@@ -460,10 +472,15 @@ function CustomerDrawer({ data, onClose, onLogged }) {
   );
 }
 
-function CreateCustomerModal({ onClose, onCreated }) {
+function CreateCustomerModal({ onClose, onCreated, existing = null }) {
+  const isEdit = Boolean(existing);
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', company: '', address: '', city: '', state_code: '', zip_code: '',
-    customer_type: 'residential', is_franchise: 0, brand: '', services: '', maintenance_agreement: '', notes: '',
+    name: existing?.name || '', email: existing?.email || '', phone: existing?.phone || '',
+    company: existing?.company || '', address: existing?.address || '', city: existing?.city || '',
+    state_code: existing?.state_code || '', zip_code: existing?.zip_code || '',
+    customer_type: existing?.customer_type || 'residential', is_franchise: existing?.is_franchise ? 1 : 0,
+    brand: existing?.brand || '', services: existing?.services || '',
+    maintenance_agreement: existing?.maintenance_agreement || '', notes: existing?.notes || '',
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -474,22 +491,24 @@ function CreateCustomerModal({ onClose, onCreated }) {
     if (!form.name.trim()) { setErr('Name is required.'); return; }
     setBusy(true);
     setErr('');
+    const payload = {
+      ...form,
+      is_franchise: Number(form.is_franchise) ? 1 : 0,
+      email: form.email || undefined,
+      phone: form.phone || undefined,
+      company: form.company || undefined,
+      address: form.address || undefined,
+      city: form.city || undefined,
+      state_code: form.state_code || undefined,
+      zip_code: form.zip_code || undefined,
+      brand: form.brand || undefined,
+      services: form.services || undefined,
+      maintenance_agreement: form.maintenance_agreement || undefined,
+      notes: form.notes || undefined,
+    };
     try {
-      await api.customerCreate({
-        ...form,
-        is_franchise: Number(form.is_franchise) ? 1 : 0,
-        email: form.email || undefined,
-        phone: form.phone || undefined,
-        company: form.company || undefined,
-        address: form.address || undefined,
-        city: form.city || undefined,
-        state_code: form.state_code || undefined,
-        zip_code: form.zip_code || undefined,
-        brand: form.brand || undefined,
-        services: form.services || undefined,
-        maintenance_agreement: form.maintenance_agreement || undefined,
-        notes: form.notes || undefined,
-      });
+      if (isEdit) await api.customerUpdate(existing.id, payload);
+      else await api.customerCreate(payload);
       onCreated();
     } catch (e2) {
       const msg = String(e2?.message || e2);
@@ -503,7 +522,7 @@ function CreateCustomerModal({ onClose, onCreated }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
       <form onSubmit={submit} onClick={(e) => e.stopPropagation()} className="w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f16] shadow-2xl">
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <h2 className="text-lg font-bold text-white">Add customer</h2>
+          <h2 className="text-lg font-bold text-white">{isEdit ? 'Edit customer' : 'Add customer'}</h2>
           <button type="button" onClick={onClose} className="rounded-lg border border-white/10 p-1.5 text-slate-400 hover:bg-white/[0.06]" aria-label="Close"><X className="h-4 w-4" /></button>
         </div>
         <div className="max-h-[70vh] space-y-3 overflow-y-auto px-5 py-4">
