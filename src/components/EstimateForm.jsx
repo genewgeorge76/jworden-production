@@ -33,10 +33,26 @@ export default function EstimateForm({ source = 'homepage' }) {
 
     setBusy(true)
     try {
-      const res = await fetch('/api/estimate-request', {
+      // POST to the live backend website-lead endpoint (proxied to the Fly API
+      // via the /api/* rewrite). It persists the lead, notifies the office, and
+      // syncs to the leads sheet — email optional, matching this form. The
+      // previous target (/api/estimate-request) was a dead Netlify function, so
+      // every estimate request through this form was silently lost.
+      const [firstName, ...restName] = fields.name.trim().split(/\s+/)
+      const jobDescription =
+        [fields.service, fields.message].map((s) => s && s.trim()).filter(Boolean).join(' — ') ||
+        'Free estimate request'
+      const res = await fetch('/api/v1/leads/website', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, source }),
+        body: JSON.stringify({
+          firstName: firstName || fields.name.trim(),
+          lastName: restName.join(' ') || undefined,
+          phone: fields.phone.trim(),
+          email: fields.email.trim() || undefined,
+          jobDescription,
+          source: `estimate-form:${source}`,
+        }),
       })
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`)

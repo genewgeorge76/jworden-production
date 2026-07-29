@@ -373,7 +373,13 @@ function normalizeProjectDocumentRecord(record) {
 }
 
 async function listBackendLeads(limit = 200) {
-  const response = await protectedRequest('GET', `/api/v1/leads${buildQS({ limit })}`)
+  // The server lead pipeline is served at /api/v1/crm/leads (returns
+  // {total, offset, limit, leads:[...]}). The old path /api/v1/leads has no GET
+  // route — it 404'd, listLeadRecords swallowed the error, and every owner lead
+  // tool (LeadInbox, CommandCenter, Cockpit, LeadConsultant) fell back to
+  // browser-localStorage only. So real inbound leads were saved server-side but
+  // invisible in the app. This repoints to the endpoint that actually exists.
+  const response = await protectedRequest('GET', `/api/v1/crm/leads${buildQS({ limit })}`)
   const leads = Array.isArray(response) ? response : Array.isArray(response?.leads) ? response.leads : []
   return leads.map(normalizeLeadRecord)
 }
@@ -792,6 +798,33 @@ export const api = {
   dispatchDeleteJob: (id) => protectedRequest('DELETE', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}`),
   dispatchReschedule: (id, payload) => protectedRequest('POST', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}/reschedule`, payload),
   dispatchAssign:   (jobId) => protectedRequest('GET', `/api/v1/admin/dispatch/assign/${encodeURIComponent(jobId)}`),
+  // ── Customers CRM (/api/v1/customers) ────────────────────────────────────
+  // Full customer database — list, stats, detail, service history. The backend
+  // (routers/customers.py) was built and mounted but had no frontend caller.
+  customersList: (params = {}) => {
+    const q = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ''),
+    ).toString();
+    return protectedRequest('GET', `/api/v1/customers${q ? `?${q}` : ''}`);
+  },
+  customersStats: () => protectedRequest('GET', '/api/v1/customers/stats/overview'),
+  customerGet: (id) => protectedRequest('GET', `/api/v1/customers/${encodeURIComponent(id)}`),
+  customerHistory: (id) => protectedRequest('GET', `/api/v1/customers/${encodeURIComponent(id)}/history`),
+  customerCreate: (payload) => protectedRequest('POST', '/api/v1/customers', payload),
+  customerUpdate: (id, payload) => protectedRequest('PATCH', `/api/v1/customers/${encodeURIComponent(id)}`, payload),
+  customerAddHistory: (id, payload) => protectedRequest('POST', `/api/v1/customers/${encodeURIComponent(id)}/history`, payload),
+  // Bulk import from a CSV (header row) or JSON array file. formData must carry
+  // the file under 'file'. Existing customers are matched on email and skipped.
+  customerImport: (formData) => protectedFormRequest('/api/v1/customers/import?source=crm_import', formData),
+  // ── Owner analytics / KPI dashboards (built backends, no UI) ──────────────
+  analyticsDashboard: () => protectedRequest('GET', '/api/v1/analytics/dashboard'),
+  kpiWall: () => protectedRequest('GET', '/api/v1/kpi-wall'),
+  bidSummary: () => protectedRequest('GET', '/api/v1/bid-intelligence/summary'),
+  // ── Math-AI estimators (built backends, no UI) ───────────────────────────
+  mathPavementScore: (payload) => request('POST', '/api/v1/math-ai/pavement-score', payload),
+  mathCostEstimate: (payload) => request('POST', '/api/v1/math-ai/cost-estimate', payload),
+  mathMaintenanceForecast: (payload) => request('POST', '/api/v1/math-ai/maintenance-forecast', payload),
+  mathLeadQuality: (payload) => protectedRequest('POST', '/api/v1/math-ai/lead-quality', payload),
   // ── Asphalt thermal lay-down window (Ship E) ─────────────────────────────
   thermalWindow: (params) => {
     const q = new URLSearchParams(params).toString();

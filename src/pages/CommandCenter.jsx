@@ -298,6 +298,38 @@ function parseBoolLike(input) {
 function HubLinkPanel() {
   const hubs = [
     {
+      title: 'Customers',
+      desc: 'CRM — accounts, service history, LTV & churn',
+      path: '/customers',
+      icon: UserRound,
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-400/10',
+    },
+    {
+      title: 'Analytics',
+      desc: 'Pipeline funnel, revenue forecast, volume',
+      path: '/analytics',
+      icon: Gauge,
+      color: 'text-sky-400',
+      bg: 'bg-sky-400/10',
+    },
+    {
+      title: 'Area Takeoff',
+      desc: 'Solar/aerial roof & lot takeoff, photo measure',
+      path: '/takeoff',
+      icon: Box,
+      color: 'text-orange-400',
+      bg: 'bg-orange-400/10',
+    },
+    {
+      title: 'AI Estimators',
+      desc: 'Pavement score, cost, maintenance & lead quality',
+      path: '/estimators',
+      icon: Sparkles,
+      color: 'text-fuchsia-400',
+      bg: 'bg-fuchsia-400/10',
+    },
+    {
       title: 'Level 4 Autonomy',
       desc: 'Cognitive Digital Twin & Drift Remediation',
       path: '/autonomy',
