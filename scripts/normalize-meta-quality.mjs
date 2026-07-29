@@ -138,16 +138,24 @@ async function run() {
     generatedCount++;
   }
   
-  // thewordenstandard.com — internal Operations/Command Center domain, not a
-  // public marketing site. Give it its own static HTML with noindex baked in
-  // (rather than relying on the client-side SEO component to set it after JS
-  // runs) so crawlers never index or list internal admin URLs.
-  const opsTitle = 'J. Worden & Sons — Command Center';
-  const opsCanonical = 'https://thewordenstandard.com';
+  // thewordenstandard.com — the PUBLIC SaaS storefront ("built for the
+  // blue-collar man"). "/" is the marketing home and MUST be indexable. The
+  // private Command Center lives at /command-center on this host and is kept
+  // out of the index by (a) the X-Robots-Tag noindex header in vercel.json and
+  // (b) the robots.txt Disallow list — both server-side and authoritative, so
+  // the storefront shell does NOT need a blanket noindex (which previously made
+  // the whole domain un-indexable).
+  //
+  // This static shell mirrors MarketingHome's <head> so that if the shell is
+  // ever served for "/" (a root rewrite, an edge fallback), a crawler that does
+  // not run JS still gets correct, indexable storefront metadata rather than an
+  // empty SPA shell with the paving site's title.
+  const opsTitle = 'The J. Worden Standard OS | AI Software for Blue-Collar Empires';
+  const opsCanonical = 'https://thewordenstandard.com/';
   let opsHtml = upsertTitle(rawHtml, opsTitle);
-  opsHtml = upsertDescription(opsHtml, 'Internal operations dashboard. Not for public access.');
+  opsHtml = upsertDescription(opsHtml, 'Field software for asphalt, roofing and concrete contractors — built inside a paving company running crews since 1984. Drone takeoffs, weather-aware scheduling, and an AI dispatcher that never misses a lead.');
   opsHtml = upsertCanonical(opsHtml, opsCanonical);
-  opsHtml = upsertRobotsMeta(opsHtml, 'noindex, nofollow');
+  opsHtml = upsertRobotsMeta(opsHtml, 'index, follow');
   fs.writeFileSync(path.join(distDir, 'thewordenstandard.com.html'), opsHtml, 'utf8');
   generatedCount++;
 
