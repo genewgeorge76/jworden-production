@@ -70,29 +70,34 @@
     <!-- Primary SEO -->
     <title>Virginia Asphalt Paving Contractor | J. Worden & Sons</title>
     <!--
-      No hardcoded canonical here. Deliberate.
+      This canonical is a fallback for the SPA shell, and it has a known cost.
+      Read this before changing it — removing it has been tried and reverted.
 
-      NOTE TO ANYONE EDITING THIS COMMENT: do not write a canonical link element
-      in literal tag syntax anywhere in this file, not even inside a comment.
-      scripts/normalize-meta-quality.mjs finds canonical tags with a regex over
-      the raw HTML, and a regex cannot tell a comment from markup. A previous
-      version of this comment spelled the tag out; the normaliser matched the
-      prose and rewrote it into a real tag, putting a homepage canonical back on
-      every page and adding a second one. Describe it in words instead.
+      EDITING THIS COMMENT: never write a canonical link element in literal tag
+      syntax here, not even inside a comment. normalize-meta-quality.mjs locates
+      canonical tags with a regex over raw HTML and cannot tell a comment from
+      markup; a previous version of this comment spelled the element out, the
+      normaliser matched the prose and rewrote it into a real tag, and every page
+      shipped an extra canonical. Describe it in words.
 
-      Why it is absent: this file is the SPA shell served for every route, so a
-      canonical baked in here claims every page is the homepage. Pages using the
-      SEO component overwrote it in place (querySelector then setAttribute) and
-      were fine. Pages using SchemaMarkup emit theirs through react-helmet, which
-      cannot replace a tag helmet does not manage — so those shipped two, the
-      homepage one first. Google discards the signal entirely when a page
-      declares more than one, so /about, /contact, /services and all 20
-      /service-areas/* pages had no canonical at all.
+      The cost: this file is the SPA shell for every route and the source
+      prerender.mjs renders all ~209 sitemap routes from, so this tag rides into
+      each one. Pages using the SEO component overwrite it in place and are
+      correct. Pages using SchemaMarkup emit theirs via react-helmet, which
+      cannot replace a tag helmet does not manage, so they carry two — this one
+      first. Google ignores the signal when a page declares more than one, which
+      affects /about, /contact, /services and the 20 /service-areas/* pages.
 
-      Both components create the tag when it is absent, so leaving it out gives
-      every real page exactly one, self-referential. Routes falling through to
-      the raw shell ship none and Google self-canonicalises — correct, and better
-      than asserting they are the homepage.
+      Why it stays anyway: deleting it is worse. verify-seo-readiness requires a
+      canonical on index.html and every prerendered route, and /contact produces
+      no react-helmet output at all — full body, but the shell's title and no
+      canonical — so without this fallback /contact and /quote ship none.
+      tests/e2e/seo-signals.spec.js catches exactly that.
+
+      The real fix is to make SchemaMarkup replace the inherited tag instead of
+      adding to it, and to find out why /contact's helmet output never lands.
+    -->
+    <link rel="canonical" href="https://www.jwordenasphaltpaving.com/" />
     -->
     <meta name="description" content="Virginia's family-owned asphalt paving contractor — 40+ years. Driveways, parking lots, sealcoating & repair across Richmond, VA Beach, Roanoke. Licensed & insured." />
     <meta name="keywords" content="asphalt paving Virginia, driveway paving Virginia, commercial paving Virginia, asphalt contractor Virginia, Virginia paving company, Richmond VA paving, Virginia Beach paving, Roanoke VA paving, Fredericksburg VA paving, J Worden Sons paving" />
