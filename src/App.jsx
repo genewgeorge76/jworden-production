@@ -358,20 +358,27 @@ const AuthenticatedApp = () => {
         {/* Public Operations / SaaS Routes */}
         {isOperationsSite && <Route path="/super-admin" element={<SuperAdmin />} />}
         {isOperationsSite && <Route path="/super-admin/apis" element={<ApiDashboard />} />}
+        {/* thewordenstandard.com "/" is now the public, indexable SaaS
+            storefront (MarketingHome). Google can crawl it, and it is the
+            "built for the blue-collar man" front door for the product.
+            The owner/staff Command Center moves to /command-center on this
+            same host, still behind the PIN gate (RequireAuth). It is declared
+            HERE — above the operations /command-center → CockpitHome route
+            further down — so on these hosts this authed CommandCenter wins the
+            match. /command-center stays noindex via the X-Robots-Tag header in
+            vercel.json, so opening the storefront to crawlers does not expose
+            the cockpit.
+            The admin. subdomain (if/when attached in Vercel) keeps "/" = the
+            Command Center for muscle memory; that host is never indexed. */}
         {(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && (
+          <Route path="/command-center" element={<RequireAuth><CommandCenter /></RequireAuth>} />
+        )}
+        {subdomainMode === SUBDOMAIN_MODES.ADMIN && (
           <Route path="/" element={<RequireAuth><CommandCenter /></RequireAuth>} />
         )}
-        {isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<MarketingHome />} />}
-        {/* MarketingHome also gets its own path, which is the only way it has
-            ever been reachable.
-            The condition above deliberately excludes thewordenstandard.com: that
-            host resolves to the Command Center at "/" (the route just above this
-            block), and it is the owner's working door — admin. and command.
-            subdomains resolve in DNS but are not attached in Vercel, so they do
-            not serve at all. Claiming "/" here would have contested the one
-            entrance that works.
-            So the storefront lives at /os instead, where it collides with
-            nothing and can actually be looked at. */}
+        {isOperationsSite && subdomainMode !== SUBDOMAIN_MODES.ADMIN && <Route path="/" element={<MarketingHome />} />}
+        {/* /os keeps serving the storefront too, so existing links and the
+            "/" flip above resolve to the same page from either address. */}
         {isOperationsSite && <Route path="/os" element={<MarketingHome />} />}
         {isOperationsSite && <Route path="/register" element={<Register />} />}
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}

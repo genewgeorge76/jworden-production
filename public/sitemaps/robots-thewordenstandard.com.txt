@@ -1,2 +1,21 @@
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /command-center
+Disallow: /leads
+Disallow: /portal
+Disallow: /staff
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /super-admin
+Disallow: /diamond
+Disallow: /jarvis
+Disallow: /scanner
+Disallow: /estimate
+Disallow: /consultant
+Disallow: /autonomy
+Disallow: /mobile
+Disallow: /register
+Disallow: /login
+Disallow: /advisory/
+
+Sitemap: https://thewordenstandard.com/sitemap.xml
