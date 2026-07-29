@@ -91,6 +91,26 @@ async function renderPage(browser, baseUrl, route) {
       () => { const root = document.getElementById('root'); return root && (root.innerText || '').trim().length > 50 },
       { timeout: PAGE_TIMEOUT_MS },
     )
+    // Body text is not evidence that <head> is done. react-helmet-async commits
+    // its tags in an effect that runs after paint, so a page whose body renders
+    // fast can reach "root has text" in the window before its canonical, title
+    // and OG tags exist. Under CONCURRENCY the snapshot then catches that window
+    // on whichever page happens to be quickest — a different page each run —
+    // shipping it with the shell's homepage canonical and generic title. That is
+    // how /contact, /services and others intermittently prerendered with no
+    // per-page head at all.
+    //
+    // Helmet marks every tag it manages with data-rh="true". Waiting for the
+    // helmet-managed canonical specifically means waiting for that commit to
+    // have happened. Best-effort with a short ceiling: a route that legitimately
+    // emits no helmet head (should be none in the public sitemap, but the check
+    // must not assume it) proceeds rather than burning the full page timeout.
+    await page
+      .waitForFunction(
+        () => Boolean(document.querySelector('link[rel="canonical"][data-rh="true"]')),
+        { timeout: 8_000 },
+      )
+      .catch(() => {})
     return await page.content()
   } finally {
     await page.close()
