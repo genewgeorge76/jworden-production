@@ -70,22 +70,29 @@
     <!-- Primary SEO -->
     <title>Virginia Asphalt Paving Contractor | J. Worden & Sons</title>
     <!--
-      No hardcoded canonical here.
+      No hardcoded canonical here. Deliberate.
 
-      This file is the SPA shell served for every route, so a canonical baked in
-      is a canonical claiming every page is the homepage. Pages that render the
-      SEO component overwrote it in place (document.head.querySelector then
-      setAttribute) and were fine. Pages that render SchemaMarkup emit their own
-      <link rel="canonical"> through react-helmet instead, which cannot replace a
-      tag helmet does not manage — so those pages shipped TWO canonicals, the
-      first pointing at the homepage. Google discards rel=canonical entirely when
-      a page declares more than one, so /about, /contact, /services and all 20
-      /service-areas/* pages had no canonical signal at all.
+      NOTE TO ANYONE EDITING THIS COMMENT: do not write a canonical link element
+      in literal tag syntax anywhere in this file, not even inside a comment.
+      scripts/normalize-meta-quality.mjs finds canonical tags with a regex over
+      the raw HTML, and a regex cannot tell a comment from markup. A previous
+      version of this comment spelled the tag out; the normaliser matched the
+      prose and rewrote it into a real tag, putting a homepage canonical back on
+      every page and adding a second one. Describe it in words instead.
 
-      Both components create the tag when it is absent, so removing it leaves
-      every real page with exactly one, self-referential. Routes that fall
-      through to the raw shell now ship none, and Google self-canonicalises —
-      which is correct, and strictly better than asserting they are the homepage.
+      Why it is absent: this file is the SPA shell served for every route, so a
+      canonical baked in here claims every page is the homepage. Pages using the
+      SEO component overwrote it in place (querySelector then setAttribute) and
+      were fine. Pages using SchemaMarkup emit theirs through react-helmet, which
+      cannot replace a tag helmet does not manage — so those shipped two, the
+      homepage one first. Google discards the signal entirely when a page
+      declares more than one, so /about, /contact, /services and all 20
+      /service-areas/* pages had no canonical at all.
+
+      Both components create the tag when it is absent, so leaving it out gives
+      every real page exactly one, self-referential. Routes falling through to
+      the raw shell ship none and Google self-canonicalises — correct, and better
+      than asserting they are the homepage.
     -->
     <meta name="description" content="Virginia's family-owned asphalt paving contractor — 40+ years. Driveways, parking lots, sealcoating & repair across Richmond, VA Beach, Roanoke. Licensed & insured." />
     <meta name="keywords" content="asphalt paving Virginia, driveway paving Virginia, commercial paving Virginia, asphalt contractor Virginia, Virginia paving company, Richmond VA paving, Virginia Beach paving, Roanoke VA paving, Fredericksburg VA paving, J Worden Sons paving" />
