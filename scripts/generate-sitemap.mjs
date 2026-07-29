@@ -324,10 +324,24 @@ try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch 
 
 let totalUrls = 0;
 
-// thewordenstandard.com is the internal Operations/Command Center domain,
-// not a public marketing site — it must never be crawled or submitted to
-// search engines. Disallow everything and skip URL generation entirely.
-const NOINDEX_DOMAINS = new Set(['thewordenstandard.com']);
+// thewordenstandard.com is the public SaaS storefront ("built for the
+// blue-collar man"). Its "/" is the marketing home and SHOULD be indexed,
+// but the owner/staff Command Center and every other authed surface on the
+// same host must never be crawled. So it emits a single-URL sitemap for "/"
+// and a robots file that allows the storefront while disallowing every
+// private path. Those Disallow paths must stay in sync with the noindex
+// X-Robots-Tag header sources in vercel.json.
+const STOREFRONT_DOMAINS = new Map([
+  ['thewordenstandard.com', {
+    urls: ['/'],
+    disallow: [
+      '/command-center', '/leads', '/portal', '/staff', '/dashboard',
+      '/admin', '/super-admin', '/diamond', '/jarvis', '/scanner',
+      '/estimate', '/consultant', '/autonomy', '/mobile', '/register',
+      '/login', '/advisory/',
+    ],
+  }],
+]);
 // Only the primary domain ships an image sitemap, so only its robots file
 // should advertise one — pointing crawlers at a 404 on the other six hurts.
 const PRIMARY_DOMAIN = 'www.jwordenasphaltpaving.com';
@@ -335,11 +349,18 @@ const PRIMARY_DOMAIN = 'www.jwordenasphaltpaving.com';
 for (const domain of DOMAINS) {
   const SITE = `https://${domain}`;
 
-  if (NOINDEX_DOMAINS.has(domain)) {
+  if (STOREFRONT_DOMAINS.has(domain)) {
+    const { urls: storefrontPaths, disallow } = STOREFRONT_DOMAINS.get(domain);
+    const body = storefrontPaths
+      .map((p) => `  <url>\n    <loc>${SITE}${p}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>`)
+      .join('\n');
     writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.xml`),
-      `<?xml version="1.0" encoding="utf-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>\n`, 'utf8');
-    writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.txt`), '', 'utf8');
-    writeFileSync(resolve(ROOT, `public/sitemaps/robots-${domain}.txt`), `User-agent: *\nDisallow: /\n`, 'utf8');
+      `<?xml version="1.0" encoding="utf-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`, 'utf8');
+    writeFileSync(resolve(ROOT, `public/sitemaps/sitemap-${domain}.txt`),
+      storefrontPaths.map((p) => `${SITE}${p}`).join('\n') + '\n', 'utf8');
+    writeFileSync(resolve(ROOT, `public/sitemaps/robots-${domain}.txt`),
+      `User-agent: *\nAllow: /\n${disallow.map((d) => `Disallow: ${d}`).join('\n')}\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
+    totalUrls += storefrontPaths.length;
     continue;
   }
 
@@ -402,8 +423,8 @@ for (const domain of DOMAINS) {
   // these have to stop being emitted here rather than being filtered out later.
   //
   // --all-states (or SITEMAP_INCLUDE_ALL_STATES) still forces them, but note it
-  // cannot produce a sitemap for thewordenstandard.com itself: that domain is in
-  // NOINDEX_DOMAINS and returns before reaching this point. The flag is an
+  // cannot produce these for thewordenstandard.com itself: that domain is a
+  // STOREFRONT_DOMAIN and returns above with just its "/" URL. The flag is an
   // escape hatch for a future paving domain that genuinely serves multiple
   // states, not a way to restore the SaaS pages here.
   if (!SINGLE_PAGE_DOMAINS.has(domain) && INCLUDE_ALL_STATES) {

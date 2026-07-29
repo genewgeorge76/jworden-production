@@ -214,7 +214,7 @@ export default function MarketingHome() {
                 {l.label}
               </a>
             ))}
-            <Link to="/login" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+            <Link to="/command-center" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
               Sign In
             </Link>
             <Button asChild className="bg-amber-500 hover:bg-amber-400 text-[#020408] font-bold px-6">
@@ -249,7 +249,7 @@ export default function MarketingHome() {
               </a>
             ))}
             <Link
-              to="/login"
+              to="/command-center"
               onClick={() => setMenuOpen(false)}
               className="block py-2 text-base text-slate-300 hover:text-white"
             >
@@ -313,7 +313,7 @@ export default function MarketingHome() {
                 variant="outline"
                 className="h-14 px-8 text-lg border-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl w-full sm:w-auto"
               >
-                <Link to="/login">Access Cockpit</Link>
+                <Link to="/command-center">Access Cockpit</Link>
               </Button>
             </motion.div>
           </div>
