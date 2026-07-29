@@ -60,6 +60,9 @@ const AutonomyDashboard = lazy(() => import('./pages/AutonomyDashboard'));
 // were fully built but nothing imported it, so the whole suite was unreachable.
 // Surfaced here behind auth at /takeoff. It degrades gracefully with no map key.
 const TakeoffMap = lazy(() => import('./components/TakeoffMap'));
+// Customers CRM — surfaces the /api/v1/customers backend (list, stats, detail,
+// service history, create) which was fully built but had no UI.
+const Customers = lazy(() => import('./pages/Customers'));
 const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
@@ -534,6 +537,7 @@ const AuthenticatedApp = () => {
         />
         <Route path="/estimate" element={<RequireAuth><EstimatePage /></RequireAuth>} />
         <Route path="/takeoff" element={<RequireAuth><TakeoffMap /></RequireAuth>} />
+        <Route path="/customers" element={<RequireAuth><Customers /></RequireAuth>} />
         <Route path="/jarvis" element={<RequireAuth><JarvisPage /></RequireAuth>} />
         <Route path="/scanner" element={<RequireAuth><ScannerPage /></RequireAuth>} />
         <Route path="/virginia-statewide" element={<RequireAuth><VirginiaStatewide /></RequireAuth>} />

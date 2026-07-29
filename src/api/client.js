@@ -798,6 +798,21 @@ export const api = {
   dispatchDeleteJob: (id) => protectedRequest('DELETE', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}`),
   dispatchReschedule: (id, payload) => protectedRequest('POST', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}/reschedule`, payload),
   dispatchAssign:   (jobId) => protectedRequest('GET', `/api/v1/admin/dispatch/assign/${encodeURIComponent(jobId)}`),
+  // ── Customers CRM (/api/v1/customers) ────────────────────────────────────
+  // Full customer database — list, stats, detail, service history. The backend
+  // (routers/customers.py) was built and mounted but had no frontend caller.
+  customersList: (params = {}) => {
+    const q = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ''),
+    ).toString();
+    return protectedRequest('GET', `/api/v1/customers${q ? `?${q}` : ''}`);
+  },
+  customersStats: () => protectedRequest('GET', '/api/v1/customers/stats/overview'),
+  customerGet: (id) => protectedRequest('GET', `/api/v1/customers/${encodeURIComponent(id)}`),
+  customerHistory: (id) => protectedRequest('GET', `/api/v1/customers/${encodeURIComponent(id)}/history`),
+  customerCreate: (payload) => protectedRequest('POST', '/api/v1/customers', payload),
+  customerUpdate: (id, payload) => protectedRequest('PATCH', `/api/v1/customers/${encodeURIComponent(id)}`, payload),
+  customerAddHistory: (id, payload) => protectedRequest('POST', `/api/v1/customers/${encodeURIComponent(id)}/history`, payload),
   // ── Asphalt thermal lay-down window (Ship E) ─────────────────────────────
   thermalWindow: (params) => {
     const q = new URLSearchParams(params).toString();
