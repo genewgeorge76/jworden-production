@@ -362,6 +362,17 @@ const AuthenticatedApp = () => {
           <Route path="/" element={<RequireAuth><CommandCenter /></RequireAuth>} />
         )}
         {isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<MarketingHome />} />}
+        {/* MarketingHome also gets its own path, which is the only way it has
+            ever been reachable.
+            The condition above deliberately excludes thewordenstandard.com: that
+            host resolves to the Command Center at "/" (the route just above this
+            block), and it is the owner's working door — admin. and command.
+            subdomains resolve in DNS but are not attached in Vercel, so they do
+            not serve at all. Claiming "/" here would have contested the one
+            entrance that works.
+            So the storefront lives at /os instead, where it collides with
+            nothing and can actually be looked at. */}
+        {isOperationsSite && <Route path="/os" element={<MarketingHome />} />}
         {isOperationsSite && <Route path="/register" element={<Register />} />}
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
