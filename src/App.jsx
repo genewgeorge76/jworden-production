@@ -55,6 +55,11 @@ const HomeServices = lazy(() => import('./pages/HomeServices'));
 const GeneralContracting = lazy(() => import('./pages/GeneralContracting'));
 const VirginiaStatewide = lazy(() => import('./pages/VirginiaStatewide'));
 const AutonomyDashboard = lazy(() => import('./pages/AutonomyDashboard'));
+// Area-takeoff tool (Google Solar API roof/lot takeoff, Aerial 3D flyover,
+// OpenCV photo measure, pavement-decay). The component + its backend endpoints
+// were fully built but nothing imported it, so the whole suite was unreachable.
+// Surfaced here behind auth at /takeoff. It degrades gracefully with no map key.
+const TakeoffMap = lazy(() => import('./components/TakeoffMap'));
 const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
@@ -528,6 +533,7 @@ const AuthenticatedApp = () => {
           }
         />
         <Route path="/estimate" element={<RequireAuth><EstimatePage /></RequireAuth>} />
+        <Route path="/takeoff" element={<RequireAuth><TakeoffMap /></RequireAuth>} />
         <Route path="/jarvis" element={<RequireAuth><JarvisPage /></RequireAuth>} />
         <Route path="/scanner" element={<RequireAuth><ScannerPage /></RequireAuth>} />
         <Route path="/virginia-statewide" element={<RequireAuth><VirginiaStatewide /></RequireAuth>} />
