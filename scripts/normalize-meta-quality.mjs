@@ -2,6 +2,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+// TWO-PASS DESIGN — read this before changing the call order in package.json.
+//
+// This script runs twice per build, and the two passes do different jobs:
+//
+//   pass 1 (before prerender)  stamps title/description/canonical onto
+//                              dist/index.html. prerender.mjs renders all ~209
+//                              sitemap routes FROM that file, so the canonical
+//                              stamped here is inherited by every prerendered
+//                              page. verify-seo-readiness.mjs fails the build if
+//                              any prerendered route lacks one, so this pass is
+//                              load-bearing for the main site's indexed routes.
+//
+//   pass 2 (--domains-only)    regenerates only the regional dist/<domain>.html
+//                              files, now that index.html actually contains
+//                              prerendered markup. Without this pass those files
+//                              are copied from the empty pre-prerender shell and
+//                              every regional domain ships a blank page to
+//                              Google — which is exactly what was happening.
+//
+// Pass 2 deliberately does NOT rewrite index.html: by then it holds the
+// prerendered homepage, and overwriting it would undo prerender's work on the
+// main money site.
+const DOMAINS_ONLY = process.argv.includes('--domains-only');
+
 const root = process.cwd();
 const distDir = path.join(root, 'dist');
 const profilesPath = path.join(root, 'src', 'data', 'regionalMarketProfiles.js');
@@ -179,6 +203,13 @@ async function run() {
   generatedCount++;
 
   // Update index.html for jwordenasphaltpaving.com
+  // Pass 2 stops here: index.html is the prerendered homepage at this point and
+  // must not be rewritten from a template.
+  if (DOMAINS_ONLY) {
+    console.log(`[meta-normalizer] --domains-only: regenerated ${generatedCount} regional files from prerendered index.html; left index.html untouched.`);
+    return;
+  }
+
   const defaultCanonical = 'https://www.jwordenasphaltpaving.com';
   let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');
   defaultHtml = upsertDescription(defaultHtml, 'Premium asphalt paving, sealcoating, and repair in Virginia. Contact J. Worden Asphalt Paving today.');
