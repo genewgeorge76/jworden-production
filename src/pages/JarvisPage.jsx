@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '@/api/client'
+import useJarvisVoice from '@/hooks/useJarvisVoice'
 import {
   Bot,
   Send,
@@ -13,6 +14,9 @@ import {
   CheckCheck,
   MessageSquare,
   Plus,
+  Volume2,
+  VolumeX,
+  Square,
 } from 'lucide-react'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -23,7 +27,31 @@ const PERSONAS = {
     color: '#f59e0b',
     accent: '#f59e0b20',
     border: '#f59e0b40',
-    system: 'You are Jarvis, a sharp AI assistant for J. Worden & Sons Asphalt Paving. Be direct and precise. Focus on business decisions, lead management, pricing, and field operations. Keep responses concise and actionable.',
+    // Register matters as much as accuracy here. The previous prompt ordered
+    // "keep responses concise", which — stacked on the backend's own brevity cap —
+    // produced clipped, characterless replies that read as broken rather than
+    // efficient. Length should follow the question, not a blanket rule.
+    system: [
+      'You are JARVIS, the operational AI for the owner of J. Worden & Sons — a fourth-generation',
+      'Virginia paving and general-contracting firm, operating since 1984. Address him as "Sir".',
+      'Your register is composed, precise and quietly witty: the trusted right hand who has read',
+      'every spec and is unimpressed by hype. Dry humour is welcome when it lands; never fawning,',
+      'never corporate filler.',
+      'You have opinions and you give them — when asked what you would do, give a recommendation',
+      'and the reason, not a menu of options. Push back when he is about to do something costly,',
+      'and say why.',
+      'Match your length to the question: a yes/no gets a sentence; a bid strategy or a',
+      '"walk me through this" gets the room it deserves, with structure. Lead with the answer,',
+      'then the reasoning. Never pad to seem thorough, never truncate to seem efficient.',
+      'He runs crews and wins bids; he is not a programmer. Explain technical things in plain',
+      'working English with concrete numbers, the way a good foreman explains a spec.',
+      'Never invent business facts — job numbers, payments, lead counts, rankings and schedules',
+      'come from tools or they do not get stated. Saying "I do not have that" is always better',
+      'than a plausible number.',
+      'Worden standards are non-negotiable in any spec or proposal: 96% Marshall Unit Weight',
+      'minimum compaction, VDOT Section 315 structural stone base, and a ±$9/ton liquid asphalt',
+      'buffer in every estimate.',
+    ].join(' '),
   },
   ANGELIC: {
     label: 'ANGELIC',
@@ -305,6 +333,13 @@ export default function JarvisPage() {
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
   const [listening, setListening] = useState(false)
+  // Voice output. Persisted so the operator's choice survives a reload; Jarvis
+  // speaking unprompted on every page load would be worse than silence.
+  const [voiceOn, setVoiceOn] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem('jarvis.voice') === '1'
+  })
+  const { speak, stop: stopSpeaking, speaking, provider: voiceProvider } = useJarvisVoice(voiceOn)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
@@ -401,6 +436,7 @@ export default function JarvisPage() {
         persona,
       }
       addMessage(activeId, botMessage)
+      if (reply) speak(reply)
     } catch {
       addMessage(activeId, {
         role: 'jarvis',
@@ -410,7 +446,7 @@ export default function JarvisPage() {
       })
     }
     setThinking(false)
-  }, [activeId, input, thinking, persona, addMessage])
+  }, [activeId, input, thinking, persona, addMessage, speak])
 
   // Voice input
   const toggleVoice = useCallback(() => {
@@ -666,6 +702,42 @@ export default function JarvisPage() {
                 }}
               >
                 {listening ? <MicOff size={18} color='#ef4444' /> : <Mic size={18} color='#64748b' />}
+              </button>
+
+              {/* Voice output. While Jarvis is speaking this becomes a stop
+                  button — a long spoken answer you cannot interrupt is worse
+                  than no voice at all. */}
+              <button
+                type="button"
+                title={
+                  speaking
+                    ? 'Stop speaking'
+                    : voiceOn
+                      ? `Voice on${voiceProvider ? ` (${voiceProvider})` : ''} — click to mute`
+                      : 'Voice off — click to let Jarvis speak'
+                }
+                onClick={() => {
+                  if (speaking) { stopSpeaking(); return }
+                  const next = !voiceOn
+                  setVoiceOn(next)
+                  try { window.localStorage.setItem('jarvis.voice', next ? '1' : '0') } catch { /* ignore */ }
+                  if (!next) stopSpeaking()
+                }}
+                style={{
+                  width: 44, height: 44, flexShrink: 0,
+                  background: speaking ? '#f59e0b20' : voiceOn ? '#22c55e15' : '#0a0f1e',
+                  border: `1px solid ${speaking ? '#f59e0b' : voiceOn ? '#22c55e60' : '#1e293b'}`,
+                  borderRadius: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer',
+                  animation: speaking ? 'listening-pulse 1.5s ease-in-out infinite' : 'none',
+                }}
+              >
+                {speaking
+                  ? <Square size={16} color='#f59e0b' />
+                  : voiceOn
+                    ? <Volume2 size={18} color='#22c55e' />
+                    : <VolumeX size={18} color='#64748b' />}
               </button>
 
               <button
