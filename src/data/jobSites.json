@@ -1,8 +1,8 @@
 {
  "generated": "2026-07-30",
  "note": "Each pin is a cluster of photographs carrying GPS coordinates and capture dates in their EXIF. Residential sites show city and state only; street addresses are published for commercial sites, which are public business addresses.",
- "site_count": 560,
- "photo_count": 4835,
+ "site_count": 561,
+ "photo_count": 4967,
  "states": [
   "Delaware",
   "Georgia",
@@ -36,6 +36,16 @@
    "photo_count": 151,
    "first_seen": "2013:11:07 09:51:10",
    "last_seen": "2014:09:05 09:49:17",
+   "kind": "residential"
+  },
+  {
+   "lat": 37.403721,
+   "lon": -77.448216,
+   "city": "Bellwood",
+   "state": "Virginia",
+   "photo_count": 132,
+   "first_seen": "2013:09:05 08:21:11",
+   "last_seen": "2015:10:30 14:26:10",
    "kind": "residential"
   },
   {
