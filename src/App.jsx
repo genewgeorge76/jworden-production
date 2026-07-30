@@ -70,6 +70,9 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 // a paving go/no-go verdict scored against the Worden Standard. Surfaces
 // /api/v1/weather/{radar/frames,alerts,conditions}.
 const StormTracker = lazy(() => import('./pages/StormTracker'));
+// National footprint — every job site pinned from GPS data in the job
+// photographs themselves, so coverage is evidenced rather than claimed.
+const NationalFootprint = lazy(() => import('./pages/NationalFootprint'));
 // AI estimators — surfaces /api/v1/math-ai/* (pavement score, cost, maintenance
 // forecast, lead quality) which were built but had no UI.
 const Estimators = lazy(() => import('./pages/Estimators'));
@@ -550,6 +553,7 @@ const AuthenticatedApp = () => {
         <Route path="/customers" element={<RequireAuth><Customers /></RequireAuth>} />
         <Route path="/analytics" element={<RequireAuth><Analytics /></RequireAuth>} />
         <Route path="/storm-tracker" element={<RequireAuth><StormTracker /></RequireAuth>} />
+        <Route path="/footprint" element={<PublicLayout><NationalFootprint /></PublicLayout>} />
         <Route path="/weather" element={<RequireAuth><StormTracker /></RequireAuth>} />
         <Route path="/estimators" element={<RequireAuth><Estimators /></RequireAuth>} />
         <Route path="/jarvis" element={<RequireAuth><JarvisPage /></RequireAuth>} />
