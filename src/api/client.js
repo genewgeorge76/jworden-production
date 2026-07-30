@@ -734,19 +734,41 @@ export const api = {
   getForemanStatus: () => request('GET', '/api/v1/foreman/status'),
   getVisionResult: (jobId) => request('GET', `/api/v1/ai/vision-result/${jobId}`),
   // ── JARVIS Command Interface ───────────────────────────────────────────────
+  /**
+   * Ask JARVIS. Tries the full agent first, then the chat engine.
+   *
+   * /jarvis/command needs staff_operator and returns 403 without it, so the
+   * fallback to /jarvis/chat is the normal path, not an edge case — and
+   * /jarvis/chat is the real assistant: same Claude model, same tool belt,
+   * answering with live forecasts and the Worden standards.
+   *
+   * Two things were wrong here.
+   *
+   * The fallback only fired when the error *string* happened to contain 403,
+   * 401, "unauthorized" or "required". Any other failure — a network blip, a
+   * timeout, an error phrased differently — skipped straight past the working
+   * endpoint. Matching on message text to detect an auth failure is guesswork;
+   * any failure of /command should simply try /chat, since /chat needs no auth
+   * and answers the same question.
+   *
+   * Worse, the last resort was /public/chat: the marketing concierge that
+   * pitches free estimates to website visitors. When an owner asks what his
+   * compaction standard is, that endpoint replies with sales copy. Falling back
+   * to it made JARVIS look brain-damaged while the real engine sat there
+   * working. It is gone from this path — a visible error beats a wrong
+   * personality confidently answering the wrong question.
+   */
   jarvisCommand: async (query, persona = "JARVIS", { confirmed = false } = {}) => {
     try {
       return await request('POST', '/api/v1/jarvis/command', { query, persona, confirmed })
     } catch (err) {
-      const msg = String(err?.message || '').toLowerCase()
-      if (msg.includes('403') || msg.includes('required') || msg.includes('unauthorized') || msg.includes('401')) {
-        try {
-          return await request('POST', '/api/v1/jarvis/chat', { query, persona, confirmed: false })
-        } catch {
-          return await request('POST', '/api/v1/public/chat', { message: query, persona })
-        }
+      try {
+        return await request('POST', '/api/v1/jarvis/chat', { query, persona, confirmed: false })
+      } catch (chatErr) {
+        // Both failed. Surface the original failure — it is the more
+        // informative one — rather than a cheerful sales reply.
+        throw err instanceof Error ? err : chatErr
       }
-      throw err
     }
   },
   jarvisStatus: () => request('GET', '/api/v1/jarvis/status'),
