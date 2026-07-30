@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { api } from '@/api/client';
+import EmptyState from '@/components/EmptyState';
 import { DollarSign, TrendingUp, Target, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -81,6 +82,34 @@ export default function RevenueDashboard() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
+  }
+
+  // Revenue attribution divides by lead volume; with no leads every percentage
+  // is 0/0. Rendering a wall of zeroes reads as "the numbers are broken" —
+  // say plainly that there is nothing to attribute yet instead.
+  if (!loading && metrics.totalLeads === 0) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="border-b border-border px-6 py-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center gap-2 mb-1">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">Revenue Attribution</p>
+            </div>
+            <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+              Where The Money Comes From
+            </h1>
+          </div>
+        </div>
+        <EmptyState
+          title="No revenue to attribute yet"
+          body="This report is connected and working. It breaks closed revenue down by the channel each lead came from — so it needs leads that have been marked won before it can show you anything."
+          hint="The chain is: a lead arrives from the website, you build an estimate from it, the estimate becomes a job, and the lead is marked won. Revenue appears here at that last step."
+          action={{ label: 'Go to Lead Inbox', to: '/leads' }}
+          icon={TrendingUp}
+        />
       </div>
     );
   }
