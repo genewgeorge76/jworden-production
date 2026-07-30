@@ -696,9 +696,11 @@ export default function Projects() {
       </section>
 
       {/* CTA */}
-      {/* Real QSR portfolio proof: six fully documented locations plus 120
-          programme photographs, none of them captioned with invented
-          locations. See the component header for why. */}
+      {/* Real QSR portfolio proof: 39 restaurant sites across eleven states,
+          each backed by a dated client email, plus 120 programme photographs
+          shown without captions. The six "documented locations" this comment
+          used to describe were the fabricated records that component replaced —
+          a stale comment restating them is how the claim creeps back. */}
       <KfcNationalProgram />
 
       <section className="py-16 bg-brand-amber text-center">

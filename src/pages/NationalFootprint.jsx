@@ -28,7 +28,11 @@
  */
 
 import { useMemo, useState } from 'react'
-import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps'
+// Aliased deliberately: importing this as `Map` shadows the built-in Map
+// constructor for the whole module, so `new Map()` below would construct the
+// React component instead of a collection and throw on the first .set().
+// Valid syntax, so neither the bundler nor ESLint flags it.
+import { APIProvider, Map as GoogleMap, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps'
 import { CalendarDays, Camera, MapPin } from 'lucide-react'
 import SEO from '@/components/SEO'
 import sitesData from '@/data/jobSites.json'
@@ -112,10 +116,14 @@ export default function NationalFootprint() {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
       name: 'Documented Job Sites — J. Worden & Sons Paving',
+      // numberOfItems must describe THIS list, not the dataset behind it.
+      // Claiming 297 while listing 50 is an inconsistency a validator will
+      // flag, and overstating a count in structured data is the same species
+      // of error this page exists to correct.
       description:
-        `${stats.count} job sites across ${stats.states.length} states, each documented by ` +
-        'dated, GPS-tagged job photographs.',
-      numberOfItems: stats.count,
+        `Commercial job sites documented by dated, GPS-tagged photographs, drawn from ` +
+        `${stats.count} sites across ${stats.states.length} states.`,
+      numberOfItems: items.length,
       itemListElement: items,
     }
   }, [commercialSites, stats])
@@ -232,7 +240,7 @@ export default function NationalFootprint() {
         ) : (
           <div className="overflow-hidden border border-border" style={{ height: 560 }}>
             <APIProvider apiKey={API_KEY}>
-              <Map
+              <GoogleMap
                 defaultCenter={US_CENTER}
                 defaultZoom={4}
                 mapId="worden-footprint"
@@ -298,7 +306,7 @@ export default function NationalFootprint() {
                     </div>
                   </InfoWindow>
                 )}
-              </Map>
+              </GoogleMap>
             </APIProvider>
           </div>
         )}

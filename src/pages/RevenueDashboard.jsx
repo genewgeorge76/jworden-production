@@ -103,10 +103,16 @@ export default function RevenueDashboard() {
             </h1>
           </div>
         </div>
+        {/* This branch is "no leads at all", so the copy must say that. It
+            previously talked about needing leads marked won, which describes a
+            different state — leads present, none closed — that does NOT land
+            here and should not, because pipeline value and per-source counts
+            are still worth showing then. Wrong copy on a working report is how
+            someone concludes the report is broken. */}
         <EmptyState
-          title="No revenue to attribute yet"
-          body="This report is connected and working. It breaks closed revenue down by the channel each lead came from — so it needs leads that have been marked won before it can show you anything."
-          hint="The chain is: a lead arrives from the website, you build an estimate from it, the estimate becomes a job, and the lead is marked won. Revenue appears here at that last step."
+          title="No leads yet"
+          body="This report is connected and working. It breaks revenue and pipeline down by the channel each lead came from, so it needs leads before it can show you anything."
+          hint="Leads arrive here from the website forms and the estimate request page. Once the first one lands, this fills in — and closed revenue appears once a lead is marked won."
           action={{ label: 'Go to Lead Inbox', to: '/leads' }}
           icon={TrendingUp}
         />
