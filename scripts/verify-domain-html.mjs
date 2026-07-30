@@ -35,12 +35,24 @@ const profilesPath = path.join(root, 'src', 'data', 'regionalMarketProfiles.js')
 // empty shell (0) or a bare loading state cannot.
 const MIN_BODY_CHARS = 1500
 
-/** Readable text a crawler would see: body minus script/style/markup. */
+/**
+ * Readable text a crawler would see: body minus script/style/markup.
+ *
+ * The close-tag patterns allow whitespace before the '>' because `</script >`
+ * is valid HTML that browsers accept. Matching only `</script>` (flagged by
+ * CodeQL as bad HTML filtering) would leave the tag unmatched, so the script's
+ * source would survive into the "readable text" and be counted as page
+ * content — letting an empty shell clear MIN_BODY_CHARS on the strength of its
+ * own bundle. That is precisely the failure this file exists to catch, so the
+ * strictness matters more here than the unlikelihood of the input.
+ *
+ * `\b` after the tag name stops `<scriptish>` being treated as a script open.
+ */
 function bodyText(html) {
-  const body = /<body[^>]*>([\s\S]*)<\/body>/i.exec(html)
+  const body = /<body[^>]*>([\s\S]*)<\/body\s*>/i.exec(html)
   let t = body ? body[1] : ''
-  t = t.replace(/<script[\s\S]*?<\/script>/gi, ' ')
-  t = t.replace(/<style[\s\S]*?<\/style>/gi, ' ')
+  t = t.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, ' ')
+  t = t.replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, ' ')
   t = t.replace(/<[^>]+>/g, ' ')
   return t.replace(/\s+/g, ' ').trim()
 }
