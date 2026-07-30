@@ -171,6 +171,13 @@ const STATIC_ROUTES = [
   // and dates — the most link-worthy proof on the site, and worthless to
   // search if it is invisible. High priority for the same reason.
   { path: '/footprint',                     priority: '0.9',  changefreq: 'monthly' },
+  // Both self-canonical and both were absent. Deliberately NOT added:
+  // /commercial and /richmond-commercial canonicalise to /commercial/richmond-va,
+  // and /residential-asphalt canonicalises to /residential — all three targets
+  // are already listed, so adding the aliases would put URLs in the sitemap
+  // whose canonical points elsewhere and muddy pages that already rank.
+  { path: '/home-services',                 priority: '0.85', changefreq: 'monthly' },
+  { path: '/request-estimate',              priority: '0.95', changefreq: 'monthly' },
   { path: '/richmond-va-asphalt-paving.html',        priority: '0.95', changefreq: 'weekly' },
   { path: '/asphalt-driveway-paving.html',           priority: '0.9',  changefreq: 'monthly' },
   { path: '/asphalt-paving-cost-virginia.html',      priority: '0.9',  changefreq: 'monthly' },

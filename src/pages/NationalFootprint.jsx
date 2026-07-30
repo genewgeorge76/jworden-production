@@ -30,6 +30,7 @@
 import { useMemo, useState } from 'react'
 import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps'
 import { CalendarDays, Camera, MapPin } from 'lucide-react'
+import SEO from '@/components/SEO'
 import sitesData from '@/data/jobSites.json'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
@@ -79,8 +80,61 @@ export default function NationalFootprint() {
     return [...counts.entries()].sort((a, b) => b[1] - a[1])
   }, [sites])
 
+  /**
+   * Structured data. This page is unusually well suited to it: an ItemList of
+   * Place entries with real postal addresses and coordinates is exactly the
+   * shape Google wants, and every value is drawn from the dataset rather than
+   * written for the crawler.
+   *
+   * Only commercial sites are emitted. Residential coordinates are on the map
+   * but must never enter structured data — a machine-readable feed of customer
+   * home addresses is the same privacy breach as printing them, in a more
+   * durable format.
+   */
+  const jsonLd = useMemo(() => {
+    const items = commercialSites.slice(0, 50).map((s, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Place',
+        name: s.place || `Job site — ${s.city}, ${s.state}`,
+        address: {
+          '@type': 'PostalAddress',
+          ...(s.address ? { streetAddress: s.address } : {}),
+          addressLocality: s.city,
+          addressRegion: s.state,
+          addressCountry: 'US',
+        },
+        geo: { '@type': 'GeoCoordinates', latitude: s.lat, longitude: s.lon },
+      },
+    }))
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Documented Job Sites — J. Worden & Sons Paving',
+      description:
+        `${stats.count} job sites across ${stats.states.length} states, each documented by ` +
+        'dated, GPS-tagged job photographs.',
+      numberOfItems: stats.count,
+      itemListElement: items,
+    }
+  }, [commercialSites, stats])
+
+  const title =
+    `Our Work — ${stats.count} Documented Job Sites in ${stats.states.length} States | J. Worden & Sons Paving`
+  const description =
+    `Every J. Worden & Sons job site mapped from GPS-tagged photographs: ${stats.commercial} ` +
+    `commercial sites with addresses across ${stats.states.slice(0, 4).join(', ')} and more. ` +
+    'Verifiable paving, sealcoating and site work — not a coverage claim.'
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={title}
+        description={description}
+        canonicalPath="/footprint"
+        jsonLd={jsonLd}
+      />
       <div className="border-b border-border px-6 py-10">
         <div className="mx-auto max-w-7xl">
           <p className="font-display text-primary text-xs uppercase tracking-[0.3em]">
