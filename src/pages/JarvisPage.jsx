@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '@/api/client'
+import useJarvisVoice from '@/hooks/useJarvisVoice'
 import {
   Bot,
   Send,
@@ -13,6 +14,9 @@ import {
   CheckCheck,
   MessageSquare,
   Plus,
+  Volume2,
+  VolumeX,
+  Square,
 } from 'lucide-react'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -23,7 +27,31 @@ const PERSONAS = {
     color: '#f59e0b',
     accent: '#f59e0b20',
     border: '#f59e0b40',
-    system: 'You are Jarvis, a sharp AI assistant for J. Worden & Sons Asphalt Paving. Be direct and precise. Focus on business decisions, lead management, pricing, and field operations. Keep responses concise and actionable.',
+    // Register matters as much as accuracy here. The previous prompt ordered
+    // "keep responses concise", which — stacked on the backend's own brevity cap —
+    // produced clipped, characterless replies that read as broken rather than
+    // efficient. Length should follow the question, not a blanket rule.
+    system: [
+      'You are JARVIS, the operational AI for the owner of J. Worden & Sons — a fourth-generation',
+      'Virginia paving and general-contracting firm, operating since 1984. Address him as "Sir".',
+      'Your register is composed, precise and quietly witty: the trusted right hand who has read',
+      'every spec and is unimpressed by hype. Dry humour is welcome when it lands; never fawning,',
+      'never corporate filler.',
+      'You have opinions and you give them — when asked what you would do, give a recommendation',
+      'and the reason, not a menu of options. Push back when he is about to do something costly,',
+      'and say why.',
+      'Match your length to the question: a yes/no gets a sentence; a bid strategy or a',
+      '"walk me through this" gets the room it deserves, with structure. Lead with the answer,',
+      'then the reasoning. Never pad to seem thorough, never truncate to seem efficient.',
+      'He runs crews and wins bids; he is not a programmer. Explain technical things in plain',
+      'working English with concrete numbers, the way a good foreman explains a spec.',
+      'Never invent business facts — job numbers, payments, lead counts, rankings and schedules',
+      'come from tools or they do not get stated. Saying "I do not have that" is always better',
+      'than a plausible number.',
+      'Worden standards are non-negotiable in any spec or proposal: 96% Marshall Unit Weight',
+      'minimum compaction, VDOT Section 315 structural stone base, and a ±$9/ton liquid asphalt',
+      'buffer in every estimate.',
+    ].join(' '),
   },
   ANGELIC: {
     label: 'ANGELIC',
@@ -305,6 +333,20 @@ export default function JarvisPage() {
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
   const [listening, setListening] = useState(false)
+  // Voice output. Persisted so the operator's choice survives a reload; Jarvis
+  // speaking unprompted on every page load would be worse than silence.
+  const [voiceOn, setVoiceOn] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem('jarvis.voice') === '1'
+  })
+  const { speak, stop: stopSpeaking, speaking, provider: voiceProvider } = useJarvisVoice(voiceOn)
+  // Hands-free conversation: you talk, he acts, he answers aloud, the mic
+  // reopens. Mirrored into a ref because the SpeechRecognition callbacks are
+  // created once and would otherwise close over a stale value.
+  const [conversation, setConversation] = useState(false)
+  const conversationRef = useRef(false)
+  const resumeTimerRef = useRef(null)
+  useEffect(() => { conversationRef.current = conversation }, [conversation])
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
@@ -401,6 +443,7 @@ export default function JarvisPage() {
         persona,
       }
       addMessage(activeId, botMessage)
+      if (reply) speak(reply)
     } catch {
       addMessage(activeId, {
         role: 'jarvis',
@@ -410,34 +453,87 @@ export default function JarvisPage() {
       })
     }
     setThinking(false)
-  }, [activeId, input, thinking, persona, addMessage])
+  }, [activeId, input, thinking, persona, addMessage, speak])
 
-  // Voice input
+  // Voice input. In conversation mode a finished utterance is sent straight to
+  // Jarvis; otherwise it is dictated into the input box for the operator to edit.
+  const beginListening = useCallback(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) return
+    // Never open the mic while he is talking, or he transcribes his own voice.
+    if (speaking) return
+    try { recognitionRef.current?.stop() } catch { /* not running */ }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-US'
+    recognition.interimResults = false
+    recognition.continuous = false
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript
+      setListening(false)
+      if (conversationRef.current) {
+        if (transcript.trim()) send(transcript.trim())
+      } else {
+        setInput(prev => prev + (prev ? ' ' : '') + transcript)
+      }
+    }
+    recognition.onerror = () => setListening(false)
+    recognition.onend = () => setListening(false)
+
+    recognitionRef.current = recognition
+    try {
+      recognition.start()
+      setListening(true)
+    } catch {
+      setListening(false)
+    }
+  }, [speaking, send])
+
   const toggleVoice = useCallback(() => {
     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
       alert('Voice input is not supported in this browser. Try Chrome.')
       return
     }
     if (listening) {
-      recognitionRef.current?.stop()
+      try { recognitionRef.current?.stop() } catch { /* ignore */ }
       setListening(false)
       return
     }
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    const recognition = new SpeechRecognition()
-    recognition.lang = 'en-US'
-    recognition.interimResults = false
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript
-      setInput(prev => prev + (prev ? ' ' : '') + transcript)
-      setListening(false)
+    beginListening()
+  }, [listening, beginListening])
+
+  // The conversation loop. Once he has stopped speaking and is not thinking,
+  // reopen the mic so the operator can simply keep talking. The short delay
+  // keeps the mic from catching the tail of his own audio.
+  useEffect(() => {
+    if (!conversation) {
+      if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null }
+      return
     }
-    recognition.onerror = () => setListening(false)
-    recognition.onend = () => setListening(false)
-    recognitionRef.current = recognition
-    recognition.start()
-    setListening(true)
-  }, [listening])
+    if (speaking || thinking || listening) return
+    resumeTimerRef.current = setTimeout(() => beginListening(), 600)
+    return () => {
+      if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null }
+    }
+  }, [conversation, speaking, thinking, listening, beginListening])
+
+  // Entering conversation mode implies he should answer aloud.
+  const toggleConversation = useCallback(() => {
+    const next = !conversation
+    setConversation(next)
+    if (next) {
+      if (!voiceOn) {
+        setVoiceOn(true)
+        try { window.localStorage.setItem('jarvis.voice', '1') } catch { /* ignore */ }
+      }
+      beginListening()
+    } else {
+      try { recognitionRef.current?.stop() } catch { /* ignore */ }
+      setListening(false)
+      stopSpeaking()
+    }
+  }, [conversation, voiceOn, beginListening, stopSpeaking])
 
   const personaConfig = PERSONAS[persona]
 
@@ -666,6 +762,63 @@ export default function JarvisPage() {
                 }}
               >
                 {listening ? <MicOff size={18} color='#ef4444' /> : <Mic size={18} color='#64748b' />}
+              </button>
+
+              {/* Voice output. While Jarvis is speaking this becomes a stop
+                  button — a long spoken answer you cannot interrupt is worse
+                  than no voice at all. */}
+              <button
+                type="button"
+                title={
+                  speaking
+                    ? 'Stop speaking'
+                    : voiceOn
+                      ? `Voice on${voiceProvider ? ` (${voiceProvider})` : ''} — click to mute`
+                      : 'Voice off — click to let Jarvis speak'
+                }
+                onClick={() => {
+                  if (speaking) { stopSpeaking(); return }
+                  const next = !voiceOn
+                  setVoiceOn(next)
+                  try { window.localStorage.setItem('jarvis.voice', next ? '1' : '0') } catch { /* ignore */ }
+                  if (!next) stopSpeaking()
+                }}
+                style={{
+                  width: 44, height: 44, flexShrink: 0,
+                  background: speaking ? '#f59e0b20' : voiceOn ? '#22c55e15' : '#0a0f1e',
+                  border: `1px solid ${speaking ? '#f59e0b' : voiceOn ? '#22c55e60' : '#1e293b'}`,
+                  borderRadius: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer',
+                  animation: speaking ? 'listening-pulse 1.5s ease-in-out infinite' : 'none',
+                }}
+              >
+                {speaking
+                  ? <Square size={16} color='#f59e0b' />
+                  : voiceOn
+                    ? <Volume2 size={18} color='#22c55e' />
+                    : <VolumeX size={18} color='#64748b' />}
+              </button>
+
+              {/* Conversation mode — talk to him, hands free. */}
+              <button
+                type="button"
+                title={conversation ? 'End conversation mode' : 'Conversation mode — just talk, hands free'}
+                onClick={toggleConversation}
+                style={{
+                  height: 44, flexShrink: 0, padding: '0 14px',
+                  background: conversation ? '#3b82f620' : '#0a0f1e',
+                  border: `1px solid ${conversation ? '#3b82f6' : '#1e293b'}`,
+                  borderRadius: 12,
+                  display: 'flex', alignItems: 'center', gap: 7,
+                  cursor: 'pointer',
+                  color: conversation ? '#93c5fd' : '#64748b',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <Bot size={15} />
+                {conversation ? 'TALKING' : 'TALK'}
               </button>
 
               <button

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '@/api/client';
 import { useNavigate } from 'react-router-dom';
-import { Phone, Mail, MapPin, Clock, Loader2, DollarSign, Sparkles, RefreshCw, Map } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Loader2, DollarSign, Sparkles, RefreshCw, Map, Filter } from 'lucide-react';
 import LeadScoreBadge from '@/components/LeadScoreBadge';
 import LeadMap from '@/components/LeadMap';
+import EmptyState from '@/components/EmptyState';
 
 const TIER_ORDER = { hot: 0, warm: 1, cool: 2, cold: 3 };
 
@@ -186,11 +187,24 @@ export default function LeadInbox() {
         ) : viewMode === 'map' ? (
           <LeadMap leads={leads} jobs={jobs} estimates={estimates} />
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-border">
-            <p className="font-display text-muted-foreground text-sm tracking-wider uppercase">
-              No leads in this view
-            </p>
-          </div>
+          /* An empty inbox is almost always "nothing has come in yet" rather
+             than a fault, and those two need to look different. Distinguish
+             them: if there are no leads at all, explain where leads come from;
+             if there are leads but this filter hides them, say so. */
+          leads.length === 0 ? (
+            <EmptyState
+              title="No leads yet"
+              body="This inbox is connected and working — nothing has come in yet. Leads arrive automatically when someone submits a quote or contact form on the website, and every one is scored on close probability and project value the moment it lands."
+              hint="Nothing to set up. The website forms already post here. If you expected a lead and do not see it, check the form on the public site first."
+              action={{ label: 'Open Command Center', to: '/command-center' }}
+            />
+          ) : (
+            <EmptyState
+              title="No leads match this view"
+              body={`You have ${leads.length} lead${leads.length === 1 ? '' : 's'}, but none in this filter. Switch to “All” to see everything.`}
+              icon={Filter}
+            />
+          )
         ) : (
           <div className="grid grid-cols-1 gap-3">
             {filtered.map((lead) => (

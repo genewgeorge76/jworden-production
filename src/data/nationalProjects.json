@@ -1,0 +1,424 @@
+{
+  "_source": "Compiled from J. Worden & Sons project correspondence. Every entry below is backed by a dated email in the company archive — most are completion-photo submissions sent to the client on the date shown. Scope is recorded only where the correspondence states it; entries without a stated scope say so rather than guessing.",
+  "_completeness": "This is a floor, not a ceiling. It enumerates only what one mailbox documents with a date, which is densest for 2015-2019. The work continued past that and the Atlanta metro alone ran to well over 100 restaurants. Nothing here should be read as the full extent of the portfolio.",
+  "_compiled": "2026-07-30",
+  "programs": [
+    {
+      "id": "kbp-foods",
+      "client": "KBP Foods / KBP Investments",
+      "clientNote": "One of the largest KFC franchise operators in the United States, headquartered in Overland Park, Kansas.",
+      "role": "Multi-state paving, sealcoating, concrete and site work across the KBP restaurant portfolio, plus general contracting on the new-store build program.",
+      "years": "2015–2023",
+      "engagementStart": "2015-12-21",
+      "_coverageNote": "The programme ran through 2023. The site list below is drawn from project correspondence in one mailbox, which documents 2015–2019 in detail; later years are under-represented here and are not bounded by this list. Atlanta in particular ran to well over 100 restaurants — only the locations with a dated email record are enumerated below.",
+      "states": ["VA", "NC", "MI", "NJ", "GA", "TX", "IL", "TN", "MO", "FL", "LA"],
+      "sites": [
+        {
+          "store": "135",
+          "address": "5010 Mercury Blvd",
+          "city": "Newport News",
+          "state": "VA",
+          "scope": null,
+          "documented": "2017-07-10",
+          "evidence": "During and after photographs submitted to client"
+        },
+        {
+          "store": "149",
+          "address": "10151 Hull Street Rd",
+          "city": "Midlothian",
+          "state": "VA",
+          "scope": null,
+          "documented": "2017-07-10",
+          "evidence": "Finished photographs submitted to client"
+        },
+        {
+          "store": "162",
+          "address": "1010 Independence Blvd",
+          "city": "Virginia Beach",
+          "state": "VA",
+          "scope": null,
+          "documented": "2017-06-28",
+          "evidence": "Before, during and after photographs submitted to client"
+        },
+        {
+          "store": "184",
+          "address": "2304 Maple Ave",
+          "city": "Burlington",
+          "state": "NC",
+          "scope": null,
+          "documented": "2017-07-17",
+          "evidence": "Before photographs 2017-06-27; during and after photographs 2017-07-17"
+        },
+        {
+          "store": "186",
+          "address": "N Church St",
+          "city": "Burlington",
+          "state": "NC",
+          "scope": null,
+          "documented": "2017-07-10",
+          "evidence": "Before photographs 2017-06-27; during and after photographs 2017-07-10"
+        },
+        {
+          "store": "189",
+          "address": "4623 W Market St",
+          "city": "Greensboro",
+          "state": "NC",
+          "scope": null,
+          "documented": "2017-06-07",
+          "evidence": "Before photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "2340 Randleman Rd",
+          "city": "Greensboro",
+          "state": "NC",
+          "scope": null,
+          "documented": "2017-06-07",
+          "evidence": "Before photographs submitted to client"
+        },
+        {
+          "store": "195",
+          "address": "2722 S Main St",
+          "city": "High Point",
+          "state": "NC",
+          "scope": null,
+          "documented": "2017-07-24",
+          "evidence": "Site documented 2017-06-07; after photographs 2017-07-24"
+        },
+        {
+          "store": "207",
+          "address": null,
+          "city": "Elizabeth City",
+          "state": "NC",
+          "scope": null,
+          "documented": "2017",
+          "evidence": "Project correspondence with client"
+        },
+        {
+          "store": "356",
+          "address": "8939 W Seven Mile Rd",
+          "city": "Detroit",
+          "state": "MI",
+          "scope": null,
+          "documented": "2017-07-24",
+          "evidence": "Before photographs submitted to client"
+        },
+        {
+          "store": "369",
+          "address": "12721 Michigan Ave",
+          "city": "Dearborn",
+          "state": "MI",
+          "scope": null,
+          "documented": "2017-07-24",
+          "evidence": "Before photographs submitted to client; after and during photographs submitted with final invoice"
+        },
+        {
+          "store": null,
+          "address": "688 Lyons Ave",
+          "city": "Irvington",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "841 Springfield Ave",
+          "city": "Irvington",
+          "state": "NJ",
+          "scope": "Patch and seal; concrete pad cut back to stable subgrade and patched",
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs and scope notes submitted to client"
+        },
+        {
+          "store": null,
+          "address": "92 St George's Ave",
+          "city": "Rahway",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "419 US Route 1",
+          "city": "Iselin",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "1055 Route 1 South",
+          "city": "North Brunswick",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "190 Route 46",
+          "city": "Rockaway",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "Route 36",
+          "city": "Hazlet",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "185 Ridgedale Ave",
+          "city": "Florham Park",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-04-21",
+          "evidence": "Completion photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Hackettstown",
+          "state": "NJ",
+          "scope": null,
+          "documented": "2017-05-05",
+          "evidence": "Finished photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": "1133 N Loop 340",
+          "city": "Lacy Lakeview (Waco)",
+          "state": "TX",
+          "scope": null,
+          "documented": "2017-02-27",
+          "evidence": "Site coordination with client operations; geotagged site photographs on file dated 2015-06-20"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "McAllen",
+          "state": "TX",
+          "scope": "Parking lot work completed in halves to keep the entrance accessible during trading hours",
+          "documented": "2017-01-09",
+          "evidence": "Traffic-control photographs and scope notes submitted to client"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Brownsville",
+          "state": "TX",
+          "scope": null,
+          "documented": "2017-01-04",
+          "evidence": "Schedule coordination with client area coaches"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Mission",
+          "state": "TX",
+          "scope": null,
+          "documented": "2017-01-04",
+          "evidence": "Schedule coordination with client area coaches"
+        },
+        {
+          "store": "G135231",
+          "address": null,
+          "city": "Del Rio",
+          "state": "TX",
+          "scope": null,
+          "documented": "2017-12-11",
+          "evidence": "Site correspondence with client"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Alpharetta",
+          "state": "GA",
+          "scope": null,
+          "documented": "2016-04-16",
+          "evidence": "Photographs submitted to client and approved same day"
+        },
+        {
+          "store": null,
+          "address": "Old National Hwy",
+          "city": "Atlanta",
+          "state": "GA",
+          "scope": null,
+          "documented": "2016-04-16",
+          "evidence": "Site condition photographs submitted to client"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Stone Mountain",
+          "state": "GA",
+          "scope": "Asphalt patching",
+          "documented": "2016-09-01",
+          "evidence": "Work notice sent to store operator"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Kennesaw",
+          "state": "GA",
+          "scope": "Asphalt patching",
+          "documented": "2016-07-27",
+          "evidence": "Work notice sent to store operator"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Acworth",
+          "state": "GA",
+          "scope": "Concrete parking lot work",
+          "documented": "2016-09-27",
+          "evidence": "Work notice sent to store operator"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Cartersville",
+          "state": "GA",
+          "scope": "Sealcoating",
+          "documented": "2016-10-25",
+          "evidence": "Work notice sent to store operator"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Stockbridge",
+          "state": "GA",
+          "scope": null,
+          "documented": "2016-07-22",
+          "evidence": "Site photographs on file"
+        },
+        {
+          "store": null,
+          "address": "Holcomb Bridge Rd",
+          "city": "Roswell",
+          "state": "GA",
+          "scope": "Sealcoating and striping, completed after hours",
+          "documented": "2016-08-17",
+          "evidence": "Work notice sent to store operator"
+        },
+        {
+          "store": null,
+          "address": "2540 Delk Rd SE",
+          "city": "Marietta",
+          "state": "GA",
+          "scope": "Concrete patching and entranceway work",
+          "documented": "2016-07-22",
+          "evidence": "Measured scope notes on file"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "South Chicago Heights",
+          "state": "IL",
+          "scope": "Striping layout",
+          "documented": "2017-04-25",
+          "evidence": "Estimate and layout coordination"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Smyrna",
+          "state": "TN",
+          "scope": null,
+          "documented": "2017-04-25",
+          "evidence": "Site correspondence with client"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Excelsior Springs",
+          "state": "MO",
+          "scope": null,
+          "documented": "2017-01-20",
+          "evidence": "Project information on file"
+        },
+        {
+          "store": null,
+          "address": "4th St",
+          "city": "Ft Pierce",
+          "state": "FL",
+          "scope": null,
+          "documented": "2018-07-12",
+          "evidence": "Executed contract on file"
+        },
+        {
+          "store": null,
+          "address": null,
+          "city": "Port St. Lucie",
+          "state": "FL",
+          "scope": null,
+          "documented": "2018-07-12",
+          "evidence": "Executed contract on file"
+        }
+      ],
+      "newBuildProgram": {
+        "role": "General contractor",
+        "years": "2018",
+        "developer": "Plaza Street Partners, Prairie Village, Kansas",
+        "projectTeam": [
+          "Plaza Street Partners — developer",
+          "Davidson AE — architect",
+          "Burns & McDonnell — engineering",
+          "Innovative Building Solutions LLC — construction management"
+        ],
+        "sites": [
+          { "city": "Leesville", "state": "LA", "note": "Ground-up KFC build" },
+          { "city": "DeRidder", "state": "LA", "note": "Ground-up KFC build" },
+          { "city": "Sulphur Springs", "state": "TN", "note": "TDOT entrance permit obtained" }
+        ]
+      }
+    }
+  ],
+  "otherCommercial": [
+    {
+      "client": "KinderCare",
+      "address": null,
+      "city": "Midlothian",
+      "state": "VA",
+      "scope": "Parking lot",
+      "documented": "2018-08-29",
+      "evidence": "Contracted through KAI Total Pavement Management; estimate and invoice on file"
+    },
+    {
+      "client": "VA Cars Inc",
+      "address": null,
+      "city": "Richmond",
+      "state": "VA",
+      "scope": "Parking lot",
+      "documented": "2019-07-12",
+      "evidence": "Invoice on file"
+    },
+    {
+      "client": "Scott Douglas Corp",
+      "address": "2201 N Parham Rd",
+      "city": "Richmond",
+      "state": "VA",
+      "scope": "Parking lot, curb repair and grading",
+      "documented": "2019-08-05",
+      "evidence": "Estimate, follow-on scope request and client correspondence on file"
+    },
+    {
+      "client": "Kalmia Apartments",
+      "address": null,
+      "city": "Clearwater",
+      "state": "FL",
+      "scope": "Milling and paving",
+      "documented": "2019-09-24",
+      "evidence": "Project awarded; insurance and W-9 submitted, schedule confirmed"
+    }
+  ]
+}

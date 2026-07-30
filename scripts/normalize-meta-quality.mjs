@@ -1,9 +1,66 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { renderRegionalBody } from './regional-content.mjs';
+
+// TWO-PASS DESIGN — read this before changing the call order in package.json.
+//
+// This script runs twice per build, and the two passes do different jobs:
+//
+//   pass 1 (before prerender)  stamps title/description/canonical onto
+//                              dist/index.html. prerender.mjs renders all ~209
+//                              sitemap routes FROM that file, so the canonical
+//                              stamped here is inherited by every prerendered
+//                              page. verify-seo-readiness.mjs fails the build if
+//                              any prerendered route lacks one, so this pass is
+//                              load-bearing for the main site's indexed routes.
+//
+//   pass 2 (--domains-only)    regenerates only the regional dist/<domain>.html
+//                              files, now that index.html actually contains
+//                              prerendered markup. Without this pass those files
+//                              are copied from the empty pre-prerender shell and
+//                              every regional domain ships a blank page to
+//                              Google — which is exactly what was happening.
+//
+// Pass 2 deliberately does NOT rewrite index.html: by then it holds the
+// prerendered homepage, and overwriting it would undo prerender's work on the
+// main money site.
+const DOMAINS_ONLY = process.argv.includes('--domains-only');
 
 const root = process.cwd();
 const distDir = path.join(root, 'dist');
+
+/**
+ * Replace everything inside <div id="root"> with `inner`, keeping the wrapper
+ * and everything after it (the module script tags that boot React).
+ *
+ * Depth counting rather than a regex, because the prerendered homepage nests
+ * hundreds of divs and no regular expression can find a matching close tag. A
+ * non-greedy `[\s\S]*?</div>` stops at the FIRST close and leaves the rest of
+ * the page in place — which silently produced a Carolina domain mentioning
+ * Richmond 22 times.
+ *
+ * Returns null when the subtree cannot be located, so the caller can warn
+ * instead of shipping a file it did not actually change.
+ */
+function replaceRootSubtree(html, inner) {
+  const openMatch = /<div[^>]+id="root"[^>]*>/.exec(html);
+  if (!openMatch) return null;
+
+  const contentStart = openMatch.index + openMatch[0].length;
+  const tag = /<div\b[^>]*>|<\/div>/gi;
+  tag.lastIndex = contentStart;
+
+  let depth = 1;
+  let m;
+  while ((m = tag.exec(html)) !== null) {
+    depth += m[0][1] === '/' ? -1 : 1;
+    if (depth === 0) {
+      return html.slice(0, contentStart) + inner + html.slice(m.index);
+    }
+  }
+  return null; // unbalanced markup — do not guess
+}
 const profilesPath = path.join(root, 'src', 'data', 'regionalMarketProfiles.js');
 
 const defaultTenant = {
@@ -32,6 +89,24 @@ function upsertDescription(html, nextDesc) {
     return html.replace(descRegex, descTag);
   }
   return html.replace(/<head[^>]*>/i, (m) => `${m}\n${descTag}`);
+}
+
+/**
+ * og:url must point at the domain being generated.
+ *
+ * The base index.html hardcodes og:url to www.jwordenasphaltpaving.com. Copied
+ * unchanged into every regional file, that told crawlers and social scrapers
+ * the canonical entity for Savannah, Richmond and Carolina Blacktop was the
+ * main J. Worden site — a cross-domain signal working directly against the
+ * per-domain canonical tag sitting a few lines above it.
+ */
+function upsertOgUrl(html, canonicalBase) {
+  const tag = `<meta property="og:url" content="${canonicalBase}">`;
+  const regex = /<meta[^>]+property=["']og:url["'][^>]*>/i;
+  if (regex.test(html)) {
+    return html.replace(regex, tag);
+  }
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
 }
 
 function upsertCanonical(html, canonicalBase) {
@@ -132,8 +207,32 @@ async function run() {
     let html = upsertTitle(rawHtml, title);
     html = upsertDescription(html, desc);
     html = upsertCanonical(html, canonicalBase);
+    html = upsertOgUrl(html, canonicalBase);
     html = upsertSchema(html, tenant, canonicalBase);
-    
+
+    // Give the domain its OWN body.
+    //
+    // Without this every regional file carries the Virginia homepage, so six
+    // domains serve one page under six names — each canonicalising to itself.
+    // Content-wise that is a doorway network, and the rewritten <head> does not
+    // change it: Google compares bodies.
+    //
+    // Only done on pass 2, when index.html has been prerendered and the body
+    // markers we splice between actually exist. On pass 1 the file is still a
+    // template and there is nothing to replace.
+    if (DOMAINS_ONLY) {
+      const regional = renderRegionalBody(domain, tenant, root);
+      const replaced = replaceRootSubtree(html, regional);
+      if (replaced === null) {
+        console.warn(
+          `[meta-normalizer] ${domain}: could not locate the #root subtree — ` +
+            'file keeps the shared body. Check the prerender output before shipping.',
+        );
+      } else {
+        html = replaced;
+      }
+    }
+
     fs.writeFileSync(path.join(distDir, `${domain}.html`), html, 'utf8');
     generatedCount++;
   }
@@ -160,6 +259,13 @@ async function run() {
   generatedCount++;
 
   // Update index.html for jwordenasphaltpaving.com
+  // Pass 2 stops here: index.html is the prerendered homepage at this point and
+  // must not be rewritten from a template.
+  if (DOMAINS_ONLY) {
+    console.log(`[meta-normalizer] --domains-only: regenerated ${generatedCount} regional files from prerendered index.html; left index.html untouched.`);
+    return;
+  }
+
   const defaultCanonical = 'https://www.jwordenasphaltpaving.com';
   let defaultHtml = upsertTitle(rawHtml, 'J. Worden Asphalt Paving | Premium Asphalt Services');
   defaultHtml = upsertDescription(defaultHtml, 'Premium asphalt paving, sealcoating, and repair in Virginia. Contact J. Worden Asphalt Paving today.');

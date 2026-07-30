@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, CloudRain, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
 import CockpitHome from '../components/CockpitHome'
@@ -320,6 +320,14 @@ function HubLinkPanel() {
       icon: Box,
       color: 'text-orange-400',
       bg: 'bg-orange-400/10',
+    },
+    {
+      title: 'Storm Tracker',
+      desc: 'Live radar loop, NWS warnings, paving go/no-go',
+      path: '/storm-tracker',
+      icon: CloudRain,
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-400/10',
     },
     {
       title: 'AI Estimators',

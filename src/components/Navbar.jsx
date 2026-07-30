@@ -12,6 +12,9 @@ const NAV_LINKS = [
   { label: 'Services', href: '/services' },
   { label: 'Locations', href: '/locations' },
   { label: 'Worden U', href: '/worden-university' },
+  // Public proof of where the work actually is — every pin backed by dated,
+  // GPS-tagged job photographs rather than a drawn coverage area.
+  { label: 'Our Work', href: '/footprint' },
   { label: 'Reviews', href: '/reviews' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
