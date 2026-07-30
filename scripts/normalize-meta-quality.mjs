@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { renderRegionalBody } from './regional-content.mjs';
 
 // TWO-PASS DESIGN — read this before changing the call order in package.json.
 //
@@ -28,6 +29,38 @@ const DOMAINS_ONLY = process.argv.includes('--domains-only');
 
 const root = process.cwd();
 const distDir = path.join(root, 'dist');
+
+/**
+ * Replace everything inside <div id="root"> with `inner`, keeping the wrapper
+ * and everything after it (the module script tags that boot React).
+ *
+ * Depth counting rather than a regex, because the prerendered homepage nests
+ * hundreds of divs and no regular expression can find a matching close tag. A
+ * non-greedy `[\s\S]*?</div>` stops at the FIRST close and leaves the rest of
+ * the page in place — which silently produced a Carolina domain mentioning
+ * Richmond 22 times.
+ *
+ * Returns null when the subtree cannot be located, so the caller can warn
+ * instead of shipping a file it did not actually change.
+ */
+function replaceRootSubtree(html, inner) {
+  const openMatch = /<div[^>]+id="root"[^>]*>/.exec(html);
+  if (!openMatch) return null;
+
+  const contentStart = openMatch.index + openMatch[0].length;
+  const tag = /<div\b[^>]*>|<\/div>/gi;
+  tag.lastIndex = contentStart;
+
+  let depth = 1;
+  let m;
+  while ((m = tag.exec(html)) !== null) {
+    depth += m[0][1] === '/' ? -1 : 1;
+    if (depth === 0) {
+      return html.slice(0, contentStart) + inner + html.slice(m.index);
+    }
+  }
+  return null; // unbalanced markup — do not guess
+}
 const profilesPath = path.join(root, 'src', 'data', 'regionalMarketProfiles.js');
 
 const defaultTenant = {
@@ -176,7 +209,30 @@ async function run() {
     html = upsertCanonical(html, canonicalBase);
     html = upsertOgUrl(html, canonicalBase);
     html = upsertSchema(html, tenant, canonicalBase);
-    
+
+    // Give the domain its OWN body.
+    //
+    // Without this every regional file carries the Virginia homepage, so six
+    // domains serve one page under six names — each canonicalising to itself.
+    // Content-wise that is a doorway network, and the rewritten <head> does not
+    // change it: Google compares bodies.
+    //
+    // Only done on pass 2, when index.html has been prerendered and the body
+    // markers we splice between actually exist. On pass 1 the file is still a
+    // template and there is nothing to replace.
+    if (DOMAINS_ONLY) {
+      const regional = renderRegionalBody(domain, tenant, root);
+      const replaced = replaceRootSubtree(html, regional);
+      if (replaced === null) {
+        console.warn(
+          `[meta-normalizer] ${domain}: could not locate the #root subtree — ` +
+            'file keeps the shared body. Check the prerender output before shipping.',
+        );
+      } else {
+        html = replaced;
+      }
+    }
+
     fs.writeFileSync(path.join(distDir, `${domain}.html`), html, 'utf8');
     generatedCount++;
   }
