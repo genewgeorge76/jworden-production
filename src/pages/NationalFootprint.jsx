@@ -15,6 +15,16 @@
  * Sites are loaded from src/data/jobSites.json, produced by the Dropbox EXIF
  * harvest. If that file is absent or empty the page says so plainly rather than
  * drawing an empty map that looks broken.
+ *
+ * ADDRESSES ARE NOT SHOWN UNIFORMLY, AND THAT IS DELIBERATE
+ *
+ * Commercial pins carry a street address: a restaurant or a dealership puts its
+ * address on a sign, and naming it is what makes the pin checkable.
+ *
+ * Residential pins carry city and state only. A homeowner who let a paving crew
+ * onto their driveway did not agree to have their street address published on a
+ * public map with a photograph count beside it. The pin still proves the work
+ * happened; the customer stays unnamed. `kind` on each record decides which.
  */
 
 import { useMemo, useState } from 'react'
@@ -49,7 +59,24 @@ export default function NationalFootprint() {
   const stats = useMemo(() => {
     const states = [...new Set(sites.map((s) => s.state).filter(Boolean))].sort()
     const photos = sites.reduce((n, s) => n + (s.photo_count || 0), 0)
-    return { states, photos, count: sites.length }
+    const commercial = sites.filter((s) => s.kind === 'commercial').length
+    return { states, photos, commercial, count: sites.length }
+  }, [sites])
+
+  /** Listed individually — these carry a checkable name and address. */
+  const commercialSites = useMemo(
+    () => sites.filter((s) => s.kind === 'commercial'),
+    [sites],
+  )
+
+  /** Counted, not listed. Busiest state first. */
+  const residentialByState = useMemo(() => {
+    const counts = new Map()
+    for (const s of sites) {
+      if (s.kind === 'commercial' || !s.state) continue
+      counts.set(s.state, (counts.get(s.state) || 0) + 1)
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1])
   }, [sites])
 
   return (
@@ -63,9 +90,10 @@ export default function NationalFootprint() {
             National Footprint
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-            Every pin is a job site where we have dated, GPS-tagged photographs on file.
-            Locations come from the photographs themselves, not from a coverage map — each
-            one can be checked against its address and the dates the work was done.
+            Every pin is a job site where we have dated, GPS-tagged photographs on file — every
+            job, whatever it was: restaurant lots, arenas, retail, and private driveways alike.
+            Locations come from the photographs themselves, not from a coverage map, so each one
+            can be checked against the dates the work was done.
           </p>
 
           {sites.length > 0 && (
@@ -74,6 +102,14 @@ export default function NationalFootprint() {
                 <div className="font-display text-2xl font-black text-primary">{stats.count}</div>
                 <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                   documented sites
+                </div>
+              </div>
+              <div>
+                <div className="font-display text-2xl font-black text-primary">
+                  {stats.commercial}
+                </div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                  commercial
                 </div>
               </div>
               <div>
@@ -94,6 +130,19 @@ export default function NationalFootprint() {
               </div>
             </div>
           )}
+
+          {/* The privacy rule, said out loud. A customer reading this page
+              learns that hiring us does not put their address on the internet. */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#f97316]" />
+              Commercial — street address shown
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#38bdf8]" />
+              Residential — city only, never the customer&rsquo;s address
+            </span>
+          </div>
 
           {stats.states.length > 0 && (
             <div className="mt-5 flex flex-wrap gap-1.5">
@@ -143,15 +192,20 @@ export default function NationalFootprint() {
                     position={{ lat: s.lat, lng: s.lon }}
                     onClick={() => setActive(s)}
                   >
-                    {/* Pin scales with how much work is documented there. */}
+                    {/* Pin scales with how much work is documented there, and
+                        is coloured by job type so a commercial portfolio reads
+                        at a glance against the residential base. */}
                     <div
                       style={{
                         width: Math.min(34, 12 + (s.photo_count || 1)),
                         height: Math.min(34, 12 + (s.photo_count || 1)),
                         borderRadius: '9999px',
-                        background: '#f97316',
+                        background: s.kind === 'commercial' ? '#f97316' : '#38bdf8',
                         border: '2px solid #fff',
-                        boxShadow: '0 0 0 2px rgba(249,115,22,.35)',
+                        boxShadow:
+                          s.kind === 'commercial'
+                            ? '0 0 0 2px rgba(249,115,22,.35)'
+                            : '0 0 0 2px rgba(56,189,248,.30)',
                       }}
                     />
                   </AdvancedMarker>
@@ -164,8 +218,13 @@ export default function NationalFootprint() {
                   >
                     <div style={{ maxWidth: 260, color: '#0f172a' }}>
                       <div style={{ fontWeight: 700, fontSize: 13 }}>
-                        {active.city ? `${active.city}, ${active.state}` : 'Job site'}
+                        {active.place || (active.city ? `${active.city}, ${active.state}` : 'Job site')}
                       </div>
+                      {active.place && (
+                        <div style={{ marginTop: 2, fontSize: 12, color: '#475569' }}>
+                          {active.city}, {active.state}
+                        </div>
+                      )}
                       {active.address && (
                         <div style={{ marginTop: 4, fontSize: 12, color: '#475569' }}>
                           {active.address}
@@ -190,23 +249,36 @@ export default function NationalFootprint() {
           </div>
         )}
 
-        {/* Text list — indexable, and works without the map script. */}
-        {sites.length > 0 && (
+        {/* Text list — indexable, and works without the map script.
+            Only commercial sites are listed individually: they are the ones
+            that carry a checkable name and address, and listing 400+ private
+            driveways as cards would bury them without telling anyone anything.
+            Residential volume is reported per state instead. */}
+        {commercialSites.length > 0 && (
           <div className="mt-10">
             <h2 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
-              Documented Sites
+              Commercial Sites
             </h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {commercialSites.length} commercial job sites with a business address on file.
+              Private residential work is on the map but not listed by address.
+            </p>
             <div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-              {sites.map((s, i) => (
+              {commercialSites.map((s, i) => (
                 <div key={`${s.lat}-${i}`} className="border border-border bg-card p-4">
                   <div className="flex items-start gap-2">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <div>
+                    <div className="min-w-0">
                       <div className="text-sm font-semibold text-foreground">
-                        {s.city ? `${s.city}, ${s.state}` : `${s.lat}, ${s.lon}`}
+                        {s.place || `${s.city}, ${s.state}`}
                       </div>
                       {s.address && (
                         <div className="mt-0.5 text-xs text-muted-foreground">{s.address}</div>
+                      )}
+                      {s.place && (
+                        <div className="text-xs text-muted-foreground">
+                          {s.city}, {s.state}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -219,6 +291,29 @@ export default function NationalFootprint() {
                         <CalendarDays className="h-3 w-3" /> {fmtDate(s.first_seen)}
                       </span>
                     )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Residential volume by state — the count is the point, not the address. */}
+        {residentialByState.length > 0 && (
+          <div className="mt-12">
+            <h2 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
+              Private Residential Work
+            </h2>
+            <p className="mt-1 max-w-3xl text-xs text-muted-foreground">
+              Driveways and private drives are pinned on the map at their coordinates, counted here
+              by state. We do not publish a customer&rsquo;s street address.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {residentialByState.map(([state, n]) => (
+                <div key={state} className="border border-border bg-card px-4 py-3">
+                  <div className="font-display text-xl font-black text-primary">{n}</div>
+                  <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                    {state}
                   </div>
                 </div>
               ))}
