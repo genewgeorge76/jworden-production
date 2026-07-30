@@ -38,21 +38,27 @@ const MIN_BODY_CHARS = 1500
 /**
  * Readable text a crawler would see: body minus script/style/markup.
  *
- * The close-tag patterns allow whitespace before the '>' because `</script >`
- * is valid HTML that browsers accept. Matching only `</script>` (flagged by
- * CodeQL as bad HTML filtering) would leave the tag unmatched, so the script's
- * source would survive into the "readable text" and be counted as page
- * content — letting an empty shell clear MIN_BODY_CHARS on the strength of its
- * own bundle. That is precisely the failure this file exists to catch, so the
- * strictness matters more here than the unlikelihood of the input.
+ * Close tags are matched as `</name\b[^>]*>`, because an HTML end tag may carry
+ * arbitrary text after the tag name — `</script\t\n bar>` is a valid end tag
+ * and browsers ignore the junk. An earlier fix here allowed only whitespace
+ * (`</script\s*>`), which CodeQL correctly flagged as still incomplete.
  *
- * `\b` after the tag name stops `<scriptish>` being treated as a script open.
+ * That matters in this file specifically. bodyText() strips scripts to measure
+ * how much readable text a crawler would see, and the result is compared
+ * against MIN_BODY_CHARS to decide whether a domain would ship blank. Any
+ * unmatched close tag leaves the script's own source in the "readable" text,
+ * so the bundle is counted as page content and an empty shell clears the floor
+ * on the strength of its own JavaScript — precisely the failure this file
+ * exists to catch. Being strict is worth more than the input is unlikely.
+ *
+ * `\b` after each tag name keeps `<scriptish>` and `</scriptfoo>` out: a word
+ * character there means no boundary, so they are left alone as ordinary markup.
  */
 function bodyText(html) {
-  const body = /<body[^>]*>([\s\S]*)<\/body\s*>/i.exec(html)
+  const body = /<body[^>]*>([\s\S]*)<\/body\b[^>]*>/i.exec(html)
   let t = body ? body[1] : ''
-  t = t.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, ' ')
-  t = t.replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, ' ')
+  t = t.replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, ' ')
+  t = t.replace(/<style\b[^>]*>[\s\S]*?<\/style\b[^>]*>/gi, ' ')
   t = t.replace(/<[^>]+>/g, ' ')
   return t.replace(/\s+/g, ' ').trim()
 }
