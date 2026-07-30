@@ -340,6 +340,13 @@ export default function JarvisPage() {
     return window.localStorage.getItem('jarvis.voice') === '1'
   })
   const { speak, stop: stopSpeaking, speaking, provider: voiceProvider } = useJarvisVoice(voiceOn)
+  // Hands-free conversation: you talk, he acts, he answers aloud, the mic
+  // reopens. Mirrored into a ref because the SpeechRecognition callbacks are
+  // created once and would otherwise close over a stale value.
+  const [conversation, setConversation] = useState(false)
+  const conversationRef = useRef(false)
+  const resumeTimerRef = useRef(null)
+  useEffect(() => { conversationRef.current = conversation }, [conversation])
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
@@ -448,32 +455,85 @@ export default function JarvisPage() {
     setThinking(false)
   }, [activeId, input, thinking, persona, addMessage, speak])
 
-  // Voice input
+  // Voice input. In conversation mode a finished utterance is sent straight to
+  // Jarvis; otherwise it is dictated into the input box for the operator to edit.
+  const beginListening = useCallback(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) return
+    // Never open the mic while he is talking, or he transcribes his own voice.
+    if (speaking) return
+    try { recognitionRef.current?.stop() } catch { /* not running */ }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-US'
+    recognition.interimResults = false
+    recognition.continuous = false
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript
+      setListening(false)
+      if (conversationRef.current) {
+        if (transcript.trim()) send(transcript.trim())
+      } else {
+        setInput(prev => prev + (prev ? ' ' : '') + transcript)
+      }
+    }
+    recognition.onerror = () => setListening(false)
+    recognition.onend = () => setListening(false)
+
+    recognitionRef.current = recognition
+    try {
+      recognition.start()
+      setListening(true)
+    } catch {
+      setListening(false)
+    }
+  }, [speaking, send])
+
   const toggleVoice = useCallback(() => {
     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
       alert('Voice input is not supported in this browser. Try Chrome.')
       return
     }
     if (listening) {
-      recognitionRef.current?.stop()
+      try { recognitionRef.current?.stop() } catch { /* ignore */ }
       setListening(false)
       return
     }
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    const recognition = new SpeechRecognition()
-    recognition.lang = 'en-US'
-    recognition.interimResults = false
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript
-      setInput(prev => prev + (prev ? ' ' : '') + transcript)
-      setListening(false)
+    beginListening()
+  }, [listening, beginListening])
+
+  // The conversation loop. Once he has stopped speaking and is not thinking,
+  // reopen the mic so the operator can simply keep talking. The short delay
+  // keeps the mic from catching the tail of his own audio.
+  useEffect(() => {
+    if (!conversation) {
+      if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null }
+      return
     }
-    recognition.onerror = () => setListening(false)
-    recognition.onend = () => setListening(false)
-    recognitionRef.current = recognition
-    recognition.start()
-    setListening(true)
-  }, [listening])
+    if (speaking || thinking || listening) return
+    resumeTimerRef.current = setTimeout(() => beginListening(), 600)
+    return () => {
+      if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null }
+    }
+  }, [conversation, speaking, thinking, listening, beginListening])
+
+  // Entering conversation mode implies he should answer aloud.
+  const toggleConversation = useCallback(() => {
+    const next = !conversation
+    setConversation(next)
+    if (next) {
+      if (!voiceOn) {
+        setVoiceOn(true)
+        try { window.localStorage.setItem('jarvis.voice', '1') } catch { /* ignore */ }
+      }
+      beginListening()
+    } else {
+      try { recognitionRef.current?.stop() } catch { /* ignore */ }
+      setListening(false)
+      stopSpeaking()
+    }
+  }, [conversation, voiceOn, beginListening, stopSpeaking])
 
   const personaConfig = PERSONAS[persona]
 
@@ -738,6 +798,27 @@ export default function JarvisPage() {
                   : voiceOn
                     ? <Volume2 size={18} color='#22c55e' />
                     : <VolumeX size={18} color='#64748b' />}
+              </button>
+
+              {/* Conversation mode — talk to him, hands free. */}
+              <button
+                type="button"
+                title={conversation ? 'End conversation mode' : 'Conversation mode — just talk, hands free'}
+                onClick={toggleConversation}
+                style={{
+                  height: 44, flexShrink: 0, padding: '0 14px',
+                  background: conversation ? '#3b82f620' : '#0a0f1e',
+                  border: `1px solid ${conversation ? '#3b82f6' : '#1e293b'}`,
+                  borderRadius: 12,
+                  display: 'flex', alignItems: 'center', gap: 7,
+                  cursor: 'pointer',
+                  color: conversation ? '#93c5fd' : '#64748b',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <Bot size={15} />
+                {conversation ? 'TALKING' : 'TALK'}
               </button>
 
               <button
