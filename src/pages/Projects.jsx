@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import SchemaMarkup, { LOCAL_BUSINESS_SCHEMA, projectCaseStudySchema } from '../components/SchemaMarkup'
 import SocialShare from '../components/SocialShare'
 import SmartImage from '../components/SmartImage'
+import KfcNationalProgram from '../components/KfcNationalProgram'
 import { trackEvent } from '../api/client'
 
 /**
@@ -695,6 +696,11 @@ export default function Projects() {
       </section>
 
       {/* CTA */}
+      {/* Real QSR portfolio proof: six fully documented locations plus 120
+          programme photographs, none of them captioned with invented
+          locations. See the component header for why. */}
+      <KfcNationalProgram />
+
       <section className="py-16 bg-brand-amber text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="font-display font-black text-brand-navy text-4xl mb-4">

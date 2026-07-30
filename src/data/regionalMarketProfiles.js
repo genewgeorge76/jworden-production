@@ -21,6 +21,17 @@
 
 export const REGIONAL_MARKET_PROFILES = {
   'richmondasphaltpaving.com': {
+    basedIn: 'Chester, Virginia — 20 minutes from downtown Richmond',
+    travelNote: null,
+    stateDot: 'VDOT (Virginia Department of Transportation) Road & Bridge Specifications, Section 315',
+    subgrade: 'Central Virginia sits on Piedmont clay-loam that holds water against the stone base. Undercut and stone-replace soft spots rather than paving over them — a mat laid on a pumping subgrade fails at the joint within two winters.',
+    climate: 'Roughly 30 freeze-thaw cycles a year. Water entering a crack in November is ice by January, and every cycle widens it. Crack sealing before December is the cheapest work a property manager can buy.',
+    commercialFocus: [
+      'Parking lot construction and full-depth reclamation',
+      'Mill-and-overlay for lots still structurally sound underneath',
+      'ADA stall, aisle and ramp layout to current federal standards',
+      'Night and phased work so retail stays open',
+    ],
     marketName: 'Richmond Asphalt Paving',
     primaryRegion: 'Greater Richmond, Virginia',
     primaryMetro: 'Richmond, VA',
@@ -45,6 +56,17 @@ export const REGIONAL_MARKET_PROFILES = {
   },
 
   'carolinablacktop.com': {
+    basedIn: 'Chester, Virginia — crews travel to the Carolinas for commercial work',
+    travelNote: 'We are a Virginia contractor that mobilises to the Carolinas for commercial and multi-site work. We do not run a Charlotte storefront, and we would rather tell you that than pretend otherwise.',
+    stateDot: 'NCDOT Standard Specifications for Roads and Structures (and SCDOT for South Carolina scopes)',
+    subgrade: 'Piedmont red clay shrinks in drought and swells when saturated, so pavement built straight on it moves seasonally. The fix is a properly thick stone base with drainage that actually leaves the site, not a heavier mat.',
+    climate: 'Milder winters than Virginia but real summer heat. Rutting and shoving under truck traffic is the failure to design against here — binder grade and compaction matter more than thickness alone.',
+    commercialFocus: [
+      'Multi-site retail and franchise portfolios across NC and SC',
+      'Distribution and warehouse yards built for loaded trailer traffic',
+      'Full-depth reclamation where the existing base has failed',
+      'Single point of contact across every location in the portfolio',
+    ],
     marketName: 'Carolina Blacktop',
     primaryRegion: 'North & South Carolina',
     primaryMetro: 'Charlotte, NC',
@@ -69,6 +91,17 @@ export const REGIONAL_MARKET_PROFILES = {
   },
 
   'atlantaasphaltpavingpros.com': {
+    basedIn: 'Chester, Virginia — crews travel to Georgia for commercial work',
+    travelNote: 'We are a Virginia contractor that mobilises to metro Atlanta for commercial and multi-site work. No local branch — one accountable crew and one number, wherever the sites are.',
+    stateDot: 'GDOT (Georgia Department of Transportation) Standard Specifications',
+    subgrade: 'Metro Atlanta red clay is among the most reactive subgrade in the Southeast. It loses strength fast when wet, so base thickness and drainage carry the design — paving thicker over a saturated clay subgrade buys nothing.',
+    climate: 'Long, hot summers with intense afternoon storms. Heat drives rutting under stopped traffic at drive-thrus and loading docks; sudden heavy rain punishes any lot without real slope.',
+    commercialFocus: [
+      'Franchise and QSR portfolios — drive-thru lanes built for standing loads',
+      'Retail centre parking lots phased to keep tenants trading',
+      'Heavy-duty sections at dumpster pads and truck approaches',
+      'ADA compliance review across an entire portfolio at once',
+    ],
     marketName: 'Atlanta Asphalt Paving Pros',
     primaryRegion: 'Metro Atlanta, Georgia',
     primaryMetro: 'Atlanta, GA',
@@ -93,6 +126,17 @@ export const REGIONAL_MARKET_PROFILES = {
   },
 
   'asphaltpavingkansascity.com': {
+    basedIn: 'Chester, Virginia — crews travel to the Kansas City metro for commercial work',
+    travelNote: 'We are a Virginia contractor that mobilises to Kansas City for commercial and multi-site work. We are not a local KC shop, and we will say so before you ask.',
+    stateDot: 'MoDOT and KDOT specifications, depending on which side of the state line the site sits',
+    subgrade: 'Kansas City swings between deep freeze and summer heat, and the freeze line runs deep enough to heave a base that was never compacted properly. Compaction verification is not paperwork here — it is the whole job.',
+    climate: 'Among the harshest freeze-thaw cycling of any market we work. Water in a joint becomes a pothole in one season, so joint sealing and drainage do more for lot life than an extra half-inch of mat.',
+    commercialFocus: [
+      'Multi-site portfolios spanning the Missouri–Kansas line',
+      'Freight and distribution yards built for loaded semi traffic',
+      'Winter-damage assessment and spring reconstruction planning',
+      'AASHTO T99/T180 density verification documented per section',
+    ],
     marketName: 'Asphalt Paving Kansas City',
     primaryRegion: 'Greater Kansas City, Missouri & Kansas',
     primaryMetro: 'Kansas City, MO',
@@ -117,6 +161,17 @@ export const REGIONAL_MARKET_PROFILES = {
   },
 
   'savannahasphaltpaving.com': {
+    basedIn: 'Chester, Virginia — crews travel to coastal Georgia for commercial work',
+    travelNote: 'We are a Virginia contractor that mobilises to Savannah and the Georgia coast for commercial and multi-site work. There is no Savannah office — there is a crew, a spec, and one number that reaches the owner.',
+    stateDot: 'GDOT (Georgia Department of Transportation) Standard Specifications',
+    subgrade: 'Coastal Georgia sits low with a high water table and sandy, poorly-draining soils. Pavement here is a drainage problem before it is a paving problem — if water cannot leave the site, no mat thickness saves it.',
+    climate: 'Heat, humidity and salt air year-round, with tropical rainfall events. Almost no freeze-thaw, so the enemy is oxidation, standing water and rutting rather than cracking from ice.',
+    commercialFocus: [
+      'Port-adjacent and logistics yards built for container traffic',
+      'Hospitality and retail lots phased around peak season',
+      'Drainage-first design — slope, inlets and outfall before mat depth',
+      'Sealcoating scheduled around coastal humidity and cure windows',
+    ],
     marketName: 'Savannah Asphalt Paving',
     primaryRegion: 'Coastal Georgia',
     primaryMetro: 'Savannah, GA',
