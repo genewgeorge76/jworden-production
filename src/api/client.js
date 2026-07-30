@@ -1088,6 +1088,15 @@ export const api = {
   // ── Commercial bid hunter ──────────────────────────────────────────────────
   huntCommercialBids: (states = '') =>
     protectedRequest('GET', `/api/v1/hunter/commercial-bids${buildQS(states ? { states } : {})}`),
+
+  // ── Storm Tracker ──────────────────────────────────────────────────────────
+  // Radar/satellite frames animate the map; alerts are live NWS warnings;
+  // conditions carries the paving go/no-go verdict for a point.
+  getRadarFrames: () => protectedRequest('GET', '/api/v1/weather/radar/frames'),
+  getWeatherAlerts: (params = {}) =>
+    protectedRequest('GET', `/api/v1/weather/alerts${buildQS(params)}`),
+  getWeatherConditions: (lat, lon) =>
+    protectedRequest('GET', `/api/v1/weather/conditions${buildQS({ lat, lon })}`),
   entities,
   functions: functionsClient,
   integrations: integrationsClient,
