@@ -34,6 +34,24 @@ function upsertDescription(html, nextDesc) {
   return html.replace(/<head[^>]*>/i, (m) => `${m}\n${descTag}`);
 }
 
+/**
+ * og:url must point at the domain being generated.
+ *
+ * The base index.html hardcodes og:url to www.jwordenasphaltpaving.com. Copied
+ * unchanged into every regional file, that told crawlers and social scrapers
+ * the canonical entity for Savannah, Richmond and Carolina Blacktop was the
+ * main J. Worden site — a cross-domain signal working directly against the
+ * per-domain canonical tag sitting a few lines above it.
+ */
+function upsertOgUrl(html, canonicalBase) {
+  const tag = `<meta property="og:url" content="${canonicalBase}">`;
+  const regex = /<meta[^>]+property=["']og:url["'][^>]*>/i;
+  if (regex.test(html)) {
+    return html.replace(regex, tag);
+  }
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
+}
+
 function upsertCanonical(html, canonicalBase) {
   const canonicalTag = `<link rel="canonical" href="${canonicalBase}">`;
   const canonicalRegex = /<link[^>]+rel=["']canonical["'][^>]*>/i;
@@ -132,6 +150,7 @@ async function run() {
     let html = upsertTitle(rawHtml, title);
     html = upsertDescription(html, desc);
     html = upsertCanonical(html, canonicalBase);
+    html = upsertOgUrl(html, canonicalBase);
     html = upsertSchema(html, tenant, canonicalBase);
     
     fs.writeFileSync(path.join(distDir, `${domain}.html`), html, 'utf8');
