@@ -243,13 +243,15 @@ def _toolset_for_session(*, confirmed: bool, role: str) -> list[dict]:
     return [t for t in JARVIS_TOOLS if t.get("name") in allowed]
 
 _ACTION_HINT_RE = re.compile(
-    r"\b(call|dial|phone|text|sms|email|send|book|schedule|reserve|pay|order|quote|estimate|create|update|delete|cancel|approve|publish|post|run|launch)\b",
+    r"\b(call|dial|phone|text|sms|email|send|book|schedule|reserve|pay|order|quote|estimate|create|update|delete|cancel|approve|publish|post|run|launch|weather|forecast|temp|temperature|rain|wind|radar|search|find|check|pull|lookup|show|get)\b",
     re.IGNORECASE,
 )
 
 
 def _looks_like_tool_action(query: str) -> bool:
-    q = (query or "").strip()
+    q = (query or "").strip().lower()
+    if any(term in q for term in _LIVE_INFO_KEYWORDS):
+        return True
     return bool(_ACTION_HINT_RE.search(q))
 
 
@@ -669,8 +671,8 @@ async def _ask_claude_internal(
 
     tools = _toolset_for_session(confirmed=confirmed, role=role)
 
-    # Two-round max: initial → optional tool use → final.
-    for _round in range(2):
+    # Multi-round tool execution (up to 5 turns max)
+    for _round in range(5):
         try:
             default_tokens = 320 if _low_cost_mode() else 700
             max_tokens = int((_cfg.get("JARVIS_CLAUDE_MAX_TOKENS") or str(default_tokens)).strip())
@@ -767,7 +769,7 @@ async def _ask_openai(
     messages = [{"role": "system", "content": system}, {"role": "user", "content": query}]
     tool_calls_result = []
 
-    for _round in range(2):
+    for _round in range(5):
         try:
             resp = await client.chat.completions.create(
                 model="gpt-4o",
