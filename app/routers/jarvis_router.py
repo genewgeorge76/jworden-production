@@ -136,11 +136,15 @@ async def jarvis_chat(
     """Chat endpoint: stores recent messages under `session_id` and includes them in context.
     Use this for interactive voice/web sessions so Jarvis remembers recent turn history.
     """
-    from app.services import short_memory
+    from app.services import short_memory, conversation_memory
 
     session = payload.session_id or payload.user_id
-    # append user message to short-term memory
+    # append user message to short-term and persistent memory
     short_memory.append(session, f"user: {payload.query}")
+    try:
+        conversation_memory.save_message(session, "user", payload.query, db=db)
+    except Exception as mem_err:
+        logger.debug("conversation_memory save_message user failed: %s", mem_err)
 
     ctx = resolve_access_context(x_owner_token=x_owner_token, authorization=authorization)
     # Confirmation is honored only in operator sessions.
@@ -175,9 +179,14 @@ async def jarvis_chat(
             error=error,
         )
 
-    # store Jarvis reply
+    # store Jarvis reply in short-term and persistent memory
     if isinstance(response, dict) and response.get("message"):
-        short_memory.append(session, f"jarvis: {response.get('message')}" )
+        reply_txt = response.get("message")
+        short_memory.append(session, f"jarvis: {reply_txt}")
+        try:
+            conversation_memory.save_message(session, "assistant", reply_txt, db=db)
+        except Exception as mem_err:
+            logger.debug("conversation_memory save_message assistant failed: %s", mem_err)
 
     _audit_jarvis_event(
         db,
