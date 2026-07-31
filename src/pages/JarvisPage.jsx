@@ -336,8 +336,9 @@ export default function JarvisPage() {
   // Voice output. Persisted so the operator's choice survives a reload; Jarvis
   // speaking unprompted on every page load would be worse than silence.
   const [voiceOn, setVoiceOn] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.localStorage.getItem('jarvis.voice') === '1'
+    if (typeof window === 'undefined') return true
+    const saved = window.localStorage.getItem('jarvis.voice')
+    return saved !== '0'
   })
   const { speak, stop: stopSpeaking, speaking, provider: voiceProvider } = useJarvisVoice(voiceOn)
   // Hands-free conversation: you talk, he acts, he answers aloud, the mic
@@ -423,17 +424,15 @@ export default function JarvisPage() {
 
     try {
       let reply = null
-      const personaConfig = PERSONAS[persona]
-      const fullMsg = personaConfig.system + '\n\nUser: ' + msg
-
       try {
-        const r = await api.jarvisCommand(fullMsg, persona)
+        const r = await api.jarvisCommand(msg, persona)
         reply = r?.response || r?.reply || r?.message || r?.answer
       } catch {
+        // Fall back to jarvisSearch or direct LLM
         try {
-          const r2 = await api.publicChat({ message: msg, session_id: activeId })
-          reply = r2?.response || r2?.reply || r2?.message
-        } catch { /* both failed */ }
+          const r2 = await api.jarvisSearch(msg)
+          reply = r2?.response || r2?.reply || r2?.answer || r2?.message
+        } catch { /* call failed */ }
       }
 
       const botMessage = {

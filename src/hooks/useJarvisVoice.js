@@ -80,23 +80,28 @@ export default function useJarvisVoice(enabled = true) {
 
   const speakBrowser = useCallback((text) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return
-    const u = new SpeechSynthesisUtterance(text)
-    u.rate = 1.0
-    u.pitch = 0.9
-    // Prefer a deeper male en-* voice to stay in register when we're degraded.
-    const voices = window.speechSynthesis.getVoices() || []
-    const pick =
-      voices.find((v) => /daniel|david|guy|roger|andrew|matthew/i.test(v.name || '')) ||
-      voices.find((v) => (v.lang || '').toLowerCase().startsWith('en')) ||
-      null
-    if (pick) u.voice = pick
-    u.onstart = () => {
-      setProvider('browser')
-      setSpeaking(true)
+    try {
+      window.speechSynthesis.cancel()
+      const u = new SpeechSynthesisUtterance(text)
+      u.rate = 1.0
+      u.pitch = 0.9
+      // Prefer a deeper male en-* voice to stay in register when we're degraded.
+      const voices = window.speechSynthesis.getVoices() || []
+      const pick =
+        voices.find((v) => /daniel|david|guy|roger|andrew|matthew/i.test(v.name || '')) ||
+        voices.find((v) => (v.lang || '').toLowerCase().startsWith('en')) ||
+        null
+      if (pick) u.voice = pick
+      u.onstart = () => {
+        setProvider('browser')
+        setSpeaking(true)
+      }
+      u.onend = () => setSpeaking(false)
+      u.onerror = () => setSpeaking(false)
+      window.speechSynthesis.speak(u)
+    } catch {
+      setSpeaking(false)
     }
-    u.onend = () => setSpeaking(false)
-    u.onerror = () => setSpeaking(false)
-    window.speechSynthesis.speak(u)
   }, [])
 
   const speak = useCallback(

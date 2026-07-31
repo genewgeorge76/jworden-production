@@ -99,7 +99,45 @@ class ElevenLabsService {
       this.cache.set(text, blob)
       this._playBlob(blob)
     } catch (error) {
-      console.error('Failed to play voice:', error)
+      console.warn('Backend TTS unreachable/unconfigured, falling back to browser speech:', error)
+      this._playBrowserFallback(text)
+    }
+  }
+
+  _playBrowserFallback(text) {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    try {
+      window.speechSynthesis.cancel()
+      const clean = String(text)
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/(\*\*|__)(.*?)\1/g, '$2')
+        .replace(/(\*|_)(.*?)\1/g, '$2')
+        .replace(/^\s*[-*+]\s+/gm, '')
+        .replace(/\|/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+
+      const u = new SpeechSynthesisUtterance(clean.slice(0, 1000))
+      u.rate = 1.0
+      u.pitch = 0.95
+      const voices = window.speechSynthesis.getVoices() || []
+      const pick =
+        voices.find((v) => /daniel|david|guy|roger|andrew|matthew/i.test(v.name || '')) ||
+        voices.find((v) => (v.lang || '').toLowerCase().startsWith('en')) ||
+        null
+      if (pick) u.voice = pick
+
+      u.onstart = () => window.dispatchEvent(new CustomEvent('mrworden:audio-start'))
+      u.onend = () => window.dispatchEvent(new CustomEvent('mrworden:audio-end'))
+      u.onerror = () => window.dispatchEvent(new CustomEvent('mrworden:audio-end'))
+
+      window.speechSynthesis.speak(u)
+    } catch (err) {
+      console.warn('Browser TTS fallback failed:', err)
     }
   }
 

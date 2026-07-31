@@ -232,7 +232,17 @@ def _build_openai_messages(
     return msgs
 
 
+from app.services import llm_client
+
 def _call_openai(messages: list[dict]) -> str:
+    """Generate concierge reply using unified llm_client (Gemini/OpenAI/Claude) with direct OpenAI fallback."""
+    try:
+        reply, err = llm_client.chat(messages=messages, task="fast", max_tokens=300, temperature=0.72)
+        if reply and not err:
+            return reply.strip()
+    except Exception as exc:
+        logger.warning("llm_client fast call failed: %s", exc)
+
     client = _get_openai_client()
     if client is None:
         return ""
