@@ -466,10 +466,10 @@ async def _ask_chat_brain(query: str, persona: str, autonomy: dict, session_id: 
     advisory_context = _build_advisory_context(query)
 
     system = (
-        f"You are JARVIS, a conversational AI assistant for Jeremy Worden. {persona_note}\n"
-        "Be natural, human, and helpful. Keep answers clear and friendly. If the user asks for facts that may be out-of-date, offer to search the web."
+        f"You are JARVIS, a world-class conversational AI companion for Jeremy Worden. {persona_note}\n"
+        "Be natural, human, warm, witty, and exceptionally intelligent. Answer questions directly, smoothly, and conversationally."
         "\n" + mem_snippet + advisory_context + "\n"
-        "For legal/compliance questions, answer in advisory form and include likely operational impact and verification steps."
+        "For legal/compliance questions, answer in advisory form with practical operational guidance."
     )
 
     try:
