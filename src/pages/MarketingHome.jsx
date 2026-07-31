@@ -179,6 +179,27 @@ export default function MarketingHome() {
           content={`Field software for asphalt, roofing and concrete contractors — built inside a paving company running crews since ${FOUNDED}. Drone takeoffs, weather-aware scheduling, and an AI dispatcher that never misses a lead.`}
         />
         <link rel="canonical" href="https://thewordenstandard.com/" />
+        {/* Open Graph — override paving defaults from index.html */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="The Worden Standard" />
+        <meta property="og:title" content="The J. Worden Standard OS | AI Software for Blue-Collar Empires" />
+        <meta
+          property="og:description"
+          content={`Field software for asphalt, roofing and concrete contractors — built inside a paving company running crews since ${FOUNDED}. Drone takeoffs, weather-aware scheduling, and an AI dispatcher that never misses a lead.`}
+        />
+        <meta property="og:url" content="https://thewordenstandard.com/" />
+        <meta property="og:image" content="https://thewordenstandard.com/og-default.jpg" />
+        <meta property="og:image:alt" content="The J. Worden Standard OS — field-operations software for contractors" />
+        <meta property="og:locale" content="en_US" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="The J. Worden Standard OS | AI Software for Blue-Collar Empires" />
+        <meta
+          name="twitter:description"
+          content={`Field software for asphalt, roofing and concrete contractors — built inside a paving company running crews since ${FOUNDED}. Drone takeoffs, weather-aware scheduling, and an AI dispatcher that never misses a lead.`}
+        />
+        <meta name="twitter:image" content="https://thewordenstandard.com/og-default.jpg" />
+        <meta name="twitter:image:alt" content="The J. Worden Standard OS — field-operations software for contractors" />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
 

@@ -127,6 +127,24 @@ function upsertRobotsMeta(html, content) {
   return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
 }
 
+function upsertMetaProperty(html, property, content) {
+  const safe = content.replace(/"/g, '&quot;');
+  const tag = `<meta property="${property}" content="${safe}">`;
+  const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`<meta[^>]+property=["']${escaped}["'][^>]*>`, 'i');
+  if (regex.test(html)) return html.replace(regex, tag);
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
+}
+
+function upsertMetaName(html, name, content) {
+  const safe = content.replace(/"/g, '&quot;');
+  const tag = `<meta name="${name}" content="${safe}">`;
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`<meta[^>]+name=["']${escaped}["'][^>]*>`, 'i');
+  if (regex.test(html)) return html.replace(regex, tag);
+  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
+}
+
 function upsertSchema(html, tenant, canonicalBase) {
   const brand = tenant?.marketName || tenant?.label || defaultTenant.label;
   const [metroCity, metroRegion] = (tenant?.primaryMetro || 'Richmond, VA').split(',').map((s) => s.trim());
@@ -250,11 +268,31 @@ async function run() {
   // not run JS still gets correct, indexable storefront metadata rather than an
   // empty SPA shell with the paving site's title.
   const opsTitle = 'The J. Worden Standard OS | AI Software for Blue-Collar Empires';
+  const opsDesc = 'Field software for asphalt, roofing and concrete contractors — built inside a paving company running crews since 1984. Drone takeoffs, weather-aware scheduling, and an AI dispatcher that never misses a lead.';
   const opsCanonical = 'https://thewordenstandard.com/';
+  const opsImage = 'https://thewordenstandard.com/og-default.jpg';
+  const opsAlt = 'The J. Worden Standard OS — field-operations software for contractors';
+
   let opsHtml = upsertTitle(rawHtml, opsTitle);
-  opsHtml = upsertDescription(opsHtml, 'Field software for asphalt, roofing and concrete contractors — built inside a paving company running crews since 1984. Drone takeoffs, weather-aware scheduling, and an AI dispatcher that never misses a lead.');
+  opsHtml = upsertDescription(opsHtml, opsDesc);
   opsHtml = upsertCanonical(opsHtml, opsCanonical);
   opsHtml = upsertRobotsMeta(opsHtml, 'index, follow');
+
+  opsHtml = upsertMetaProperty(opsHtml, 'og:title', opsTitle);
+  opsHtml = upsertMetaProperty(opsHtml, 'og:description', opsDesc);
+  opsHtml = upsertMetaProperty(opsHtml, 'og:url', opsCanonical);
+  opsHtml = upsertMetaProperty(opsHtml, 'og:image', opsImage);
+  opsHtml = upsertMetaProperty(opsHtml, 'og:image:alt', opsAlt);
+  opsHtml = upsertMetaProperty(opsHtml, 'og:site_name', 'The Worden Standard');
+  opsHtml = upsertMetaProperty(opsHtml, 'og:type', 'website');
+  opsHtml = upsertMetaProperty(opsHtml, 'og:locale', 'en_US');
+
+  opsHtml = upsertMetaName(opsHtml, 'twitter:card', 'summary_large_image');
+  opsHtml = upsertMetaName(opsHtml, 'twitter:title', opsTitle);
+  opsHtml = upsertMetaName(opsHtml, 'twitter:description', opsDesc);
+  opsHtml = upsertMetaName(opsHtml, 'twitter:image', opsImage);
+  opsHtml = upsertMetaName(opsHtml, 'twitter:image:alt', opsAlt);
+
   fs.writeFileSync(path.join(distDir, 'thewordenstandard.com.html'), opsHtml, 'utf8');
   generatedCount++;
 
