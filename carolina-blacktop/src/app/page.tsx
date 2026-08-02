@@ -54,14 +54,14 @@ export default function Home() {
               Call us today for a free estimate on your next paving project.
             </p>
             <p className="mt-2 text-lg font-bold text-amber-600">
-              (555) 555-1984
+              (804) 446-1296
             </p>
           </div>
         )}
       </main>
 
       <footer className="w-full text-center py-6 text-sm text-zinc-400 dark:text-zinc-600">
-        &copy; 2024 J. Worden &amp; Sons Asphalt Paving. All rights reserved.
+        &copy; 2024 Carolina Blacktop. All rights reserved.
       </footer>
     </div>
   );

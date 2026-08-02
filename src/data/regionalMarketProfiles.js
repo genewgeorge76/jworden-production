@@ -53,6 +53,7 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '37.5407;-77.4360',
       icbm: '37.5407, -77.4360',
     },
+    serviceAreas: ['Richmond', 'Henrico', 'Chesterfield', 'Midlothian', 'Short Pump', 'Glen Allen', 'Chester', 'Mechanicsville', 'Ashland', 'Colonial Heights', 'Hopewell', 'Petersburg', 'Bon Air', 'Brandermill', 'Hanover'],
   },
 
   'carolinablacktop.com': {
@@ -88,6 +89,7 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '35.2271;-80.8431',
       icbm: '35.2271, -80.8431',
     },
+    serviceAreas: ['Charlotte', 'Raleigh', 'Durham', 'Greensboro', 'Winston-Salem', 'Fayetteville', 'Greenville SC', 'Spartanburg', 'Rock Hill', 'Concord', 'Gastonia', 'Huntersville', 'Mooresville', 'Cary', 'Apex'],
   },
 
   'atlantaasphaltpavingpros.com': {
@@ -123,6 +125,7 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '33.7490;-84.3880',
       icbm: '33.7490, -84.3880',
     },
+    serviceAreas: ['Atlanta', 'Marietta', 'Roswell', 'Alpharetta', 'Sandy Springs', 'Decatur', 'Smyrna', 'Kennesaw', 'Woodstock', 'Dunwoody', 'Johns Creek', 'Peachtree City', 'McDonough', 'Buckhead', 'Gainesville'],
   },
 
   'asphaltpavingkansascity.com': {
@@ -145,7 +148,7 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Serving the Kansas City metro on both sides of the state line with parking lot construction, driveway paving, and sealcoating engineered for Midwest freeze-thaw cycles.',
     ctaLabel: 'Call For A Kansas City Estimate',
-    phoneDisplay: '804-446-1296',
+    phoneDisplay: '816-662-7011',
     proofHeadline: 'Recent Kansas City-Area Projects',
     localSpecs: [
       'Structural stone base engineered for Midwest freeze-thaw cycles',
@@ -158,6 +161,7 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '39.0997;-94.5786',
       icbm: '39.0997, -94.5786',
     },
+    serviceAreas: ['Kansas City', 'Overland Park', 'Olathe', "Lee's Summit", 'Independence', 'Blue Springs', 'Shawnee', 'Lenexa', 'Leavenworth', 'Liberty', 'Gladstone', 'Raymore', 'Belton', 'Grandview', 'Parkville'],
   },
 
   'savannahasphaltpaving.com': {
@@ -180,7 +184,7 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Commercial and residential asphalt paving across Savannah and the Georgia coast — built with drainage-first design for low-lying, high-humidity coastal conditions.',
     ctaLabel: 'Call For A Savannah Estimate',
-    phoneDisplay: '804-446-1296',
+    phoneDisplay: '843-610-8935',
     proofHeadline: 'Recent Savannah-Area Projects',
     localSpecs: [
       'Drainage-first slope design for coastal Georgia water tables',
@@ -193,6 +197,7 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '32.0809;-81.0912',
       icbm: '32.0809, -81.0912',
     },
+    serviceAreas: ['Savannah', 'Pooler', 'Richmond Hill', 'Tybee Island', 'Garden City', 'Port Wentworth', 'Hinesville', 'Wilmington Island', 'Statesboro', 'Vidalia', 'Bluffton', 'Hilton Head', 'Beaufort', 'Rincon', 'Springfield'],
   },
 };
 
