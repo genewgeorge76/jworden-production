@@ -64,7 +64,7 @@ export default function RootLayout({
           </div>
           <div style={{ display: 'flex', gap: '30px' }}>
             <span style={{display: 'flex', alignItems: 'center', gap: '8px'}}><MapPin size={16} color="var(--estate-gold)" /> VIRGINIA HIGHLANDS</span>
-            <a href="tel:5409241672" style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--estate-gold)', fontWeight: '600', textDecoration: 'none'}}><Phone size={16} /> (540) 924-1672</a>
+            <a href="tel:8044461296" style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--estate-gold)', fontWeight: '600', textDecoration: 'none'}}><Phone size={16} /> (804) 446-1296</a>
           </div>
         </div>
         
@@ -98,7 +98,7 @@ export default function RootLayout({
                 We provide superior mountain-grade asphalt solutions for commercial and residential properties across the Virginia Highlands. From steep rural driveways to massive commercial overlays, we engineer asphalt to survive the harsh Appalachian freeze-thaw cycles.
               </p>
               <div style={{ marginTop: '15px' }}>
-                <a href="tel:5409241672" style={{color: '#fff', fontSize: '1rem', fontWeight: 'bold', display: 'block', textDecoration: 'none'}}><Phone size={14} style={{ display: 'inline', marginRight: '5px' }}/> (540) 924-1672</a>
+                <a href="tel:8044461296" style={{color: '#fff', fontSize: '1rem', fontWeight: 'bold', display: 'block', textDecoration: 'none'}}><Phone size={14} style={{ display: 'inline', marginRight: '5px' }}/> (804) 446-1296</a>
                 <p style={{color: '#fff', fontSize: '1rem', fontWeight: 'bold', marginTop: '5px'}}>Email: j.wordenandsonspaving@gmail.com</p>
               </div>
             </div>
