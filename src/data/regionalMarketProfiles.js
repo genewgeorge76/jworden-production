@@ -76,7 +76,7 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Commercial and residential asphalt paving, sealcoating, and repair across the Charlotte metro, the Piedmont Triad, and the Upstate of South Carolina.',
     ctaLabel: 'Call For A Carolinas Estimate',
-    phoneDisplay: '804-446-1296',
+    phoneDisplay: '843-610-8935',
     proofHeadline: 'Recent Carolina Blacktop Projects',
     localSpecs: [
       'Structural stone base engineered for Piedmont clay subgrade',

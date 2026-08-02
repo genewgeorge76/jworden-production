@@ -54,7 +54,7 @@ export default function Home() {
               Call us today for a free estimate on your next paving project.
             </p>
             <p className="mt-2 text-lg font-bold text-amber-600">
-              (804) 446-1296
+              (843) 610-8935
             </p>
           </div>
         )}
