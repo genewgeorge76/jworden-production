@@ -82,13 +82,54 @@ function upsertTitle(html, nextTitle) {
   return html.replace(/<head[^>]*>/i, (m) => `${m}\n${titleTag}`);
 }
 
+/**
+ * Replace EVERY matching tag with a single one, rather than the first.
+ *
+ * WHY THIS EXISTS
+ *
+ * These helpers used to call String.replace with a non-global regex, which
+ * rewrites only the first match and silently leaves any others in place. That
+ * is fine for a hand-written index.html with one tag each — but prerender runs
+ * the React app, and react-helmet APPENDS its own <link rel="canonical"> and
+ * <meta name="description"> (marked data-rh="true") instead of editing the
+ * static ones. The snapshot therefore carries two of each, and the per-domain
+ * pass only corrected the first.
+ *
+ * Measured live on 2026-08-09, every regional domain served:
+ *
+ *   <link rel="canonical" href="https://www.richmondasphaltpaving.com">
+ *   <link rel="canonical" href="https://thewordenstandard.com/" data-rh="true">
+ *
+ * Helmet's copy resolves from SITE_URL (see src/components/SchemaMarkup.jsx),
+ * so every regional money domain was telling Google it was a duplicate of
+ * thewordenstandard.com. Two conflicting canonicals is worse than none: Google
+ * picks one, and the one it picked pointed the whole regional network at the
+ * SaaS site. The duplicate description did the same to the snippet.
+ *
+ * So: strip all matches, then insert exactly one. The count is returned so the
+ * caller can log when it removed more than it expected.
+ */
+function replaceAllTags(html, regex, tag) {
+  const globalRegex = new RegExp(regex.source, regex.flags.includes('g') ? regex.flags : `${regex.flags}g`);
+  const matches = html.match(globalRegex);
+  if (!matches || matches.length === 0) {
+    return { html: html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`), removed: 0 };
+  }
+  let first = true;
+  const next = html.replace(globalRegex, () => {
+    if (first) {
+      first = false;
+      return tag;
+    }
+    return '';
+  });
+  return { html: next, removed: matches.length - 1 };
+}
+
 function upsertDescription(html, nextDesc) {
   const descTag = `<meta name="description" content="${nextDesc}">`;
   const descRegex = /<meta[^>]+name=["']description["'][^>]*>/i;
-  if (descRegex.test(html)) {
-    return html.replace(descRegex, descTag);
-  }
-  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${descTag}`);
+  return replaceAllTags(html, descRegex, descTag).html;
 }
 
 /**
@@ -103,28 +144,25 @@ function upsertDescription(html, nextDesc) {
 function upsertOgUrl(html, canonicalBase) {
   const tag = `<meta property="og:url" content="${canonicalBase}">`;
   const regex = /<meta[^>]+property=["']og:url["'][^>]*>/i;
-  if (regex.test(html)) {
-    return html.replace(regex, tag);
-  }
-  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
+  return replaceAllTags(html, regex, tag).html;
 }
 
 function upsertCanonical(html, canonicalBase) {
   const canonicalTag = `<link rel="canonical" href="${canonicalBase}">`;
   const canonicalRegex = /<link[^>]+rel=["']canonical["'][^>]*>/i;
-  if (canonicalRegex.test(html)) {
-    return html.replace(canonicalRegex, canonicalTag);
+  const { html: next, removed } = replaceAllTags(html, canonicalRegex, canonicalTag);
+  if (removed > 0) {
+    // Loud on purpose: a surviving second canonical is the exact failure that
+    // pointed every regional domain at thewordenstandard.com.
+    console.log(`[meta] removed ${removed} duplicate canonical tag(s) for ${canonicalBase}`);
   }
-  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${canonicalTag}`);
+  return next;
 }
 
 function upsertRobotsMeta(html, content) {
   const tag = `<meta id="robots-meta" name="robots" content="${content}">`;
   const regex = /<meta[^>]+name=["']robots["'][^>]*>/i;
-  if (regex.test(html)) {
-    return html.replace(regex, tag);
-  }
-  return html.replace(/<head[^>]*>/i, (m) => `${m}\n${tag}`);
+  return replaceAllTags(html, regex, tag).html;
 }
 
 function upsertMetaProperty(html, property, content) {

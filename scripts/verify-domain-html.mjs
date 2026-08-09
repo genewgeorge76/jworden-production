@@ -116,6 +116,32 @@ async function main() {
       problems.push(`og:url points at ${ogUrl || 'nothing'}, not ${domain}`)
     }
 
+    // Duplicate head tags are as damaging as wrong ones, and this check used to
+    // miss them entirely because firstMatch() stops at the first hit.
+    //
+    // prerender runs the React app and react-helmet APPENDS its own canonical
+    // and description (data-rh="true") rather than editing the static ones, so
+    // every regional file carried two of each. The second canonical resolved
+    // from SITE_URL, i.e. https://thewordenstandard.com/ — telling Google each
+    // regional money domain was a duplicate of the SaaS site. Measured live on
+    // 2026-08-09 across all five regional domains. Two conflicting canonicals
+    // are worse than none: the crawler picks one, and it picked the wrong one.
+    for (const [label, re] of [
+      ['canonical', /<link[^>]+rel=["']canonical["'][^>]*>/gi],
+      ['description', /<meta[^>]+name=["']description["'][^>]*>/gi],
+      ['og:url', /<meta[^>]+property=["']og:url["'][^>]*>/gi],
+    ]) {
+      const found = html.match(re) || []
+      if (found.length > 1) {
+        problems.push(
+          `${found.length} ${label} tags (needs exactly 1) — extras: ${found
+            .slice(1)
+            .map((t) => t.replace(/\s+/g, ' '))
+            .join(' ')}`
+        )
+      }
+    }
+
     if (problems.length) {
       failures.push(`${domain}: ${problems.join('; ')}`)
     } else {
