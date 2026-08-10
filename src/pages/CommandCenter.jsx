@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, CloudRain, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
 import CockpitHome from '../components/CockpitHome'
@@ -18,6 +18,7 @@ import contractLaw from '../data/legal/contractLaw'
 import roadsAndPavingRegulations from '../data/legal/roadsAndPavingRegulations'
 import { recommendStrategy, rankStatesByDispute, DISPUTE_TYPES, ROLES } from '../lib/lawyerRecommender'
 import { optimizeLicenseStates, getLienLeverageByState, rankContractorBids } from '../lib/contractorRanker'
+const FacebookPanel = lazy(() => import('@/components/command/FacebookPanel'))
 
 const RichmondGrid = lazy(() => import('../components/RichmondGrid'))
 
@@ -39,6 +40,7 @@ const TABS = [
   { id: 'crm', label: 'CRM Leads' },
   { id: 'ops', label: 'Ops Pipeline' },
   { id: 'civil-intel', label: 'Civil Intel' },
+  { id: 'facebook', label: 'Facebook' },
   { id: 'integrations', label: 'Integrations' },
   { id: 'search-pulse', label: 'Search Pulse' },
   { id: 'google-search', label: 'Google Search' },
@@ -295,6 +297,46 @@ function parseBoolLike(input) {
 
 function HubLinkPanel() {
   const hubs = [
+    {
+      title: 'Customers',
+      desc: 'CRM — accounts, service history, LTV & churn',
+      path: '/customers',
+      icon: UserRound,
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-400/10',
+    },
+    {
+      title: 'Analytics',
+      desc: 'Pipeline funnel, revenue forecast, volume',
+      path: '/analytics',
+      icon: Gauge,
+      color: 'text-sky-400',
+      bg: 'bg-sky-400/10',
+    },
+    {
+      title: 'Area Takeoff',
+      desc: 'Solar/aerial roof & lot takeoff, photo measure',
+      path: '/takeoff',
+      icon: Box,
+      color: 'text-orange-400',
+      bg: 'bg-orange-400/10',
+    },
+    {
+      title: 'Storm Tracker',
+      desc: 'Live radar loop, NWS warnings, paving go/no-go',
+      path: '/storm-tracker',
+      icon: CloudRain,
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-400/10',
+    },
+    {
+      title: 'AI Estimators',
+      desc: 'Pavement score, cost, maintenance & lead quality',
+      path: '/estimators',
+      icon: Sparkles,
+      color: 'text-fuchsia-400',
+      bg: 'bg-fuchsia-400/10',
+    },
     {
       title: 'Level 4 Autonomy',
       desc: 'Cognitive Digital Twin & Drift Remediation',
@@ -6565,6 +6607,11 @@ export default function CommandCenter() {
           {strategyVisible ? <HubLinkPanel /> : null}
 
           {activeTab === 'jarvis' && <JarvisPanel />}
+          {activeTab === 'facebook' && (
+            <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-zinc-900" />}>
+              <FacebookPanel />
+            </Suspense>
+          )}
 
           {activeTab === 'triage' && <InboxTriagePanel />}
 

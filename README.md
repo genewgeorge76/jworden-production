@@ -1,6 +1,6 @@
 # J. Worden Luxury Paving
 
-Professional asphalt paving and maintenance across Virginia. This repo is the full-stack project: a React + Vite frontend (deployed on Netlify) and a FastAPI + PostgreSQL + Celery backend (deployed on Railway).
+Professional asphalt paving and maintenance across Virginia. This repo is the full-stack project: a React + Vite frontend (deployed on Vercel) and a FastAPI + PostgreSQL + Celery backend (deployed on Fly.io).
 
 ---
 
@@ -10,8 +10,8 @@ Professional asphalt paving and maintenance across Virginia. This repo is the fu
 |---|---|
 | Frontend | React 18, Vite 6, Tailwind CSS, shadcn/ui, React Router v6, TanStack Query |
 | Backend | FastAPI, SQLAlchemy, Alembic, Celery, Redis, PostgreSQL |
-| Frontend deploy | Netlify (auto-deploy from `main`) |
-| Backend deploy | Railway (API service + Worker service + Postgres + Redis) |
+| Frontend deploy | Vercel (auto-deploy from `main`) |
+| Backend deploy | Fly.io (`jworden-api.fly.dev` API + Postgres + Redis) |
 | Payments | Stripe |
 | AI | OpenAI (GPT-4), optional Gemini / Claude / Perplexity |
 | Voice | Vapi + Twilio |
@@ -28,7 +28,7 @@ Tenant-aware content engine that produces equipment-specific, technically credib
 ```
 LOCATIONS (src/lib/locations.js)
   → scripts/ai-authority-factory.mjs   (build-time, per tenant)
-    → GET /api/v1/authority/local-proof (FastAPI on Railway)
+    → GET /api/v1/authority/local-proof (FastAPI on Fly.io)
       → app/services/ai_foreman.py
         → llm_client.chat(task='city_authority', ...)
           → Gemini 2.5 Flash  (primary)  or  GPT-4o  (fallback)
@@ -59,11 +59,11 @@ node scripts/ai-authority-factory.mjs --ttl-days=7
 node scripts/ai-authority-factory.mjs --tenant=acme
 ```
 
-**Build pipeline**: Netlify runs `npm run ai:authority && npm run build` automatically. Cache file is committed for build determinism; Railway-down builds degrade to the last cached content rather than failing.
+**Build pipeline**: Vercel runs `npm run build` automatically. Cache file is committed for build determinism; backend-down builds degrade to the last cached content rather than failing.
 
 **Required env vars**
-- Railway: `GEMINI_API_KEY` (or `GOOGLE_API_KEY` — `llm_client.py` accepts either)
-- Netlify build: `VITE_API_BASE_URL` (set in [netlify.toml](netlify.toml))
+- Fly.io: `GEMINI_API_KEY` (or `GOOGLE_API_KEY` — `llm_client.py` accepts either)
+- Vercel build: `VITE_API_BASE_URL` (set in Vercel environment settings)
 
 **Endpoint reference**
 
@@ -90,7 +90,7 @@ See [.env.example](.env.example) for the full variable list and [scripts/factory
 
 - Node 20+
 - Python 3.11+
-- PostgreSQL (or use the Railway dev database)
+- PostgreSQL (or use dev database)
 
 ### Frontend
 
@@ -117,23 +117,23 @@ automatically picks a bindable port and prints the exact URL.
 
 ## Environment Variables
 
-### Frontend (Netlify / `.env.local`)
+### Frontend (Vercel / `.env.local`)
 
 | Variable | Required | Description |
 |---|---|---|
-| `VITE_API_BASE_URL` | ✅ | FastAPI backend URL — e.g. `https://jworden-api.up.railway.app` |
+| `VITE_API_BASE_URL` | ✅ | FastAPI backend URL — e.g. `https://jworden-api.fly.dev` |
 | `VITE_AUTH_MODE` | ✅ | Auth gate mode. Set to `none` to disable for public-only builds |
 | `VITE_SENTRY_DSN` | ⚠️ | Frontend Sentry DSN (optional — enables browser error tracking) |
 | `VITE_GA4_ID` | ⚠️ | Google Analytics 4 measurement ID |
 | `VITE_STRIPE_PUBLISHABLE_KEY` | ⚠️ | Stripe publishable key (`pk_live_...` or `pk_test_...`) |
 | `VITE_SITE_URL` | ⚠️ | Canonical site URL — e.g. `https://www.jwordenasphaltpaving.com` |
 
-### Backend (Railway Variables tab)
+### Backend (Fly.io secrets / env)
 
 | Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | ✅ | PostgreSQL connection string (auto-set by Railway Postgres plugin) |
-| `REDIS_URL` | ✅ | Redis connection string (auto-set by Railway Redis plugin) |
+| `DATABASE_URL` | ✅ | PostgreSQL connection string |
+| `REDIS_URL` | ✅ | Redis connection string |
 | `JWORDEN_MASTER_KEY` | ✅ | Long-lived API key — generate with `openssl rand -hex 32` |
 | `JWT_SECRET_KEY` | ✅ | JWT signing secret — generate with `openssl rand -hex 32` |
 | `ADMIN_USERNAME` | ✅ | Admin dashboard username (default: `admin`) |
@@ -146,7 +146,7 @@ automatically picks a bindable port and prints the exact URL.
 | `TWILIO_AUTH_TOKEN` | ⚠️ | Twilio auth token (voice features) |
 | `TWILIO_PHONE_NUMBER` | ⚠️ | Twilio number in E.164 format — e.g. `+18045550100` |
 | `SENTRY_DSN` | ⚠️ | Backend Sentry DSN |
-| `SENTRY_ENVIRONMENT` | ⚠️ | Set to `production` for Railway deploys |
+| `SENTRY_ENVIRONMENT` | ⚠️ | Set to `production` for Fly.io deploys |
 
 Full reference: see [`ENVIRONMENT_VARIABLES.md`](ENVIRONMENT_VARIABLES.md)
 
@@ -154,25 +154,25 @@ Full reference: see [`ENVIRONMENT_VARIABLES.md`](ENVIRONMENT_VARIABLES.md)
 
 ## Deployment
 
-### Netlify (frontend)
+### Vercel (frontend)
 
 | Setting | Value |
 |---|---|
 | Build command | `npm run build` |
-| Publish directory | `dist` |
+| Output directory | `dist` |
 | Node version | `20` |
 
-SPA fallback and `jwordenasphaltpaving.com → www` redirects are pre-configured in `netlify.toml`.
+SPA fallback, multi-domain routing, and domain rewrites are pre-configured in `vercel.json`.
 
-### Railway (backend)
+### Fly.io (backend)
 
-Start command (set in Railway → Service → Settings → Deploy):
+Deploy backend to Fly.io:
 
+```bash
+fly deploy
 ```
-bash scripts/railway_start.sh
-```
 
-This runs `alembic upgrade head` before starting Gunicorn so migrations are always applied on every deploy.
+Starts Gunicorn / FastAPI using `fly.toml`. This runs `alembic upgrade head` before starting Gunicorn so migrations are always applied on every deploy.
 
 Full checklist: see [`DEPLOYMENT.md`](DEPLOYMENT.md)
 

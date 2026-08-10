@@ -118,12 +118,12 @@ export async function getAccessToken() {
 }
 
 export async function authenticateWithPin(pin) {
-  const localPin = import.meta.env.VITE_ADMIN_PIN
-  if (localPin && pin === localPin) {
-    const fakeToken = `local_${Date.now()}`
-    storeAuthToken(fakeToken, Math.floor(Date.now() / 1000) + 86_400 * 30)
-    return fakeToken
-  }
+  // NOTE: there was previously a VITE_ADMIN_PIN short-circuit here that minted
+  // a synthetic `local_<timestamp>` token and stored it as if it were real.
+  // The backend rejects that string on every request, so the result was a
+  // login that appeared to succeed followed by a dashboard where every panel
+  // silently 403'd — indistinguishable from "the app is broken". A client can
+  // never mint its own credential; the server is the only thing that can.
   const response = await request('POST', '/api/v1/auth/pin-token', { pin })
   storeAuthToken(response.access_token, Math.floor(Date.now() / 1000) + (response.expires_in || 86_400))
   return authState.token
@@ -373,7 +373,13 @@ function normalizeProjectDocumentRecord(record) {
 }
 
 async function listBackendLeads(limit = 200) {
-  const response = await protectedRequest('GET', `/api/v1/leads${buildQS({ limit })}`)
+  // The server lead pipeline is served at /api/v1/crm/leads (returns
+  // {total, offset, limit, leads:[...]}). The old path /api/v1/leads has no GET
+  // route — it 404'd, listLeadRecords swallowed the error, and every owner lead
+  // tool (LeadInbox, CommandCenter, Cockpit, LeadConsultant) fell back to
+  // browser-localStorage only. So real inbound leads were saved server-side but
+  // invisible in the app. This repoints to the endpoint that actually exists.
+  const response = await protectedRequest('GET', `/api/v1/crm/leads${buildQS({ limit })}`)
   const leads = Array.isArray(response) ? response : Array.isArray(response?.leads) ? response.leads : []
   return leads.map(normalizeLeadRecord)
 }
@@ -728,19 +734,41 @@ export const api = {
   getForemanStatus: () => request('GET', '/api/v1/foreman/status'),
   getVisionResult: (jobId) => request('GET', `/api/v1/ai/vision-result/${jobId}`),
   // ── JARVIS Command Interface ───────────────────────────────────────────────
+  /**
+   * Ask JARVIS. Tries the full agent first, then the chat engine.
+   *
+   * /jarvis/command needs staff_operator and returns 403 without it, so the
+   * fallback to /jarvis/chat is the normal path, not an edge case — and
+   * /jarvis/chat is the real assistant: same Claude model, same tool belt,
+   * answering with live forecasts and the Worden standards.
+   *
+   * Two things were wrong here.
+   *
+   * The fallback only fired when the error *string* happened to contain 403,
+   * 401, "unauthorized" or "required". Any other failure — a network blip, a
+   * timeout, an error phrased differently — skipped straight past the working
+   * endpoint. Matching on message text to detect an auth failure is guesswork;
+   * any failure of /command should simply try /chat, since /chat needs no auth
+   * and answers the same question.
+   *
+   * Worse, the last resort was /public/chat: the marketing concierge that
+   * pitches free estimates to website visitors. When an owner asks what his
+   * compaction standard is, that endpoint replies with sales copy. Falling back
+   * to it made JARVIS look brain-damaged while the real engine sat there
+   * working. It is gone from this path — a visible error beats a wrong
+   * personality confidently answering the wrong question.
+   */
   jarvisCommand: async (query, persona = "JARVIS", { confirmed = false } = {}) => {
     try {
       return await request('POST', '/api/v1/jarvis/command', { query, persona, confirmed })
     } catch (err) {
-      const msg = String(err?.message || '').toLowerCase()
-      if (msg.includes('403') || msg.includes('required') || msg.includes('unauthorized') || msg.includes('401')) {
-        try {
-          return await request('POST', '/api/v1/jarvis/chat', { query, persona, confirmed: false })
-        } catch {
-          return await request('POST', '/api/v1/public/chat', { message: query, persona })
-        }
+      try {
+        return await request('POST', '/api/v1/jarvis/chat', { query, persona, confirmed: false })
+      } catch (chatErr) {
+        // Both failed. Surface the original failure — it is the more
+        // informative one — rather than a cheerful sales reply.
+        throw err instanceof Error ? err : chatErr
       }
-      throw err
     }
   },
   jarvisStatus: () => request('GET', '/api/v1/jarvis/status'),
@@ -792,6 +820,33 @@ export const api = {
   dispatchDeleteJob: (id) => protectedRequest('DELETE', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}`),
   dispatchReschedule: (id, payload) => protectedRequest('POST', `/api/v1/admin/dispatch/jobs/${encodeURIComponent(id)}/reschedule`, payload),
   dispatchAssign:   (jobId) => protectedRequest('GET', `/api/v1/admin/dispatch/assign/${encodeURIComponent(jobId)}`),
+  // ── Customers CRM (/api/v1/customers) ────────────────────────────────────
+  // Full customer database — list, stats, detail, service history. The backend
+  // (routers/customers.py) was built and mounted but had no frontend caller.
+  customersList: (params = {}) => {
+    const q = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ''),
+    ).toString();
+    return protectedRequest('GET', `/api/v1/customers${q ? `?${q}` : ''}`);
+  },
+  customersStats: () => protectedRequest('GET', '/api/v1/customers/stats/overview'),
+  customerGet: (id) => protectedRequest('GET', `/api/v1/customers/${encodeURIComponent(id)}`),
+  customerHistory: (id) => protectedRequest('GET', `/api/v1/customers/${encodeURIComponent(id)}/history`),
+  customerCreate: (payload) => protectedRequest('POST', '/api/v1/customers', payload),
+  customerUpdate: (id, payload) => protectedRequest('PATCH', `/api/v1/customers/${encodeURIComponent(id)}`, payload),
+  customerAddHistory: (id, payload) => protectedRequest('POST', `/api/v1/customers/${encodeURIComponent(id)}/history`, payload),
+  // Bulk import from a CSV (header row) or JSON array file. formData must carry
+  // the file under 'file'. Existing customers are matched on email and skipped.
+  customerImport: (formData) => protectedFormRequest('/api/v1/customers/import?source=crm_import', formData),
+  // ── Owner analytics / KPI dashboards (built backends, no UI) ──────────────
+  analyticsDashboard: () => protectedRequest('GET', '/api/v1/analytics/dashboard'),
+  kpiWall: () => protectedRequest('GET', '/api/v1/kpi-wall'),
+  bidSummary: () => protectedRequest('GET', '/api/v1/bid-intelligence/summary'),
+  // ── Math-AI estimators (built backends, no UI) ───────────────────────────
+  mathPavementScore: (payload) => request('POST', '/api/v1/math-ai/pavement-score', payload),
+  mathCostEstimate: (payload) => request('POST', '/api/v1/math-ai/cost-estimate', payload),
+  mathMaintenanceForecast: (payload) => request('POST', '/api/v1/math-ai/maintenance-forecast', payload),
+  mathLeadQuality: (payload) => protectedRequest('POST', '/api/v1/math-ai/lead-quality', payload),
   // ── Asphalt thermal lay-down window (Ship E) ─────────────────────────────
   thermalWindow: (params) => {
     const q = new URLSearchParams(params).toString();
@@ -976,6 +1031,16 @@ export const api = {
   verifySccBatch: (entities) => request('POST', '/api/v1/scc/verify-batch', { entities }),
   getSccStatus: () => request('GET', '/api/v1/scc/status'),
 
+  // ── Facebook Page ──────────────────────────────────────────────────────────
+  // Premium-gated on the backend. When FACEBOOK_PAGE_ID / FACEBOOK_PAGE_ACCESS_TOKEN
+  // are unset these return { configured: false, missing: [...] } rather than an
+  // empty feed, so the UI can say why instead of showing nothing.
+  getFacebookStatus: () => protectedRequest('GET', '/api/v1/facebook/status'),
+  getFacebookPosts: (limit = 15) => protectedRequest('GET', `/api/v1/facebook/posts?limit=${limit}`),
+  publishFacebookPost: (message, link) =>
+    protectedRequest('POST', '/api/v1/facebook/posts', link ? { message, link } : { message }),
+  deleteFacebookPost: (id) => protectedRequest('DELETE', `/api/v1/facebook/posts/${encodeURIComponent(id)}`),
+
   // ── VDOT Bid Board ─────────────────────────────────────────────────────────
   getVdotBids: (params) => request('GET', `/api/v1/vdot-bids${buildQS(params)}`),
   getVdotBid: (id) => request('GET', `/api/v1/vdot-bids/${id}`),
@@ -1016,11 +1081,44 @@ export const api = {
   searchAbilities: (query = '') => request('GET', `/api/v1/abilities/search?q=${encodeURIComponent(query)}`),
   executeAbility: (moduleId, params = {}) => request('POST', '/api/v1/abilities/execute', { module_id: moduleId, params }),
   createStripeCheckoutSession: (payload) => request('POST', '/api/v1/billing/checkout', payload),
-  scanSatelliteProperty: (payload) => request('POST', '/api/v1/market-orchestration/satellite-scan', payload),
-  triggerDirectMailCampaign: (payload) => request('POST', '/api/v1/market-orchestration/direct-mail/trigger', payload),
+  // Property scan + direct mail (Regrid parcel data + Lob mailing). Premium-gated
+  // on the backend; returns { configured: false, missing: [...] } when the keys
+  // are unset rather than fabricating a result, and refuses (501) to fake a send.
+  scanSatelliteProperty: (payload) => protectedRequest('POST', '/api/v1/market-orchestration/satellite-scan', payload),
+  scanZipCode: (payload) => protectedRequest('POST', '/api/v1/market-orchestration/zip-scan', payload),
+  triggerDirectMailCampaign: (payload) => protectedRequest('POST', '/api/v1/market-orchestration/direct-mail/trigger', payload),
   fetchB2GOpportunties: (state = 'VA') => request('GET', `/api/v1/b2g/opportunities?state=${encodeURIComponent(state)}`),
   fetchGeotechnicalSoilData: (payload) => request('POST', '/api/v1/b2g/geotechnical-soil', payload),
   synthesizeVoice: (payload) => request('POST', '/api/v1/voice/synthesize', payload),
+
+  // ── Mechanics lien calendar ────────────────────────────────────────────────
+  // Backed by app/services/lien_calendar.py. Every response carries
+  // `used_default_rules` — true when the requested state has no researched
+  // statute in the table and generic fallback timing was applied instead. The
+  // UI must surface that flag; a lien deadline that is wrong by a day is a
+  // waived claim, so "we don't have this state yet" has to be visible, not
+  // buried behind a confident-looking date.
+  // Public — discloses only which states we have researched statutes for.
+  getLienStateCoverage: () => request('GET', '/api/v1/liens/states'),
+  calculateLienDeadlines: (payload) => protectedRequest('POST', '/api/v1/liens/calculate', payload),
+  trackLienProject: (payload) => protectedRequest('POST', '/api/v1/liens/track', payload),
+  getUpcomingLienDeadlines: (params = {}) =>
+    protectedRequest('GET', `/api/v1/liens/upcoming${buildQS(params)}`),
+  listLienEntries: (params = {}) =>
+    protectedRequest('GET', `/api/v1/liens/entries${buildQS(params)}`),
+
+  // ── Commercial bid hunter ──────────────────────────────────────────────────
+  huntCommercialBids: (states = '') =>
+    protectedRequest('GET', `/api/v1/hunter/commercial-bids${buildQS(states ? { states } : {})}`),
+
+  // ── Storm Tracker ──────────────────────────────────────────────────────────
+  // Radar/satellite frames animate the map; alerts are live NWS warnings;
+  // conditions carries the paving go/no-go verdict for a point.
+  getRadarFrames: () => protectedRequest('GET', '/api/v1/weather/radar/frames'),
+  getWeatherAlerts: (params = {}) =>
+    protectedRequest('GET', `/api/v1/weather/alerts${buildQS(params)}`),
+  getWeatherConditions: (lat, lon) =>
+    protectedRequest('GET', `/api/v1/weather/conditions${buildQS({ lat, lon })}`),
   entities,
   functions: functionsClient,
   integrations: integrationsClient,
@@ -1029,10 +1127,10 @@ export const api = {
 export default api;
 
 // ── GA4 / Google Ads event helpers ────────────────────────────────────────────
-// Map of internal event names → Netlify env vars holding the matching
+// Map of internal event names → build env vars holding the matching
 // Google Ads conversion label (format "AbCdEf12-3"). When set, the event
 // also fires `gtag('event','conversion', { send_to: 'AW-XXX/LABEL', value })`
-// so the click is counted in Google Ads. Set these in Netlify → Site settings
+// so the click is counted in Google Ads. Set these in Vercel → Project settings
 // → Environment variables, then redeploy:
 //   VITE_GADS_CONVERSION_ID            = AW-18031160509   (already in <head>)
 //   VITE_GADS_LABEL_LEAD_FORM          = <label from Google Ads conversion>

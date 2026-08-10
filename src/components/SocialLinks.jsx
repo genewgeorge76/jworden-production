@@ -101,7 +101,7 @@ export default function SocialLinks({
   overrides = {},
 }) {
   const s = SIZES[size] || SIZES.md
-  const tenant = typeof useTenant === 'function' ? useTenant() : null
+  const tenant = useTenant()
   const localProfile = typeof window !== 'undefined' ? getRegionalMarketProfile(window.location.hostname) : null
   const siteSocials = {
     ...(tenant?.socials || {}),

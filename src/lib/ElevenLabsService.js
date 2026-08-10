@@ -1,23 +1,34 @@
 /**
- * ElevenLabsService.js — High-end AI voice synthesis for the "Mr. Worden" concierge.
+ * ElevenLabsService.js — voice for the "Mr. Worden" concierge.
  *
- * This service uses ElevenLabs (Flash v2.5 models) to generate premium,
- * human-like speech that matches the high-end minimalist UI.
+ * Synthesis happens on the backend (`/api/v1/tts/*`), never here.
  *
- * Requirements:
- * - VITE_ELEVENLABS_API_KEY (Client-side usage for low-latency, though server-side is safer)
- * - VITE_ELEVENLABS_VOICE_ID (Default: 'JBFqnCBsd6RMkjVDRZzb' — "George" style, or a custom clone)
+ * WHY THERE IS NO API KEY IN THIS FILE ANY MORE
+ *
+ * This module used to read VITE_ELEVENLABS_API_KEY and call
+ * api.elevenlabs.io directly from the browser. Vite inlines every VITE_*
+ * variable into the shipped bundle as a plain string, so that key was
+ * readable by anyone who opened devtools and could be used to spend the
+ * account's credits. The original comment here acknowledged it —
+ * "Client-side usage for low-latency, though server-side is safer" — and took
+ * the risk for latency that the backend stream already provides.
+ *
+ * It was also producing the wrong voice. The two paths disagreed:
+ *
+ *   frontend   voice pNInz6obpgH9PthW4RUI   model eleven_flash_v2_5
+ *   backend    voice pNInz6obpgDQGcFmaJgB   model eleven_turbo_v2_5
+ *
+ * Same first ten characters, different tails — the frontend ID looks like a
+ * corrupted copy of the backend's. A voice ID ElevenLabs does not recognise
+ * returns an error, the catch below swallowed it, and playback fell through
+ * to the backend anyway. So the "premium" path either failed silently or
+ * spoke in a different voice at lower quality than the fallback it was meant
+ * to improve on. That is the intermittent, generic-sounding voice.
+ *
+ * Voice and model now live in one place — app/services/tts_service.py,
+ * configured by ELEVENLABS_VOICE_ID and ELEVENLABS_MODEL. Change the voice
+ * there and every surface follows; there is no second copy to drift.
  */
-
-const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY
-const VOICE_ID = import.meta.env.VITE_ELEVENLABS_VOICE_ID || 'pNInz6obpgH9PthW4RUI' // "George" - Mature, professional, authoritative
-
-// Map of voice styles if we want to switch contextually
-export const VOICES = {
-  PREMIUM_MALE: 'pNInz6obpgH9PthW4RUI', // George - Deep, professional
-  FRIENDLY_MALE: 'N2lVS1wzCLpce5hCq99G', // Callum - Friendly, relatable
-  ELDER_MALE: 'JBFqnCBsd6RMkjVDRZzb', // George (Alternate)
-}
 
 class ElevenLabsService {
   constructor() {
@@ -29,7 +40,7 @@ class ElevenLabsService {
     this.isPlaying = false
   }
 
-  async play(text, voiceId = VOICE_ID) {
+  async play(text) {
     if (!text) return
 
     try {
@@ -43,38 +54,9 @@ class ElevenLabsService {
 
       let blob = null
 
-      // ── Path A: Direct ElevenLabs (only if key is exposed to browser) ────
-      if (ELEVENLABS_API_KEY) {
-        try {
-          const response = await fetch(
-            `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'xi-api-key': ELEVENLABS_API_KEY,
-              },
-              body: JSON.stringify({
-                text: text,
-                model_id: 'eleven_flash_v2_5',
-                voice_settings: {
-                  stability: 0.5,
-                  similarity_boost: 0.75,
-                  style: 0.05,
-                  use_speaker_boost: true,
-                },
-              }),
-            }
-          )
-          if (!response.ok) throw new Error(`ElevenLabs API error: ${response.statusText}`)
-          blob = await response.blob()
-        } catch (err) {
-          console.warn('[voiceService] ElevenLabs direct failed, falling back to backend:', err)
-        }
-      }
-
-      // ── Path B: Backend neural TTS (OpenAI onyx / ElevenLabs server-side) ─
-      if (!blob) {
+      // Backend neural TTS. Single path — see the header for why the direct
+      // browser-to-ElevenLabs call was removed.
+      {
         const apiBase = String(import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 
         // Preferred: direct provider streaming for lower time-to-first-audio.
@@ -85,10 +67,22 @@ class ElevenLabsService {
         })
 
         if (streamResp.ok) {
-          const streamed = await this._playStreamResponse(streamResp)
-          if (streamed) return
+          // /tts/stream is NOT chunked today — it returns the whole MP3 with a
+          // Content-Length, identical in size to /tts/speak. Feeding a complete
+          // file to MediaSource is fragile, and _playStreamResponse can report
+          // success while nothing is audible; because it "succeeded", the
+          // dependable /tts/speak path below never ran. That is silent voice
+          // with no error in the console.
+          //
+          // So only take the MediaSource route when the body really is
+          // progressive (no Content-Length => chunked/streamed). Otherwise play
+          // the buffered blob, which is the path already proven to work.
+          const declaredLength = streamResp.headers.get('content-length')
+          if (!declaredLength) {
+            const streamed = await this._playStreamResponse(streamResp)
+            if (streamed) return
+          }
 
-          // Older browsers: same endpoint, buffered fallback.
           blob = await streamResp.blob()
         } else {
           // Final fallback endpoint if stream route fails.
@@ -105,7 +99,45 @@ class ElevenLabsService {
       this.cache.set(text, blob)
       this._playBlob(blob)
     } catch (error) {
-      console.error('Failed to play voice:', error)
+      console.warn('Backend TTS unreachable/unconfigured, falling back to browser speech:', error)
+      this._playBrowserFallback(text)
+    }
+  }
+
+  _playBrowserFallback(text) {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    try {
+      window.speechSynthesis.cancel()
+      const clean = String(text)
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/(\*\*|__)(.*?)\1/g, '$2')
+        .replace(/(\*|_)(.*?)\1/g, '$2')
+        .replace(/^\s*[-*+]\s+/gm, '')
+        .replace(/\|/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+
+      const u = new SpeechSynthesisUtterance(clean.slice(0, 1000))
+      u.rate = 1.0
+      u.pitch = 0.95
+      const voices = window.speechSynthesis.getVoices() || []
+      const pick =
+        voices.find((v) => /daniel|david|guy|roger|andrew|matthew/i.test(v.name || '')) ||
+        voices.find((v) => (v.lang || '').toLowerCase().startsWith('en')) ||
+        null
+      if (pick) u.voice = pick
+
+      u.onstart = () => window.dispatchEvent(new CustomEvent('mrworden:audio-start'))
+      u.onend = () => window.dispatchEvent(new CustomEvent('mrworden:audio-end'))
+      u.onerror = () => window.dispatchEvent(new CustomEvent('mrworden:audio-end'))
+
+      window.speechSynthesis.speak(u)
+    } catch (err) {
+      console.warn('Browser TTS fallback failed:', err)
     }
   }
 

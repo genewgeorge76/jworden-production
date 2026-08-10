@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Award, Shield, ArrowRight, Building2, Home as HomeIcon, Utensils, Sparkles } from 'lucide-react'
+import { ArrowRight, Building2, Home as HomeIcon, Utensils } from 'lucide-react'
 import SmartImage from './SmartImage'
 
 const residentialPhotos = [
@@ -105,64 +105,37 @@ const commercialPhotos = [
   }
 ]
 
+/**
+ * Job photographs from the QSR programme.
+ *
+ * These carried invented captions: store numbers (#1042, #1105, #2014 …),
+ * per-photo scopes and city locations, none of which came from any record. The
+ * store numbers matched none of the real ones (135, 149, 162, 184, 186, 189,
+ * 195, 207, 356, 369), and at least one photograph captioned as a drive-thru
+ * concrete pad is a roadside erosion cut. The photographs are genuine; the
+ * captions were not, and EXIF is gone, so nothing truthful about place or scope
+ * can be recovered from the files.
+ *
+ * They are shown unlabelled. The verified portfolio — thirty-nine restaurants
+ * with store numbers, street addresses and dated client records — lives in
+ * src/data/nationalProjects.json and is rendered by KfcNationalProgram. That is
+ * where a franchise buyer should be sent, not at a caption we cannot stand
+ * behind.
+ */
 const kfcPhotos = [
-  {
-    url: '/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_1.jpg',
-    title: 'KFC Store #1042 — Richmond W Broad St',
-    scope: 'Full Depth Reconstruction & ADA Realignment',
-    location: 'Richmond, VA',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_1.jpg',
-    title: 'KFC Store #1105 — Chester Route 1',
-    scope: 'Drive-Thru Concrete Pad Tie-In & Night Milling',
-    location: 'Chester, VA',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_1.jpg',
-    title: 'KFC Store #1188 — Petersburg Crater Rd',
-    scope: 'Surface Overlay & Catch Basin Restoration',
-    location: 'Petersburg, VA',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_1.JPG',
-    title: 'KFC Store #2014 — Atlanta Peachtree Rd',
-    scope: 'Subgrade Stabilization & High-Volume Overlay',
-    location: 'Atlanta, GA',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_1.JPG',
-    title: 'KFC Store #2099 — Marietta Cobb Pkwy',
-    scope: 'Night Milling, Drive-Thru Paving & Sealcoating',
-    location: 'Marietta, GA',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_1.JPG',
-    title: 'KFC Store #2140 — Savannah Abercorn St',
-    scope: 'Salt-Spray Protection & Heavy Aggregate Base',
-    location: 'Savannah, GA',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_1.JPG',
-    title: 'KFC Store #3055 — Orlando International Dr',
-    scope: 'Polymer Modified Binder & Overnight Resurfacing',
-    location: 'Orlando, FL',
-    category: 'KFC Franchise'
-  },
-  {
-    url: '/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_1.JPG',
-    title: 'KFC Store #4012 — Houston Westheimer Rd',
-    scope: 'Drive-Thru Heavy Compaction & Paving',
-    location: 'Houston, TX',
-    category: 'KFC Franchise'
-  }
-]
+  '/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_1.jpg',
+  '/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_1.jpg',
+  '/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_1.jpg',
+  '/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_1.JPG',
+  '/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_1.JPG',
+  '/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_1.JPG',
+  '/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_1.JPG',
+  '/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_1.JPG'
+].map((url) => ({
+  url,
+  title: 'QSR restaurant programme',
+  category: 'KFC Franchise'
+}))
 
 function MarqueeRow({ items, reverse = false, speed = 35 }) {
   // Duplicate array to create a seamless infinite looping marquee scroll track
@@ -245,7 +218,10 @@ export default function LegacyStory() {
       year: 'Today',
       title: 'The Third Generation — KFC National Franchise Program',
       icon: Utensils,
-      description: 'The legacy continues. Managing 100+ KFC franchise site builds, sealcoating, and resurfacing programs across Virginia, Georgia, and the Southeast with precision equipment and guaranteed warranties.',
+      // "Southeast" undersold this by a continent. The documented record spans
+      // eleven states — Michigan, New Jersey, Texas, Illinois and Missouri among
+      // them — plus ground-up restaurant builds delivered as general contractor.
+      description: 'The legacy continues. Paving, sealcoating and resurfacing programmes across a national KFC portfolio — eleven states from Michigan to Texas to New Jersey — plus ground-up restaurant construction as general contractor. The Atlanta metro alone ran to well over a hundred restaurants.',
       items: kfcPhotos,
       reverse: false,
       speed: 38

@@ -9,7 +9,7 @@ export default function GeoSchema() {
         "legalName": "Blue Ridge Estate Paving",
         "description": "Top-rated commercial and residential asphalt paving contractors operating in Roanoke, Charlottesville, Lynchburg, and the Virginia Highlands. Over 40 years of industry experience handling Appalachian mountain-grade paving and steep topography.",
         "url": "https://www.blueridgeasphaltpaving.com",
-        "telephone": "+1-540-924-1672",
+        "telephone": "+1-804-446-1296",
         "areaServed": [
           { "@type": "City", "name": "Roanoke", "addressRegion": "VA" },
           { "@type": "City", "name": "Charlottesville", "addressRegion": "VA" },

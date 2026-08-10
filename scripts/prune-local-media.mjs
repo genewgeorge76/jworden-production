@@ -56,6 +56,8 @@ const main = async () => {
 };
 
 main().catch((err) => {
-  console.error(`[media-prune] Failed: ${err.message}`);
-  process.exitCode = 1;
+  // Advisory CDN cleanup step — must never fail the build (see submit-indexnow.mjs
+  // for why: an unguarded postbuild script previously crashed every production
+  // deploy for two days while every preview deploy silently skipped it).
+  console.error(`[media-prune] Failed (non-fatal): ${err.message}`);
 });

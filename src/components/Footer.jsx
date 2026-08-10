@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { trackPhoneClick } from '@/lib/analytics';
 import { PRIMARY_LOGO_URL } from '@/lib/branding';
 import SocialLinks from './SocialLinks';
 import { LOCATIONS } from '@/lib/locations';
+import { getRegionalMarketProfile } from '@/data/regionalMarketProfiles';
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -18,8 +19,33 @@ export default function Footer() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Take top 24 locations for the SEO footer grid
-  const seoLocations = LOCATIONS.slice(0, 24);
+  // Detect regional market and use its service areas, falling back to Virginia
+  const { seoLocations, regionLabel, phoneDisplay, phoneTel } = useMemo(() => {
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    const profile = getRegionalMarketProfile(hostname);
+
+    if (profile?.serviceAreas) {
+      const stateAbbr = profile.geo?.placename?.split(', ')[1]?.substring(0, 2) || '';
+      return {
+        seoLocations: profile.serviceAreas.map((city) => ({
+          city,
+          slug: city.toLowerCase().replace(/['\s]+/g, '-'),
+          stateAbbr,
+        })),
+        regionLabel: profile.primaryRegion || 'Regional',
+        phoneDisplay: profile.phoneDisplay ? `(${profile.phoneDisplay.slice(0,3)}) ${profile.phoneDisplay.slice(4,7)}-${profile.phoneDisplay.slice(8)}` : '(804) 446-1296',
+        phoneTel: `tel:+1${(profile.phoneDisplay || '804-446-1296').replace(/-/g, '')}`,
+      };
+    }
+
+    // Default: main J. Worden site — Virginia locations
+    return {
+      seoLocations: LOCATIONS.slice(0, 24),
+      regionLabel: 'Virginia',
+      phoneDisplay: '(804) 446-1296',
+      phoneTel: 'tel:+18044461296',
+    };
+  }, []);
 
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#050505]">
@@ -100,17 +126,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Contact */}
+          {/* Contact — now uses region-aware phone */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6">
             <h4 className="font-display font-bold text-white text-xs tracking-[0.2em] uppercase mb-6">Contact</h4>
             <div className="space-y-4">
               <a
-                href="tel:+18044461296"
+                href={phoneTel}
                 onClick={() => trackPhoneClick('footer')}
                 className="flex items-center gap-3 text-gray-400 hover:text-[#ff7a00] transition-colors"
               >
                 <Phone className="w-4 h-4 text-[#ff7a00]" />
-                <span className="font-body text-sm">(804) 446-1296</span>
+                <span className="font-body text-sm">{phoneDisplay}</span>
               </a>
               <a href="mailto:j.wordenandsonspaving@gmail.com" className="flex items-center gap-3 text-gray-400 hover:text-[#ff7a00] transition-colors">
                 <Mail className="w-4 h-4 text-[#ff7a00]" />
@@ -128,23 +154,23 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* SEO Local Flair Block - Satisfies Google Helpful Content Local Density */}
+        {/* SEO Local Flair Block — now region-aware */}
         <div className="mt-16 pt-10 border-t border-white/10">
-          <h4 className="font-display font-bold text-white text-sm tracking-[0.2em] uppercase mb-6">Virginia Service Areas</h4>
+          <h4 className="font-display font-bold text-white text-sm tracking-[0.2em] uppercase mb-6">{regionLabel} Service Areas</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-3">
             {seoLocations.map((loc) => (
               <a 
                 key={loc.slug} 
                 href={`/locations/${loc.slug}`}
                 className="text-xs text-gray-500 hover:text-[#ff7a00] transition-colors truncate"
-                title={`Asphalt Paving in ${loc.city}, ${loc.stateAbbr}`}
+                title={`Asphalt Paving in ${loc.city}${loc.stateAbbr ? `, ${loc.stateAbbr}` : ''}`}
               >
-                {loc.city}, {loc.stateAbbr}
+                {loc.city}{loc.stateAbbr ? `, ${loc.stateAbbr}` : ''}
               </a>
             ))}
           </div>
           <div className="mt-4">
-             <a href="/locations" className="text-xs text-[#ff7a00] hover:text-white transition-colors">View All 50+ Virginia Service Areas &rarr;</a>
+             <a href="/locations" className="text-xs text-[#ff7a00] hover:text-white transition-colors">View All {seoLocations.length}+ {regionLabel} Service Areas &rarr;</a>
           </div>
         </div>
 

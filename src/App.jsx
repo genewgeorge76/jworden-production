@@ -31,6 +31,7 @@ import EstimatePortal from './pages/EstimatePortal';
 import ApiDashboard from './pages/ApiDashboard';
 
 // All other pages are code-split so the initial bundle stays small.
+const SatelliteMap = lazy(() => import('./pages/SatelliteMap'));
 const LeadConsultant = lazy(() => import('./pages/LeadConsultant'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const JobDetail = lazy(() => import('./pages/JobDetail'));
@@ -45,7 +46,6 @@ const Services = lazy(() => import('./pages/Services'));
 const ServiceAreas = lazy(() => import('./pages/ServiceAreas'));
 const CityPage = lazy(() => import('./pages/CityPage'));
 const StatePavingPage = lazy(() => import('./pages/StatePavingPage'));
-const TradePage = lazy(() => import('./pages/TradePage'));
 const LocationsIndex = lazy(() => import('./pages/LocationsIndex'));
 const LocationPage = lazy(() => import('./pages/LocationPage'));
 const RichmondZipLanding = lazy(() => import('./pages/RichmondZipLanding'));
@@ -55,10 +55,33 @@ const HomeServices = lazy(() => import('./pages/HomeServices'));
 const GeneralContracting = lazy(() => import('./pages/GeneralContracting'));
 const VirginiaStatewide = lazy(() => import('./pages/VirginiaStatewide'));
 const AutonomyDashboard = lazy(() => import('./pages/AutonomyDashboard'));
+// Area-takeoff tool (Google Solar API roof/lot takeoff, Aerial 3D flyover,
+// OpenCV photo measure, pavement-decay). The component + its backend endpoints
+// were fully built but nothing imported it, so the whole suite was unreachable.
+// Surfaced here behind auth at /takeoff. It degrades gracefully with no map key.
+const TakeoffMap = lazy(() => import('./components/TakeoffMap'));
+// Customers CRM — surfaces the /api/v1/customers backend (list, stats, detail,
+// service history, create) which was fully built but had no UI.
+const Customers = lazy(() => import('./pages/Customers'));
+// Owner analytics dashboard — surfaces /api/v1/analytics/dashboard (pipeline
+// funnel, revenue forecast, 12-month volume) + bid-intelligence summary.
+const Analytics = lazy(() => import('./pages/Analytics'));
+// Storm Tracker — animated radar/satellite loop, live NWS warning polygons and
+// a paving go/no-go verdict scored against the Worden Standard. Surfaces
+// /api/v1/weather/{radar/frames,alerts,conditions}.
+const StormTracker = lazy(() => import('./pages/StormTracker'));
+// National footprint — every job site pinned from GPS data in the job
+// photographs themselves, so coverage is evidenced rather than claimed.
+const NationalFootprint = lazy(() => import('./pages/NationalFootprint'));
+// AI estimators — surfaces /api/v1/math-ai/* (pavement score, cost, maintenance
+// forecast, lead quality) which were built but had no UI.
+const Estimators = lazy(() => import('./pages/Estimators'));
 const TarAndChip = lazy(() => import('./pages/TarAndChip'));
 const CandidatePortal = lazy(() => import('./pages/CandidatePortal'));
 const ContractorAIPlatform = lazy(() => import('./pages/ContractorAIPlatform'));
 const CommandCenter = lazy(() => import('./pages/CommandCenter'));
+const LienCalendar = lazy(() => import('./pages/LienCalendar'));
+const BidHunter = lazy(() => import('./pages/BidHunter'));
 const ClientLitePortal = lazy(() => import('./components/ClientLitePortal'));
 const CockpitHome = lazy(() => import('./pages/CockpitHome'));
 const EstimatePage = lazy(() => import('./pages/EstimatePage'));
@@ -66,7 +89,6 @@ const JarvisPage = lazy(() => import('./pages/JarvisPage'));
 const ScannerPage = lazy(() => import('./pages/ScannerPage'));
 const Visualizer = lazy(() => import('./pages/Visualizer'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
-const DnsMigration = lazy(() => import('./pages/DnsMigration'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const CustomerPortal = lazy(() => import('./pages/CustomerPortal'));
@@ -244,10 +266,16 @@ const PublicLayout = ({ children }) => (
 const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
   const tenant = useTenant();
-  const routeMode = tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE;
+  // Exact-match only (not .includes) — provisioned SaaS tenant subdomains
+  // like smithpaving.thewordenstandard.com must NOT be caught here, or
+  // they'd be forced into Operations mode instead of honoring the
+  // saas-client route_mode /api/v1/factory/resolve returns for them.
+  const wordenStandardHostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+  const isWordenStandardDomain = wordenStandardHostname === 'thewordenstandard.com' || wordenStandardHostname === 'www.thewordenstandard.com';
+  const routeMode = isWordenStandardDomain
+    ? SITE_ROUTE_MODES.OPERATIONS
+    : (tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE);
   const subdomainMode = detectSubdomainMode();
-
-  const isWordenStandardDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().includes('thewordenstandard.com');
 
 
   if (subdomainMode === SUBDOMAIN_MODES.CREW) {
@@ -334,6 +362,7 @@ const AuthenticatedApp = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<AdminPinGate />} />
+          <Route path="/satellite-map" element={<RequireAuth><SatelliteMap /></RequireAuth>} />
           <Route path="/dashboard" element={<RequireAuth><ClientCockpit /></RequireAuth>} />
           <Route path="/portal/:public_token" element={<EstimatePortal />} />
           <Route path="/client-portal" element={<ClientPortal />} />
@@ -350,14 +379,37 @@ const AuthenticatedApp = () => {
         {/* Public Operations / SaaS Routes */}
         {isOperationsSite && <Route path="/super-admin" element={<SuperAdmin />} />}
         {isOperationsSite && <Route path="/super-admin/apis" element={<ApiDashboard />} />}
+        {/* thewordenstandard.com "/" is now the public, indexable SaaS
+            storefront (MarketingHome). Google can crawl it, and it is the
+            "built for the blue-collar man" front door for the product.
+            The owner/staff Command Center moves to /command-center on this
+            same host, still behind the PIN gate (RequireAuth). It is declared
+            HERE — above the operations /command-center → CockpitHome route
+            further down — so on these hosts this authed CommandCenter wins the
+            match. /command-center stays noindex via the X-Robots-Tag header in
+            vercel.json, so opening the storefront to crawlers does not expose
+            the cockpit.
+            The admin. subdomain (if/when attached in Vercel) keeps "/" = the
+            Command Center for muscle memory; that host is never indexed. */}
         {(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && (
+          <Route path="/command-center" element={<RequireAuth><CommandCenter /></RequireAuth>} />
+        )}
+        {subdomainMode === SUBDOMAIN_MODES.ADMIN && (
           <Route path="/" element={<RequireAuth><CommandCenter /></RequireAuth>} />
         )}
-        {isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<MarketingHome />} />}
+        {isOperationsSite && subdomainMode !== SUBDOMAIN_MODES.ADMIN && <Route path="/" element={<MarketingHome />} />}
+        {/* /os keeps serving the storefront too, so existing links and the
+            "/" flip above resolve to the same page from either address. */}
+        {isOperationsSite && <Route path="/os" element={<MarketingHome />} />}
         {isOperationsSite && <Route path="/register" element={<Register />} />}
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
+
+        {/* Contractor operations tools. Both call authenticated backend
+            endpoints, so they sit behind RequireAuth like /diamond. */}
+        <Route path="/lien-calendar" element={<RequireAuth><LienCalendar /></RequireAuth>} />
+        <Route path="/bid-hunter" element={<RequireAuth><BidHunter /></RequireAuth>} />
 
         {/* Public Local Market Routes */}
         {!isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<Home />} />}
@@ -371,7 +423,18 @@ const AuthenticatedApp = () => {
         <Route path="/driveway-ai" element={<Suspense fallback={<RouteLoader />}><DrivewayAI /></Suspense>} />
         <Route path="/jworden-ai" element={<Suspense fallback={<RouteLoader />}><JwordenAI /></Suspense>} />
         <Route path="/saas-marketing" element={<Suspense fallback={<RouteLoader />}><SaaSMarketing /></Suspense>} />
-        <Route path="/portal" element={<ClientPortal />} />
+        {/* NOTE: `/portal` is deliberately NOT registered here.
+            8ae84e8 added `<Route path="/portal" element={<ClientPortal />} />` on
+            this line without noticing that `/portal` was already registered
+            further down this same <Routes> block as
+            `<RequireAuth><CustomerPortal /></RequireAuth>`. Two identical paths
+            in one <Routes> means the first one wins, so ClientPortal shadowed
+            CustomerPortal and CustomerPortal became unreachable dead code.
+
+            CustomerPortal is the intended occupant: it sets
+            canonicalPath="/portal" itself, and Dashboard links to /portal under
+            the label "Customer Portal". ClientPortal is unaffected — it keeps
+            its own /client-portal route. */}
         <Route path="/request-estimate" element={<RequestEstimate />} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
@@ -380,7 +443,6 @@ const AuthenticatedApp = () => {
         <Route path="/service-areas" element={<PublicLayout><ServiceAreas /></PublicLayout>} />
         <Route path="/service-areas/:slug" element={<PublicLayout><CityPage /></PublicLayout>} />
         <Route path="/states/:stateSlug" element={<PublicLayout><StatePavingPage /></PublicLayout>} />
-        <Route path="/trades/:tradeSlug" element={<PublicLayout><TradePage /></PublicLayout>} />
         <Route path="/locations" element={<LocationsIndex />} />
         <Route path="/locations/richmond-va/:zip" element={<RichmondZipLanding />} />
         <Route path="/locations/:slug" element={<LocationPage />} />
@@ -487,6 +549,13 @@ const AuthenticatedApp = () => {
           }
         />
         <Route path="/estimate" element={<RequireAuth><EstimatePage /></RequireAuth>} />
+        <Route path="/takeoff" element={<RequireAuth><TakeoffMap /></RequireAuth>} />
+        <Route path="/customers" element={<RequireAuth><Customers /></RequireAuth>} />
+        <Route path="/analytics" element={<RequireAuth><Analytics /></RequireAuth>} />
+        <Route path="/storm-tracker" element={<RequireAuth><StormTracker /></RequireAuth>} />
+        <Route path="/footprint" element={<PublicLayout><NationalFootprint /></PublicLayout>} />
+        <Route path="/weather" element={<RequireAuth><StormTracker /></RequireAuth>} />
+        <Route path="/estimators" element={<RequireAuth><Estimators /></RequireAuth>} />
         <Route path="/jarvis" element={<RequireAuth><JarvisPage /></RequireAuth>} />
         <Route path="/scanner" element={<RequireAuth><ScannerPage /></RequireAuth>} />
         <Route path="/virginia-statewide" element={<RequireAuth><VirginiaStatewide /></RequireAuth>} />
@@ -513,7 +582,6 @@ const AuthenticatedApp = () => {
         />
         <Route path="/job" element={<RequireAuth><JobDetail /></RequireAuth>} />
         <Route path="/crew-reporting" element={<RequireAuth><CrewReporting /></RequireAuth>} />
-        <Route path="/dns-migration" element={<RequireAuth><DnsMigration /></RequireAuth>} />
         <Route path="/portal" element={<RequireAuth><CustomerPortal /></RequireAuth>} />
         <Route path="/admin/documents" element={<RequireAuth><AdminDocuments /></RequireAuth>} />
         <Route path="/admin/slack" element={<RequireAuth><AdminSlackSettings /></RequireAuth>} />

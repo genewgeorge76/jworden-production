@@ -9,7 +9,7 @@ import { PHONE_E164, PHONE_DISPLAY, SMS_E164, SMS_PREFILL } from '../lib/busines
  * Why it exists: the long quote form on /quote was scaring people away
  * (348 ad clicks → 0 real submissions). This component asks for ONE
  * thing — a phone number — and ships it to the lead pipeline plus the
- * always-on Netlify Forms fallback. We auto-fill safe defaults for
+ * always-on lead-capture fallback. We auto-fill safe defaults for
  * required backend fields (property_type, urgency, service_type) so
  * the customer doesn't have to think.
  *
@@ -61,12 +61,12 @@ export default function QuickQuoteBar({
       message: `1-tap quick-quote request from ${source}. Customer wants to be texted at ${digits}.`,
     }
 
-    // Fire both the primary API call and the Netlify Forms fallback in
+    // Fire both the primary API call and the lead-capture fallback in
     // parallel; the fallback guarantees Gene gets emailed even if the
     // backend or SendGrid is misbehaving.
     const promises = [
       api.submitQuote(payload).catch((e) => ({ __error: e })),
-      fetch('/.netlify/functions/lead-fallback-notify', {
+      fetch('/api/lead-fallback-notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -83,7 +83,7 @@ export default function QuickQuoteBar({
 
     setBusy(false)
     if (apiResult && apiResult.__error) {
-      // Backend rejected — most likely a transient outage. The Netlify
+      // Backend rejected — most likely a transient outage. The fallback
       // Forms fallback already fired, so the lead is not lost; surface
       // a soft error so the customer knows we got it.
       trackEvent('quick_quote_partial', { source, error: String(apiResult.__error?.message || apiResult.__error) })

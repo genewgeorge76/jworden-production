@@ -1,0 +1,28 @@
+# Netlify is no longer this site's host — Vercel is.
+#
+# Both jwordenasphaltpaving.com and www. resolve to Vercel (verified by
+# response headers: `server: Vercel`). The Netlify project `wordenproduction`
+# still lists the domain in its own config, but that is a stale field, not live
+# routing — it serves no production traffic.
+#
+# What it does still do is build every pushed commit, fail, and post three red
+# checks on every pull request:
+#
+#   Pages changed - wordenproduction
+#   Header rules - wordenproduction
+#   Redirect rules - wordenproduction
+#
+# Those failures predate any current work — they appear identically on `main`,
+# e.g. on PR #51 — and they drown the checks that actually matter. A reviewer
+# who learns to ignore red checks is a reviewer who will ignore a real one.
+#
+# `ignore` runs before the build: exit 0 means "nothing changed, skip it".
+# Returning 0 unconditionally means Netlify never builds this repo again.
+#
+# This is a stopgap. The clean fix is to unlink the repository in the Netlify
+# project settings, which removes the integration rather than muting it, and
+# takes an account action rather than a commit. Delete this file when that
+# happens — or if Netlify ever becomes a host for this site again, in which
+# case this file would silently prevent every deploy.
+[build]
+  ignore = "exit 0"

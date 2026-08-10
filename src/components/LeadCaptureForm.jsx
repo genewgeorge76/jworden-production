@@ -19,6 +19,30 @@ const TIMING_OPTIONS = [
   'Flexible',
 ];
 
+// Map the friendly form values onto the backend QuoteRequest schema
+// (POST /api/v1/leads/quote). service_type / property_type / urgency are
+// required strings on the backend, so every submission must carry them.
+const URGENCY_MAP = {
+  'ASAP': 'asap',
+  'Within 1 week': 'within_1_week',
+  'Within 1 month': 'within_1_month',
+  'Flexible': 'flexible',
+};
+
+function toQuotePayload(form) {
+  const service = String(form.service || '').trim();
+  const isCommercial = /commercial|parking lot|general contracting/i.test(service);
+  return {
+    name: String(form.name || '').trim(),
+    email: String(form.email || '').trim(),
+    phone: String(form.phone || '').trim(),
+    service_type: service || 'General',
+    property_type: isCommercial ? 'commercial' : 'residential',
+    urgency: URGENCY_MAP[form.timing] || 'flexible',
+    message: String(form.projectDetails || '').trim() || undefined,
+  };
+}
+
 export default function LeadCaptureForm() {
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
@@ -29,10 +53,15 @@ export default function LeadCaptureForm() {
     setError('');
 
     const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData.entries());
+    const payload = toQuotePayload(Object.fromEntries(formData.entries()));
 
     try {
-      const response = await fetch('/.netlify/functions/chat-lead-capture', {
+      // POST to the live backend quote endpoint (proxied to the Fly API via
+      // the /api/* rewrite in vercel.json). This scores the lead, stores it,
+      // and fires the confirmation + admin notification. The previous target
+      // (/api/chat-lead-capture) was a dead Netlify function — every lead
+      // submitted through this form was silently dropped.
+      const response = await fetch('/api/v1/leads/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -40,7 +69,10 @@ export default function LeadCaptureForm() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || 'Submission failed');
+        const detail = Array.isArray(data?.detail)
+          ? data.detail.map((d) => d?.msg).filter(Boolean).join(', ')
+          : data?.detail || data?.error;
+        throw new Error(detail || 'Submission failed');
       }
 
       setStatus('success');

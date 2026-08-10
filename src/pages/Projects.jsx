@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import SchemaMarkup, { LOCAL_BUSINESS_SCHEMA, projectCaseStudySchema } from '../components/SchemaMarkup'
 import SocialShare from '../components/SocialShare'
 import SmartImage from '../components/SmartImage'
+import KfcNationalProgram from '../components/KfcNationalProgram'
 import { trackEvent } from '../api/client'
 
 /**
@@ -695,6 +696,13 @@ export default function Projects() {
       </section>
 
       {/* CTA */}
+      {/* Real QSR portfolio proof: 39 restaurant sites across eleven states,
+          each backed by a dated client email, plus 120 programme photographs
+          shown without captions. The six "documented locations" this comment
+          used to describe were the fabricated records that component replaced —
+          a stale comment restating them is how the claim creeps back. */}
+      <KfcNationalProgram />
+
       <section className="py-16 bg-brand-amber text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="font-display font-black text-brand-navy text-4xl mb-4">

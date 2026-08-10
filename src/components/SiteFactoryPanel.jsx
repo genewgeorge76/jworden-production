@@ -3,9 +3,7 @@ import { useTenant } from '@/lib/TenantContext';
 import api from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Globe, Lock, CheckCircle, Sparkles, Bot, Zap,
-  Search, ShieldCheck, MapPin, Cpu, ArrowRight, RefreshCw, Layers
+import { Lock, CheckCircle, Sparkles, Cpu, ArrowRight, RefreshCw
 } from 'lucide-react';
 
 const TRADE_PRESETS = [

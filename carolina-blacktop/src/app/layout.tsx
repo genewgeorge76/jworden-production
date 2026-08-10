@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "J. Worden & Sons Asphalt Paving",
+  title: "Carolina Blacktop | Asphalt Paving NC & SC",
   description:
     "4th-Generation Legacy since 1984. Independent from other local entities. Vetted by KFC, Arby's, and Taco Bell.",
 };

@@ -19,11 +19,27 @@ async function getMeta(page, selector, attr = 'content') {
   return page.$eval(`meta[${selector}]`, (el, a) => el.getAttribute(a), attr).catch(() => null)
 }
 
-// Helper: parse first JSON-LD script on the page
+// Helper: parse every JSON-LD script on the page.
+//
+// Deliberately all of them, not the first. index.html ships one ld+json block of
+// its own, and pages add theirs through react-helmet, so a page legitimately
+// carries several and their DOM order is not guaranteed. Reading only the first
+// meant these assertions passed or failed on whether the page's own schema
+// happened to land ahead of the shell's — which is exactly how this file failed
+// on a different test each run: /contact once, the Richmond page the next time,
+// 45 of 46 passing both times.
+//
+// This does not weaken anything. A page genuinely missing its schema still has
+// no matching block anywhere and still fails; it just stops failing when the
+// schema is present but not first.
 async function getJsonLd(page) {
-  const text = await page.$eval('script[type="application/ld+json"]', (el) => el.textContent).catch(() => null)
-  if (!text) return null
-  try { return JSON.parse(text) } catch { return null }
+  const texts = await page
+    .$$eval('script[type="application/ld+json"]', (els) => els.map((el) => el.textContent))
+    .catch(() => [])
+  const parsed = texts
+    .map((t) => { try { return JSON.parse(t) } catch { return null } })
+    .filter(Boolean)
+  return parsed.length > 0 ? parsed : null
 }
 
 // ── Home ─────────────────────────────────────────────────────────────────────
@@ -112,33 +128,55 @@ test('dashboard: is noindexed (protected page)', async ({ page }) => {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ auth_required: false }) })
   })
   await page.goto('/dashboard')
-  const robots = await getMeta(page, 'name="robots"')
   // Either explicit noindex OR the page is behind auth (redirect)
   const url = page.url()
   const isRedirectedAway = !url.includes('/dashboard')
   if (!isRedirectedAway) {
+    // NoindexMeta sets content via useEffect — wait for it to fire
+    await page.waitForFunction(
+      () => (document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '').includes('noindex'),
+      { timeout: 5000 }
+    ).catch(() => {})
+    const robots = await getMeta(page, 'name="robots"')
     expect(robots).toMatch(/noindex/)
   }
 })
 
 // ── Houzz canonical links ─────────────────────────────────────────────────────
+//
+// These three tests were written as `goto` followed immediately by `$$eval`.
+// `$$eval` is a one-shot DOM read with no waiting, and every route in this app
+// is a React.lazy chunk — so the assertion could run before the route component
+// had rendered. Nothing made that safe; it passed because the chunk usually won
+// the race.
+//
+// It stopped usually winning. Adding two lazy routes to App.jsx reshuffled the
+// chunk graph enough to tip general-contracting over, and the test reported
+// "0 Houzz links" for a page whose source has two, with the correct slug, right
+// there in GeneralContracting.jsx.
+//
+// `expect(locator)` retries until the timeout, so the wait is the assertion
+// rather than a sleep. Reading hrefs only after that is settled makes the check
+// deterministic instead of dependent on chunk load order.
+async function houzzHrefs(page, minimum) {
+  const links = page.locator('a[href*="houzz.com"]')
+  // Retries until at least `minimum` links exist, then the read below is safe.
+  await expect(links).not.toHaveCount(0)
+  await expect
+    .poll(async () => links.count(), { timeout: 10_000 })
+    .toBeGreaterThanOrEqual(minimum)
+  return links.evaluateAll((els) => els.map((el) => el.href))
+}
+
 test('general-contracting: Houzz profile links are present and correct', async ({ page }) => {
   await page.goto('/general-contracting')
-  const houzzLinks = await page.$$eval(
-    'a[href*="houzz.com"]',
-    (els) => els.map((el) => el.href)
-  )
-  expect(houzzLinks.length).toBeGreaterThanOrEqual(1)
+  const houzzLinks = await houzzHrefs(page, 1)
   expect(houzzLinks[0]).toContain('j-worden-sons')
 })
 
 test('hardscapes: Houzz profile link opens correct URL', async ({ page }) => {
   await page.goto('/hardscapes')
-  const houzzLinks = await page.$$eval(
-    'a[href*="houzz.com"]',
-    (els) => els.map((el) => el.href)
-  )
-  expect(houzzLinks.length).toBeGreaterThanOrEqual(1)
+  const houzzLinks = await houzzHrefs(page, 1)
   expect(houzzLinks[0]).toContain('j-worden-sons')
 })
 
@@ -151,10 +189,6 @@ test('reviews: Houzz profile link opens correct URL', async ({ page }) => {
     })
   })
   await page.goto('/reviews')
-  const houzzLinks = await page.$$eval(
-    'a[href*="houzz.com"]',
-    (els) => els.map((el) => el.href)
-  )
-  expect(houzzLinks.length).toBeGreaterThanOrEqual(2)
+  const houzzLinks = await houzzHrefs(page, 2)
   expect(houzzLinks.some((h) => h.includes('j-worden-sons'))).toBe(true)
 })

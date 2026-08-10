@@ -5,7 +5,27 @@
  * Last verified: 2026-05-10
  */
 
-export const SITE_URL = import.meta.env?.VITE_SITE_URL || 'https://www.jwordenasphaltpaving.com'
+// Vercel serves this site on www and 308-redirects the bare apex to it, so an
+// apex value here is not a preference — it is a URL that resolves somewhere
+// else, stamped onto every schema @id, canonical and og:url downstream.
+// .env.example shipped the apex form for a long time and CI builds a .env from
+// it, so the wrong value reached production. Normalising here means the deploy
+// is correct regardless of what the environment variable happens to say.
+const CONFIGURED_SITE_URL =
+  import.meta.env?.VITE_SITE_URL || 'https://www.jwordenasphaltpaving.com'
+
+// The lookahead terminates the hostname. Without it the pattern matches any
+// host merely *starting* with jwordenasphaltpaving.com — including
+// jwordenasphaltpaving.com.example.net — and would rewrite an unrelated domain
+// into something that looks like ours. CodeQL flagged this as an incomplete
+// hostname expression, correctly: a host ends at end-of-string, a path, a port,
+// a query or a fragment, and nowhere else.
+const APEX_HOST = /^(https?:\/\/)jwordenasphaltpaving\.com(?=$|[/:?#])/i
+
+export const SITE_URL = CONFIGURED_SITE_URL.replace(
+  APEX_HOST,
+  '$1www.jwordenasphaltpaving.com',
+).replace(/\/+$/, '')
 
 export const SCHEMA_IDS = {
   organization:  `${SITE_URL}/#organization`,

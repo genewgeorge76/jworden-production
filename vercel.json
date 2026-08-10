@@ -3,10 +3,26 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "redirects": [
-
     {
-      "source": "/3ef8a81ce186414ca3235bebb5072f22.txt",
-      "destination": "/3ef8a81ce186414ca3235bebb5072f22.txt",
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.richmondasphaltpros.com"
+        }
+      ],
+      "destination": "https://www.richmondasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "richmondasphaltpros.com"
+        }
+      ],
+      "destination": "https://www.richmondasphaltpaving.com/$1",
       "permanent": true
     },
     {
@@ -30,57 +46,17 @@
       "permanent": true
     },
     {
-      "source": "/states/florida",
+      "source": "/request-estimate.html",
+      "destination": "/quote",
+      "permanent": true
+    },
+    {
+      "source": "/service-areas.html",
       "destination": "/service-areas",
       "permanent": true
     },
     {
-      "source": "/states/georgia",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/iowa",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/kansas",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/michigan",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/minnesota",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/missouri",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/new-jersey",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/new-york",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/north-carolina",
-      "destination": "/service-areas",
-      "permanent": true
-    },
-    {
-      "source": "/states/texas",
+      "source": "/states/(.*)",
       "destination": "/service-areas",
       "permanent": true
     }
@@ -88,21 +64,36 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://jworden-api.fly.dev/api/"
+      "destination": "https://jworden-api.fly.dev/api/$1"
     },
     {
       "source": "/robots.txt",
-      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<domain>.*)"
+        }
+      ],
       "destination": "/sitemaps/robots-:domain.txt"
     },
     {
       "source": "/sitemap.xml",
-      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<domain>.*)"
+        }
+      ],
       "destination": "/sitemaps/sitemap-:domain.xml"
     },
     {
       "source": "/sitemap.txt",
-      "has": [{ "type": "host", "value": "(?<domain>.*)" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<domain>.*)"
+        }
+      ],
       "destination": "/sitemaps/sitemap-:domain.txt"
     },
     {
@@ -110,37 +101,27 @@
       "has": [
         {
           "type": "host",
-          "value": "blueridgeasphaltpaving.com"
+          "value": "(?!www\\.)(?<tenantSlug>.+)\\.thewordenstandard\\.com"
         }
       ],
-      "destination": "/blueridgeasphaltpaving.com.html"
+      "destination": "/index.html"
     },
     {
       "source": "/(.*)",
       "has": [
         {
           "type": "host",
-          "value": "minnesotaasphaltpaving.com"
+          "value": "(www\\.)?richmondasphaltpaving\\.com"
         }
       ],
-      "destination": "/minnesotaasphaltpaving.com.html"
+      "destination": "/richmondasphaltpaving.com.html"
     },
     {
       "source": "/(.*)",
       "has": [
         {
           "type": "host",
-          "value": "obxpaving.com"
-        }
-      ],
-      "destination": "/obxpaving.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "atlantaasphaltpavingpros.com"
+          "value": "(www\\.)?atlantaasphaltpavingpros\\.com"
         }
       ],
       "destination": "/atlantaasphaltpavingpros.com.html"
@@ -150,17 +131,7 @@
       "has": [
         {
           "type": "host",
-          "value": "michiganasphaltpavingpros.com"
-        }
-      ],
-      "destination": "/michiganasphaltpavingpros.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "asphaltpavingkansascity.com"
+          "value": "(www\\.)?asphaltpavingkansascity\\.com"
         }
       ],
       "destination": "/asphaltpavingkansascity.com.html"
@@ -170,7 +141,7 @@
       "has": [
         {
           "type": "host",
-          "value": "savannahasphaltpaving.com"
+          "value": "(www\\.)?savannahasphaltpaving\\.com"
         }
       ],
       "destination": "/savannahasphaltpaving.com.html"
@@ -180,7 +151,7 @@
       "has": [
         {
           "type": "host",
-          "value": "carolinablacktop.com"
+          "value": "(www\\.)?carolinablacktop\\.com"
         }
       ],
       "destination": "/carolinablacktop.com.html"
@@ -216,7 +187,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com; script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net; connect-src 'self' https://jworden-api.fly.dev https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://www.google.com https://*.ingest.sentry.io https://*.sentry.io; frame-src 'self' https://www.google.com https://td.doubleclick.net https://bid.g.doubleclick.net https://app.kickserv.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com https://maps.googleapis.com; script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://maps.gstatic.com https://maps.googleapis.com; media-src 'self' blob: data:; connect-src 'self' https://jworden-api.fly.dev https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://www.google.com https://*.ingest.sentry.io https://*.sentry.io https://maps.googleapis.com; frame-src 'self' https://www.google.com https://td.doubleclick.net https://bid.g.doubleclick.net https://app.kickserv.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
         }
       ]
     },
@@ -226,6 +197,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(sw|service-worker)\\.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     },
