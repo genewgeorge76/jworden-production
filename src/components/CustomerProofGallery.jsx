@@ -23,7 +23,7 @@ const proofImages = [
     label: 'After: estate driveway restoration',
   },
   {
-    src: '/work/kfc/kfc-job-001.webp',
+    src: '/work/imported/KFC/IMG_9496.webp',
     alt: 'Before condition at restaurant parking lot with aged pavement and striping wear',
     label: 'Before: restaurant lot deterioration',
   },

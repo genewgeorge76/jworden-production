@@ -110,16 +110,6 @@
       "has": [
         {
           "type": "host",
-          "value": "richmondasphaltpaving.com"
-        }
-      ],
-      "destination": "/richmondasphaltpaving.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
           "value": "blueridgeasphaltpaving.com"
         }
       ],

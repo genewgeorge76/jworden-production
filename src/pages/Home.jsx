@@ -37,7 +37,7 @@ const TRUST_POINTS = [
   'Virginia Class A Contractor License',
   'NASCLA certified',
   '$5M general liability + workers\' comp',
-  'Family-owned since 1985 — Chester, VA',
+  'Family-owned since 1984 — Chester, VA',
   'Written estimates with line-item breakdown',
   'No deposit until materials are ordered',
 ];
@@ -68,7 +68,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0a0a0a] font-body text-gray-200">
       <SEO
         title="Asphalt Paving Virginia | J. Worden & Sons — Chester, Richmond, Chesterfield"
-        description="Virginia's trusted asphalt paving contractor since 1985. Driveways, parking lots, sealcoating, crack repair, and tar and chip across Richmond, Chesterfield, Hampton Roads, and all of Virginia."
+        description="Virginia's trusted asphalt paving contractor since 1984. Driveways, parking lots, sealcoating, crack repair, and tar and chip across Richmond, Chesterfield, Hampton Roads, and all of Virginia."
         canonicalPath="/"
       />
       <HomeSchema />
@@ -112,7 +112,7 @@ export default function Home() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 border border-[#ff7a00]/40 text-[#ff7a00] text-xs font-display uppercase tracking-[0.2em] px-4 py-2 mb-8">
               <Shield className="w-3.5 h-3.5" />
-              Virginia Class A Licensed · Family-Owned Since 1985
+              Virginia Class A Licensed · Family-Owned Since 1984
             </div>
             <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl uppercase leading-none tracking-tight mb-6">
               Asphalt Paving<br />
@@ -299,7 +299,7 @@ export default function Home() {
                 Licensed.<br />Insured.<br />Family-Owned.
               </h2>
               <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                Based in Chester, VA. Serving all of Virginia since 1985. We carry the licensing, insurance, and documentation that protect you — not just promises.
+                Based in Chester, VA. Serving all of Virginia since 1984. We carry the licensing, insurance, and documentation that protect you — not just promises.
               </p>
               <div className="space-y-3">
                 {TRUST_POINTS.map((pt) => (
@@ -312,7 +312,7 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: Award, title: '40+ Years', sub: 'Family-owned since 1985' },
+                { icon: Award, title: '40+ Years', sub: 'Family-owned since 1984' },
                 { icon: Shield, title: 'Class A', sub: 'Virginia licensed contractor' },
                 { icon: Users, title: '5,000+', sub: 'Projects completed' },
                 { icon: Clock, title: 'Same-Week', sub: 'Quotes in Central Virginia' },
