@@ -92,6 +92,67 @@ export const REGIONAL_MARKET_PROFILES = {
     serviceAreas: ['Charlotte', 'Raleigh', 'Durham', 'Greensboro', 'Winston-Salem', 'Fayetteville', 'Greenville SC', 'Spartanburg', 'Rock Hill', 'Concord', 'Gastonia', 'Huntersville', 'Mooresville', 'Cary', 'Apex'],
   },
 
+  // Outer Banks. Backed by 10 documented job sites in Dare County — Kill Devil
+  // Hills, Manteo, Manns Harbor, Duck and Oregon Inlet Road — carrying 183
+  // GPS-tagged photographs between April 2014 and July 2015. Only two of those
+  // are commercial, so the proof section here is deliberately short; the rest
+  // is residential and stays unpublished, same rule as every other market.
+  //
+  // The engineering content below is barrier-island specific on purpose. A
+  // page that recycled the Piedmont clay copy would be visibly wrong to anyone
+  // who actually paves out there, and wrong copy does not rank or convert.
+  'obxpaving.com': {
+    basedIn: 'Chester, Virginia — crews mobilise to the Outer Banks for coastal work',
+    travelNote:
+      'We are a Virginia contractor that has worked Dare County since 2014. We do not keep a storefront on the beach road, and we would rather say so than pretend we are around the corner.',
+    stateDot: 'NCDOT Standard Specifications for Roads and Structures',
+    subgrade:
+      'A barrier island is the opposite problem from the Piedmont. Coastal sand drains beautifully and holds almost nothing together — it has drainage but no cohesion, so a mat laid straight on it moves under load instead of heaving under frost. The work is in the base: proper stone, properly compacted, thick enough to bridge a subgrade that will never itself be structural. Wind-blown sand also finds its way back onto everything, and sand sitting on asphalt acts like grit under every tyre that turns on it.',
+    climate:
+      'Salt air and UV are what age pavement here, not the freeze-thaw cycle that governs inland Virginia. Salt and sun strip the binder out of the surface, greying it and opening it to water years before a comparable inland lot would need attention. That makes sealcoating a structural decision on the coast rather than a cosmetic one. Add nor’easters and hurricane season pushing water across low-lying lots, and drainage that genuinely leaves the site matters more than any amount of extra thickness.',
+    commercialFocus: [
+      'Asphalt paving and overlays for rental-property drives, restaurants and beach-road retail',
+      'Concrete work — aprons, walks, pads and ADA ramps where asphalt is the wrong material',
+      'Sealcoating on a coastal cycle, because salt and UV age a surface faster here than inland',
+      'Striping and ADA layout to current federal standards, scheduled around the season',
+      'Repairs — patching, crack sealing and pothole work between rental turnovers',
+    ],
+    marketName: 'OBX Paving',
+    primaryRegion: 'the Outer Banks, North Carolina',
+    primaryMetro: 'Kill Devil Hills, NC',
+    heroKicker: 'Outer Banks Field Documentation',
+    heroHeadline: 'OBX Paving — Asphalt, Concrete, Sealcoating & Striping on the Outer Banks',
+    heroBody:
+      'Asphalt and concrete paving, sealcoating, striping and repairs across Dare County — Kill Devil Hills, Nags Head, Kitty Hawk, Manteo, Duck and Corolla. Built for sand subgrade and salt air, to NCDOT specification.',
+    ctaLabel: 'Call For An Outer Banks Estimate',
+    // Declared explicitly so the schema advertises the full scope rather than
+    // inheriting the asphalt-only default.
+    serviceTypes: [
+      'Asphalt Paving',
+      'Concrete Paving',
+      'Sealcoating',
+      'Pavement Marking and Striping',
+      'Asphalt Repair',
+      'Parking Lot Construction',
+    ],
+    // NOTE: this is the main J. Worden line. Swap it if OBX gets its own number.
+    phoneDisplay: '804-446-1296',
+    proofHeadline: 'Documented Outer Banks Projects',
+    localSpecs: [
+      'Structural stone base engineered for coastal sand subgrade, not clay',
+      '96% Marshall Unit Weight minimum compaction floor',
+      'Salt- and UV-aware sealcoating cycle rather than an inland schedule',
+      'Work sequenced around the rental season so lots stay usable',
+    ],
+    geo: {
+      region: 'US-NC',
+      placename: 'Kill Devil Hills, North Carolina',
+      position: '35.9918;-75.6674',
+      icbm: '35.9918, -75.6674',
+    },
+    serviceAreas: ['Kill Devil Hills', 'Nags Head', 'Kitty Hawk', 'Manteo', 'Duck', 'Corolla', 'Southern Shores', 'Wanchese', 'Manns Harbor', 'Rodanthe', 'Avon', 'Hatteras', 'Currituck', 'Elizabeth City', 'Columbia'],
+  },
+
   'atlantaasphaltpavingpros.com': {
     basedIn: 'Chester, Virginia — crews travel to Georgia for commercial work',
     travelNote: 'We are a Virginia contractor that mobilises to metro Atlanta for commercial and multi-site work. No local branch — one accountable crew and one number, wherever the sites are.',

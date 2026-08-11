@@ -49,6 +49,57 @@ const MARKET_STATES = {
   'atlantaasphaltpavingpros.com': ['Georgia'],
   'savannahasphaltpaving.com': ['Georgia'],
   'asphaltpavingkansascity.com': ['Missouri', 'Kansas'],
+  'obxpaving.com': ['North Carolina'],
+}
+
+/**
+ * Towns of the Outer Banks / Dare County.
+ *
+ * obxpaving.com and carolinablacktop.com are both North Carolina domains, so a
+ * state filter alone would put the same job sites on both — which is duplicate
+ * content across two domains we own, working against the per-domain canonical
+ * the rest of this pipeline exists to get right. It would also be misleading:
+ * Oregon Inlet Road is not a Charlotte-metro reference.
+ *
+ * So these towns belong to OBX and are excluded from the Carolinas page.
+ */
+const OBX_CITIES = [
+  'Kill Devil Hills',
+  'Nags Head',
+  'Kitty Hawk',
+  'Manteo',
+  'Duck',
+  'Corolla',
+  'Southern Shores',
+  'Wanchese',
+  'Manns Harbor',
+  'Dare County',
+]
+
+/**
+ * Domains restricted to a sub-state region rather than whole states. When a
+ * domain appears here its sites must ALSO match one of these cities; when it
+ * does not, the state filter alone applies as before.
+ */
+const MARKET_CITIES = {
+  'obxpaving.com': OBX_CITIES,
+}
+
+/** Domains that must NOT claim a sub-region owned by a more specific domain. */
+const MARKET_CITY_EXCLUDES = {
+  'carolinablacktop.com': OBX_CITIES,
+}
+
+/**
+ * Indefinite article for a region name, or none when the name already carries
+ * one. "a the Outer Banks project" and "a Outer Banks project" are both wrong;
+ * regions are author-supplied strings, so the template cannot assume "a ".
+ */
+function article(region) {
+  const r = String(region || '').trim()
+  if (!r) return ''
+  if (/^(the|a|an)\s/i.test(r)) return ''
+  return /^[aeiou]/i.test(r) ? 'an ' : 'a '
 }
 
 const esc = (s) =>
@@ -86,13 +137,56 @@ function loadSites(rootDir) {
 function sitesForMarket(domain, allSites) {
   const states = MARKET_STATES[domain]
   if (!states) return []
+  const only = MARKET_CITIES[domain]
+  const excluded = MARKET_CITY_EXCLUDES[domain]
   return allSites
     .filter((s) => states.includes(s.state) && s.kind === 'commercial')
+    .filter((s) => (only ? only.includes(s.city) : true))
+    .filter((s) => (excluded ? !excluded.includes(s.city) : true))
     .sort((a, b) => b.photo_count - a.photo_count)
     .slice(0, 12)
 }
 
-function proofSection(domain, profile, sites) {
+/**
+ * Honest one-line summary of everything documented in a market, including the
+ * residential work the proof list deliberately omits.
+ *
+ * On the Outer Banks the commercial/residential split is lopsided — two
+ * commercial sites against eight residential — because that is what the market
+ * is: rental cottages and private drives. Publishing only the commercial pair
+ * would understate a decade of real work, and publishing the residential
+ * addresses would break the privacy rule. Counting them does neither.
+ *
+ * Returns null when there is nothing beyond what the list already shows, so no
+ * market gets a sentence restating its own bullet points.
+ */
+function coverageSummary(domain, allSites, listed) {
+  const states = MARKET_STATES[domain]
+  if (!states) return null
+  const only = MARKET_CITIES[domain]
+  const excluded = MARKET_CITY_EXCLUDES[domain]
+  const all = allSites
+    .filter((s) => states.includes(s.state))
+    .filter((s) => (only ? only.includes(s.city) : true))
+    .filter((s) => (excluded ? !excluded.includes(s.city) : true))
+  if (all.length <= listed.length) return null
+
+  const photos = all.reduce((n, s) => n + (s.photo_count || 0), 0)
+  const years = all
+    .flatMap((s) => [fmtDate(s.first_seen), fmtDate(s.last_seen)])
+    .filter(Boolean)
+    .sort((a, b) => new Date(a) - new Date(b))
+  const span = years.length ? `${years[0]} and ${years[years.length - 1]}` : null
+  const towns = [...new Set(all.map((s) => s.city).filter(Boolean))].sort()
+
+  return `${all.length} documented job sites${
+    span ? ` worked between ${span}` : ''
+  }, carrying ${photos.toLocaleString('en-US')} GPS-tagged photographs across ${esc(
+    towns.join(', ')
+  )}. Most of it is residential — private drives do not get published with an address, so only the commercial sites are listed individually below.`
+}
+
+function proofSection(domain, profile, sites, summary) {
   if (!sites.length) return ''
   const states = MARKET_STATES[domain] || []
   const rows = sites
@@ -113,6 +207,7 @@ function proofSection(domain, profile, sites) {
     GPS-tagged photographs. Locations come from the photographs themselves, not
     from a coverage map, so each one can be checked against its address and the
     dates the work was done.</p>
+${summary ? `    <p>${summary}</p>` : ''}
     <ul>
 ${rows}
     </ul>
@@ -131,7 +226,15 @@ function jsonLd(domain, profile, sites) {
     url: `https://www.${domain}/`,
     telephone: profile.phoneDisplay,
     areaServed: states.map((s) => ({ '@type': 'State', name: s })),
-    serviceType: ['Asphalt Paving', 'Sealcoating', 'Asphalt Repair', 'Parking Lot Construction'],
+    // Per-market where declared. A market that also sells concrete and
+    // striping should say so in its schema rather than inherit an
+    // asphalt-only list that undersells it.
+    serviceType: profile.serviceTypes || [
+      'Asphalt Paving',
+      'Sealcoating',
+      'Asphalt Repair',
+      'Parking Lot Construction',
+    ],
     parentOrganization: {
       '@type': 'Organization',
       name: 'J. Worden & Sons Paving LLC',
@@ -158,7 +261,9 @@ function jsonLd(domain, profile, sites) {
  * both get the real page.
  */
 export function renderRegionalBody(domain, profile, rootDir) {
-  const sites = sitesForMarket(domain, loadSites(rootDir))
+  const allSites = loadSites(rootDir)
+  const sites = sitesForMarket(domain, allSites)
+  const summary = coverageSummary(domain, allSites, sites)
 
   const focus = (profile.commercialFocus || [])
     .map((f) => `<li>${esc(f)}</li>`)
@@ -194,10 +299,10 @@ export function renderRegionalBody(domain, profile, rootDir) {
     </section>
 
     ${focus ? `<section id="commercial">\n<h2>Commercial work in this market</h2>\n<ul>\n${focus}\n</ul>\n</section>` : ''}
-${proofSection(domain, profile, sites)}
+${proofSection(domain, profile, sites, summary)}
 
     <section id="contact">
-      <h2>Talk to us about a ${esc(profile.primaryRegion || '')} project</h2>
+      <h2>Talk to us about ${esc(article(profile.primaryRegion))}${esc(profile.primaryRegion || '')} project</h2>
       <p>One contractor, one point of contact, across every location in a
       portfolio. Call ${esc(profile.phoneDisplay || '')} or
       <a href="https://www.jwordenasphaltpaving.com/request-estimate">request an estimate</a>.</p>
