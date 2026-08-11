@@ -14,7 +14,7 @@
     "dev:backend": "powershell -ExecutionPolicy Bypass -File scripts/dev-backend.ps1",
     "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-route-manifest.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/normalize-meta-quality.mjs && npm run prerender:browser && node scripts/prerender.mjs && node scripts/normalize-meta-quality.mjs --domains-only && node scripts/verify-domain-html.mjs && node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs",
+    "postbuild": "node scripts/verify-photo-approvals.mjs && node scripts/normalize-meta-quality.mjs && npm run prerender:browser && node scripts/prerender.mjs && node scripts/normalize-meta-quality.mjs --domains-only && node scripts/verify-domain-html.mjs && node scripts/submit-indexnow.mjs && node scripts/submit-google-search-console.mjs",
     "ai:blog-factory": "node scripts/ai-blog-factory.mjs",
     "ai:authority": "node scripts/ai-authority-factory.mjs",
     "ai:authority:force": "node scripts/ai-authority-factory.mjs --force",
@@ -50,7 +50,7 @@
     "guard:premium-quality": "node scripts/normalize-meta-quality.mjs && node scripts/verify-premium-site-quality.mjs",
     "guard:google-update": "node scripts/verify-google-update-compliance.mjs",
     "guard:release-readiness": "node scripts/verify-release-readiness.mjs",
-    "guard:site-safety": "npm run guard:public-core && npm run guard:site-isolation && npm run guard:sitemaps",
+    "guard:site-safety": "npm run guard:public-core && npm run guard:site-isolation && npm run guard:sitemaps && npm run guard:photo-approvals",
     "gate:deploy-premium": "echo Bypass Vercel guards",
     "ops:seo-kit": "node scripts/create-seo-growth-kit.mjs",
     "ops:pricing": "node scripts/calc-builder-pricing.mjs",
@@ -95,7 +95,8 @@
     "test:e2e": "npx playwright test",
     "guard:deploy-mode": "node scripts/verify-deploy-mode.mjs",
     "prerender": "node scripts/prerender.mjs",
-    "prerender:browser": "puppeteer browsers install chrome"
+    "prerender:browser": "puppeteer browsers install chrome",
+    "guard:photo-approvals": "node scripts/verify-photo-approvals.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.940.0",
