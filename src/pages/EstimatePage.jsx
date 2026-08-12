@@ -350,7 +350,7 @@ export default function EstimatePage() {
     const fetchArbitrage = async () => {
       try {
         const sqftVal = parseInt(sqft, 10) || 0
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/v1/supply-chain/arbitrage', {
+        const res = await fetch((import.meta.env.VITE_API_BASE_URL || '') + '/api/v1/supply-chain/arbitrage', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ service, sqft: sqftVal, condition, zip_code: '23219' })
@@ -414,7 +414,7 @@ export default function EstimatePage() {
       await api.entities.Lead.create(payload)
 
       // Also create the Estimate Portal instance
-      const estRes = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/v1/portal/estimates/internal', {
+      const estRes = await fetch((import.meta.env.VITE_API_BASE_URL || '') + '/api/v1/portal/estimates/internal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

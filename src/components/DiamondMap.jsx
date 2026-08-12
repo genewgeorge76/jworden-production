@@ -41,15 +41,16 @@ export default function DiamondMap({ jobs = [], onJobClick = null }) {
     if (!map.current) return;
 
     // Clear old markers
-    markersRef.current.forEach(m => m.remove());
+    (markersRef.current || []).forEach(m => m?.remove());
     markersRef.current = [];
 
-    if (jobs.length === 0) return;
+    const safeJobs = Array.isArray(jobs) ? jobs : [];
+    if (safeJobs.length === 0) return;
 
     const bounds = new mapboxgl.LngLatBounds();
     let hasCoords = false;
 
-    jobs.forEach(job => {
+    safeJobs.forEach(job => {
       const lat = job.latitude;
       const lng = job.longitude;
       
@@ -122,7 +123,7 @@ export default function DiamondMap({ jobs = [], onJobClick = null }) {
       <div ref={mapContainer} className="absolute inset-0" />
       <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur border border-slate-700 p-3 rounded-lg shadow-lg z-10 pointer-events-none">
         <h3 className="text-white font-bold text-sm">Contracted Jobs Map</h3>
-        <p className="text-slate-400 text-xs">{jobs.length} Active {jobs.length === 1 ? 'Project' : 'Projects'}</p>
+        <p className="text-slate-400 text-xs">{(jobs || []).length} Active {(jobs || []).length === 1 ? 'Project' : 'Projects'}</p>
       </div>
     </div>
   );

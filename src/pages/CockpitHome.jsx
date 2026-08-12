@@ -545,7 +545,7 @@ function SystemHealthBar() {
     next.PAYMENTS = 'green'
 
     setStatuses(next)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])  
 
   useEffect(() => {
     check()
@@ -670,7 +670,7 @@ export default function CockpitHome() {
       setBriefingLoading(false)
     }
     run()
-  }, [dataLoaded]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dataLoaded])  
 
   // ── Autonomy toggle ──────────────────────────────────────────────────────
   const handleAutonomyToggle = async () => {

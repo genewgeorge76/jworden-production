@@ -111,16 +111,6 @@
       "has": [
         {
           "type": "host",
-          "value": "(www\\.)?richmondasphaltpaving\\.com"
-        }
-      ],
-      "destination": "/richmondasphaltpaving.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
           "value": "(www\\.)?atlantaasphaltpavingpros\\.com"
         }
       ],

@@ -51,7 +51,7 @@ export default function Register() {
     
     try {
       // 1. Create Tenant & User
-      const authResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/register`, {
+      const authResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -61,7 +61,7 @@ export default function Register() {
       if (!authResponse.ok) throw new Error(authData.detail || 'Registration failed');
       
       // 2. Generate Stripe Checkout Session
-      const billingResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/billing/checkout`, {
+      const billingResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/billing/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

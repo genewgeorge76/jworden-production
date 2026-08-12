@@ -207,7 +207,7 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
         formData.append('job_name', 'Driveway Scanner: ' + (geoData ? `${geoData.lat.toFixed(4)}, ${geoData.lng.toFixed(4)}` : file.name))
         formData.append('description', reply)
         
-        await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/gallery/upload`, {
+        await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/gallery/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`

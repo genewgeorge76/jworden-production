@@ -21,7 +21,7 @@ import { motion, AnimatePresence } from 'framer-motion'
  *   aspectClass  string    — Tailwind aspect class for the slide window
  */
 export default function Carousel({
-  items,
+  items = [],
   renderItem,
   intervalMs = 5000,
   ariaLabel = 'Image carousel',
@@ -30,7 +30,8 @@ export default function Carousel({
 }) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
-  const count = items.length
+  const safeItems = Array.isArray(items) ? items : []
+  const count = safeItems.length
 
   const goTo = useCallback(
     (i) => {
@@ -114,7 +115,7 @@ export default function Carousel({
             aria-roledescription="slide"
             aria-label={`Slide ${index + 1} of ${count}`}
           >
-            {renderItem(items[index], index)}
+            {renderItem ? renderItem(safeItems[index], index) : null}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -145,7 +146,7 @@ export default function Carousel({
             role="tablist"
             aria-label="Select slide"
           >
-            {items.map((_, i) => (
+            {safeItems.map((_, i) => (
               <button
                 key={i}
                 type="button"

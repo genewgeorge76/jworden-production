@@ -10,14 +10,16 @@ import { AnimatePresence, motion } from 'framer-motion'
  * Usage:
  *   <FAQAccordion items={MY_FAQS} />
  */
-export default function FAQAccordion({ items }) {
+export default function FAQAccordion({ items = [] }) {
   const [openIndex, setOpenIndex] = useState(null)
 
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i)
 
+  const safeItems = Array.isArray(items) ? items : []
+
   return (
     <div className="space-y-3">
-      {items.map(({ question, answer }, i) => {
+      {safeItems.map(({ question, answer }, i) => {
         const isOpen = openIndex === i
         return (
           <div

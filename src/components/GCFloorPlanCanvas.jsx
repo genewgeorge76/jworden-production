@@ -10,10 +10,42 @@
  *   onSelect  — callback(roomId)
  */
 /* eslint-disable react/no-unknown-property */
-import { useRef, useState, useMemo } from 'react'
+import React, { Component, useRef, useState, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Grid, Text, Html } from '@react-three/drei'
 import * as THREE from 'three'
+
+class CanvasErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("GCFloorPlanCanvas error:", error, errorInfo)
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 300, background: '#1a1e2e', color: '#94a3b8', fontSize: '14px' }}>
+          3D floor plan visualizer unavailable on this device.
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')))
+  } catch (e) {
+    return false
+  }
+}
 
 // Room type → base color
 const ROOM_COLORS = {
@@ -134,43 +166,55 @@ function Compass() {
 
 // ── Canvas export ─────────────────────────────────────────────────────────────
 export default function GCFloorPlanCanvas({ rooms = [], selectedRoom, onSelectRoom }) {
+  if (!isWebGLAvailable()) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 300, background: '#1a1e2e', color: '#94a3b8', fontSize: '14px' }}>
+        3D floor plan requires WebGL support.
+      </div>
+    )
+  }
+
+  const safeRooms = Array.isArray(rooms) ? rooms : []
+
   return (
-    <Canvas
-      camera={{ position: [0, 12, 12], fov: 45 }}
-      shadows
-      style={{ background: '#1a1e2e' }}
-    >
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[10, 15, 10]} intensity={0.9} castShadow />
+    <CanvasErrorBoundary>
+      <Canvas
+        camera={{ position: [0, 12, 12], fov: 45 }}
+        shadows
+        style={{ background: '#1a1e2e' }}
+      >
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 15, 10]} intensity={0.9} castShadow />
 
-      <Grid
-        args={[40, 40]}
-        cellSize={toWorld(10)}
-        cellColor="#334"
-        sectionColor="#445"
-        fadeDistance={60}
-        fadeStrength={1}
-        infiniteGrid
-      />
-
-      {rooms.map((room) => (
-        <RoomMesh
-          key={room.id}
-          room={room}
-          isSelected={selectedRoom === room.id}
-          onSelect={onSelectRoom}
+        <Grid
+          args={[40, 40]}
+          cellSize={toWorld(10)}
+          cellColor="#334"
+          sectionColor="#445"
+          fadeDistance={60}
+          fadeStrength={1}
+          infiniteGrid
         />
-      ))}
 
-      <Compass />
-      <OrbitControls
-        enablePan
-        enableZoom
-        enableRotate
-        minPolarAngle={0}
-        maxPolarAngle={Math.PI / 2.2}
-        target={[0, 0, 0]}
-      />
-    </Canvas>
+        {safeRooms.map((room) => (
+          <RoomMesh
+            key={room?.id || Math.random()}
+            room={room}
+            isSelected={selectedRoom === room?.id}
+            onSelect={onSelectRoom}
+          />
+        ))}
+
+        <Compass />
+        <OrbitControls
+          enablePan
+          enableZoom
+          enableRotate
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 2.2}
+          target={[0, 0, 0]}
+        />
+      </Canvas>
+    </CanvasErrorBoundary>
   )
 }

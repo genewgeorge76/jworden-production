@@ -14,7 +14,7 @@ export default function SuperAdmin() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/superadmin/telemetry`);
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/superadmin/telemetry`);
       if (res.ok) {
         setTelemetry(await res.json());
       }
@@ -28,7 +28,7 @@ export default function SuperAdmin() {
   const handleIntervene = async (tenantId) => {
     setIntervening(tenantId);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/superadmin/intervene`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/superadmin/intervene`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -166,7 +166,7 @@ export default function SuperAdmin() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
-              {telemetry?.tenants.map((t) => (
+              {(telemetry?.tenants || []).map((t) => (
                 <tr key={t.tenant_id} className="hover:bg-slate-800/20 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-bold text-white">{t.company_name}</div>
@@ -209,7 +209,7 @@ export default function SuperAdmin() {
                 </tr>
               ))}
               
-              {!telemetry?.tenants.length && (
+              {!(telemetry?.tenants?.length) && (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                     No active tenants found in the database.

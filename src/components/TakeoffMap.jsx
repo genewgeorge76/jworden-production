@@ -11,7 +11,7 @@
  * Requires VITE_GOOGLE_MAPS_API_KEY env var to load the map.
  */
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { APIProvider, Map, AdvancedMarker, useMapsLibrary } from '@vis.gl/react-google-maps'
 import {
   analyzeGroundScan,
@@ -55,7 +55,12 @@ function MapContents({ onGeocode }) {
   const geocode = useGeocoder()
 
   // Expose geocode upward via callback so the outer form can use it
-  if (onGeocode) onGeocode(geocode)
+  useEffect(() => {
+    if (onGeocode && geocode) {
+      onGeocode(geocode)
+    }
+  }, [onGeocode, geocode])
+
   return null
 }
 

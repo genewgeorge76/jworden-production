@@ -11,10 +11,42 @@
  * the `config` prop from BuildConfigurator so changes update instantly.
  */
 /* eslint-disable react/no-unknown-property */
-import { Suspense, useRef, useMemo } from 'react'
+import React, { Component, Suspense, useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Grid, Environment, Text } from '@react-three/drei'
 import * as THREE from 'three'
+
+class CanvasErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("PropertyVisualizer Canvas Error:", error, errorInfo)
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#64748b', fontSize: '14px' }}>
+          3D preview unavailable on this device.
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')))
+  } catch (e) {
+    return false
+  }
+}
 
 // ── Colour palette keyed by material name ────────────────────────────────────
 const MATERIAL_COLORS = {
@@ -295,21 +327,34 @@ function Scene({ config }) {
 
 // ── Public component ─────────────────────────────────────────────────────────
 export default function PropertyVisualizer({ config = {}, className = '' }) {
+  if (!isWebGLAvailable()) {
+    return (
+      <div
+        className={`w-full rounded-2xl overflow-hidden shadow-xl border border-brand-navy/10 bg-brand-navy/5 flex items-center justify-center ${className}`}
+        style={{ height: 420 }}
+      >
+        <p className="text-slate-500 text-sm">3D visualization requires WebGL support.</p>
+      </div>
+    )
+  }
+
   return (
     <div
       className={`w-full rounded-2xl overflow-hidden shadow-xl border border-brand-navy/10 bg-brand-navy/5 ${className}`}
       style={{ height: 420 }}
     >
-      <Canvas
-        shadows
-        camera={{ position: [8, 7, 10], fov: 45, near: 0.1, far: 200 }}
-        gl={{ antialias: true, alpha: false }}
-        style={{ background: 'linear-gradient(180deg, #dbeafe 0%, #f0fdf4 100%)' }}
-      >
-        <Suspense fallback={null}>
-          <Scene config={config} />
-        </Suspense>
-      </Canvas>
+      <CanvasErrorBoundary>
+        <Canvas
+          shadows
+          camera={{ position: [8, 7, 10], fov: 45, near: 0.1, far: 200 }}
+          gl={{ antialias: true, alpha: false }}
+          style={{ background: 'linear-gradient(180deg, #dbeafe 0%, #f0fdf4 100%)' }}
+        >
+          <Suspense fallback={null}>
+            <Scene config={config} />
+          </Suspense>
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   )
 }

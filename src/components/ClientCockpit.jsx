@@ -40,7 +40,7 @@ function StatusDot({ status }) {
 }
 
 /* ─── Panels ─────────────────────────────────────────────── */
-function HomePanel({ leads, jobs }) {
+function HomePanel({ leads = [], jobs = [] }) {
   const now = new Date();
   const todayLeads = leads.filter(l => {
     const d = new Date(l.created_at || l.createdAt);
@@ -75,7 +75,7 @@ function HomePanel({ leads, jobs }) {
   );
 }
 
-function LeadsPanel({ leads }) {
+function LeadsPanel({ leads = [] }) {
   const [selected, setSelected] = useState(null);
   return (
     <div style={{ display: 'flex', gap: 16 }}>
@@ -113,7 +113,7 @@ function LeadsPanel({ leads }) {
   );
 }
 
-function JobsPanel({ jobs }) {
+function JobsPanel({ jobs = [] }) {
   return (
     <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, overflow: 'hidden' }}>
       <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: 13, fontFamily: 'monospace', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Jobs ({jobs.length})</div>

@@ -81,7 +81,7 @@ export default function JobScopeMap({ job, onSave }) {
       
       if (job?.id) {
           // Hit the raw endpoint using fetch
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/jobs/${job.id}/scope`, {
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/jobs/${job.id}/scope`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

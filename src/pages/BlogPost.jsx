@@ -230,7 +230,7 @@ export default function BlogPost() {
             40+ years across Central Virginia and the Southeast. Free site visits.
           </p>
           <Link
-            to="/#quote"
+            to="/quote"
             className="inline-flex items-center gap-2 bg-background text-foreground px-6 py-3 font-display font-bold text-xs tracking-[0.2em] uppercase hover:bg-foreground hover:text-background transition-colors"
           >
             Request Estimate <ArrowRight className="w-4 h-4" />
@@ -250,7 +250,7 @@ export default function BlogPost() {
             <Link to="/locations" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Service Areas
             </Link>
-            <Link to="/#quote" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
+            <Link to="/quote" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Request Free Estimate
             </Link>
             <Link to="/blog" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">

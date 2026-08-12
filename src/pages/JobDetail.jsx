@@ -27,7 +27,7 @@ export default function JobDetail() {
       if (!url) return;
       setUploadingPic(true);
       try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/jobs/${job.id}/pictures`, {
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/jobs/${job.id}/pictures`, {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -172,7 +172,7 @@ export default function JobDetail() {
                   <p className={`font-display font-bold text-lg mt-1 ${
                     job.status === 'completed' ? 'text-primary' : job.status === 'in_progress' ? 'text-blue-400' : 'text-secondary-foreground'
                   }`}>
-                    {job.status.replace('_', ' ').toUpperCase()}
+                    {(job?.status || '').replace('_', ' ').toUpperCase()}
                   </p>
                 </div>
                 <div>

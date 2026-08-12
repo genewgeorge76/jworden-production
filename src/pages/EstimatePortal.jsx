@@ -25,7 +25,7 @@ export default function EstimatePortal() {
 
   // Fetch Estimate
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/portal/estimates/${public_token}`)
+    fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/portal/estimates/${public_token}`)
       .then(res => {
         if (!res.ok) throw new Error('Estimate not found or link expired.')
         return res.json()
@@ -41,6 +41,7 @@ export default function EstimatePortal() {
   // Canvas Drawing logic
   const startDrawing = ({ nativeEvent }) => {
     if (signed) return
+    if (!canvasRef.current) return
     const { offsetX, offsetY } = nativeEvent
     const ctx = canvasRef.current.getContext('2d')
     ctx.beginPath()
@@ -49,6 +50,7 @@ export default function EstimatePortal() {
   }
   const draw = ({ nativeEvent }) => {
     if (!isDrawing || signed) return
+    if (!canvasRef.current) return
     const { offsetX, offsetY } = nativeEvent
     const ctx = canvasRef.current.getContext('2d')
     ctx.lineTo(offsetX, offsetY)
@@ -56,12 +58,14 @@ export default function EstimatePortal() {
   }
   const stopDrawing = () => {
     if (signed) return
+    if (!canvasRef.current) return
     const ctx = canvasRef.current.getContext('2d')
     ctx.closePath()
     setIsDrawing(false)
   }
   const clearCanvas = () => {
     if (signed) return
+    if (!canvasRef.current) return
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -83,6 +87,7 @@ export default function EstimatePortal() {
           setSignError("You must accept the terms & conditions.")
           return
       }
+      if (!canvasRef.current) return
       
       const canvas = canvasRef.current
       // Check if blank (rudimentary check)
@@ -98,7 +103,7 @@ export default function EstimatePortal() {
       setSignError(null)
       try {
           const signatureUrl = canvas.toDataURL('image/png')
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/portal/estimates/${public_token}/sign`, {
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/portal/estimates/${public_token}/sign`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ signature_data_url: signatureUrl, terms_accepted: true })
@@ -118,7 +123,7 @@ export default function EstimatePortal() {
       setProcessing(true)
       try {
           if (paymentMethod === 'stripe') {
-              const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/portal/estimates/${public_token}/checkout`, {
+              const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/portal/estimates/${public_token}/checkout`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
@@ -130,7 +135,7 @@ export default function EstimatePortal() {
               if (data.checkout_url) window.location.href = data.checkout_url
           } else {
               // Manual Payment (Zelle, Check, Wire)
-              const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/portal/estimates/${public_token}/manual_payment`, {
+              const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/portal/estimates/${public_token}/manual_payment`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ payment_method: paymentMethod })
@@ -149,8 +154,8 @@ export default function EstimatePortal() {
   if (error) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', color: '#ef4444' }}>{error}</div>
 
   const fmt$ = (n) => typeof n === 'number' ? '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '$0.00'
-  const isPendingVerification = estimate.payment_status === 'pending' && estimate.payment_method !== 'stripe'
-  const isApproved = estimate.status === 'approved'
+  const isPendingVerification = estimate?.payment_status === 'pending' && estimate?.payment_method !== 'stripe'
+  const isApproved = estimate?.status === 'approved'
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#0f172a', padding: '40px 20px', fontFamily: 'system-ui, sans-serif' }}>
@@ -159,7 +164,7 @@ export default function EstimatePortal() {
             {/* Header */}
             <div style={{ background: primaryColor || '#050810', padding: '32px 40px', color: 'white' }}>
                 <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.02em' }}>J. Worden & Sons</h1>
-                <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>Estimate #{estimate.estimate_number}</p>
+                <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>Estimate #{estimate?.estimate_number}</p>
             </div>
             
             <div style={{ padding: '40px' }}>
@@ -167,7 +172,7 @@ export default function EstimatePortal() {
                 <div style={{ marginBottom: 40 }}>
                     <h2 style={{ fontSize: 18, fontWeight: 700, borderBottom: '2px solid #e2e8f0', paddingBottom: 12, marginBottom: 20 }}>Scope of Work</h2>
                     <div style={{ whiteSpace: 'pre-wrap', color: '#475569', lineHeight: 1.6 }}>
-                        {estimate.scope_summary || 'No scope details provided.'}
+                        {estimate?.scope_summary || 'No scope details provided.'}
                     </div>
                 </div>
                 
@@ -175,12 +180,12 @@ export default function EstimatePortal() {
                 <div style={{ marginBottom: 40, background: '#f1f5f9', borderRadius: 12, padding: 24 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                         <span style={{ color: '#475569', fontWeight: 600 }}>Total Investment</span>
-                        <span style={{ fontWeight: 700 }}>{fmt$(estimate.total_amount)}</span>
+                        <span style={{ fontWeight: 700 }}>{fmt$(estimate?.total_amount)}</span>
                     </div>
-                    {estimate.deposit_amount > 0 && (
+                    {estimate?.deposit_amount > 0 && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #cbd5e1', paddingTop: 12, marginTop: 12 }}>
                             <span style={{ color: '#0f172a', fontWeight: 700 }}>Required Deposit</span>
-                            <span style={{ color: primaryColor || '#f59e0b', fontWeight: 700, fontSize: 18 }}>{fmt$(estimate.deposit_amount)}</span>
+                            <span style={{ color: primaryColor || '#f59e0b', fontWeight: 700, fontSize: 18 }}>{fmt$(estimate?.deposit_amount)}</span>
                         </div>
                     )}
                 </div>
@@ -200,18 +205,18 @@ export default function EstimatePortal() {
                             Pending Deposit Verification
                         </div>
                         <p style={{ margin: '0 0 16px', lineHeight: 1.5 }}>
-                            You have elected to pay your deposit via <strong>{estimate.payment_method.toUpperCase()}</strong>.
+                            You have elected to pay your deposit via <strong>{estimate?.payment_method?.toUpperCase()}</strong>.
                             Your project will be scheduled as soon as the funds clear.
                         </p>
                         <div style={{ background: 'white', padding: 16, borderRadius: 8, border: '1px dashed #d97706' }}>
-                            {estimate.payment_method === 'zelle' && (
-                                <><strong>Zelle Details:</strong> Send to payments@jworden.com. Mention Est {estimate.estimate_number}.</>
+                            {estimate?.payment_method === 'zelle' && (
+                                <><strong>Zelle Details:</strong> Send to payments@jworden.com. Mention Est {estimate?.estimate_number}.</>
                             )}
-                            {estimate.payment_method === 'check' && (
-                                <><strong>Check Details:</strong> Mail to J. Worden & Sons, 123 Paving Way, Richmond, VA. Memo: Est {estimate.estimate_number}.</>
+                            {estimate?.payment_method === 'check' && (
+                                <><strong>Check Details:</strong> Mail to J. Worden & Sons, 123 Paving Way, Richmond, VA. Memo: Est {estimate?.estimate_number}.</>
                             )}
-                            {estimate.payment_method === 'wire' && (
-                                <><strong>Wire Details:</strong> Bank of America, Acct: 123456789, Rtn: 987654321. Memo: Est {estimate.estimate_number}.</>
+                            {estimate?.payment_method === 'wire' && (
+                                <><strong>Wire Details:</strong> Bank of America, Acct: 123456789, Rtn: 987654321. Memo: Est {estimate?.estimate_number}.</>
                             )}
                         </div>
                     </div>

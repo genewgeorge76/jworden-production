@@ -213,7 +213,7 @@ export default function Blog() {
             <Link to="/locations" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Service Areas
             </Link>
-            <Link to="/#quote" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
+            <Link to="/quote" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Request Free Estimate
             </Link>
             <Link to="/blog" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
