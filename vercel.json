@@ -148,6 +148,16 @@
     },
     {
       "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?obxpaving\\.com"
+        }
+      ],
+      "destination": "/obxpaving.com.html"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
