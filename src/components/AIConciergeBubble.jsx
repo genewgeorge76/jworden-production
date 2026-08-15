@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Loader2, Mic, MicOff, Volume2, VolumeX, Radio, Phone, Sparkles, ShieldCheck } from 'lucide-react';
+import { X, Send, Loader2, Mic, MicOff, Volume2, VolumeX, Radio, Phone, Sparkles, ShieldCheck, Bot } from 'lucide-react';
 import { api } from '@/api/client';
 // Lazy-load the WebGL avatar so the 500+KB three.js bundle never blocks the
 // initial page render. It is only mounted when AVATAR_REALISM_MODE === 'hybrid'

@@ -1,13 +1,11 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, CloudRain, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+import { Activity, AlertTriangle, Briefcase, CalendarDays, CircleCheckBig, CloudRain, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
 import CockpitHome from '../components/CockpitHome'
 
 import GoogleSearchPanel from '../components/GoogleSearchPanel'
 import AgenticConstructionWorkspace from '../components/AgenticConstructionWorkspace'
-import OwnerConfirmModal from '../components/OwnerConfirmModal'
-import SessionUnlockModal from '../components/SessionUnlockModal'
 import { voiceService } from '../lib/ElevenLabsService'
 import { Link } from 'react-router-dom'
 import states from '../data/legal/states'
@@ -405,11 +403,6 @@ function HubLinkPanel() {
   )
 }
 
-// Owner confirmation modal mounted for CRM actions
-// Uses local state `pendingOwnerAction` and `performPendingOwnerAction` defined above
-{/** placeholder for OwnerConfirmModal mount - injected in component scope via JSX below */}
-
-
 function statusTone(score) {
   if (score >= 85) return 'text-emerald-300 border-emerald-300/50 bg-emerald-300/10'
   if (score >= 70) return 'text-amber-300 border-amber-300/50 bg-amber-300/10'
@@ -431,15 +424,6 @@ function KpiCard({ label, value, delta, tone, icon: Icon }) {
           <Icon className="w-5 h-5 text-brand-amber" />
         </div>
       </div>
-      <OwnerConfirmModal
-        open={Boolean(pendingOwnerAction)}
-        title={pendingOwnerAction ? (pendingOwnerAction.kind === 'call' ? 'Confirm Call' : 'Confirm Email') : ''}
-        message={pendingOwnerAction ? `Authorize Jarvis to ${pendingOwnerAction.kind} ${pendingOwnerAction.lead?.name || pendingOwnerAction.lead?.phone || pendingOwnerAction.lead?.email}? This requires operator approval.` : ''}
-        defaultToken={typeof window !== 'undefined' ? window.sessionStorage.getItem('OWNER_TOKEN') || '' : ''}
-        onCancel={() => setPendingOwnerAction(null)}
-        onConfirm={(opts) => performPendingOwnerAction(opts)}
-      />
-      <SessionUnlockModal open={showUnlockModal} defaultPin="" defaultToken={typeof window !== 'undefined' ? sessionStorage.getItem('OWNER_TOKEN') || '' : ''} onCancel={() => setShowUnlockModal(false)} onUnlock={handleUnlock} />
     </div>
   )
 }
@@ -2462,7 +2446,7 @@ function GoogleAdsBudgetControlPanel() {
       return null
     }
   })
-  const [_note, setNote] = useState('')
+  const [note, setNote] = useState('')
 
   useEffect(() => {
     try {
@@ -2711,7 +2695,7 @@ function HumanApprovalPolicyPanel() {
 
 function TempInAppOpsFallbackPanel() {
   const [busy, setBusy] = useState(false)
-  const [_note, setNote] = useState('')
+  const [note, setNote] = useState('')
   const [providerSummary, setProviderSummary] = useState(null)
 
   const downloadJson = useCallback((filename, payload) => {

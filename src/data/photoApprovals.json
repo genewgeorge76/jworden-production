@@ -1,0 +1,123 @@
+{
+  "_readme": [
+    "OWNER APPROVAL LIST FOR PHOTO-DERIVED LOCATIONS.",
+    "",
+    "Every pin on the public footprint map, and every 'documented project' cited",
+    "on a regional domain, is derived from GPS coordinates inside photographs.",
+    "Nothing distinguishes a photograph of a driveway you paved from a photograph",
+    "of a house you stayed in. Four times now, personal locations have reached the",
+    "public site because the pipeline assumed a cluster of photographs meant work:",
+    "three of the owner's own homes, and a family visit to the Outer Banks that was",
+    "published as ten job sites with coordinates on a public map.",
+    "",
+    "This file is the owner's say-so, in writing. scripts/verify-photo-approvals.mjs",
+    "enforces it during the build.",
+    "",
+    "HOW TO USE IT",
+    "",
+    "  denied    Never publishable. If one of these turns up in jobSites.json the",
+    "            BUILD FAILS. This is what stops a removed location coming back",
+    "            through a re-import.",
+    "",
+    "  approved  Confirmed by the owner as real work, safe to publish.",
+    "",
+    "  mode      'warn'   - unreviewed locations still publish, and the build",
+    "                       prints how many are awaiting review.",
+    "            'strict' - ONLY approved locations publish. Anything unreviewed",
+    "                       fails the build. Switch to this once the review queue",
+    "                       is worked through.",
+    "",
+    "Identity is the rounded coordinate pair, not the city name, because a city",
+    "label can be re-geocoded but the coordinates in the photograph cannot.",
+    "",
+    "SCOPE LIMIT, stated honestly: this guards build-time data (jobSites.json).",
+    "Gallery photographs served from the backend API at runtime are NOT covered",
+    "here and need the same treatment on the backend before they can be trusted."
+  ],
+
+  "mode": "warn",
+
+  "denied": [
+    {
+      "id": "37.4026,-77.4583",
+      "label": "Evelake Road, Chesterfield VA",
+      "reason": "Owner's home. Confirmed by the owner.",
+      "recorded": "2026-08-09"
+    },
+    {
+      "id": "37.3678,-77.4220",
+      "label": "Hillside Road, Chester VA",
+      "reason": "Owner's home. Confirmed by the owner.",
+      "recorded": "2026-08-09"
+    },
+    {
+      "id": "37.3724,-77.4416",
+      "label": "Mineola Drive, Chester VA",
+      "reason": "Owner's home. Confirmed by the owner.",
+      "recorded": "2026-08-09"
+    },
+
+    {
+      "id": "36.0490,-75.6797",
+      "label": "Kill Devil Hills NC (92 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "35.7960,-75.5474",
+      "label": "Oregon Inlet Road, Dare County NC (26 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "36.0082,-75.6583",
+      "label": "Blue Jay Street, Kill Devil Hills NC (13 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "35.8847,-75.7641",
+      "label": "Manns Harbor NC (12 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "36.0502,-75.6783",
+      "label": "Kill Devil Hills NC (12 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "35.9084,-75.6435",
+      "label": "Manteo NC (9 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "35.9328,-75.6517",
+      "label": "Dare County NC (6 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "36.1662,-75.7549",
+      "label": "Duck NC (5 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "35.8182,-75.5639",
+      "label": "Dare County NC (4 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    },
+    {
+      "id": "35.9208,-75.6491",
+      "label": "Dare County NC (4 photographs)",
+      "reason": "Family visit to the Outer Banks, not work. Confirmed by the owner 2026-08-11.",
+      "recorded": "2026-08-11"
+    }
+  ],
+
+  "approved": []
+}
