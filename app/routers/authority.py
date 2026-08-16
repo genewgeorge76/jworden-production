@@ -33,7 +33,7 @@ from sqlalchemy.orm import Session
 from ..core.limiter import limiter
 from ..core.tenant_contract import profiles_by_key
 from ..database import get_db
-from ..models import AuditEvent
+from ..models import AuditEvent, MarketSite, Tenant
 from ..services import ai_foreman
 
 logger = logging.getLogger(__name__)
@@ -42,13 +42,44 @@ router = APIRouter(prefix="/api/v1/authority", tags=["authority"])
 
 
 # ── Tenant key validation ────────────────────────────────────────────────────
-try:
-    _VALID_TENANTS = set(profiles_by_key().keys())
-except Exception as exc:  # noqa: BLE001
-    logger.warning(
-        "Could not load tenant contract (%s); defaulting to 'jworden' only", exc
-    )
-    _VALID_TENANTS = {"jworden"}
+#
+# This used to be a module-level frozen set built from the site factory manifest:
+#
+#     _VALID_TENANTS = set(profiles_by_key().keys())
+#
+# src/config/siteFactoryManifest.json was never committed, so that load failed
+# and tenant_contract's fallback returned a jworden-only manifest. The result was
+# a hard 400 on this endpoint for every tenant except "jworden" — Carolina
+# Blacktop, Minnesota, OBX, Atlanta, Savannah, Richmond, Michigan and Kansas City
+# all rejected as "Unknown tenant".
+#
+# It is now resolved per request against the database, which is the authority the
+# manifest was being replaced by (see MarketSite in models.py: "Replacing the
+# hardcoded siteFactoryManifest.json"). The manifest keys are still unioned in so
+# nothing regresses if the file is later shipped, and so this keeps working
+# before any tenant rows exist.
+
+
+def _valid_tenants(db: Session) -> set[str]:
+    """Tenant keys accepted by this endpoint: manifest keys plus live DB rows."""
+    keys: set[str] = set()
+
+    try:
+        keys |= set(profiles_by_key().keys())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Could not load tenant contract (%s)", exc)
+
+    for model, column in ((Tenant, "tenant_id"), (MarketSite, "tenant_id")):
+        try:
+            keys |= {
+                row[0] for row in db.query(getattr(model, column)).distinct() if row[0]
+            }
+        except Exception as exc:  # noqa: BLE001
+            # A missing table must not take the endpoint down; fall back to
+            # whatever keys we already have.
+            logger.warning("Could not read %s for tenant validation (%s)", model.__name__, exc)
+
+    return keys or {"jworden"}
 
 
 # ── Response model ───────────────────────────────────────────────────────────
@@ -102,10 +133,11 @@ def get_local_proof(
     primary, GPT-4o fallback. Each successful call writes one row to
     `audit_events` for cost/audit tracking.
     """
-    if tenant not in _VALID_TENANTS:
+    valid_tenants = _valid_tenants(db)
+    if tenant not in valid_tenants:
         raise HTTPException(
             status_code=400,
-            detail=f"Unknown tenant '{tenant}'. Valid keys: {sorted(_VALID_TENANTS)}",
+            detail=f"Unknown tenant '{tenant}'. Valid keys: {sorted(valid_tenants)}",
         )
 
     equipment_list = [eq.strip() for eq in equipment.split(",") if eq.strip()]
