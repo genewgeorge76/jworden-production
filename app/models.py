@@ -1356,6 +1356,23 @@ class Tenant(Base):
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(String(60), nullable=False, index=True)
     company_name = Column(String(200), nullable=False)
+    # Self-serve SaaS tenants are reached at <subdomain_slug>.thewordenstandard.com.
+    # routers/factory.py resolves that hostname against this column and sets it at
+    # provision time, but both call sites were guarded with
+    # `hasattr(Tenant, 'subdomain_slug')`. While the column was absent the lookup
+    # silently returned None and the slug was silently dropped on write, so every
+    # subdomain-only signup appeared to provision and then resolved to nothing.
+    # Unique because the slug is the hostname; nullable so existing tenants and
+    # custom-domain-only tenants are unaffected (SQL permits many NULLs under a
+    # unique index). 63 chars is the DNS label limit.
+    subdomain_slug = Column(String(63), nullable=True, index=True, unique=True)
+    # Which branding a SaaS tenant gets: jarvis | worden_standard | white_label.
+    # Same story as subdomain_slug — factory.py accepted it on the provision
+    # request and dropped it through the same hasattr guard, while echoing the
+    # requested tier back in the response. src/lib/siteProfiles.js reads this to
+    # pick the tier, so a customer who paid for white_label was silently served
+    # Jarvis branding.
+    branding_tier = Column(String(30), nullable=False, default="jarvis")
     system_prompt_override = Column(Text, nullable=True)
     primary_color = Column(String(20), nullable=True, default="#f5a623")
     logo_url = Column(String(500), nullable=True)
