@@ -656,10 +656,17 @@ def _org_from_key(db: Session, key: Optional[str]) -> Organization:
     return org
 
 
+# Worden University is free for now. Seats still exist because they are how a
+# company gets its own dashboard and roster, but the free tier is provisioned
+# generously so the limit never blocks a crew being trained. The enforcement
+# path stays in place and tested, ready for the day it is charged for.
+FREE_TIER_SEATS = 50
+
+
 class OrgCreate(BaseModel):
     name: str
     billing_email: str
-    seats: int = 0
+    seats: Optional[int] = None
 
 
 class MemberAdd(BaseModel):
@@ -678,14 +685,15 @@ def create_org(
     email = (payload.billing_email or "").strip().lower()
     if not name or "@" not in email:
         raise HTTPException(status_code=422, detail="Company name and a valid billing email are required")
-    if payload.seats < 0:
+    seats = FREE_TIER_SEATS if payload.seats is None else payload.seats
+    if seats < 0:
         raise HTTPException(status_code=422, detail="Seats cannot be negative")
 
     raw_key = f"wu_{secrets.token_urlsafe(32)}"
     org = Organization(
         name=name,
         billing_email=email,
-        seats_purchased=payload.seats,
+        seats_purchased=seats,
         key_hash=_hash_key(raw_key),
     )
     db.add(org)
@@ -697,6 +705,7 @@ def create_org(
         "seats_purchased": org.seats_purchased,
         # Shown exactly once. We store only the hash.
         "org_key": raw_key,
+        "plan": "free",
         "note": "Save this key now — it is not recoverable.",
     }
 
