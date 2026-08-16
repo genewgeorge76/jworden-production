@@ -449,12 +449,10 @@ _EXTRA_ORIGINS = [
     o.strip() for o in os.getenv("EXTRA_CORS_ORIGINS", "").split(",") if o.strip()
 ]
 _ALLOWED_ORIGINS = [
-    "https://jworden.netlify.app",
     "https://jwordenasphaltpaving.com",
     "https://www.jwordenasphaltpaving.com",
     "https://thewordenstandard.com",
     "https://www.thewordenstandard.com",
-    "https://doooone.netlify.app",
     "https://app.jwordenasphaltpaving.com",
     "http://localhost:5173",  # Vite dev server
     "http://localhost:5174",
@@ -463,16 +461,22 @@ _ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ] + _EXTRA_ORIGINS
 
-# Allow Netlify deploy-preview origins (e.g. https://deploy-preview-42--jworden.netlify.app)
-# AND any *.netlify.app subdomain (so renamed Netlify sites and branch deploys keep
-# working without redeploying the backend).  Override or extend via EXTRA_CORS_ORIGINS
-# env var on Railway for additional origins.
-_DEPLOY_PREVIEW_ORIGIN_REGEX = r"https://([\w-]+--)?[\w-]+\.netlify\.app"
+# NOTE: there is deliberately no `allow_origin_regex` here.
+#
+# This previously carried r"https://([\w-]+--)?[\w-]+\.netlify\.app", which was
+# intended to permit Netlify deploy previews.  That pattern is unanchored on the
+# subdomain, so it matched *every* netlify.app site on the internet — combined
+# with allow_credentials=True it granted any third-party page credentialed
+# cross-origin access to this API.  Hosting has since moved to Vercel + Fly.io,
+# so it granted that access in exchange for nothing.
+#
+# Preview/branch deploy origins should be added explicitly via the
+# EXTRA_CORS_ORIGINS env var instead.  Never reintroduce a wildcard regex over a
+# shared hosting domain while allow_credentials is True.
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_ALLOWED_ORIGINS,
-    allow_origin_regex=_DEPLOY_PREVIEW_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],

@@ -13,12 +13,21 @@ from pydantic import BaseModel
 import stripe
 from sqlalchemy.orm import Session
 
+from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Tenant, User
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/billing", tags=["billing"])
+# Both routes act on an *existing* tenant supplied in the request body, so both
+# must be authenticated — otherwise any caller can mint a Stripe portal session
+# for an arbitrary tenant_id.  Enforced at router level (see autonomy.py) so new
+# routes inherit the guard by construction.
+router = APIRouter(
+    prefix="/api/v1/billing",
+    tags=["billing"],
+    dependencies=[Depends(verify_premium_security)],
+)
 
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "sk_test_mock")
 
