@@ -229,6 +229,11 @@ JARVIS_TOOLS = [
 ]
 
 _SENSITIVE_TOOL_NAMES = {"make_phone_call", "send_email", "run_npm"}
+
+# Subscription tiers that unlock paid features. models.py documents the
+# vocabulary as lite | pro | max; "enterprise" is not a tier in this system and
+# appeared only in a since-corrected gate below.
+_PAID_TIERS = {"pro", "max"}
 _ROLE_TOOLS: dict[str, set[str]] = {
     ROLE_PUBLIC_CONCIERGE: {"web_search", "search_os_abilities"},
     ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm", "search_os_abilities", "execute_os_ability", "check_dynamic_route", "check_fleet_status", "check_thermal_mix"},
@@ -577,15 +582,50 @@ async def _run_tool(
         result = _execute(mod_id, params)
         return _finalize(result)
     if name in ["check_dynamic_route", "check_fleet_status", "check_thermal_mix"]:
-        from app.core.tenant_contract import profiles_by_key
-        profiles = profiles_by_key()
-        tenant = profiles.get(tenant_id)
-        tier = getattr(tenant, "subscriptionTier", "lite") if tenant else "lite"
-        
-        # Free-tier default bypass if it's the root JWORDEN_HQ for demo
-        if tenant_id != "JWORDEN_HQ" and tier not in ["pro", "enterprise"]:
-            return _finalize({"ok": False, "error": "This feature requires a PRO or ENTERPRISE license tier. Please upgrade."})
-            
+        # Two bugs previously met here and denied paying customers this feature.
+        #
+        # 1. The tier was read from profiles_by_key(), i.e. from
+        #    src/config/siteFactoryManifest.json — a file that was never
+        #    committed. tenant_contract's fallback returns a jworden-only
+        #    manifest with subscriptionTier unset, so `tenant` was None for
+        #    every real tenant_id and the tier fell through to "lite".
+        # 2. The gate accepted ["pro", "enterprise"], but "enterprise" is not a
+        #    tier in this system. models.py documents lite | pro | max, and
+        #    "enterprise" appears nowhere else in the codebase. So "max" — the
+        #    highest tier, the one bootstrap_hq.py assigns to HQ — was rejected.
+        #
+        # Net effect: everyone except a literal "JWORDEN_HQ" tenant_id was told
+        # to upgrade, including customers already on max.
+        #
+        # The tier now comes from the database, which is the source of truth for
+        # what a customer actually pays for.
+        tier = "lite"
+        try:
+            from app.database import SessionLocal  # noqa: PLC0415
+            from app.models import Tenant  # noqa: PLC0415
+
+            with SessionLocal() as _db:
+                row = (
+                    _db.query(Tenant.subscription_tier)
+                    .filter(Tenant.tenant_id == tenant_id)
+                    .first()
+                )
+            if row and row[0]:
+                tier = str(row[0]).strip().lower()
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Could not read subscription tier for %s (%s)", tenant_id, exc)
+
+        # HQ keeps its bypass so internal/demo use is unaffected.
+        if tenant_id != "JWORDEN_HQ" and tier not in _PAID_TIERS:
+            return _finalize({
+                "ok": False,
+                "error": (
+                    "This feature requires a Pro or Max subscription. "
+                    f"This account is on '{tier}'."
+                ),
+            })
+
+
         try:
             if name == "check_dynamic_route":
                 from app.jarvis_os.abilities.OperationalAndDispatch.dynamic_routing_engine import DynamicRoutingEngine
