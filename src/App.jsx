@@ -413,8 +413,13 @@ const AuthenticatedApp = () => {
 
         {/* Public Local Market Routes */}
         {!isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<Home />} />}
-        {!isOperationsSite && <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />}
-        {!isOperationsSite && <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />}
+        {/* /about and /contact are registered unconditionally, like /quote below.
+            They were previously gated behind !isOperationsSite, which 404'd them on
+            thewordenstandard.com — even though that host serves the public
+            MarketingHome at "/" and "/os" (see above). A visitor landing on the
+            storefront and clicking through to About or Contact hit "not found". */}
+        <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+        <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
         <Route path="/quote" element={<PublicLayout><Quote /></PublicLayout>} />
         <Route path="/client-portal" element={<ClientPortal />} />
         <Route path="/client-lite" element={<ClientLitePortal />} />
@@ -464,13 +469,21 @@ const AuthenticatedApp = () => {
         <Route path="/shenandoah-valley-paving" element={<ShenandoahValleyPaving />} />
         <Route path="/millings-fines" element={<MillingsAndFines />} />
         <Route path="/tar-and-chip" element={<TarAndChip />} />
-        <Route path="/driveway-ai" element={<Navigate to="/quote" replace />} />
+        {/* /driveway-ai previously redirected to /quote here. It was dead code:
+            the real DrivewayAI page is registered earlier in this same <Routes>
+            block, so React Router matched that first and this never fired. The
+            redirect predates the page (it came in with the initial import; the
+            page was added by "wire all remaining UI pages"), so the page is the
+            intended behaviour. Removed so a future route reorder can't silently
+            resurrect the redirect and break the page. */}
         <Route path="/commercial" element={<RichmondCommercial />} />
         <Route path="/richmond-commercial" element={<RichmondCommercial />} />
         <Route path="/commercial/richmond-va" element={<RichmondCommercial />} />
         <Route path="/worden-university" element={<WordenUniversity />} />
         <Route path="/jwordenai" element={<Navigate to="/quote" replace />} />
-        <Route path="/ai-research" element={<Navigate to="/blog" replace />} />
+        {/* /ai-research previously redirected to /blog here — dead for the same
+            reason as /driveway-ai above: the AIResearchHub page is registered
+            earlier in this block and always won. Removed. */}
         <Route path="/general-contracting" element={<GeneralContracting />} />
         <Route path="/visualizer" element={<Visualizer />} />
         <Route path="/worden-standard" element={<WordenStandardHub />} />
