@@ -410,15 +410,27 @@ async def lifespan(app: FastAPI):
         scheduler = AsyncIOScheduler()
 
         async def _run_email_sync():
+            # This job had three mismatches against the function it calls, so it
+            # had never completed a single run — the inbound-email lead channel
+            # was dead while appearing to be scheduled:
+            #
+            #   1. imported `sync_all_accounts`, which does not exist;
+            #      email_sync defines `sync_gmail_accounts`
+            #   2. awaited it — `sync_gmail_accounts` is a plain def, not a coroutine
+            #   3. passed a db session — it takes no arguments and manages its
+            #      own session internally
+            #
+            # routers/email.py:90 already calls it correctly, and off the request
+            # path because IMAP plus per-email LLM analysis is slow. asyncio.to_thread
+            # is the equivalent here: without it, a blocking sync would stall the
+            # event loop for every other request for the duration of the sync.
             try:
-                from .services.email_sync import sync_all_accounts
-                from .database import SessionLocal
-                db = SessionLocal()
-                try:
-                    result = await sync_all_accounts(db)
-                    logger.info("Scheduled email sync complete: %s", result)
-                finally:
-                    db.close()
+                import asyncio  # noqa: PLC0415
+
+                from .services.email_sync import sync_gmail_accounts  # noqa: PLC0415
+
+                result = await asyncio.to_thread(sync_gmail_accounts)
+                logger.info("Scheduled email sync complete: %s", result)
             except Exception as exc:
                 logger.error("Scheduled email sync failed: %s", exc, exc_info=True)
 
