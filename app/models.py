@@ -2031,3 +2031,63 @@ class Progress(Base):
     completed_at = Column(DateTime(timezone=True), nullable=True)
     
     __table_args__ = (UniqueConstraint("enrollment_id", "lesson_id", name="uq_progress"),)
+
+
+# ── Worden University: exam attempts & certifications ────────────────────────
+# The LMS previously had Enrollment/Progress but no way to record an exam result
+# or issue a verifiable certificate, so completed training left no trace an
+# owner or a GC could audit. These two tables close that gap.
+
+
+class ExamAttempt(Base):
+    """One certification-exam submission, graded server-side.
+
+    Every attempt is recorded whether it passed or failed. The full history is
+    what makes the record defensible in an OSHA inspection: it shows who tried,
+    when, and how they scored — not just a final green checkmark.
+    """
+
+    __tablename__ = "lms_exam_attempts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_slug = Column(String(120), nullable=False, index=True)
+    course_title = Column(String(200), nullable=False)
+    user_email = Column(String(254), nullable=False, index=True)
+    user_name = Column(String(160), nullable=True)
+    score = Column(Float, nullable=False)
+    passed = Column(Boolean, nullable=False, default=False)
+    answers_json = Column(Text, nullable=True)  # submitted answers, for audit
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<ExamAttempt {self.user_email!r} {self.course_slug!r} {self.score}>"
+
+
+class Certification(Base):
+    """A certificate issued after a passing exam, verifiable by number.
+
+    expires_at drives recertification. Training that never expires is a lie on
+    a safety record — OSHA-relevant topics are re-taken annually.
+    """
+
+    __tablename__ = "lms_certifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cert_number = Column(String(64), nullable=False, unique=True, index=True)
+    course_slug = Column(String(120), nullable=False, index=True)
+    course_title = Column(String(200), nullable=False)
+    user_email = Column(String(254), nullable=False, index=True)
+    user_name = Column(String(160), nullable=True)
+    score = Column(Float, nullable=False)
+    issued_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    revoked = Column(Boolean, nullable=False, default=False)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+
+    __table_args__ = (
+        UniqueConstraint("course_slug", "user_email", name="uq_certification"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<Certification {self.cert_number!r} {self.user_email!r}>"
