@@ -10,25 +10,31 @@
     --font-heading: 'Bebas Neue', 'League Spartan', sans-serif;
     --font-body: 'Plus Jakarta Sans', 'Manrope', sans-serif;
 
-    /* Ultra-Luxury Asphalt Palette: Dark Slate background, crisp text, vibrant orange */
-    --background: 0 0% 4%;
-    --foreground: 210 40% 98%;
-    --card: 0 0% 7%;
-    --card-foreground: 210 40% 98%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 210 40% 98%;
+    /* Asphalt palette — dark, but with real elevation layers so cards, sections
+       and forms lift off the page instead of blending into one flat wash.
+       The old palette put background at 4% and cards at 7% (only 3 apart), which
+       is why everything looked the same. Layers now step ~6% each:
+       bg 6  ->  card 12  ->  popover 15  ->  muted 18, with visible borders. */
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
     --primary: 24.6 95% 53.1%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 24 100% 12%;
-    --secondary-foreground: 24 100% 90%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 210 20% 85%;
+    --secondary: 24 45% 18%;
+    --secondary-foreground: 24 100% 92%;
+    --muted: 0 0% 18%;
+    /* secondary/caption text: bright enough to read, calmer than pure white */
+    --muted-foreground: 0 0% 74%;
     --accent: 24.6 95% 53.1%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
+    /* borders you can actually see -> defined sections read as professional */
+    --border: 0 0% 24%;
+    --input: 0 0% 26%;
     --ring: 24.6 95% 53.1%;
     --radius: 0.75rem;
   }
@@ -46,12 +52,11 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #0a0a0a;
-    color: #f8fafc;
+    background-color: #0f0f0f;
+    color: #fafafa;
     background-image:
-      linear-gradient(180deg, rgba(10,10,10,0.98), rgba(15,15,15,0.95)),
-      radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.15) 0px, transparent 45%),
-      radial-gradient(at 100% 10%, rgba(245, 158, 11, 0.1) 0px, transparent 40%);
+      radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.10) 0px, transparent 42%),
+      radial-gradient(at 100% 8%, rgba(245, 158, 11, 0.07) 0px, transparent 38%);
     background-attachment: fixed;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
