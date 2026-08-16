@@ -26,6 +26,7 @@ from __future__ import annotations
 import logging
 import time
 from dataclasses import dataclass
+from functools import lru_cache
 
 from app.core.tenant_contract import infer_default_state, profiles_by_key
 from app.services import llm_client
@@ -77,8 +78,61 @@ def _load_manifest_brands() -> dict[str, dict[str, str]]:
 _TENANT_BRANDS = {**_TENANT_BRANDS, **_load_manifest_brands()}
 
 
+def _state_for_company(name: str) -> str:
+    """Mirror of infer_default_state() for tenants that have no manifest profile."""
+    lowered = (name or "").lower()
+    if "minnesota" in lowered:
+        return "MN"
+    return "VA"
+
+
+@lru_cache(maxsize=256)
+def _brand_from_db(tenant: str) -> dict[str, str] | None:
+    """
+    Build a brand descriptor from the tenants table.
+
+    _TENANT_BRANDS is assembled at import time from a hardcoded dict plus
+    src/config/siteFactoryManifest.json. That file was never committed, so the
+    manifest half contributes nothing and the hardcoded half contains exactly
+    one key — "jworden". Every other tenant therefore fell through to
+    _DEFAULT_TENANT and had its AI-generated content branded "J. Worden" with a
+    Virginia default state: a Minnesota or Carolina proposal carrying the wrong
+    company name and the wrong state.
+
+    The database is the source of truth for who a tenant is, so it is consulted
+    when the static map has no entry. Cached because tenant names change rarely
+    and this sits on a generation path.
+    """
+    try:
+        from ..database import SessionLocal  # noqa: PLC0415
+        from ..models import Tenant  # noqa: PLC0415
+
+        with SessionLocal() as db:
+            row = (
+                db.query(Tenant.company_name)
+                .filter(Tenant.tenant_id == tenant)
+                .first()
+            )
+        if not row or not row[0]:
+            return None
+        label = str(row[0]).strip()
+        return {
+            "brand_descriptor": (
+                f"{label}, an enterprise asphalt and operations platform "
+                "focused on technically credible project documentation"
+            ),
+            "default_state": _state_for_company(label),
+        }
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Could not load brand for tenant %s from DB (%s)", tenant, exc)
+        return None
+
+
 def _brand_for(tenant: str) -> dict[str, str]:
-    return _TENANT_BRANDS.get(tenant) or _TENANT_BRANDS[_DEFAULT_TENANT]
+    brand = _TENANT_BRANDS.get(tenant)
+    if brand:
+        return brand
+    return _brand_from_db(tenant) or _TENANT_BRANDS[_DEFAULT_TENANT]
 
 
 # ── Response dataclass ──────────────────────────────────────────────────────
