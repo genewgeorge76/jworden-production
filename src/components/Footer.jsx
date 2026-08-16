@@ -7,6 +7,35 @@ import SocialLinks from './SocialLinks';
 import { LOCATIONS } from '@/lib/locations';
 import { getRegionalMarketProfile } from '@/data/regionalMarketProfiles';
 
+// Full state name -> USPS two-letter code. The footer used to derive the
+// abbreviation with placename.split(', ')[1].substring(0, 2), which is wrong
+// for every state: "Virginia" -> "VI", "North Carolina" -> "No",
+// "Georgia" -> "Ge", "Missouri" -> "Mi". Map the real name instead.
+const STATE_ABBR = {
+  alabama: 'AL', alaska: 'AK', arizona: 'AZ', arkansas: 'AR', california: 'CA',
+  colorado: 'CO', connecticut: 'CT', delaware: 'DE', 'district of columbia': 'DC',
+  florida: 'FL', georgia: 'GA', hawaii: 'HI', idaho: 'ID', illinois: 'IL',
+  indiana: 'IN', iowa: 'IA', kansas: 'KS', kentucky: 'KY', louisiana: 'LA',
+  maine: 'ME', maryland: 'MD', massachusetts: 'MA', michigan: 'MI',
+  minnesota: 'MN', mississippi: 'MS', missouri: 'MO', montana: 'MT',
+  nebraska: 'NE', nevada: 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+  'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC',
+  'north dakota': 'ND', ohio: 'OH', oklahoma: 'OK', oregon: 'OR',
+  pennsylvania: 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+  'south dakota': 'SD', tennessee: 'TN', texas: 'TX', utah: 'UT',
+  vermont: 'VT', virginia: 'VA', washington: 'WA', 'west virginia': 'WV',
+  wisconsin: 'WI', wyoming: 'WY',
+};
+
+// Resolve the correct two-letter state code from a "City, State" placename.
+// Accepts a full state name ("Virginia") or an already-correct code ("VA").
+function stateAbbrFromPlacename(placename) {
+  const part = (placename || '').split(',')[1]?.trim() || '';
+  if (!part) return '';
+  if (/^[A-Za-z]{2}$/.test(part)) return part.toUpperCase(); // already an abbr
+  return STATE_ABBR[part.toLowerCase()] || part.slice(0, 2).toUpperCase();
+}
+
 export default function Footer() {
   const navigate = useNavigate();
 
@@ -25,7 +54,7 @@ export default function Footer() {
     const profile = getRegionalMarketProfile(hostname);
 
     if (profile?.serviceAreas) {
-      const stateAbbr = profile.geo?.placename?.split(', ')[1]?.substring(0, 2) || '';
+      const stateAbbr = stateAbbrFromPlacename(profile.geo?.placename);
       return {
         seoLocations: profile.serviceAreas.map((city) => ({
           city,
