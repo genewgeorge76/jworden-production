@@ -36,6 +36,9 @@ function stateAbbrFromPlacename(placename) {
   return STATE_ABBR[part.toLowerCase()] || part.slice(0, 2).toUpperCase();
 }
 
+// Copyright year — derived, not hardcoded, so the footer never goes stale.
+const YEAR = new Date().getFullYear();
+
 export default function Footer() {
   const navigate = useNavigate();
 
@@ -48,13 +51,19 @@ export default function Footer() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Detect regional market and use its service areas, falling back to Virginia
-  const { seoLocations, regionLabel, phoneDisplay, phoneTel } = useMemo(() => {
+  // Detect regional market and use its service areas + brand identity,
+  // falling back to the J. Worden hub.
+  const {
+    seoLocations, regionLabel, phoneDisplay, phoneTel,
+    brandName, brandTagline, brandBlurb, servingLine, legalNotice,
+  } = useMemo(() => {
     const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
     const profile = getRegionalMarketProfile(hostname);
 
     if (profile?.serviceAreas) {
       const stateAbbr = stateAbbrFromPlacename(profile.geo?.placename);
+      const name = profile.marketName || 'J. Worden & Sons';
+      const metro = profile.primaryMetro || profile.primaryRegion || 'your area';
       return {
         seoLocations: profile.serviceAreas.map((city) => ({
           city,
@@ -64,6 +73,14 @@ export default function Footer() {
         regionLabel: profile.primaryRegion || 'Regional',
         phoneDisplay: profile.phoneDisplay ? `(${profile.phoneDisplay.slice(0,3)}) ${profile.phoneDisplay.slice(4,7)}-${profile.phoneDisplay.slice(8)}` : '(804) 446-1296',
         phoneTel: `tel:+1${(profile.phoneDisplay || '804-446-1296').replace(/-/g, '')}`,
+        brandName: name,
+        brandTagline: profile.primaryRegion || 'Asphalt Paving',
+        brandBlurb: `Family-owned and operated. 40+ years of asphalt and site work, serving ${profile.primaryRegion || metro}.`,
+        // Trade name up front, operating entity disclosed — this is a
+        // J. Worden brand, not a separate company, and saying so is both
+        // honest and what the FTC/state trade-name rules expect.
+        servingLine: `© ${YEAR} ${name} — a brand of J. Worden & Sons Paving LLC. All rights reserved. Serving ${metro} and surrounding areas.`,
+        legalNotice: `${name} is a trade name of J. Worden & Sons Paving LLC, an independent Virginia contractor operating at jwordenasphaltpaving.com. Not affiliated with Worden Paving.`,
       };
     }
 
@@ -73,6 +90,11 @@ export default function Footer() {
       regionLabel: 'Virginia',
       phoneDisplay: '(804) 446-1296',
       phoneTel: 'tel:+18044461296',
+      brandName: 'J. Worden & Sons',
+      brandTagline: 'Asphalt Paving',
+      brandBlurb: 'Family-owned and operated. 40+ years paving Virginia — from Hampton Roads to the Blue Ridge.',
+      servingLine: `© ${YEAR} J. Worden & Sons Paving LLC. All rights reserved. Serving Richmond, VA and surrounding areas.`,
+      legalNotice: 'Independent company notice: J. Worden & Sons Paving LLC operates at jwordenasphaltpaving.com and is not affiliated with Worden Paving.',
     };
   }, []);
 
@@ -85,7 +107,7 @@ export default function Footer() {
             <div className="flex items-center gap-3 mb-6">
               <img
                 src={PRIMARY_LOGO_URL}
-                alt="J. Worden & Sons Paving LLC logo"
+                alt={`${brandName} logo`}
                 width={560}
                 height={120}
                 className="w-40 h-12 object-contain rounded-md border border-white/20 bg-white p-1"
@@ -93,15 +115,15 @@ export default function Footer() {
               />
               <div>
                 <p className="font-display font-bold text-white text-sm tracking-widest uppercase leading-none">
-                  J. Worden & Sons
+                  {brandName}
                 </p>
                 <p className="text-[#ff7a00] text-xs tracking-wider uppercase mt-0.5">
-                  Asphalt Paving
+                  {brandTagline}
                 </p>
               </div>
             </div>
             <p className="font-body text-gray-400 text-sm leading-relaxed mb-6">
-              Family-owned and operated. 40+ years paving Virginia — from Hampton Roads to the Blue Ridge.
+              {brandBlurb}
             </p>
             <SocialLinks size="sm" className="opacity-80 hover:opacity-100 transition-opacity" />
           </div>
@@ -171,9 +193,14 @@ export default function Footer() {
                 <Mail className="w-4 h-4 text-[#ff7a00]" />
                 <span className="font-body text-sm">j.wordenandsonspaving@gmail.com</span>
               </a>
+              {/* Home office. Deliberately the same on every regional brand:
+                  all of them are operated by the one Virginia entity, and
+                  inventing a local street address would be both untrue and a
+                  Google Business Profile violation. */}
               <div className="flex items-start gap-3 text-gray-400">
                 <MapPin className="w-4 h-4 text-[#ff7a00] mt-0.5" />
                 <span className="font-body text-sm">
+                  <span className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Home Office</span>
                   1601 Ware Bottom Spring Rd<br />
                   Suite 214<br />
                   Chester, VA 23836
@@ -206,14 +233,14 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="font-body text-gray-500 text-xs text-center sm:text-left">
-            © 2026 J. Worden & Sons Paving LLC. All rights reserved. Serving Richmond, VA and surrounding areas.
+            {servingLine}
           </p>
           <p className="font-body text-gray-500 text-xs">
-            Licensed · Bonded · Insured · VA Contractor
+            Licensed · Bonded · Insured · Virginia Contractor
           </p>
         </div>
         <p className="font-body text-gray-600 text-[11px] mt-4 text-center sm:text-left">
-          Independent company notice: J. Worden & Sons Paving LLC operates at jwordenasphaltpaving.com and is not affiliated with Worden Paving.
+          {legalNotice}
         </p>
       </div>
     </footer>

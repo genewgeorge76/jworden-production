@@ -298,7 +298,8 @@ ${form}
   <div><strong>${esc(p.marketName)}</strong> — ${esc(p.basedIn || '')}</div>
   <div>Call <a href="${tel}">${esc(p.phoneDisplay || '804-446-1296')}</a></div>
   <div class="hublink">Part of the <a href="${HUB}">J. Worden &amp; Sons</a> network — 4th generation, since 1984.</div>
-  <div style="margin-top:10px">&copy; ${new Date().getFullYear()} ${esc(p.marketName)}. All rights reserved.</div>
+  <div style="margin-top:10px">&copy; ${new Date().getFullYear()} ${esc(p.marketName)} &mdash; a brand of J. Worden &amp; Sons Paving LLC. All rights reserved. Serving ${esc(p.primaryMetro || p.primaryRegion || '')} and surrounding areas.</div>
+  <div style="margin-top:6px">Licensed &middot; Bonded &middot; Insured &middot; Virginia Contractor</div>
 </div></footer>
 
 <script>
