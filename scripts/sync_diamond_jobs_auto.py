@@ -10,10 +10,15 @@ from datetime import datetime, timezone
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
-DIAMOND_EMAIL = 'j.wordenandsonspaving@gmail.com'
-GMAIL_APP_PASS = 'kggihfudcsrlsfny'
+# The app password used to be hardcoded here in a public repository. It grants
+# full IMAP access to the mailbox, so it now comes from the environment.
+DIAMOND_EMAIL = os.environ.get('GMAIL_USER', 'j.wordenandsonspaving@gmail.com')
+GMAIL_APP_PASS = os.environ.get('GMAIL_APP_PASSWORD')
 
 def get_latest_otp():
+    if not GMAIL_APP_PASS:
+        print('GMAIL_APP_PASSWORD is not set; cannot read the OTP mailbox.')
+        return None
     try:
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
         mail.login(DIAMOND_EMAIL, GMAIL_APP_PASS)

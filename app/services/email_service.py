@@ -178,9 +178,19 @@ def send_raw(
         from email.mime.multipart import MIMEMultipart
         from email.mime.text import MIMEText
         
-        gmail_user = "j.wordenandsonspaving@gmail.com"
-        gmail_app_password = "kggihfudcsrlsfny"
-        
+        # Previously hardcoded here in plaintext in a public repository. An app
+        # password bypasses 2FA and grants full send-as/read access, so it is
+        # read from the environment and the fallback is skipped when unset.
+        gmail_user = os.environ.get("GMAIL_USER", "j.wordenandsonspaving@gmail.com")
+        gmail_app_password = os.environ.get("GMAIL_APP_PASSWORD")
+
+        if not gmail_app_password:
+            logger.error(
+                "Gmail SMTP fallback unavailable for to=%s: GMAIL_APP_PASSWORD is not set",
+                to_email,
+            )
+            return False
+
         logger.info("Attempting Gmail SMTP fallback for to=%s", to_email)
         msg = MIMEMultipart('alternative')
         msg["Subject"] = subject
