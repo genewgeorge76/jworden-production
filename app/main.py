@@ -352,6 +352,18 @@ async def lifespan(app: FastAPI):
             "AUTO_CREATE_TABLES disabled; expecting Alembic migrations to manage schema"
         )
 
+    # ── Tenant isolation guard ────────────────────────────────────────────────
+    # Log-only by default: reports queries that read tenant-scoped tables without
+    # a tenant_id filter, and changes nothing. A static audit
+    # (scripts/audit_tenant_isolation.py) found only 16 of 123 such queries are
+    # filtered, so this exists to show which of those are real at runtime before
+    # anything starts enforcing. Set TENANT_GUARD_MODE=enforce only once the log
+    # is quiet and every deliberate cross-tenant caller is wrapped in
+    # allow_cross_tenant(). TENANT_GUARD_MODE=off disables it entirely.
+    from .core.tenant_guard import install_tenant_guard  # noqa: PLC0415
+
+    install_tenant_guard()
+
     # ── Seed first owner account if configured ────────────────────────────────
     _seed_user = os.getenv("SEED_OWNER_USERNAME", "").strip()
     _seed_pass = os.getenv("SEED_OWNER_PASSWORD", "").strip()
