@@ -22,16 +22,34 @@ def clean_text(text):
     return ""
 
 def load_accounts():
-    if not os.path.exists(CONFIG_FILE):
-        logger.error(f"Configuration file {CONFIG_FILE} not found.")
-        return []
-    with open(CONFIG_FILE, 'r') as f:
-        try:
-            accounts = json.load(f)
-            return [acc for acc in accounts if acc.get('active')]
-        except Exception as e:
-            logger.error(f"Failed to parse JSON config: {e}")
+    """
+    Load accounts from the EMAIL_ACCOUNTS_JSON env var, falling back to the
+    on-disk config for local development.
+
+    App passwords grant full IMAP/SMTP access and bypass 2FA, so they belong in
+    the environment rather than in a file inside this public repository.
+    """
+    raw = os.environ.get('EMAIL_ACCOUNTS_JSON')
+    source = 'EMAIL_ACCOUNTS_JSON'
+    if not raw:
+        if not os.path.exists(CONFIG_FILE):
+            logger.error(
+                "No accounts configured: set EMAIL_ACCOUNTS_JSON or create %s "
+                "(see email_accounts.example.json).", CONFIG_FILE
+            )
             return []
+        source = CONFIG_FILE
+        with open(CONFIG_FILE, 'r') as f:
+            raw = f.read()
+    try:
+        accounts = json.loads(raw)
+    except Exception as e:
+        logger.error(f"Failed to parse JSON config from {source}: {e}")
+        return []
+    if not isinstance(accounts, list):
+        logger.error(f"Accounts in {source} must be a JSON array.")
+        return []
+    return [acc for acc in accounts if acc.get('active')]
 
 def poll_account(account):
     gmail_user = account['email']
