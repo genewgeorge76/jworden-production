@@ -78,10 +78,37 @@ def should_auto_create_tables() -> bool:
     return os.getenv('AUTO_CREATE_TABLES', 'true').strip().lower() in {'1', 'true', 'yes', 'on'}
 
 
+# Arbitrary but fixed: both app machines must agree on it for the lock to work.
+_CREATE_ALL_LOCK_KEY = 0x4A574F52  # 'JWOR'
+
+
 def create_all_tables() -> None:
-    """Create all tables that don't yet exist."""
+    """Create all tables that don't yet exist.
+
+    Serialised across machines with a Postgres advisory lock. Both app
+    machines run this at boot, and without the lock they race each other's
+    CREATE TABLE IF NOT EXISTS — checkfirst sees "missing" on both sides,
+    both issue the CREATE, and the loser dies on
+    pg_class_relname_nsp_index with a duplicate-key error. It was caught
+    and logged, but it fired on every simultaneous boot and looked exactly
+    like a real schema failure in the logs. The lock costs one round-trip
+    and makes the second machine wait a moment instead of erroring.
+
+    Since z6c7h8a9i0n1 the migration chain builds the complete schema, so
+    this is belt-and-braces for drift, not the thing that creates the
+    schema — Alembic (via the Fly release command) owns that now.
+    """
     try:
-        Base.metadata.create_all(bind=engine)
+        from sqlalchemy import text  # noqa: PLC0415
+
+        with engine.connect() as conn:
+            conn.execute(text('SELECT pg_advisory_lock(:k)'), {'k': _CREATE_ALL_LOCK_KEY})
+            try:
+                Base.metadata.create_all(bind=conn)
+                conn.commit()
+            finally:
+                conn.execute(text('SELECT pg_advisory_unlock(:k)'), {'k': _CREATE_ALL_LOCK_KEY})
+                conn.commit()
         logger.info('Database tables verified/created (url=%s)', _DATABASE_URL.split('@')[-1])
     except Exception as exc:  # noqa: BLE001
         logger.error('Could not create database tables: %s', exc)
