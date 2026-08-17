@@ -111,30 +111,10 @@
       "has": [
         {
           "type": "host",
-          "value": "(www\\.)?atlantaasphaltpavingpros\\.com"
+          "value": "(www\\.)?richmondasphaltpaving\\.com"
         }
       ],
-      "destination": "/atlantaasphaltpavingpros.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?asphaltpavingkansascity\\.com"
-        }
-      ],
-      "destination": "/asphaltpavingkansascity.com.html"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?savannahasphaltpaving\\.com"
-        }
-      ],
-      "destination": "/savannahasphaltpaving.com.html"
+      "destination": "/brands/richmondasphaltpaving.com/$1"
     },
     {
       "source": "/(.*)",
@@ -144,7 +124,7 @@
           "value": "(www\\.)?carolinablacktop\\.com"
         }
       ],
-      "destination": "/carolinablacktop.com.html"
+      "destination": "/brands/carolinablacktop.com/$1"
     },
     {
       "source": "/(.*)",
@@ -154,7 +134,37 @@
           "value": "(www\\.)?obxpaving\\.com"
         }
       ],
-      "destination": "/obxpaving.com.html"
+      "destination": "/brands/obxpaving.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?atlantaasphaltpavingpros\\.com"
+        }
+      ],
+      "destination": "/brands/atlantaasphaltpavingpros.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?asphaltpavingkansascity\\.com"
+        }
+      ],
+      "destination": "/brands/asphaltpavingkansascity.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?savannahasphaltpaving\\.com"
+        }
+      ],
+      "destination": "/brands/savannahasphaltpaving.com/$1"
     },
     {
       "source": "/(.*)",
