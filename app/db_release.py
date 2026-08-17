@@ -43,6 +43,15 @@ from sqlalchemy import create_engine, inspect, text
 from app.database import get_database_url
 
 
+def _known_revisions() -> set[str]:
+    """Every revision id the repo's migration chain actually contains."""
+    from alembic.config import Config
+    from alembic.script import ScriptDirectory
+
+    script = ScriptDirectory.from_config(Config("alembic.ini"))
+    return {rev.revision for rev in script.walk_revisions()}
+
+
 def decide() -> str:
     """Return 'upgrade' or 'stamp' for the current database state."""
     engine = create_engine(get_database_url())
@@ -52,18 +61,38 @@ def decide() -> str:
     has_stamp = "alembic_version" in tables
     app_tables = tables - {"alembic_version"}
 
-    if not app_tables:
-        mode = "upgrade"            # empty database: run the whole chain
-    elif has_stamp:
+    revision = None
+    if has_stamp:
         with engine.connect() as conn:
             revision = conn.execute(text("SELECT version_num FROM alembic_version")).scalar()
-        mode = "upgrade" if revision else "stamp"
+
+    if not app_tables:
+        mode = "upgrade"            # empty database: run the whole chain
+    elif not has_stamp or not revision:
+        mode = "stamp"              # create_all'd but never stamped
+    elif revision not in _known_revisions():
+        # Production is stamped at a revision this repo has never contained —
+        # it was migrated by code that was never committed here. There is no
+        # path to upgrade FROM an unknown base, so alembic aborts with
+        # "Can't locate revision identified by '<rev>'" and every deploy dies.
+        #
+        # Re-stamping to head resyncs alembic with reality. It is safe because
+        # a stamp writes only a version string — it touches no data and alters
+        # no table — and any table the models expect but the database lacks is
+        # created at boot by create_all() (AUTO_CREATE_TABLES defaults true).
+        # Extra tables the repo does not know about are left alone.
+        print(
+            f"[release] stamped revision {revision!r} is not in this repo's chain "
+            "— resyncing to head",
+            flush=True,
+        )
+        mode = "stamp"
     else:
-        mode = "stamp"              # create_all'd but never stamped: the repair
+        mode = "upgrade"
 
     print(
         f"[release] tables={len(tables)} "
-        f"alembic_version={'yes' if has_stamp else 'no'} -> {mode}",
+        f"alembic_version={revision or 'none'} -> {mode}",
         flush=True,
     )
     return mode
