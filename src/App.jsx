@@ -13,6 +13,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import RouteLoader from '@/components/RouteLoader';
 import AdvisoryGate from '@/components/AdvisoryGate';
 import ChatWidget from '@/components/ChatWidget';
+import { flushLeadQueue } from '@/lib/leadCapture';
 import AIConciergeBubble from '@/components/AIConciergeBubble';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -640,6 +641,12 @@ const AuthenticatedApp = () => {
 function AppContent() {
   const tenant = useTenant();
   const shouldRenderChatWidget = Boolean(tenant?.enableChatWidget);
+
+  // Never lose a lead: on every load, redeliver any leads that were captured
+  // while the backend was briefly unreachable and held on the device.
+  useEffect(() => {
+    flushLeadQueue().catch(() => {});
+  }, []);
 
   return (
     <AuthProvider>

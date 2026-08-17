@@ -2048,3 +2048,108 @@ class Progress(Base):
     completed_at = Column(DateTime(timezone=True), nullable=True)
     
     __table_args__ = (UniqueConstraint("enrollment_id", "lesson_id", name="uq_progress"),)
+
+
+# ── Worden University: exam attempts & certifications ────────────────────────
+# The LMS previously had Enrollment/Progress but no way to record an exam result
+# or issue a verifiable certificate, so completed training left no trace an
+# owner or a GC could audit. These two tables close that gap.
+
+
+class ExamAttempt(Base):
+    """One certification-exam submission, graded server-side.
+
+    Every attempt is recorded whether it passed or failed. The full history is
+    what makes the record defensible in an OSHA inspection: it shows who tried,
+    when, and how they scored — not just a final green checkmark.
+    """
+
+    __tablename__ = "lms_exam_attempts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_slug = Column(String(120), nullable=False, index=True)
+    course_title = Column(String(200), nullable=False)
+    user_email = Column(String(254), nullable=False, index=True)
+    user_name = Column(String(160), nullable=True)
+    score = Column(Float, nullable=False)
+    passed = Column(Boolean, nullable=False, default=False)
+    answers_json = Column(Text, nullable=True)  # submitted answers, for audit
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<ExamAttempt {self.user_email!r} {self.course_slug!r} {self.score}>"
+
+
+class Certification(Base):
+    """A certificate issued after a passing exam, verifiable by number.
+
+    expires_at drives recertification. Training that never expires is a lie on
+    a safety record — OSHA-relevant topics are re-taken annually.
+    """
+
+    __tablename__ = "lms_certifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cert_number = Column(String(64), nullable=False, unique=True, index=True)
+    course_slug = Column(String(120), nullable=False, index=True)
+    course_title = Column(String(200), nullable=False)
+    user_email = Column(String(254), nullable=False, index=True)
+    user_name = Column(String(160), nullable=True)
+    score = Column(Float, nullable=False)
+    issued_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    revoked = Column(Boolean, nullable=False, default=False)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+
+    __table_args__ = (
+        UniqueConstraint("course_slug", "user_email", name="uq_certification"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<Certification {self.cert_number!r} {self.user_email!r}>"
+
+
+# ── Worden University: company seat licensing ────────────────────────────────
+# A contractor buys a block of seats for their crew. The buyer is the employer,
+# not the worker, so the unit of sale is an Organization and the thing they get
+# is visibility over their own people's training.
+
+
+class Organization(Base):
+    """A company that has purchased training seats."""
+
+    __tablename__ = "lms_organizations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    billing_email = Column(String(254), nullable=False, index=True)
+    seats_purchased = Column(Integer, nullable=False, default=0)
+    # sha256 of the admin key. The key itself is shown once at creation and
+    # never stored, so a database leak cannot be replayed as org access.
+    key_hash = Column(String(64), nullable=False, index=True)
+    plan = Column(String(50), nullable=False, default="seats")
+    active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<Organization {self.name!r} seats={self.seats_purchased}>"
+
+
+class OrgMember(Base):
+    """A crew member occupying one of an organization's seats."""
+
+    __tablename__ = "lms_org_members"
+
+    id = Column(Integer, primary_key=True, index=True)
+    org_id = Column(Integer, ForeignKey("lms_organizations.id"), nullable=False, index=True)
+    email = Column(String(254), nullable=False, index=True)
+    name = Column(String(160), nullable=True)
+    role = Column(String(20), nullable=False, default="member")  # member | admin
+    active = Column(Boolean, nullable=False, default=True)
+    added_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    __table_args__ = (UniqueConstraint("org_id", "email", name="uq_org_member"),)
+
+    def __repr__(self) -> str:
+        return f"<OrgMember {self.email!r} org={self.org_id}>"

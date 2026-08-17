@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { submitLead, flushLeadQueue } from '@/lib/leadCapture';
 
 const SERVICE_OPTIONS = [
   'Asphalt Driveway (Residential)',
@@ -56,29 +57,22 @@ export default function LeadCaptureForm() {
     const payload = toQuotePayload(Object.fromEntries(formData.entries()));
 
     try {
-      // POST to the live backend quote endpoint (proxied to the Fly API via
-      // the /api/* rewrite in vercel.json). This scores the lead, stores it,
-      // and fires the confirmation + admin notification. The previous target
-      // (/api/chat-lead-capture) was a dead Netlify function — every lead
-      // submitted through this form was silently dropped.
-      const response = await fetch('/api/v1/leads/quote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        const detail = Array.isArray(data?.detail)
-          ? data.detail.map((d) => d?.msg).filter(Boolean).join(', ')
-          : data?.detail || data?.error;
-        throw new Error(detail || 'Submission failed');
-      }
-
+      // Route through the protected capture path (src/lib/leadCapture.js).
+      // It POSTs to the live backend and, if the backend is briefly unreachable,
+      // retries and then holds the lead on the device (localStorage + sendBeacon)
+      // to be re-sent automatically — so a network blip or backend hiccup can
+      // never silently drop a customer. Both 'sent' and 'queued' mean the lead
+      // is safe, so both show the customer a confirmation.
+      const result = await submitLead(payload);
       setStatus('success');
+      if (result.status === 'queued' && typeof window !== 'undefined') {
+        // best-effort: try again as soon as the browser regains connectivity
+        window.addEventListener('online', () => { flushLeadQueue(); }, { once: true });
+      }
     } catch (err) {
+      // Only a real validation error (bad input the backend rejected) lands here.
       setStatus('error');
-      setError(err.message || 'Something went wrong. Please call us at (804) 446-1296.');
+      setError(err.message || 'Please check your details, or call us at (804) 446-1296.');
     }
   };
 

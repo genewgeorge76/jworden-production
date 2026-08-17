@@ -78,12 +78,19 @@ def list_albums(**kwargs) -> list:
     return [_status()]
 
 
-def sync_photo_to_google_photos(photo: Any = None, **kwargs) -> dict:
+def sync_photo_to_google_photos(*args: Any, **kwargs: Any) -> dict:
     """
     Upload a gallery photo to the connected library.
 
     Not implemented. Never raises — a gallery upload must still succeed locally
     even when an optional downstream sync is unavailable.
+
+    The signature is deliberately open. gallery.py:108 hands this to
+    BackgroundTasks with THREE positional arguments (data, filename,
+    description); the previous `(photo=None, **kwargs)` accepted one, because
+    **kwargs absorbs keywords but not extra positionals. Every gallery upload's
+    downstream sync therefore raised TypeError before the body ran — breaking
+    the never-raises contract above in the exact place it was written to hold.
     """
     logger.info("[PHOTOS] sync_photo_to_google_photos called but not implemented")
     return _status()

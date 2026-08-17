@@ -3,10 +3,29 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'jworden-production'
+app = 'jworden-api'
 primary_region = 'iad'
 
 [build]
+
+[deploy]
+  # runs once, before the new version takes traffic; non-zero aborts the deploy
+  release_command = "python -m app.db_release"
+
+[processes]
+  # Recovered from the running machines on 2026-08-17. fly.toml is AUTHORITATIVE
+  # for process groups: deploying a file that defines only "app" DESTROYS the
+  # beat and worker machines, silently killing every scheduled job and background
+  # task while /health keeps returning 200.
+  # The port is a literal, NOT ${PORT:-8000}. Process commands here are exec'd
+  # directly — there is no shell, so nothing expands the substitution and
+  # gunicorn receives the seven characters "${PORT:" as its port:
+  #     Error: '${PORT' is not a valid port number.
+  # Every app machine crash-looped on this until it hit the max restart count.
+  # It must stay in sync with http_service.internal_port below.
+  app = "gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app.main:app"
+  worker = "celery -A app.celery_app:celery_app worker --loglevel=info --concurrency=2"
+  beat = "celery -A app.celery_app:celery_app beat --loglevel=info"
 
 [http_service]
   internal_port = 8000
@@ -15,6 +34,18 @@ primary_region = 'iad'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
+
+  # Without a check, Fly treats "the process started" as "the deploy worked" and
+  # sends traffic to a machine that may be crash-looping. Tonight's outage went
+  # live for exactly that reason. With this check, a machine that cannot serve
+  # /health never becomes healthy, `flyctl deploy` fails, and the previous
+  # version keeps serving instead of the broken one replacing it.
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health"
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "20s"
 
 [[vm]]
   memory = '1gb'

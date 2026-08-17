@@ -69,6 +69,11 @@ venv/
 *.md
 *.sh
 scripts/
+# ...but the Fly release_command runs INSIDE the image, so the one script it
+# needs must survive. Excluding all of scripts/ made db_release.sh missing at
+# runtime and every deploy aborted with exit 127 before the schema step ran.
+# The rest of scripts/ is build-time Node tooling and stays out.
+!scripts/db_release.sh
 
 # Vercel / Netlify deploy
 .vercel/
