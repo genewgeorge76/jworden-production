@@ -53,10 +53,24 @@ def client_ip(request) -> str:
     return get_remote_address(request)
 
 
+# Counters must be SHARED, not per-process. SlowAPI defaults to memory://,
+# which counts inside one worker: with 2 machines running gunicorn, an
+# attacker's requests round-robin across processes and each one sees a fraction
+# of the traffic, so a "6/minute" limit is really 6 × (machines × workers) and
+# nobody can say what it actually is. Observed live — nine consecutive bad PINs
+# never tripped a six-per-minute rule.
+#
+# Redis makes the count global. If REDIS_URL is unset we fall back to memory://
+# rather than refusing to boot: a weakened limit is bad, an app that will not
+# start is worse, and the brute-force guard keeps its own Redis-backed counters
+# either way.
+_STORAGE_URI = _os.getenv("REDIS_URL", "").strip() or "memory://"
+
 limiter = Limiter(
     key_func=client_ip,
     default_limits=[] if _RATE_LIMIT_DISABLED else ["200/minute"],
     enabled=not _RATE_LIMIT_DISABLED,
+    storage_uri=_STORAGE_URI,
 )
 
 # ── Per-endpoint limit strings (use with @limiter.limit()) ────────────────────
