@@ -35,6 +35,18 @@ primary_region = 'iad'
   min_machines_running = 0
   processes = ['app']
 
+  # Without a check, Fly treats "the process started" as "the deploy worked" and
+  # sends traffic to a machine that may be crash-looping. Tonight's outage went
+  # live for exactly that reason. With this check, a machine that cannot serve
+  # /health never becomes healthy, `flyctl deploy` fails, and the previous
+  # version keeps serving instead of the broken one replacing it.
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health"
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "20s"
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
