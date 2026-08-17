@@ -618,3 +618,241 @@ def verify_certificate(cert_number: str, db: Session = Depends(get_db)):
         "expires_at": exp.isoformat() if exp else None,
         "issuer": "Worden University — J. Worden & Sons Paving LLC",
     }
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Company seat licensing
+#
+# The buyer is the employer, not the worker. What they purchase is a block of
+# seats; what they actually get is visibility — who on their crew is trained,
+# who is about to lapse, and proof they can hand a GC.
+#
+# Org admins authenticate with a per-org key issued once at creation. Only its
+# sha256 is stored, so a database leak can't be replayed as org access.
+# ══════════════════════════════════════════════════════════════════════════════
+
+import secrets
+
+from fastapi import Header
+
+from app.models import Organization, OrgMember
+
+
+def _hash_key(raw: str) -> str:
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _org_from_key(db: Session, key: Optional[str]) -> Organization:
+    """Resolve an org from its admin key, in constant time against the hash."""
+    if not key:
+        raise HTTPException(status_code=401, detail="Organization key required")
+    org = (
+        db.query(Organization)
+        .filter(Organization.key_hash == _hash_key(key.strip()), Organization.active == True)  # noqa: E712
+        .first()
+    )
+    if not org:
+        raise HTTPException(status_code=403, detail="Invalid organization key")
+    return org
+
+
+# Worden University is free for now. Seats still exist because they are how a
+# company gets its own dashboard and roster, but the free tier is provisioned
+# generously so the limit never blocks a crew being trained. The enforcement
+# path stays in place and tested, ready for the day it is charged for.
+FREE_TIER_SEATS = 50
+
+
+class OrgCreate(BaseModel):
+    name: str
+    billing_email: str
+    seats: Optional[int] = None
+
+
+class MemberAdd(BaseModel):
+    email: str
+    name: Optional[str] = None
+    role: str = "member"
+
+
+@router.post("/orgs", summary="Create a customer organization (admin)")
+def create_org(
+    payload: OrgCreate,
+    db: Session = Depends(get_db),
+    _: dict = Depends(verify_premium_security),
+):
+    name = (payload.name or "").strip()
+    email = (payload.billing_email or "").strip().lower()
+    if not name or "@" not in email:
+        raise HTTPException(status_code=422, detail="Company name and a valid billing email are required")
+    seats = FREE_TIER_SEATS if payload.seats is None else payload.seats
+    if seats < 0:
+        raise HTTPException(status_code=422, detail="Seats cannot be negative")
+
+    raw_key = f"wu_{secrets.token_urlsafe(32)}"
+    org = Organization(
+        name=name,
+        billing_email=email,
+        seats_purchased=seats,
+        key_hash=_hash_key(raw_key),
+    )
+    db.add(org)
+    db.commit()
+    db.refresh(org)
+    return {
+        "id": org.id,
+        "name": org.name,
+        "seats_purchased": org.seats_purchased,
+        # Shown exactly once. We store only the hash.
+        "org_key": raw_key,
+        "plan": "free",
+        "note": "Save this key now — it is not recoverable.",
+    }
+
+
+@router.post("/orgs/members", summary="Assign a crew member to a seat")
+def add_member(
+    payload: MemberAdd,
+    db: Session = Depends(get_db),
+    x_org_key: Optional[str] = Header(default=None, alias="X-Org-Key"),
+):
+    org = _org_from_key(db, x_org_key)
+    email = (payload.email or "").strip().lower()
+    if not email or "@" not in email:
+        raise HTTPException(status_code=422, detail="A valid email is required")
+
+    existing = (
+        db.query(OrgMember)
+        .filter(OrgMember.org_id == org.id, OrgMember.email == email)
+        .first()
+    )
+    if existing:
+        if existing.active:
+            return {"ok": True, "already_assigned": True, "email": email}
+        # Re-activating consumes a seat again, so it has to pass the same check.
+        used = _seats_used(db, org.id)
+        if used >= org.seats_purchased:
+            raise HTTPException(
+                status_code=409,
+                detail=f"All {org.seats_purchased} seats are in use. Remove a member or add seats.",
+            )
+        existing.active = True
+        existing.name = payload.name or existing.name
+        db.commit()
+        return {"ok": True, "reactivated": True, "email": email}
+
+    used = _seats_used(db, org.id)
+    if used >= org.seats_purchased:
+        raise HTTPException(
+            status_code=409,
+            detail=f"All {org.seats_purchased} seats are in use. Remove a member or add seats.",
+        )
+    db.add(OrgMember(org_id=org.id, email=email, name=(payload.name or "").strip() or None,
+                     role=payload.role if payload.role in ("member", "admin") else "member"))
+    db.commit()
+    return {"ok": True, "email": email, "seats_used": used + 1, "seats_purchased": org.seats_purchased}
+
+
+def _seats_used(db: Session, org_id: int) -> int:
+    return (
+        db.query(OrgMember)
+        .filter(OrgMember.org_id == org_id, OrgMember.active == True)  # noqa: E712
+        .count()
+    )
+
+
+@router.delete("/orgs/members/{email}", summary="Free a seat")
+def remove_member(
+    email: str,
+    db: Session = Depends(get_db),
+    x_org_key: Optional[str] = Header(default=None, alias="X-Org-Key"),
+):
+    org = _org_from_key(db, x_org_key)
+    m = (
+        db.query(OrgMember)
+        .filter(OrgMember.org_id == org.id, OrgMember.email == email.strip().lower())
+        .first()
+    )
+    if not m:
+        raise HTTPException(status_code=404, detail="Not on this roster")
+    # Deactivate rather than delete: their certificates remain valid and
+    # auditable after they leave the company.
+    m.active = False
+    db.commit()
+    return {"ok": True, "email": m.email, "seats_used": _seats_used(db, org.id)}
+
+
+@router.get("/orgs/roster", summary="The company's crew training dashboard")
+def org_roster(
+    db: Session = Depends(get_db),
+    x_org_key: Optional[str] = Header(default=None, alias="X-Org-Key"),
+):
+    org = _org_from_key(db, x_org_key)
+    members = (
+        db.query(OrgMember)
+        .filter(OrgMember.org_id == org.id, OrgMember.active == True)  # noqa: E712
+        .all()
+    )
+    emails = [m.email for m in members]
+    certs = (
+        db.query(Certification)
+        .filter(Certification.user_email.in_(emails), Certification.revoked == False)  # noqa: E712
+        .all()
+        if emails else []
+    )
+    by_email: dict = {}
+    for c in certs:
+        by_email.setdefault(c.user_email, []).append(c)
+
+    now = _now()
+    people = []
+    for m in members:
+        rows = []
+        for c in by_email.get(m.email, []):
+            exp = _aware(c.expires_at)
+            days = (exp - now).days if exp else None
+            rows.append({
+                "course_id": c.course_slug,
+                "course_title": c.course_title,
+                "cert_number": c.cert_number,
+                "score": c.score,
+                "expires_at": exp.isoformat() if exp else None,
+                "days_left": days,
+                "status": (
+                    "expired" if days is not None and days < 0
+                    else "due_soon" if days is not None and days <= 30
+                    else "current"
+                ),
+            })
+        done = {r["course_id"] for r in rows if r["status"] != "expired"}
+        people.append({
+            "email": m.email,
+            "name": m.name,
+            "role": m.role,
+            "certifications": rows,
+            "courses_outstanding": [
+                {"course_id": k, "title": v["title"]}
+                for k, v in WU_COURSES.items() if k not in done
+            ],
+        })
+
+    people.sort(key=lambda p: (p["name"] or p["email"]).lower())
+    flagged = [
+        {"name": p["name"] or p["email"], "email": p["email"], **c}
+        for p in people for c in p["certifications"] if c["status"] in ("expired", "due_soon")
+    ]
+    flagged.sort(key=lambda x: x["days_left"] if x["days_left"] is not None else 0)
+
+    used = len(members)
+    return {
+        "organization": {
+            "name": org.name,
+            "seats_purchased": org.seats_purchased,
+            "seats_used": used,
+            "seats_available": max(0, org.seats_purchased - used),
+        },
+        "people": people,
+        "needs_attention": flagged,
+        "fully_trained": sum(1 for p in people if not p["courses_outstanding"]),
+        "courses": [{"course_id": k, "title": v["title"]} for k, v in WU_COURSES.items()],
+    }

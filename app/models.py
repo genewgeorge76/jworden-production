@@ -2091,3 +2091,48 @@ class Certification(Base):
 
     def __repr__(self) -> str:
         return f"<Certification {self.cert_number!r} {self.user_email!r}>"
+
+
+# ── Worden University: company seat licensing ────────────────────────────────
+# A contractor buys a block of seats for their crew. The buyer is the employer,
+# not the worker, so the unit of sale is an Organization and the thing they get
+# is visibility over their own people's training.
+
+
+class Organization(Base):
+    """A company that has purchased training seats."""
+
+    __tablename__ = "lms_organizations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    billing_email = Column(String(254), nullable=False, index=True)
+    seats_purchased = Column(Integer, nullable=False, default=0)
+    # sha256 of the admin key. The key itself is shown once at creation and
+    # never stored, so a database leak cannot be replayed as org access.
+    key_hash = Column(String(64), nullable=False, index=True)
+    plan = Column(String(50), nullable=False, default="seats")
+    active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<Organization {self.name!r} seats={self.seats_purchased}>"
+
+
+class OrgMember(Base):
+    """A crew member occupying one of an organization's seats."""
+
+    __tablename__ = "lms_org_members"
+
+    id = Column(Integer, primary_key=True, index=True)
+    org_id = Column(Integer, ForeignKey("lms_organizations.id"), nullable=False, index=True)
+    email = Column(String(254), nullable=False, index=True)
+    name = Column(String(160), nullable=True)
+    role = Column(String(20), nullable=False, default="member")  # member | admin
+    active = Column(Boolean, nullable=False, default=True)
+    added_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    __table_args__ = (UniqueConstraint("org_id", "email", name="uq_org_member"),)
+
+    def __repr__(self) -> str:
+        return f"<OrgMember {self.email!r} org={self.org_id}>"
