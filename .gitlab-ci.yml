@@ -28,7 +28,7 @@ test:api:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt]
   before_script:
-    - pip install --quiet --disable-pip-version-check -r requirements.txt
+    - pip install --quiet --disable-pip-version-check -r requirements.backend.txt
   script:
     # the app must import cleanly — catches the missing-module class of failure
     # that only shows up at boot, after a deploy has already replaced the old one
