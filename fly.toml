@@ -3,10 +3,23 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'jworden-production'
+app = 'jworden-api'
 primary_region = 'iad'
 
 [build]
+
+[deploy]
+  # runs once, before the new version takes traffic; non-zero aborts the deploy
+  release_command = "bash scripts/db_release.sh"
+
+[processes]
+  # Recovered from the running machines on 2026-08-17. fly.toml is AUTHORITATIVE
+  # for process groups: deploying a file that defines only "app" DESTROYS the
+  # beat and worker machines, silently killing every scheduled job and background
+  # task while /health keeps returning 200.
+  app = "gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:${PORT:-8000} app.main:app"
+  worker = "celery -A app.celery_app:celery_app worker --loglevel=info --concurrency=2"
+  beat = "celery -A app.celery_app:celery_app beat --loglevel=info"
 
 [http_service]
   internal_port = 8000

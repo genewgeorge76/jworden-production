@@ -1,0 +1,98 @@
+# GitLab CI for jworden-production.
+#
+# GitHub Actions is dead on this account (every job dies at steps=0 with 404
+# logs — an account-level restriction, not a code problem), so CI moved here.
+# GitLab free gives 400 compute minutes a month; these jobs use a few per push.
+#
+# Two things happen automatically:
+#   test    — on every push and merge request, so a broken build is caught
+#   deploy  — on main only, ships the API to Fly
+#
+# The deploy needs FLY_API_TOKEN as a masked, protected CI/CD variable:
+#   Settings -> CI/CD -> Variables -> Add
+#     key:  FLY_API_TOKEN
+#     value: output of `fly tokens create deploy -a jworden-api`
+#     masked: yes   protected: yes
+# Without it the deploy job fails loudly rather than silently doing nothing.
+
+stages: [test, deploy]
+
+# ── Tests ────────────────────────────────────────────────────────────────────
+
+test:api:
+  stage: test
+  image: python:3.12-slim
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt]
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt]
+  before_script:
+    - pip install --quiet --disable-pip-version-check -r requirements.backend.txt
+  script:
+    # the app must import cleanly — catches the missing-module class of failure
+    # that only shows up at boot, after a deploy has already replaced the old one
+    - python3 -c "import app.main; print('app imports OK')"
+    # exactly one alembic head: a fork in the migration chain breaks every
+    # future deploy, and it is invisible until someone runs upgrade
+    - |
+      python3 - <<'PY'
+      import re, glob
+      revs, downs = {}, set()
+      for f in glob.glob('alembic/versions/*.py'):
+          s = open(f).read()
+          m = re.search(r"^revision(?::\s*str)?\s*=\s*['\"]([^'\"]+)", s, re.M)
+          d = re.search(r"^down_revision(?::\s*[^=]+)?\s*=\s*['\"]([^'\"]+)", s, re.M)
+          if m: revs[m.group(1)] = f
+          if d: downs.add(d.group(1))
+      heads = [r for r in revs if r not in downs]
+      print('migration heads:', heads)
+      assert len(heads) == 1, f'expected exactly 1 alembic head, found {len(heads)}: {heads}'
+      PY
+  timeout: 15m
+
+# ── Deploy ───────────────────────────────────────────────────────────────────
+
+deploy:api:
+  stage: deploy
+  image: debian:stable-slim
+  rules:
+    # only main, and only when something the API actually ships has changed
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt, Dockerfile, fly.toml]
+  environment:
+    name: production
+    url: https://jworden-api.fly.dev
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null
+    - curl -sL https://fly.io/install.sh | sh
+    - export PATH="/root/.fly/bin:$PATH"
+    - |
+      # The Fly token contains a space and commas, so GitLab refuses to MASK it
+      # verbatim — an unmasked variable can be echoed into a job log by any
+      # careless command. It is stored base64-encoded instead (pure base64
+      # alphabet passes the masking rules) and decoded here at use time.
+      if [ -n "${FLY_API_TOKEN_B64:-}" ]; then
+        FLY_API_TOKEN="$(printf '%s' "$FLY_API_TOKEN_B64" | base64 -d)"
+        export FLY_API_TOKEN
+      fi
+      if [ -z "${FLY_API_TOKEN:-}" ]; then
+        echo "No Fly credential. Set FLY_API_TOKEN_B64 (masked+protected) under"
+        echo "Settings -> CI/CD -> Variables. Generate with:"
+        echo "  fly tokens create deploy -a jworden-api | base64 -w0"
+        exit 1
+      fi
+  script:
+    - export PATH="/root/.fly/bin:$PATH"
+    # --remote-only builds on Fly's builders, so CI needs no docker daemon.
+    # The release_command in fly.toml runs scripts/db_release.sh first; if the
+    # schema step fails the deploy aborts and the old version keeps serving.
+    - flyctl deploy --remote-only -a jworden-api
+  after_script:
+    # prove the thing that just shipped is actually answering
+    - |
+      sleep 15
+      code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://jworden-api.fly.dev/health || echo 000)
+      echo "post-deploy /health -> $code"
+      [ "$code" = "200" ] || echo "WARNING: health check did not return 200"
+  timeout: 30m
