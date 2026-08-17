@@ -8,6 +8,83 @@
       "has": [
         {
           "type": "host",
+          "value": "jworden.tech"
+        }
+      ],
+      "destination": "https://thewordenstandard.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jworden.tech"
+        }
+      ],
+      "destination": "https://thewordenstandard.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "michiganasphaltpavingpros.net"
+        }
+      ],
+      "destination": "https://www.jwordenasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "michiganasphaltpavingpros.info"
+        }
+      ],
+      "destination": "https://www.jwordenasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "michiganasphaltpavingpros.shop"
+        }
+      ],
+      "destination": "https://www.jwordenasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "michiganasphaltpavingpros.store"
+        }
+      ],
+      "destination": "https://www.jwordenasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "michiganasphaltpavingpros.xyz"
+        }
+      ],
+      "destination": "https://www.jwordenasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
           "value": "www.richmondasphaltpros.com"
         }
       ],
