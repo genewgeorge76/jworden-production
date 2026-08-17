@@ -129,6 +129,20 @@ export async function authenticateWithPin(pin) {
   return authState.token
 }
 
+export async function authenticateWithPassword(email, password) {
+  // Tenant sign-in, as opposed to authenticateWithPin above which is the
+  // single-admin gate. POST /api/v1/auth/login has existed on the backend the
+  // whole time with nothing calling it: /register created a tenant and a user,
+  // and then there was no way to sign in as that user. Same rule as the PIN
+  // path — the server issues the token, the client only stores it.
+  const response = await request('POST', '/api/v1/auth/login', { email, password })
+  storeAuthToken(
+    response.access_token,
+    Math.floor(Date.now() / 1000) + (response.expires_in || 86_400),
+  )
+  return authState.token
+}
+
 export function clearAuthToken() {
   clearStoredAuthToken()
 }
