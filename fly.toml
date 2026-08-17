@@ -17,7 +17,13 @@ primary_region = 'iad'
   # for process groups: deploying a file that defines only "app" DESTROYS the
   # beat and worker machines, silently killing every scheduled job and background
   # task while /health keeps returning 200.
-  app = "gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:${PORT:-8000} app.main:app"
+  # The port is a literal, NOT ${PORT:-8000}. Process commands here are exec'd
+  # directly — there is no shell, so nothing expands the substitution and
+  # gunicorn receives the seven characters "${PORT:" as its port:
+  #     Error: '${PORT' is not a valid port number.
+  # Every app machine crash-looped on this until it hit the max restart count.
+  # It must stay in sync with http_service.internal_port below.
+  app = "gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app.main:app"
   worker = "celery -A app.celery_app:celery_app worker --loglevel=info --concurrency=2"
   beat = "celery -A app.celery_app:celery_app beat --loglevel=info"
 
