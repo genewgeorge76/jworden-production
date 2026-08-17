@@ -210,6 +210,16 @@ export default function Register() {
             </div>
           </form>
         )}
+
+        {/* A signup form with no route back to sign-in strands anyone who
+            already has an account — or who completed step 1 and then lost the
+            Stripe tab, since the tenant and user are committed before checkout. */}
+        <p className="text-sm text-slate-400 mt-6 text-center">
+          Already have an account?{' '}
+          <a href="/signin" className="text-amber-400 hover:text-amber-300 font-medium">
+            Sign in
+          </a>
+        </p>
       </motion.div>
     </div>
   );

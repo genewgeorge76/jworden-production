@@ -164,6 +164,7 @@ const WORDEN_STANDARD_INTERNAL_PATHS = new Set([
 
 import MarketingHome from './pages/MarketingHome';
 import Register from './pages/Register';
+import Login from './pages/Login';
 import SuperAdmin from './pages/SuperAdmin';
 
 const LoadingSpinner = () => (
@@ -363,6 +364,9 @@ const AuthenticatedApp = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<AdminPinGate />} />
+          {/* White-label tenants sign in with their own email + password, not
+              the HQ admin PIN, so this route has to exist here too. */}
+          <Route path="/signin" element={<Login />} />
           <Route path="/satellite-map" element={<RequireAuth><SatelliteMap /></RequireAuth>} />
           <Route path="/dashboard" element={<RequireAuth><ClientCockpit /></RequireAuth>} />
           <Route path="/portal/:public_token" element={<EstimatePortal />} />
@@ -403,7 +407,11 @@ const AuthenticatedApp = () => {
             "/" flip above resolve to the same page from either address. */}
         {isOperationsSite && <Route path="/os" element={<MarketingHome />} />}
         {isOperationsSite && <Route path="/register" element={<Register />} />}
+        {/* /login stays the admin PIN gate. It is the one sign-in path that
+            currently works and is in muscle memory and bookmarks, so the tenant
+            email+password page gets /signin rather than displacing it. */}
         {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
+        {isOperationsSite && <Route path="/signin" element={<Login />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
 
