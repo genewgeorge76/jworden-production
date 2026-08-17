@@ -107,8 +107,16 @@ def main() -> int:
         return 1
 
     if mode == "stamp":
-        print("[release] schema pre-exists without a version row — stamping head (one-time repair)", flush=True)
-        cmd = ["alembic", "stamp", "head"]
+        # --purge erases the version table before writing the new stamp.
+        # Without it, `alembic stamp head` still resolves the CURRENT revision
+        # to compute a path, so a version row pointing at a revision this repo
+        # does not contain makes the stamp itself fail with the very error it
+        # was meant to repair:
+        #     FAILED: Can't locate revision identified by 'x3y4z5a6b7c8'
+        # Purging is safe here: the version table holds one string, and we are
+        # deliberately replacing it. No application data lives in it.
+        print("[release] stamping head (erasing the stale version row first)", flush=True)
+        cmd = ["alembic", "stamp", "head", "--purge"]
     else:
         print("[release] running migrations", flush=True)
         cmd = ["alembic", "upgrade", "head"]
