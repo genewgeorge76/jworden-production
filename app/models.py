@@ -1285,6 +1285,16 @@ class ProposalOutcome(Base):
     competitor_price = Column(Float, nullable=True)
     notes = Column(Text, nullable=True)
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    # When the win/loss was actually recorded, as distinct from when the row was
+    # created or last touched. Four call sites already read and sort by this
+    # (bid_intelligence list/history/_out_dict, kpi_wall's 12-month bid-to-win
+    # window) and every one of them raised AttributeError because the column was
+    # never defined — the KPI wall silently fell out of the cache warm as a
+    # result. updated_at is not a substitute: editing a note would move it and
+    # quietly reshape the win-rate window.
+    outcome_recorded_at = Column(
+        DateTime(timezone=True), default=_utcnow, nullable=False
+    )
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
     updated_at = Column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
