@@ -1,0 +1,42 @@
+# Self-hosted Redis for jworden-api's Celery broker + result backend.
+#
+# Replaces Upstash, whose 500,000 request/month free tier was fully exhausted
+# ("max requests limit exceeded. Limit: 500000, Usage: 500000"). A Celery worker
+# polls the broker continuously and beat fires ~20k scheduled tasks a month, so
+# that ceiling could never hold — it would re-exhaust after any reset. A machine
+# we own has no per-command meter at all.
+#
+# PRIVATE ONLY. There is deliberately no [[services]] block and no public IP, so
+# this is reachable only over Fly's per-organisation 6PN network at
+# jworden-redis.internal. Nothing on the public internet can open a socket to it.
+
+app = 'jworden-redis'
+primary_region = 'iad'
+
+[build]
+  image = 'redis:7.4-alpine'
+
+[[mounts]]
+  source = 'redis_data'
+  destination = '/data'
+
+[processes]
+  # `sh -c` is deliberate, not accidental. Fly exec's process commands directly
+  # with no shell, so $REDIS_PASSWORD would arrive at redis-server as a literal
+  # 16-character string — the same class of bug that took the API down when
+  # gunicorn was handed "${PORT:". Invoking sh explicitly is what makes the
+  # expansion actually happen. The password is generated alphanumeric-only, so
+  # it needs no quoting and cannot be re-split by the shell.
+  #
+  #   --bind :: 0.0.0.0  6PN is IPv6; the v4 bind is for in-machine redis-cli
+  #   --appendonly yes   queued tasks survive a restart; the broker is a queue,
+  #                      and a lost queue is lost work
+  #   --maxmemory-policy noeviction
+  #                      NEVER evict on a broker. Eviction would silently drop
+  #                      queued tasks and the loss would be invisible — failing
+  #                      the write loudly is strictly better.
+  app = 'sh -c "exec redis-server --bind :: 0.0.0.0 --port 6379 --requirepass $REDIS_PASSWORD --appendonly yes --dir /data --maxmemory 192mb --maxmemory-policy noeviction"'
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '256mb'
