@@ -47,6 +47,31 @@ _DEFAULT_WIN_RATE = 0.35
 _DEFAULT_JOB_VALUE = 12000
 
 
+def _abort(db, where: str, exc: Exception) -> None:
+    """
+    Log a failed metric and return the session to a usable state.
+
+    PostgreSQL puts a connection into a failed-transaction state after any error:
+    every later statement on that session raises InFailedSqlTransaction until the
+    transaction is rolled back. get_full_dashboard() runs all five metrics on ONE
+    session, so a single failure used to take the other four down with it —
+
+        get_lead_funnel error: column leads.source does not exist
+        get_revenue_forecast error: current transaction is aborted, ...
+        get_permit_to_lead_rate error: current transaction is aborted, ...
+        get_review_approval_rate error: current transaction is aborted, ...
+        get_monthly_lead_volume error: current transaction is aborted, ...
+
+    Only the first line there is a real bug; the rest are this missing rollback.
+    Rolling back here keeps one broken metric from hiding the health of the rest.
+    """
+    logger.error("%s error: %s", where, exc)
+    try:
+        db.rollback()
+    except Exception:  # noqa: BLE001 — never let cleanup mask the original error
+        logger.exception("%s: rollback failed, session may be unusable", where)
+
+
 def get_lead_funnel(db) -> dict:
     """Return lead counts by stage, source (urgency), state, and service type."""
     try:
@@ -104,7 +129,7 @@ def get_lead_funnel(db) -> dict:
             "by_urgency": by_urgency,
         }
     except Exception as exc:  # noqa: BLE001
-        logger.error("get_lead_funnel error: %s", exc)
+        _abort(db, "get_lead_funnel", exc)
         return {"error": "An internal error occurred. Please try again."}
 
 
@@ -151,7 +176,7 @@ def get_revenue_forecast(db) -> dict:
             "assumptions": "Win rates and job values based on industry averages",
         }
     except Exception as exc:  # noqa: BLE001
-        logger.error("get_revenue_forecast error: %s", exc)
+        _abort(db, "get_revenue_forecast", exc)
         return {"error": "An internal error occurred. Please try again."}
 
 
@@ -175,7 +200,7 @@ def get_permit_to_lead_rate(db) -> dict:
             "quote_conversion_rate_pct": rate,
         }
     except Exception as exc:  # noqa: BLE001
-        logger.error("get_permit_to_lead_rate error: %s", exc)
+        _abort(db, "get_permit_to_lead_rate", exc)
         return {"error": "An internal error occurred. Please try again."}
 
 
@@ -217,7 +242,7 @@ def get_review_approval_rate(db) -> dict:
 
         return {"by_decision_type": results}
     except Exception as exc:  # noqa: BLE001
-        logger.error("get_review_approval_rate error: %s", exc)
+        _abort(db, "get_review_approval_rate", exc)
         return {"error": "An internal error occurred. Please try again."}
 
 
@@ -283,7 +308,7 @@ def get_monthly_lead_volume(db) -> list:
             })
         return results
     except Exception as exc:  # noqa: BLE001
-        logger.error("get_monthly_lead_volume error: %s", exc)
+        _abort(db, "get_monthly_lead_volume", exc)
         return []
 
 

@@ -122,8 +122,16 @@ async def update_outcome(
     o = db.get(ProposalOutcome, outcome_id)
     if not o:
         raise HTTPException(status_code=404, detail="Outcome not found")
-    for key, val in req.model_dump(exclude_none=True).items():
+    fields = req.model_dump(exclude_none=True)
+    # Re-stamp only when the verdict itself changes. A bid moving from pending
+    # to won is newly-recorded and belongs at the top of the list and inside the
+    # 12-month win-rate window; fixing a typo in `notes` is neither, and must not
+    # reshape either. Read the old value before the loop overwrites it.
+    outcome_changed = "outcome" in fields and fields["outcome"] != o.outcome
+    for key, val in fields.items():
         setattr(o, key, val)
+    if outcome_changed:
+        o.outcome_recorded_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(o)
     return {"status": "updated", **_out_dict(o)}
