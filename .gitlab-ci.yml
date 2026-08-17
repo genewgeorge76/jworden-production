@@ -68,9 +68,18 @@ deploy:api:
     - curl -sL https://fly.io/install.sh | sh
     - export PATH="/root/.fly/bin:$PATH"
     - |
+      # The Fly token contains a space and commas, so GitLab refuses to MASK it
+      # verbatim — an unmasked variable can be echoed into a job log by any
+      # careless command. It is stored base64-encoded instead (pure base64
+      # alphabet passes the masking rules) and decoded here at use time.
+      if [ -n "${FLY_API_TOKEN_B64:-}" ]; then
+        FLY_API_TOKEN="$(printf '%s' "$FLY_API_TOKEN_B64" | base64 -d)"
+        export FLY_API_TOKEN
+      fi
       if [ -z "${FLY_API_TOKEN:-}" ]; then
-        echo "FLY_API_TOKEN is not set. Add it under Settings -> CI/CD -> Variables."
-        echo "Generate one with: fly tokens create deploy -a jworden-api"
+        echo "No Fly credential. Set FLY_API_TOKEN_B64 (masked+protected) under"
+        echo "Settings -> CI/CD -> Variables. Generate with:"
+        echo "  fly tokens create deploy -a jworden-api | base64 -w0"
         exit 1
       fi
   script:
