@@ -438,7 +438,28 @@ app = FastAPI(
 def _rate_limit_exception_handler(request: Request, exc: Exception) -> Response:
     # FastAPI expects a general Exception handler signature.
     # This endpoint is registered only for RateLimitExceeded, so this cast is safe.
-    return _rate_limit_exceeded_handler(request, cast(RateLimitExceeded, exc))
+    response = _rate_limit_exceeded_handler(request, cast(RateLimitExceeded, exc))
+    # SlowAPI's stock handler returns a bare 429. Without Retry-After a caller
+    # cannot tell a momentary limit from a permanent block, so well-behaved
+    # clients retry immediately and keep themselves limited — and a locked-out
+    # owner has no idea whether to wait a minute or an hour. RFC 9110 makes this
+    # header the answer to that question, so send it.
+    seconds = 60
+    try:
+        # slowapi wraps the parsed rule, so the RateLimitItem may be at
+        # exc.limit or exc.limit.limit depending on version. Walk to whichever
+        # object actually carries GRANULARITY = Granularity(seconds=..., name=...)
+        # rather than assuming a shape and silently emitting a wrong hint.
+        candidate = getattr(exc, "limit", None)
+        for obj in (candidate, getattr(candidate, "limit", None)):
+            gran = getattr(obj, "GRANULARITY", None)
+            if gran is not None and getattr(gran, "seconds", None):
+                seconds = int(gran.seconds)
+                break
+    except Exception:  # noqa: BLE001 — a missing hint must never mask the 429
+        pass
+    response.headers["Retry-After"] = str(seconds)
+    return response
 
 
 app.state.limiter = limiter

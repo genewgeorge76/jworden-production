@@ -19,6 +19,9 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 import bcrypt
 
+from ..core import bruteforce
+from ..core.bruteforce import identity_from_request
+from ..core.limiter import AUTH_LIMIT, limiter
 from ..database import get_db
 from ..models import Tenant, User
 from ..services.audit import write_audit_event
@@ -116,10 +119,12 @@ def issue_token(
     if auth_header.startswith("Bearer "):
         token = auth_header[7:]
         if token != master_key:
+            # Only the presented value is fingerprinted. Logging the EXPECTED
+            # secret's length and hash prefix hands a log reader everything they
+            # need to confirm a guess offline, for no diagnostic benefit.
             logger.warning(
-                "Failed token exchange — invalid Bearer key presented (presented=%s expected=%s)",
+                "Failed token exchange — invalid Bearer key presented (presented=%s)",
                 _secret_fingerprint(token),
-                _secret_fingerprint(master_key),
             )
             raise HTTPException(
                 status_code=403,
@@ -181,10 +186,16 @@ def issue_token(
     summary="Exchange the configured admin PIN for a 24-hour JWT",
     response_model=TokenResponse,
 )
+@limiter.limit(AUTH_LIMIT)
 def issue_pin_token(
-    request: PinTokenRequest,
+    request: Request,
+    payload: PinTokenRequest,
     db: Session = Depends(get_db),
 ):
+    # The body model moved to `payload`: SlowAPI resolves the client address
+    # from a parameter that is literally named `request` and typed Request, and
+    # this endpoint had bound that name to the JSON body — which is why it could
+    # not carry a limit before.
     admin_pin = os.getenv("ADMIN_PIN", "")
     if not admin_pin:
         raise HTTPException(
@@ -192,17 +203,27 @@ def issue_pin_token(
             detail="PIN authentication is not configured. Set ADMIN_PIN.",
         )
 
-    if not request.pin or not request.pin.isdigit() or len(request.pin) < 4 or len(request.pin) > 8:
+    identity = identity_from_request(request)
+    bruteforce.check("pin", identity)
+
+    if not payload.pin or not payload.pin.isdigit() or len(payload.pin) < 4 or len(payload.pin) > 8:
         raise HTTPException(status_code=400, detail="A 4 to 8 digit PIN is required.")
 
-    if request.pin != admin_pin:
+    # compare_digest, not ==. A plain string compare returns as soon as it finds
+    # a differing character, so response time leaks how many leading digits were
+    # right and turns 10,000 guesses into about 40.
+    if not secrets.compare_digest(payload.pin, admin_pin):
+        bruteforce.record_failure("pin", identity)
+        # The expected PIN's fingerprint used to be logged here beside the
+        # presented one. len= plus 12 hex of sha256 is not anonymised for a
+        # secret drawn from 10,000 candidates: hash all of them, match the
+        # prefix, recover the PIN. Anyone who could read the logs had the PIN.
         logger.warning(
-            "PIN token issuance rejected — incorrect PIN presented (presented=%s expected=%s)",
-            _secret_fingerprint(request.pin),
-            _secret_fingerprint(admin_pin),
+            "PIN token issuance rejected — incorrect PIN from identity=%s", identity
         )
         raise HTTPException(status_code=403, detail="Incorrect PIN")
 
+    bruteforce.record_success("pin", identity)
     token = _issue_admin_jwt()
     logger.info(
         "JWT issued for Admin via PIN auth (tenant=JWORDEN_HQ, expires_in=%ds)",
@@ -234,9 +255,17 @@ class RegisterRequest(BaseModel):
 
 
 @router.post("/register", summary="Register a new Tenant and User")
-def register_tenant(request: RegisterRequest, db: Session = Depends(get_db)):
+@limiter.limit(AUTH_LIMIT)
+def register_tenant(
+    request: Request,
+    payload: RegisterRequest,
+    db: Session = Depends(get_db),
+):
+    # Rate limited because it was not: registration writes a tenant and a user
+    # on every call, so an unlimited endpoint is a way to fill the database and
+    # to farm which email addresses are already taken via the 400 below.
     # 1. Check if user already exists
-    existing_user = db.query(User).filter(User.email == request.email).first()
+    existing_user = db.query(User).filter(User.email == payload.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
         
@@ -244,10 +273,10 @@ def register_tenant(request: RegisterRequest, db: Session = Depends(get_db)):
     tenant_id = secrets.token_urlsafe(12)
     new_tenant = Tenant(
         tenant_id=tenant_id,
-        company_name=request.companyName,
-        industry=request.industry,
-        subscription_tier=request.plan.lower(),
-        contact_email=request.email,
+        company_name=payload.companyName,
+        industry=payload.industry,
+        subscription_tier=payload.plan.lower(),
+        contact_email=payload.email,
         is_active=1
     )
     db.add(new_tenant)
@@ -256,14 +285,14 @@ def register_tenant(request: RegisterRequest, db: Session = Depends(get_db)):
     # 3. Create User
     new_user = User(
         tenant_id=tenant_id,
-        email=request.email,
-        hashed_password=get_password_hash(request.password),
+        email=payload.email,
+        hashed_password=get_password_hash(payload.password),
         role="admin"
     )
     db.add(new_user)
     db.commit()
     
-    logger.info(f"New SaaS Tenant Registered: {tenant_id} ({request.companyName})")
+    logger.info(f"New SaaS Tenant Registered: {tenant_id} ({payload.companyName})")
     return {"status": "success", "tenant_id": tenant_id}
 
 
@@ -272,20 +301,39 @@ class LoginRequest(BaseModel):
     password: str
 
 @router.post("/login", summary="Login with Email and Password", response_model=TokenResponse)
-def login_user(request: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == request.email).first()
-    if not user or not verify_password(request.password, user.hashed_password):
+@limiter.limit(AUTH_LIMIT)
+def login_user(
+    request: Request,
+    payload: LoginRequest,
+    db: Session = Depends(get_db),
+):
+    identity = identity_from_request(request)
+    # Counted per email as well as per IP: a password-spray tries one common
+    # password against many accounts, so an IP-only counter never trips while a
+    # single account is still being hammered from everywhere.
+    bruteforce.check("login", identity)
+    bruteforce.check("login-user", payload.email.lower())
+
+    user = db.query(User).filter(User.email == payload.email).first()
+    if not user or not verify_password(payload.password, user.hashed_password):
+        bruteforce.record_failure("login", identity)
+        bruteforce.record_failure("login-user", payload.email.lower())
         raise HTTPException(status_code=401, detail="Incorrect email or password")
-        
-    # Issue JWT containing tenant_id and role
+
+    bruteforce.record_success("login", identity)
+    bruteforce.record_success("login-user", payload.email.lower())
+
+    # Issue JWT containing tenant_id and role. Named `claims`, not `payload`:
+    # the request body is `payload` now, and rebinding it here would leave a
+    # trap for the next edit that reads payload.email below this line.
     jwt_secret = os.getenv("JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret"))
-    payload = {
+    claims = {
         "sub": user.email,
         "tenant_id": user.tenant_id,
         "role": user.role,
         "exp": datetime.now(timezone.utc) + timedelta(seconds=_TOKEN_EXPIRE_SECONDS),
         "iat": datetime.now(timezone.utc),
     }
-    
-    token = jwt.encode(payload, jwt_secret, algorithm=_ALGORITHM)
+
+    token = jwt.encode(claims, jwt_secret, algorithm=_ALGORITHM)
     return TokenResponse(access_token=token)
