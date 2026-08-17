@@ -10,7 +10,7 @@ primary_region = 'iad'
 
 [deploy]
   # runs once, before the new version takes traffic; non-zero aborts the deploy
-  release_command = "bash scripts/db_release.sh"
+  release_command = "python -m app.db_release"
 
 [processes]
   # Recovered from the running machines on 2026-08-17. fly.toml is AUTHORITATIVE
