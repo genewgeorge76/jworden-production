@@ -22,11 +22,14 @@ stages: [test, deploy]
 test:api:
   stage: test
   image: python:3.12-slim
+  # This list must stay identical to deploy:api's. If deploy can be triggered by
+  # a path that test ignores, that path ships with nothing verifying it boots —
+  # which is how a fly.toml-only change reached production unchecked.
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt]
+      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt, Dockerfile, fly.toml]
     - if: '$CI_COMMIT_BRANCH == "main"'
-      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt]
+      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt, Dockerfile, fly.toml]
   before_script:
     - pip install --quiet --disable-pip-version-check -r requirements.backend.txt
   script:
@@ -48,6 +51,24 @@ test:api:
       heads = [r for r in revs if r not in downs]
       print('migration heads:', heads)
       assert len(heads) == 1, f'expected exactly 1 alembic head, found {len(heads)}: {heads}'
+      PY
+    # No shell syntax in [processes]. Fly exec's these commands directly — there
+    # is no shell — so "0.0.0.0:${PORT:-8000}" reaches gunicorn verbatim and it
+    # exits with "Error: '${PORT' is not a valid port number." Every app machine
+    # then crash-loops to the max restart count and Fly suspends the app.
+    # `flyctl config validate` does NOT catch this: the value is a legal TOML
+    # string, so only a check like this one finds it before it ships.
+    - |
+      python3 - <<'PY'
+      import re, sys, tomllib
+      cfg = tomllib.load(open('fly.toml','rb'))
+      bad = {n: c for n, c in cfg.get('processes', {}).items()
+             if re.search(r'\$\{|\$[A-Za-z_]|`|\|\||&&', c)}
+      if bad:
+          for n, c in bad.items():
+              print(f'fly.toml [processes].{n} contains shell syntax: {c}', file=sys.stderr)
+          sys.exit('process commands are exec\'d directly; nothing expands these')
+      print('fly.toml [processes] OK:', ', '.join(cfg.get('processes', {})))
       PY
   timeout: 15m
 
@@ -85,8 +106,10 @@ deploy:api:
   script:
     - export PATH="/root/.fly/bin:$PATH"
     # --remote-only builds on Fly's builders, so CI needs no docker daemon.
-    # The release_command in fly.toml runs scripts/db_release.sh first; if the
-    # schema step fails the deploy aborts and the old version keeps serving.
+    # The release_command in fly.toml runs `python -m app.db_release` first; if
+    # the schema step fails the deploy aborts and the old version keeps serving.
+    # (It lives in app/, not scripts/, because .dockerignore excludes both
+    #  `*.sh` and `scripts/` — a release script there is absent from the image.)
     - flyctl deploy --remote-only -a jworden-api
   after_script:
     # prove the thing that just shipped is actually answering
