@@ -1390,6 +1390,15 @@ class Tenant(Base):
     contact_phone = Column(String(30), nullable=True)
     industry = Column(String(100), nullable=False, default="Asphalt Paving")
     subscription_tier = Column(String(30), nullable=False, default="lite")  # lite | pro | max
+    # Exists in the database as NOT NULL with no default, but was missing from
+    # this model — so every INSERT built from it omitted the column and Postgres
+    # rejected the row:
+    #     NotNullViolation: null value in column "subscription_status"
+    # That made /auth/register return 500 for everyone, which is why the users
+    # table was empty. Nothing reads this column yet; Stripe drives real billing
+    # state. "pending" is the honest value at registration, since checkout only
+    # happens after the tenant row is committed.
+    subscription_status = Column(String(20), nullable=False, default="pending")
     stripe_customer_id = Column(String(100), nullable=True, index=True)
     stripe_subscription_id = Column(String(100), nullable=True, index=True)
     is_active = Column(Integer, nullable=False, default=1)
