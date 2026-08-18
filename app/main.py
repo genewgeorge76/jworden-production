@@ -315,6 +315,7 @@ from .routers import takeoff as takeoff_router
 from .routers import tech_intelligence as tech_intelligence_router
 from .routers import tenants as tenants_router
 from .routers import tts as tts_router
+from .routers import telematics as telematics_router
 from .routers import twilio_verify_router as twilio_verify_router
 from .routers import vdot_bids as vdot_bids_router
 from .routers import vector_search as vector_search_router
@@ -804,6 +805,7 @@ _rebuild_router_models()
 # Neural TTS for Jarvis / Mr. Worden voice (OpenAI / ElevenLabs)
 app.include_router(tts_router.router)
 app.include_router(local_proof_router.router)
+app.include_router(telematics_router.router)
 
 
 # ── Socket.IO ASGI mount ──────────────────────────────────────────────────────
