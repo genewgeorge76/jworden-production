@@ -31,7 +31,14 @@ logger = logging.getLogger(__name__)
 # queries through Claude with a JWordenAI-aware system prompt. Falls back
 # gracefully to canned responses when the key is missing or the call fails.
 def _anthropic_key()   -> str: return _cfg.get("ANTHROPIC_API_KEY")
-def _anthropic_model() -> str: return _cfg.get("ANTHROPIC_MODEL") or "claude-opus-5"
+# One default, in one place. Five other modules used to carry their own
+# hardcoded copy of the model name; when this one was upgraded they kept
+# reporting the old value, so /jarvis/readiness advertised a model the brain
+# was no longer running. They now import DEFAULT_ANTHROPIC_MODEL from here.
+DEFAULT_ANTHROPIC_MODEL = "claude-opus-5"
+
+
+def _anthropic_model() -> str: return _cfg.get("ANTHROPIC_MODEL") or DEFAULT_ANTHROPIC_MODEL
 
 
 # Model capability table.

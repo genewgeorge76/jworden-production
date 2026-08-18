@@ -25,6 +25,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, Field
 
 from ..services import runtime_config
+from app.services.jarvis import DEFAULT_ANTHROPIC_MODEL as _DEFAULT_MODEL  # single source of truth for the model default
 
 logger = logging.getLogger(__name__)
 
@@ -157,7 +158,7 @@ async def _test_anthropic() -> dict:
     key = runtime_config.get("ANTHROPIC_API_KEY")
     if not key:
         return {"ok": False, "error": "ANTHROPIC_API_KEY not set"}
-    model = (runtime_config.get("ANTHROPIC_MODEL") or "").strip() or "claude-sonnet-4-5"
+    model = (runtime_config.get("ANTHROPIC_MODEL") or "").strip() or _DEFAULT_MODEL
     try:
         async with httpx.AsyncClient(timeout=10) as c:
             # 1-token ping

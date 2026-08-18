@@ -32,6 +32,7 @@ from ..services.state_data import (
     TOTAL_US_JURISDICTIONS,
     WORDEN_ACTIVE_STATES,
 )
+from app.services.jarvis import DEFAULT_ANTHROPIC_MODEL as _DEFAULT_MODEL  # single source of truth for the model default
 
 logger = logging.getLogger(__name__)
 
@@ -241,7 +242,7 @@ def dashboard_preflight():
         "jarvis": {
             "full_capacity": jarvis_full_capacity,
             "engine": "anthropic-claude" if anthropic_ready else "heuristic-fallback",
-            "model": (_cfg.get("ANTHROPIC_MODEL") or "claude-sonnet-4-5") if anthropic_ready else None,
+            "model": (_cfg.get("ANTHROPIC_MODEL") or _DEFAULT_MODEL) if anthropic_ready else None,
             "tools": {
                 "web_search": web_ready,
                 "make_phone_call": call_ready,
