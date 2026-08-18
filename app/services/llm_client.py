@@ -14,11 +14,11 @@ Every model has ONE job it does better than the others. No redundancy.
 
   TASK                    → PRIMARY                          → FALLBACK
   ──────────────────────────────────────────────────────────────────────
-    jarvis                  → claude-sonnet-4-6                → gpt-4o → grok-4 → gemini-2.5-pro → claude-opus-4-6
-  reasoning / persona     → claude-sonnet-4-6                → gpt-4o
+    jarvis                  → claude-opus-5                    → gpt-5.6-turbo → gpt-4o
+  reasoning / persona     → claude-opus-5                    → gpt-5.6-turbo
   proposals / contracts   → claude-sonnet-4-6                → gpt-4o
   review_reply            → claude-sonnet-4-6                → gpt-4o
-  legal / compliance      → claude-opus-4-6                  → claude-sonnet-4-6
+  legal / compliance      → claude-opus-5                    → gpt-5.6-turbo
   vision                  → gpt-4o                           → gemini-2.5-pro
   math / long_context     → gemini-2.5-pro                   → claude-sonnet-4-6
   web_research            → perplexity-sonar-pro             → gpt-4o
@@ -26,9 +26,14 @@ Every model has ONE job it does better than the others. No redundancy.
     fast / classification   → gpt-4o-mini                      → claude-sonnet-4-6
   analytics               → claude-sonnet-4-6                → gpt-4o
 
-Note on Opus 4.6 vs 4.7: 4.6 is the default because 4.7's updated tokenizer
-can produce up to ~35% more tokens for the same input → higher effective
-cost. Set JARVIS_MODEL_OVERRIDE=claude-opus-4-7 to upgrade Jarvis only.
+Jarvis, reasoning, persona and legal run on claude-opus-5 — the operator-facing
+lanes, where answer quality is the product. Everything else keeps its existing
+provider. JARVIS_MODEL_OVERRIDE still forces a model for the jarvis lanes, and
+JARVIS_EFFORT ("low".."max", default "high") sets reasoning depth on every
+Anthropic call.
+
+Until this change the docstring claimed Claude was primary for jarvis while
+_ROUTES actually listed gpt-5.6-turbo first — the two had drifted apart.
 
 ────────────────────────────────────────────────────────────────────────────
 Environment variables (set in Railway → Variables)
@@ -68,14 +73,14 @@ logger = logging.getLogger(__name__)
 
 _ROUTES: dict[str, list[tuple[str, str]]] = {
     # task             provider_chain (provider, model)
-    "jarvis":          [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6"), ("openai", "gpt-4o")],
-    "jarvis_fast":     [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
-    "reasoning":       [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
-    "persona":         [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "jarvis":          [("anthropic", "claude-opus-5"), ("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6"), ("openai", "gpt-4o")],
+    "jarvis_fast":     [("anthropic", "claude-opus-5"), ("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "reasoning":       [("anthropic", "claude-opus-5"), ("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
+    "persona":         [("anthropic", "claude-opus-5"), ("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
     "proposal":        [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
     "review_reply":    [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
     "analytics":       [("openai", "gpt-5.6-turbo"),          ("anthropic", "claude-sonnet-4-6")],
-    "legal":           [("anthropic", "claude-opus-4-6"),     ("openai", "gpt-5.6-turbo")],
+    "legal":           [("anthropic", "claude-opus-5"),     ("openai", "gpt-5.6-turbo")],
     "vision":          [("openai", "gpt-4o"),                 ("google", "gemini-2.5-pro"),       ("openai", "gpt-5.6-turbo")],
     "math":            [("google", "gemini-2.5-pro"),         ("openai", "gpt-5.6-turbo")],
     "long_context":    [("google", "gemini-2.5-pro"),         ("openai", "gpt-5.6-turbo")],
@@ -306,6 +311,38 @@ def _call_openai_compatible(
     return resp.choices[0].message.content or ""
 
 
+# Two request fields changed across model generations, and sending the wrong
+# one is a hard 400, not a degraded answer. Verified against the live API:
+# `temperature` on claude-opus-5 returns "`temperature` is deprecated for this
+# model." while the same call on claude-sonnet-4-5 succeeds. Because
+# LLM_FALLBACK_SILENT defaults to "1", such a 400 would be swallowed and every
+# Claude call would quietly land on the next provider in the chain — Claude
+# would appear configured and never actually run.
+_ANTHROPIC_MODERN = (
+    "claude-opus-5", "claude-sonnet-5", "claude-fable-5", "claude-mythos-5",
+    "claude-opus-4-8", "claude-opus-4-7", "claude-opus-4-6", "claude-sonnet-4-6",
+)
+_ANTHROPIC_NO_TEMPERATURE = (
+    "claude-opus-5", "claude-sonnet-5", "claude-fable-5", "claude-mythos-5",
+    "claude-opus-4-8", "claude-opus-4-7",
+)
+
+
+def _anthropic_is_modern(model: str) -> bool:
+    return any(model.startswith(p) for p in _ANTHROPIC_MODERN)
+
+
+def _anthropic_rejects_temperature(model: str) -> bool:
+    return any(model.startswith(p) for p in _ANTHROPIC_NO_TEMPERATURE)
+
+
+def _anthropic_effort() -> str:
+    """Reasoning depth, from JARVIS_EFFORT (already a Fly secret, previously
+    read nowhere). Defaults to 'high'."""
+    raw = (os.getenv("JARVIS_EFFORT") or "high").strip().lower()
+    return raw if raw in {"low", "medium", "high", "xhigh", "max"} else "high"
+
+
 def _call_anthropic(
     client: Any,
     model: str,
@@ -323,13 +360,30 @@ def _call_anthropic(
             if role in ("user", "assistant"):
                 msgs.append({"role": role, "content": m.get("content", "")})
     msgs.append({"role": "user", "content": user})
-    resp = client.messages.create(
-        model=model,
-        system=system or "",
-        messages=msgs,
-        max_tokens=max_tokens,
-        temperature=temperature,
-    )
+
+    kwargs: dict[str, Any] = {
+        "model": model,
+        "system": system or "",
+        "messages": msgs,
+        "max_tokens": max_tokens,
+    }
+
+    if _anthropic_is_modern(model):
+        # Adaptive thinking is the current form; budget_tokens is removed on
+        # these models.
+        kwargs["thinking"] = {"type": "adaptive"}
+        kwargs["output_config"] = {"effort": _anthropic_effort()}
+    if not _anthropic_rejects_temperature(model):
+        kwargs["temperature"] = temperature
+
+    resp = client.messages.create(**kwargs)
+
+    # A refusal arrives as HTTP 200 with stop_reason "refusal" and no usable
+    # text. Returning "" here would look like a successful empty answer and the
+    # caller would render nothing; raising hands it to the provider fallback
+    # chain, which is what every other failure mode already does.
+    if getattr(resp, "stop_reason", None) == "refusal":
+        raise RuntimeError(f"anthropic refused: {getattr(resp, 'stop_details', None)}")
     # Anthropic returns a list of content blocks
     parts = []
     for block in getattr(resp, "content", []) or []:

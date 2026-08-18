@@ -31,7 +31,48 @@ logger = logging.getLogger(__name__)
 # queries through Claude with a JWordenAI-aware system prompt. Falls back
 # gracefully to canned responses when the key is missing or the call fails.
 def _anthropic_key()   -> str: return _cfg.get("ANTHROPIC_API_KEY")
-def _anthropic_model() -> str: return _cfg.get("ANTHROPIC_MODEL") or "claude-sonnet-4-5"
+def _anthropic_model() -> str: return _cfg.get("ANTHROPIC_MODEL") or "claude-opus-5"
+
+
+# Model capability table.
+#
+# Two request fields changed meaning across model generations, and getting
+# either wrong is a hard 400 rather than a degraded answer:
+#
+#   temperature  — removed on Opus 5, Sonnet 5, Opus 4.7/4.8 and Fable 5.
+#                  Sending it returns "`temperature` is deprecated for this
+#                  model." (verified against the live API).
+#   thinking     — `{"type": "adaptive"}` is the current form. `budget_tokens`
+#                  is removed on the same models.
+#
+# Anything not listed is treated as an older model and gets neither the new
+# thinking form nor effort, which is the safe direction to be wrong in: a
+# missing optional field costs quality, an unexpected one costs the whole call.
+_MODERN_PREFIXES = (
+    "claude-opus-5", "claude-sonnet-5", "claude-fable-5", "claude-mythos-5",
+    "claude-opus-4-8", "claude-opus-4-7", "claude-opus-4-6", "claude-sonnet-4-6",
+)
+_NO_TEMPERATURE = (
+    "claude-opus-5", "claude-sonnet-5", "claude-fable-5", "claude-mythos-5",
+    "claude-opus-4-8", "claude-opus-4-7",
+)
+
+
+def _is_modern(model: str) -> bool:
+    return any(model.startswith(p) for p in _MODERN_PREFIXES)
+
+
+def _jarvis_effort() -> str:
+    """Reasoning depth for the Jarvis brain.
+
+    JARVIS_EFFORT was already set as a Fly secret but was read nowhere in the
+    codebase — the knob existed and did nothing. It now drives
+    output_config.effort. 'high' is the default because Jarvis runs a
+    multi-round tool loop, where effort governs how well it picks tools and how
+    few rounds it needs, not just how long it thinks.
+    """
+    raw = (_cfg.get("JARVIS_EFFORT") or "high").strip().lower()
+    return raw if raw in {"low", "medium", "high", "xhigh", "max"} else "high"
 _ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 _ANTHROPIC_VERSION = "2023-06-01"
 
@@ -714,22 +755,39 @@ async def _ask_claude_internal(
     # Multi-round tool execution (up to 5 turns max)
     for _round in range(5):
         try:
-            default_tokens = 320 if _low_cost_mode() else 700
+            # 320/700 was sized for a model that answered in one shot without
+            # reasoning. Jarvis runs up to five tool rounds and is expected to
+            # explain itself; at 320 tokens it truncates mid-sentence, and a
+            # truncated tool argument fails the round outright.
+            default_tokens = 2000 if _low_cost_mode() else 8000
             max_tokens = int((_cfg.get("JARVIS_CLAUDE_MAX_TOKENS") or str(default_tokens)).strip())
         except Exception:  # noqa: BLE001
-            max_tokens = 320 if _low_cost_mode() else 700
+            max_tokens = 2000 if _low_cost_mode() else 8000
+        model = _anthropic_model()
         payload = {
-            "model":      _anthropic_model(),
+            "model":      model,
             "max_tokens": max_tokens,
             "system":     system,
             "tools":      tools,
             "messages":   messages,
         }
+        if _is_modern(model):
+            # Adaptive thinking lets the model decide how much to reason per
+            # turn, which matters most in the tool loop: better tool choice up
+            # front means fewer rounds, not just a longer answer.
+            payload["thinking"] = {"type": "adaptive"}
+            payload["output_config"] = {"effort": _jarvis_effort()}
         try:
             try:
-                timeout_s = float((_cfg.get("JARVIS_CLAUDE_TIMEOUT_SECONDS") or "14").strip())
+                # 14s was survivable for a non-reasoning model answering in
+                # one shot. With adaptive thinking a single turn can exceed it
+                # on a hard question, and this loop runs up to five turns — the
+                # timeout fires, the handler returns None, and Jarvis silently
+                # degrades to a canned reply with nothing in the logs to say a
+                # good answer was thrown away.
+                timeout_s = float((_cfg.get("JARVIS_CLAUDE_TIMEOUT_SECONDS") or "90").strip())
             except Exception:  # noqa: BLE001
-                timeout_s = 14.0
+                timeout_s = 90.0
             async with httpx.AsyncClient(timeout=timeout_s) as client:
                 r = await client.post(_ANTHROPIC_URL, json=payload, headers=headers)
             if r.status_code != 200:
