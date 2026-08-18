@@ -37,18 +37,23 @@ test:api:
     # that only shows up at boot, after a deploy has already replaced the old one
     - python3 -c "import app.main; print('app imports OK')"
     # exactly one alembic head: a fork in the migration chain breaks every
-    # future deploy, and it is invisible until someone runs upgrade
+    # future deploy, and it is invisible until someone runs upgrade.
+    #
+    # This asks Alembic rather than parsing the files. The previous version
+    # regex-matched down_revision against a quoted string:
+    #     ^down_revision(?::\s*[^=]+)?\s*=\s*['\"]([^'\"]+)
+    # A merge revision's down_revision is a TUPLE — ('abc', 'def') — which
+    # starts with '(' and never matched, so neither parent was recorded and
+    # all three revisions looked like heads. The check that exists to catch a
+    # forked chain could not recognise the one construct that converges one,
+    # and reported 3 heads for a tree Alembic resolves to 1. ScriptDirectory
+    # is the same resolver `alembic upgrade head` uses, so it agrees with the
+    # deploy by construction and understands merges and depends_on for free.
     - |
       python3 - <<'PY'
-      import re, glob
-      revs, downs = {}, set()
-      for f in glob.glob('alembic/versions/*.py'):
-          s = open(f).read()
-          m = re.search(r"^revision(?::\s*str)?\s*=\s*['\"]([^'\"]+)", s, re.M)
-          d = re.search(r"^down_revision(?::\s*[^=]+)?\s*=\s*['\"]([^'\"]+)", s, re.M)
-          if m: revs[m.group(1)] = f
-          if d: downs.add(d.group(1))
-      heads = [r for r in revs if r not in downs]
+      from alembic.config import Config
+      from alembic.script import ScriptDirectory
+      heads = sorted(ScriptDirectory.from_config(Config('alembic.ini')).get_heads())
       print('migration heads:', heads)
       assert len(heads) == 1, f'expected exactly 1 alembic head, found {len(heads)}: {heads}'
       PY
