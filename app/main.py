@@ -315,6 +315,7 @@ from .routers import takeoff as takeoff_router
 from .routers import tech_intelligence as tech_intelligence_router
 from .routers import tenants as tenants_router
 from .routers import tts as tts_router
+from .routers import telematics as telematics_router
 from .routers import twilio_verify_router as twilio_verify_router
 from .routers import vdot_bids as vdot_bids_router
 from .routers import vector_search as vector_search_router
@@ -351,6 +352,18 @@ async def lifespan(app: FastAPI):
         logger.info(
             "AUTO_CREATE_TABLES disabled; expecting Alembic migrations to manage schema"
         )
+
+    # ── Tenant isolation guard ────────────────────────────────────────────────
+    # Log-only by default: reports queries that read tenant-scoped tables without
+    # a tenant_id filter, and changes nothing. A static audit
+    # (scripts/audit_tenant_isolation.py) found only 16 of 123 such queries are
+    # filtered, so this exists to show which of those are real at runtime before
+    # anything starts enforcing. Set TENANT_GUARD_MODE=enforce only once the log
+    # is quiet and every deliberate cross-tenant caller is wrapped in
+    # allow_cross_tenant(). TENANT_GUARD_MODE=off disables it entirely.
+    from .core.tenant_guard import install_tenant_guard  # noqa: PLC0415
+
+    install_tenant_guard()
 
     # ── Seed first owner account if configured ────────────────────────────────
     _seed_user = os.getenv("SEED_OWNER_USERNAME", "").strip()
@@ -398,15 +411,27 @@ async def lifespan(app: FastAPI):
         scheduler = AsyncIOScheduler()
 
         async def _run_email_sync():
+            # This job had three mismatches against the function it calls, so it
+            # had never completed a single run — the inbound-email lead channel
+            # was dead while appearing to be scheduled:
+            #
+            #   1. imported `sync_all_accounts`, which does not exist;
+            #      email_sync defines `sync_gmail_accounts`
+            #   2. awaited it — `sync_gmail_accounts` is a plain def, not a coroutine
+            #   3. passed a db session — it takes no arguments and manages its
+            #      own session internally
+            #
+            # routers/email.py:90 already calls it correctly, and off the request
+            # path because IMAP plus per-email LLM analysis is slow. asyncio.to_thread
+            # is the equivalent here: without it, a blocking sync would stall the
+            # event loop for every other request for the duration of the sync.
             try:
-                from .services.email_sync import sync_all_accounts
-                from .database import SessionLocal
-                db = SessionLocal()
-                try:
-                    result = await sync_all_accounts(db)
-                    logger.info("Scheduled email sync complete: %s", result)
-                finally:
-                    db.close()
+                import asyncio  # noqa: PLC0415
+
+                from .services.email_sync import sync_gmail_accounts  # noqa: PLC0415
+
+                result = await asyncio.to_thread(sync_gmail_accounts)
+                logger.info("Scheduled email sync complete: %s", result)
             except Exception as exc:
                 logger.error("Scheduled email sync failed: %s", exc, exc_info=True)
 
@@ -470,12 +495,10 @@ _EXTRA_ORIGINS = [
     o.strip() for o in os.getenv("EXTRA_CORS_ORIGINS", "").split(",") if o.strip()
 ]
 _ALLOWED_ORIGINS = [
-    "https://jworden.netlify.app",
     "https://jwordenasphaltpaving.com",
     "https://www.jwordenasphaltpaving.com",
     "https://thewordenstandard.com",
     "https://www.thewordenstandard.com",
-    "https://doooone.netlify.app",
     "https://app.jwordenasphaltpaving.com",
     "http://localhost:5173",  # Vite dev server
     "http://localhost:5174",
@@ -484,16 +507,22 @@ _ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ] + _EXTRA_ORIGINS
 
-# Allow Netlify deploy-preview origins (e.g. https://deploy-preview-42--jworden.netlify.app)
-# AND any *.netlify.app subdomain (so renamed Netlify sites and branch deploys keep
-# working without redeploying the backend).  Override or extend via EXTRA_CORS_ORIGINS
-# env var on Railway for additional origins.
-_DEPLOY_PREVIEW_ORIGIN_REGEX = r"https://([\w-]+--)?[\w-]+\.netlify\.app"
+# NOTE: there is deliberately no `allow_origin_regex` here.
+#
+# This previously carried r"https://([\w-]+--)?[\w-]+\.netlify\.app", which was
+# intended to permit Netlify deploy previews.  That pattern is unanchored on the
+# subdomain, so it matched *every* netlify.app site on the internet — combined
+# with allow_credentials=True it granted any third-party page credentialed
+# cross-origin access to this API.  Hosting has since moved to Vercel + Fly.io,
+# so it granted that access in exchange for nothing.
+#
+# Preview/branch deploy origins should be added explicitly via the
+# EXTRA_CORS_ORIGINS env var instead.  Never reintroduce a wildcard regex over a
+# shared hosting domain while allow_credentials is True.
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_ALLOWED_ORIGINS,
-    allow_origin_regex=_DEPLOY_PREVIEW_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
@@ -776,6 +805,7 @@ _rebuild_router_models()
 # Neural TTS for Jarvis / Mr. Worden voice (OpenAI / ElevenLabs)
 app.include_router(tts_router.router)
 app.include_router(local_proof_router.router)
+app.include_router(telematics_router.router)
 
 
 # ── Socket.IO ASGI mount ──────────────────────────────────────────────────────

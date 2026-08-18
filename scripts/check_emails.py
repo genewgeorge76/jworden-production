@@ -1,9 +1,16 @@
 ﻿import imaplib
 import email
+import os
+import sys
 from email.header import decode_header
 
-DIAMOND_EMAIL = 'j.wordenandsonspaving@gmail.com'
-GMAIL_APP_PASS = 'kggihfudcsrlsfny'
+# The app password used to be hardcoded here in a public repository. It grants
+# full IMAP access to the mailbox, so it now comes from the environment.
+DIAMOND_EMAIL = os.environ.get('GMAIL_USER', 'j.wordenandsonspaving@gmail.com')
+GMAIL_APP_PASS = os.environ.get('GMAIL_APP_PASSWORD')
+
+if not GMAIL_APP_PASS:
+    sys.exit('GMAIL_APP_PASSWORD is not set; export it before running this script.')
 
 mail = imaplib.IMAP4_SSL('imap.gmail.com')
 mail.login(DIAMOND_EMAIL, GMAIL_APP_PASS)

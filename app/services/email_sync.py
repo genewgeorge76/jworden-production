@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import imaplib
 import email
 from email.header import decode_header
@@ -16,6 +17,47 @@ logger = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _ACCOUNTS_FILE = _REPO_ROOT / "email_accounts.json"
+
+# Gmail app passwords are full-mailbox credentials that bypass 2FA, so they are
+# read from the environment first and only fall back to the on-disk file for
+# local development. email_accounts.json used to be committed to this PUBLIC
+# repository with five live app passwords in it; it is now gitignored.
+_ACCOUNTS_ENV_VAR = "EMAIL_ACCOUNTS_JSON"
+
+
+def _load_accounts() -> tuple[List[Dict[str, Any]] | None, str | None]:
+    """
+    Return (accounts, error). Exactly one of the two is None.
+
+    Source order:
+      1. EMAIL_ACCOUNTS_JSON env var (a JSON array) — used in deployment.
+      2. email_accounts.json on disk — local development only.
+    """
+    raw = os.environ.get(_ACCOUNTS_ENV_VAR)
+    source = _ACCOUNTS_ENV_VAR
+    if not raw:
+        if not _ACCOUNTS_FILE.exists():
+            return None, (
+                f"No email accounts configured: set {_ACCOUNTS_ENV_VAR} or create "
+                f"{_ACCOUNTS_FILE.name} (see email_accounts.example.json)"
+            )
+        source = _ACCOUNTS_FILE.name
+        try:
+            raw = _ACCOUNTS_FILE.read_text()
+        except Exception as e:  # noqa: BLE001
+            return None, f"Failed to read {source}: {e}"
+
+    try:
+        accounts = json.loads(raw)
+    except Exception as e:  # noqa: BLE001
+        logger.error("Failed to parse email accounts from %s: %s", source, e)
+        return None, f"Failed to parse JSON from {source}: {e}"
+
+    if not isinstance(accounts, list):
+        return None, f"Email accounts in {source} must be a JSON array"
+
+    logger.info("Loaded %d email account(s) from %s", len(accounts), source)
+    return accounts, None
 
 def _decode_header_value(header_value: str | None) -> str:
     if not header_value:
@@ -66,16 +108,10 @@ def sync_gmail_accounts() -> Dict[str, Any]:
     Connects to configured Gmail accounts, reads unread emails, parses them as leads, 
     saves to DB, and marks them as read.
     """
-    if not _ACCOUNTS_FILE.exists():
-        logger.warning(f"Email accounts file not found at {_ACCOUNTS_FILE}")
-        return {"status": "error", "detail": "email_accounts.json not found"}
-
-    try:
-        with open(_ACCOUNTS_FILE, "r") as f:
-            accounts = json.load(f)
-    except Exception as e:
-        logger.error(f"Failed to parse email_accounts.json: {e}")
-        return {"status": "error", "detail": f"Failed to parse JSON: {e}"}
+    accounts, load_error = _load_accounts()
+    if load_error is not None:
+        logger.warning("Email sync could not load accounts: %s", load_error)
+        return {"status": "error", "detail": load_error}
 
     results = {
         "accounts_processed": 0,

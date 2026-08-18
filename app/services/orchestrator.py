@@ -343,11 +343,34 @@ def _worker_cost_controller(task: TaskNode) -> dict:
 def _worker_weather_monitor(task: TaskNode) -> dict:
     ctx = task.inputs
     location = ctx.get("location", "Richmond, VA")
+    # This imported `get_weather_forecast`, which does not exist —
+    # weather_service exports `get_paving_forecast`. The ImportError was caught
+    # by the except below, so this worker had never once called the weather
+    # service: it returned the hardcoded block underneath on every run, which
+    # always reports "Weather is favorable for paving over the next 7 days"
+    # with a single risk day. For a paving operation, a monitor that is
+    # unconditionally optimistic is worse than no monitor — it will green-light
+    # a pour into rain.
     try:
-        from ..services.weather_service import get_weather_forecast  # noqa: PLC0415
-        return get_weather_forecast(location)
+        from ..services.weather_service import get_paving_forecast  # noqa: PLC0415
+
+        forecast = get_paving_forecast(location)
+        windows = forecast.get("paving_windows") or []
+        # Map onto the keys this worker's callers already expect, and pass the
+        # richer payload through alongside rather than discarding it.
+        return {
+            "location": forecast.get("address", location),
+            "forecast_days": len(windows),
+            "paving_risk_days": sum(1 for w in windows if not w.get("is_suitable")),
+            "rain_expected": any((w.get("precip_prob") or 0) > 30 for w in windows),
+            "recommendation": forecast.get("recommendation", ""),
+            "risk_score": forecast.get("risk_score"),
+            "next_optimal_window": forecast.get("next_optimal_window"),
+            "paving_windows": windows,
+            "source": forecast.get("source"),
+        }
     except Exception as exc:  # noqa: BLE001
-        logger.debug("weather live call failed: %s", exc)
+        logger.warning("weather live call failed, using static fallback: %s", exc)
     return {
         "location":          location,
         "forecast_days":     7,
