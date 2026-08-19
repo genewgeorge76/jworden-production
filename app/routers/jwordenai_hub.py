@@ -43,7 +43,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, Header, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
@@ -128,16 +128,78 @@ def _domain_row(site: MarketSite) -> dict[str, Any]:
     }
 
 
+# ── Request bodies ────────────────────────────────────────────────────────────
+
+
+class HubBody(BaseModel):
+    """
+    Base for every hub request body.
+
+    Accepts two wire shapes: a flat object, and the `{systemId, data: {...}}`
+    envelope the portfolio clients send. Unwrapping here means each endpoint
+    can still declare the fields it actually reads — a `data: Dict[str, Any]`
+    passthrough would accept anything and document nothing, so a client
+    misspelling `density_pct` would get a 200 and a row with no reading in it.
+
+    Unknown keys are kept rather than rejected: they are stored verbatim in
+    `raw_payload_json`, so a caller sending more than we model loses nothing.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _unwrap_envelope(cls, value: Any) -> Any:
+        if isinstance(value, dict) and isinstance(value.get("data"), dict):
+            inner = dict(value["data"])
+            system_id = value.get("systemId")
+            if system_id is not None:
+                inner.setdefault("systemId", system_id)
+            return inner
+        return value
+
+    @model_validator(mode="after")
+    def _check_embedded_system_id(self) -> "HubBody":
+        system_id = getattr(self, "systemId", None) or (self.__pydantic_extra__ or {}).get("systemId")
+        if system_id and str(system_id).strip().upper() != MASTER_NODE_ID:
+            raise ValueError(f"Payload systemId {system_id!r} is not {MASTER_NODE_ID}")
+        return self
+
+
+# ── Health ────────────────────────────────────────────────────────────────────
+
+
+@router.get("/health", summary="Master-node handshake")
+def hub_health():
+    """
+    Node identity for the portfolio clients' handshake.
+
+    Deliberately constants only, and deliberately unauthenticated: it reports
+    which node answered, not whether anything downstream is well. The app's
+    own readiness lives at /health and /api/v1/jarvis/readiness — a second
+    endpoint claiming OPERATIONAL without checking anything would be a status
+    light wired to the switch rather than the machine.
+    """
+    return {
+        "status": "ok",
+        "node": MASTER_NODE_ID,
+        "service": "JWordenAI master-node hub",
+        "compaction_floor_pct": COMPACTION_FLOOR_PCT,
+    }
+
+
 # ── Domains ───────────────────────────────────────────────────────────────────
 
 
-class DomainRegistration(BaseModel):
+class DomainRegistration(HubBody):
     domain: str = Field(..., min_length=4, description="Hostname, with or without scheme")
     name: Optional[str] = Field(None, max_length=200)
     type: Optional[str] = Field(None, max_length=50)
     region: Optional[str] = Field(None, max_length=100)
     city: Optional[str] = Field(None, max_length=100)
-    tenant_id: Optional[str] = Field(None, max_length=60)
+    tenant_id: Optional[str] = Field(
+        None, max_length=60, validation_alias=AliasChoices("tenant_id", "tenantId")
+    )
 
 
 @router.get("/domains", summary="Domains mounted on this master node")
@@ -218,17 +280,36 @@ def register_domain(
 # ── Takeoffs ──────────────────────────────────────────────────────────────────
 
 
-class TakeoffSync(BaseModel):
-    takeoff_ref: str = Field(..., min_length=1, max_length=120)
-    source_domain: Optional[str] = Field(None, max_length=200)
-    project_name: Optional[str] = Field(None, max_length=200)
+class TakeoffSync(HubBody):
+    # Optional: a caller with no id of its own still gets a row, and the ref is
+    # then derived from that row's id so it resolves. Replay-dedup is the thing
+    # given up — without a client ref there is nothing to match a retry against.
+    takeoff_ref: Optional[str] = Field(
+        None, max_length=120, validation_alias=AliasChoices("takeoff_ref", "takeoffRef")
+    )
+    source_domain: Optional[str] = Field(
+        None, max_length=200, validation_alias=AliasChoices("source_domain", "sourceDomain", "domain")
+    )
+    project_name: Optional[str] = Field(
+        None, max_length=200, validation_alias=AliasChoices("project_name", "projectName")
+    )
     address: Optional[str] = Field(None, max_length=300)
     city: Optional[str] = Field(None, max_length=120)
-    state_code: Optional[str] = Field(None, min_length=2, max_length=2)
-    service_type: Optional[str] = Field(None, max_length=60)
-    measured_area_sqft: Optional[float] = Field(None, ge=0)
-    measured_depth_in: Optional[float] = Field(None, ge=0)
-    estimated_tons: Optional[float] = Field(None, ge=0)
+    state_code: Optional[str] = Field(
+        None, min_length=2, max_length=2, validation_alias=AliasChoices("state_code", "stateCode", "state")
+    )
+    service_type: Optional[str] = Field(
+        None, max_length=60, validation_alias=AliasChoices("service_type", "serviceType")
+    )
+    measured_area_sqft: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("measured_area_sqft", "measuredAreaSqft", "areaSqft")
+    )
+    measured_depth_in: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("measured_depth_in", "measuredDepthIn", "depthIn")
+    )
+    estimated_tons: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("estimated_tons", "estimatedTons", "tons")
+    )
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
     method: Optional[str] = Field(None, max_length=60)
 
@@ -247,11 +328,17 @@ def sync_takeoff(
     `TKF-<timestamp>` looks like a receipt while referring to nothing that can
     be looked up afterwards.
     """
-    ref = body.takeoff_ref.strip()
-    row = db.query(HubTakeoff).filter(HubTakeoff.takeoff_ref == ref).one_or_none()
+    ref = (body.takeoff_ref or "").strip()
+    row = (
+        db.query(HubTakeoff).filter(HubTakeoff.takeoff_ref == ref).one_or_none()
+        if ref
+        else None
+    )
     created = row is None
     if created:
-        row = HubTakeoff(takeoff_ref=ref)
+        # A placeholder keeps the NOT NULL/unique column satisfied until the
+        # row has an id to name itself after.
+        row = HubTakeoff(takeoff_ref=ref or f"pending-{_utcnow().timestamp()}")
         db.add(row)
 
     row.source_domain = normalize_hostname(body.source_domain) if body.source_domain else None
@@ -269,6 +356,12 @@ def sync_takeoff(
     row.tenant_id = auth.get("tenant_id") or "default"
     row.recorded_at = _utcnow()
 
+    if not ref:
+        # Derive the ref from the row so it resolves. A generated
+        # TKF-<timestamp> looks like a receipt but points at nothing.
+        db.flush()
+        row.takeoff_ref = f"TKF-{row.id}"
+
     db.commit()
     db.refresh(row)
 
@@ -284,14 +377,28 @@ def sync_takeoff(
 # ── Contracts ─────────────────────────────────────────────────────────────────
 
 
-class ContractExecuted(BaseModel):
-    contract_ref: str = Field(..., min_length=1, max_length=120)
-    source_domain: Optional[str] = Field(None, max_length=200)
-    customer_name: Optional[str] = Field(None, max_length=200)
-    project_name: Optional[str] = Field(None, max_length=200)
-    contract_value: Optional[float] = Field(None, ge=0)
-    signer_name: Optional[str] = Field(None, max_length=200)
-    executed_at: Optional[datetime] = None
+class ContractExecuted(HubBody):
+    contract_ref: Optional[str] = Field(
+        None, max_length=120, validation_alias=AliasChoices("contract_ref", "contractRef")
+    )
+    source_domain: Optional[str] = Field(
+        None, max_length=200, validation_alias=AliasChoices("source_domain", "sourceDomain", "domain")
+    )
+    customer_name: Optional[str] = Field(
+        None, max_length=200, validation_alias=AliasChoices("customer_name", "customerName")
+    )
+    project_name: Optional[str] = Field(
+        None, max_length=200, validation_alias=AliasChoices("project_name", "projectName")
+    )
+    contract_value: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("contract_value", "contractValue")
+    )
+    signer_name: Optional[str] = Field(
+        None, max_length=200, validation_alias=AliasChoices("signer_name", "signerName")
+    )
+    executed_at: Optional[datetime] = Field(
+        None, validation_alias=AliasChoices("executed_at", "executedAt")
+    )
 
 
 @router.post("/contracts/executed", summary="Record an executed contract")
@@ -309,15 +416,17 @@ def contract_executed(
     CONTRACT_LOCKED_IN_ERP for a system we never called would be a status
     report about someone else's database.
     """
-    ref = body.contract_ref.strip()
+    ref = (body.contract_ref or "").strip()
     row = (
         db.query(HubContractExecution)
         .filter(HubContractExecution.contract_ref == ref)
         .one_or_none()
+        if ref
+        else None
     )
     created = row is None
     if created:
-        row = HubContractExecution(contract_ref=ref)
+        row = HubContractExecution(contract_ref=ref or f"pending-{_utcnow().timestamp()}")
         db.add(row)
 
     row.source_domain = normalize_hostname(body.source_domain) if body.source_domain else None
@@ -329,6 +438,10 @@ def contract_executed(
     row.erp_status = "locked"
     row.raw_payload_json = body.model_dump(mode="json")
     row.tenant_id = auth.get("tenant_id") or "default"
+
+    if not ref:
+        db.flush()
+        row.contract_ref = f"CTR-{row.id}"
 
     db.commit()
     db.refresh(row)
@@ -346,18 +459,32 @@ def contract_executed(
 # ── Field QA ──────────────────────────────────────────────────────────────────
 
 
-class FieldQaLog(BaseModel):
-    roller_id: str = Field(..., min_length=1, max_length=60)
-    lat: float = Field(..., ge=-90, le=90)
-    lng: float = Field(..., ge=-180, le=180)
-    density_pct: Optional[float] = Field(None, ge=0, le=200)
-    project_site_id: Optional[int] = None
-    operator_name: Optional[str] = Field(None, max_length=120)
-    pass_number: Optional[int] = Field(None, ge=0)
-    mat_temp_f: Optional[float] = None
-    mat_thickness_in: Optional[float] = Field(None, ge=0)
-    speed_mph: Optional[float] = Field(None, ge=0)
-    gps_accuracy_ft: Optional[float] = Field(None, ge=0)
+class FieldQaLog(HubBody):
+    roller_id: str = Field(
+        ..., min_length=1, max_length=60, validation_alias=AliasChoices("roller_id", "rollerId")
+    )
+    lat: float = Field(..., ge=-90, le=90, validation_alias=AliasChoices("lat", "latitude"))
+    lng: float = Field(..., ge=-180, le=180, validation_alias=AliasChoices("lng", "lon", "longitude"))
+    density_pct: Optional[float] = Field(
+        None, ge=0, le=200, validation_alias=AliasChoices("density_pct", "densityPct", "density")
+    )
+    project_site_id: Optional[int] = Field(
+        None, validation_alias=AliasChoices("project_site_id", "projectSiteId")
+    )
+    operator_name: Optional[str] = Field(
+        None, max_length=120, validation_alias=AliasChoices("operator_name", "operatorName")
+    )
+    pass_number: Optional[int] = Field(
+        None, ge=0, validation_alias=AliasChoices("pass_number", "passNumber")
+    )
+    mat_temp_f: Optional[float] = Field(None, validation_alias=AliasChoices("mat_temp_f", "matTempF"))
+    mat_thickness_in: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("mat_thickness_in", "matThicknessIn")
+    )
+    speed_mph: Optional[float] = Field(None, ge=0, validation_alias=AliasChoices("speed_mph", "speedMph"))
+    gps_accuracy_ft: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("gps_accuracy_ft", "gpsAccuracyFt")
+    )
     notes: Optional[str] = None
 
 
@@ -393,6 +520,9 @@ def log_field_qa(
         tenant_id=auth.get("tenant_id") or "default",
         logged_at=_utcnow(),
     )
+    # A caller may still send its own compactionStandardPassed. It is recorded
+    # as an assertion by the sender, never used as the verdict.
+    claimed = (body.__pydantic_extra__ or {}).get("compactionStandardPassed")
     db.add(entry)
     db.commit()
     db.refresh(entry)
@@ -406,5 +536,6 @@ def log_field_qa(
         "compaction_floor_pct": COMPACTION_FLOOR_PCT,
         # null when nothing was measured — an unmeasured pass has no verdict.
         "compaction_standard_passed": passed,
+        "claimed_by_caller": claimed,
         "logged_at": entry.logged_at.isoformat(),
     }

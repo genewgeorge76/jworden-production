@@ -266,3 +266,144 @@ async def test_field_qa_rejects_out_of_range_coordinates(client, auth_headers):
         json={"roller_id": "R-14", "lat": 999.0, "lng": -77.4},
     )
     assert r.status_code == 422
+
+
+# ── Wire-shape compatibility with the portfolio clients ──────────────────────
+
+
+async def test_hub_health_reports_the_node_without_claiming_downstream_health(client):
+    r = await client.get("/api/v1/hub/health")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["node"] == "JWORDENAI-MASTER-AI-NODE"
+    assert body["compaction_floor_pct"] == 96.0
+    # It says which node answered, not that everything downstream is well.
+    assert body["status"] == "ok"
+
+
+async def test_envelope_shape_is_accepted(client, auth_headers, app_modules):
+    """Clients post `{systemId, data:{…}}`; a flat body must work too."""
+    _, dbmod = app_modules
+    r = await client.post(
+        "/api/v1/hub/contracts/executed",
+        headers=_h(auth_headers),
+        json={
+            "systemId": "JWORDENAI-MASTER-AI-NODE",
+            "data": {"contractRef": "CTR-ENV-1", "contractValue": 42000.0},
+        },
+    )
+    assert r.status_code == 200, r.text
+    assert r.json()["contractRef"] == "CTR-ENV-1"
+
+    from app.models import HubContractExecution
+    session = dbmod.SessionLocal()
+    try:
+        row = session.query(HubContractExecution).one()
+        assert row.contract_value == 42000.0
+    finally:
+        session.close()
+
+
+async def test_envelope_with_a_foreign_system_id_is_rejected(client, auth_headers):
+    r = await client.post(
+        "/api/v1/hub/takeoffs/sync",
+        headers=_h(auth_headers),
+        json={"systemId": "SOME-OTHER-NODE", "data": {"takeoffRef": "TKF-X"}},
+    )
+    assert r.status_code == 422
+
+
+async def test_camelcase_keys_are_accepted(client, auth_headers, app_modules):
+    _, dbmod = app_modules
+    r = await client.post(
+        "/api/v1/hub/takeoffs/sync",
+        headers=_h(auth_headers),
+        json={"data": {
+            "takeoffRef": "TKF-CAMEL",
+            "sourceDomain": "https://TexasPavementGroup.com",
+            "measuredAreaSqft": 1200.5,
+            "estimatedTons": 18.4,
+            "stateCode": "tx",
+        }},
+    )
+    assert r.status_code == 200, r.text
+
+    from app.models import HubTakeoff
+    session = dbmod.SessionLocal()
+    try:
+        row = session.query(HubTakeoff).one()
+        assert row.measured_area_sqft == 1200.5
+        assert row.estimated_tons == 18.4
+        assert row.state_code == "TX"
+        assert row.source_domain == "texaspavementgroup.com"
+    finally:
+        session.close()
+
+
+async def test_takeoff_without_a_ref_gets_one_that_resolves(client, auth_headers, app_modules):
+    """
+    A generated TKF-<timestamp> names nothing. When the caller supplies no ref,
+    the row's own id becomes the ref, so the value in the response can be
+    looked up.
+    """
+    _, dbmod = app_modules
+    r = await client.post(
+        "/api/v1/hub/takeoffs/sync",
+        headers=_h(auth_headers),
+        json={"data": {"measuredAreaSqft": 900.0}},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["takeoff_ref"] == f"TKF-{body['id']}"
+
+    from app.models import HubTakeoff
+    session = dbmod.SessionLocal()
+    try:
+        row = session.get(HubTakeoff, body["id"])
+        assert row.takeoff_ref == body["takeoff_ref"]
+    finally:
+        session.close()
+
+
+async def test_contract_without_a_ref_gets_one_that_resolves(client, auth_headers):
+    r = await client.post(
+        "/api/v1/hub/contracts/executed",
+        headers=_h(auth_headers),
+        json={"data": {"customerName": "Walk-in"}},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["contractRef"] == f"CTR-{body['id']}"
+
+
+async def test_caller_claim_is_recorded_but_never_becomes_the_verdict(client, auth_headers):
+    r = await client.post(
+        "/api/v1/hub/field-qa/log",
+        headers=_h(auth_headers),
+        json={"data": {
+            "rollerId": "R-20", "latitude": 37.5, "longitude": -77.4,
+            "density": 91.0, "compactionStandardPassed": True,
+        }},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["claimed_by_caller"] is True
+    assert body["compaction_standard_passed"] is False
+    assert body["density_pct"] == 91.0
+
+
+async def test_unmodelled_keys_are_kept_rather_than_dropped(client, auth_headers, app_modules):
+    _, dbmod = app_modules
+    await client.post(
+        "/api/v1/hub/takeoffs/sync",
+        headers=_h(auth_headers),
+        json={"data": {"takeoffRef": "TKF-EXTRA", "clientJobNumber": "JOB-778", "crew": "B"}},
+    )
+    from app.models import HubTakeoff
+    session = dbmod.SessionLocal()
+    try:
+        row = session.query(HubTakeoff).one()
+        assert row.raw_payload_json["clientJobNumber"] == "JOB-778"
+        assert row.raw_payload_json["crew"] == "B"
+    finally:
+        session.close()
