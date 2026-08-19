@@ -407,3 +407,180 @@ async def test_unmodelled_keys_are_kept_rather_than_dropped(client, auth_headers
         assert row.raw_payload_json["crew"] == "B"
     finally:
         session.close()
+
+
+# ── Read-back ────────────────────────────────────────────────────────────────
+
+
+async def test_recorded_rows_can_be_read_back(client, auth_headers):
+    """
+    The drafted router pushed into module arrays nothing could query. Storing
+    without a way to read is the same as not storing.
+    """
+    await client.post("/api/v1/hub/takeoffs/sync", headers=_h(auth_headers),
+                      json={"data": {"takeoffRef": "TKF-R1", "measuredAreaSqft": 100.0,
+                                     "sourceDomain": "texaspavementgroup.com"}})
+    await client.post("/api/v1/hub/takeoffs/sync", headers=_h(auth_headers),
+                      json={"data": {"takeoffRef": "TKF-R2", "measuredAreaSqft": 200.0,
+                                     "sourceDomain": "carolinapavementgroup.com"}})
+
+    r = await client.get("/api/v1/hub/takeoffs", headers=_h(auth_headers))
+    assert r.status_code == 200, r.text
+    assert r.json()["total"] == 2
+
+    filtered = await client.get(
+        "/api/v1/hub/takeoffs?source_domain=https://TexasPavementGroup.com",
+        headers=_h(auth_headers),
+    )
+    assert filtered.json()["total"] == 1
+    assert filtered.json()["takeoffs"][0]["takeoff_ref"] == "TKF-R1"
+
+
+async def test_contract_listing_does_not_roll_up_a_partial_total(client, auth_headers):
+    """
+    contract_value is nullable. A portfolio total summed over a column with
+    holes in it reads as complete when it is not, so none is offered.
+    """
+    await client.post("/api/v1/hub/contracts/executed", headers=_h(auth_headers),
+                      json={"data": {"contractRef": "C1", "contractValue": 1000.0}})
+    await client.post("/api/v1/hub/contracts/executed", headers=_h(auth_headers),
+                      json={"data": {"contractRef": "C2"}})
+
+    r = await client.get("/api/v1/hub/contracts", headers=_h(auth_headers))
+    body = r.json()
+    assert body["total"] == 2
+    assert "total_value" not in body and "contract_value_total" not in body
+    assert {c["contract_value"] for c in body["contracts"]} == {1000.0, None}
+
+
+async def test_field_qa_listing_recomputes_the_verdict(client, auth_headers):
+    await client.post("/api/v1/hub/field-qa/log", headers=_h(auth_headers),
+                      json={"data": {"rollerId": "R-1", "lat": 37.5, "lng": -77.4, "density": 95.9}})
+    r = await client.get("/api/v1/hub/field-qa", headers=_h(auth_headers))
+    body = r.json()
+    assert body["compaction_floor_pct"] == 96.0
+    assert body["readings"][0]["compaction_standard_passed"] is False
+
+
+async def test_read_back_requires_auth(client):
+    for path in ("/api/v1/hub/takeoffs", "/api/v1/hub/contracts", "/api/v1/hub/field-qa"):
+        r = await client.get(path, headers=NODE)
+        assert r.status_code == 403, path
+
+
+async def test_bulk_register_reports_rejections_instead_of_aborting(client, auth_headers):
+    r = await client.post(
+        "/api/v1/hub/domains/bulk-register",
+        headers=_h(auth_headers),
+        json={"domains": [
+            {"domain": "texaspavementgroup.com", "name": "Texas Pavement Group",
+             "region": "Texas (DFW/HOU/ATX/SAT)"},
+            {"domain": "not a domain", "name": "Junk"},
+            {"domain": "carolinapavementgroup.com", "name": "Carolina Pavement Group"},
+        ]},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["created"] == 2
+    assert body["rejected"] == 1
+    assert body["rejections"][0]["domain"] == "not a domain"
+
+    listing = await client.get("/api/v1/hub/domains", headers=_h(auth_headers))
+    assert listing.json()["count"] == 2
+    # A long free-text region cannot fit CHAR(2); it is kept, not truncated.
+    assert listing.json()["domains"][0]["region"] in (None, "TX")
+
+
+async def test_health_counts_real_rows(client, auth_headers):
+    before = await client.get("/api/v1/hub/health")
+    assert before.json()["connected_domains"] == 0
+    await client.post("/api/v1/hub/domains/register", headers=_h(auth_headers),
+                      json={"domain": "texaspavementgroup.com"})
+    after = await client.get("/api/v1/hub/health")
+    assert after.json()["connected_domains"] == 1
+
+
+# ── Verified technology suite ────────────────────────────────────────────────
+
+
+async def test_capabilities_publishes_the_corrected_citations(client):
+    r = await client.get("/api/v1/hub/capabilities")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["count"] == 6
+    blob = str(body)
+    # The corrected designations.
+    for good in ("R 110-22", "Tex-244-F", "R 111-22", "D8395-23", "D7113", "T 343",
+                 "T 321", "E1980", "HEC-22"):
+        assert good in blob, good
+    # The ones that did not check out must not appear as live citations.
+    tech_only = str(body["technologies"])
+    for bad in ("PP 108", "Item 344", "D698"):
+        assert bad not in tech_only, bad
+    assert body["acceptance"]["aramid_dose_oz_per_ton"] == 2.1
+    assert body["acceptance"]["leed_v4_sr_aged_min"] == 0.28
+
+
+async def test_capabilities_publishes_what_was_corrected(client):
+    r = await client.get("/api/v1/hub/capabilities")
+    corrections = r.json()["corrections"]
+    claimed = {c["claimed"] for c in corrections}
+    assert "AASHTO PP 108" in claimed
+    assert "4.2 oz/ton dosage" in claimed
+    assert "SRI >= 29 for LEED v4" in claimed
+    for c in corrections:
+        assert c["why_it_matters"]
+
+    suppressed = await client.get("/api/v1/hub/capabilities?include_corrections=false")
+    assert "corrections" not in suppressed.json()
+
+
+async def test_vendor_claims_are_labelled_not_stated_as_standards(client):
+    r = await client.get("/api/v1/hub/capabilities")
+    aramid = next(t for t in r.json()["technologies"] if t["id"] == "aramid_fiber")
+    assert any("+300%" in c for c in aramid["vendor_claims"])
+    # …and never inside the verified list.
+    assert not any("+300%" in p for p in aramid["verified_parameters"])
+
+
+async def test_thermal_segregation_is_graded_on_differential(client, auth_headers):
+    """Tex-244-F grades the spread across the mat, not an absolute temperature."""
+    cases = {60.0: "severe", 30.0: "moderate", 10.0: "acceptable"}
+    for differential, expected in cases.items():
+        r = await client.post(
+            "/api/v1/hub/field-qa/log",
+            headers=_h(auth_headers),
+            json={"data": {"rollerId": "R-T", "lat": 37.5, "lng": -77.4,
+                           "thermalDifferentialF": differential, "matTempF": 240.0}},
+        )
+        assert r.status_code == 200, r.text
+        assert r.json()["thermal_segregation"] == expected, differential
+
+
+async def test_icmv_and_density_method_are_stored(client, auth_headers, app_modules):
+    _, dbmod = app_modules
+    r = await client.post(
+        "/api/v1/hub/field-qa/log",
+        headers=_h(auth_headers),
+        json={"data": {"rollerId": "R-IC", "lat": 37.5, "lng": -77.4,
+                       "ICMV": 42.5, "densityMethod": "electromagnetic", "density": 96.4}},
+    )
+    assert r.json()["icmv"] == 42.5
+    assert r.json()["density_method"] == "electromagnetic"
+
+    from app.models import CompactionLog
+    session = dbmod.SessionLocal()
+    try:
+        row = session.get(CompactionLog, r.json()["id"])
+        assert row.icmv == 42.5 and row.density_method == "electromagnetic"
+    finally:
+        session.close()
+
+
+def test_knowledge_base_cites_only_verified_designations():
+    from app.services.knowledge_base import assemble_context
+    ctx = assemble_context("what thermal profiling and aramid fiber standards do you spec?")
+    for good in ("R 110-22", "Tex-244-F", "D8395-23", "2.1 oz"):
+        assert good in ctx, good
+    for bad in ("PP 108", "4.2 oz"):
+        assert bad not in ctx, bad
