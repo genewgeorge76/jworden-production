@@ -808,6 +808,8 @@ app.include_router(tts_router.router)
 app.include_router(local_proof_router.router)
 app.include_router(telematics_router.router)
 app.include_router(jwordenai_hub_router.router)
+# Same handlers at the bare /api/v1 paths the portfolio clients were written for.
+app.include_router(jwordenai_hub_router.compat_router)
 
 
 # ── Socket.IO ASGI mount ──────────────────────────────────────────────────────
