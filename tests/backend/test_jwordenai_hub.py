@@ -584,3 +584,67 @@ def test_knowledge_base_cites_only_verified_designations():
         assert good in ctx, good
     for bad in ("PP 108", "4.2 oz"):
         assert bad not in ctx, bad
+
+
+# ── Compatibility mount ──────────────────────────────────────────────────────
+
+
+async def test_bare_api_v1_paths_answer_the_same_handlers(client, auth_headers):
+    """
+    Clients written against the drafted routers call /api/v1/domains, not
+    /api/v1/hub/domains. Both addresses reach one implementation.
+    """
+    reg = await client.post(
+        "/api/v1/domains/register",
+        headers=_h(auth_headers),
+        json={"domain": "texaspavementgroup.com", "name": "Texas Pavement Group"},
+    )
+    assert reg.status_code == 200, reg.text
+
+    bare = await client.get("/api/v1/domains", headers=_h(auth_headers))
+    hub = await client.get("/api/v1/hub/domains", headers=_h(auth_headers))
+    assert bare.status_code == hub.status_code == 200
+    assert bare.json() == hub.json()
+    assert bare.json()["count"] == 1
+
+
+async def test_bare_health_and_capabilities_are_public(client):
+    for path in ("/api/v1/health", "/api/v1/capabilities"):
+        r = await client.get(path)
+        assert r.status_code == 200, path
+
+
+async def test_the_alias_is_a_path_not_a_way_in(client, auth_headers):
+    """
+    The drafted routers had no auth at all — on /contracts/executed that means
+    anyone who finds the URL can write contract records. The alias must not
+    reintroduce that.
+    """
+    unauth = await client.post(
+        "/api/v1/contracts/executed", headers=NODE, json={"data": {"contractRef": "X"}}
+    )
+    assert unauth.status_code == 403
+
+    wrong_node = await client.post(
+        "/api/v1/field-qa/log",
+        headers={**auth_headers, "X-JWordenAI-System-ID": "SOME-OTHER-NODE"},
+        json={"data": {"rollerId": "R", "lat": 0, "lng": 0}},
+    )
+    assert wrong_node.status_code == 400
+
+
+async def test_bare_write_paths_persist(client, auth_headers, app_modules):
+    _, dbmod = app_modules
+    r = await client.post(
+        "/api/v1/takeoffs/sync",
+        headers=_h(auth_headers),
+        json={"systemId": "JWORDENAI-MASTER-AI-NODE",
+              "data": {"takeoffRef": "TKF-COMPAT", "measuredAreaSqft": 500.0}},
+    )
+    assert r.status_code == 200, r.text
+    from app.models import HubTakeoff
+    session = dbmod.SessionLocal()
+    try:
+        assert session.query(HubTakeoff).one().takeoff_ref == "TKF-COMPAT"
+    finally:
+        session.close()

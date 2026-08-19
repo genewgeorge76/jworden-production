@@ -809,3 +809,44 @@ def capabilities(include_corrections: bool = True):
     if include_corrections:
         payload["corrections"] = pavement_technologies.CORRECTIONS
     return payload
+
+
+# ── Compatibility mount ───────────────────────────────────────────────────────
+#
+# The drafted routers use a bare `/api/v1` prefix, so a client written against
+# them calls /api/v1/domains rather than /api/v1/hub/domains. Rather than ask
+# every portfolio site to change its base path, the same handlers are mounted
+# at both. None of the six paths collided with an existing route.
+#
+# Same functions, so the two mounts cannot drift: there is one implementation
+# and two addresses for it. Auth is unchanged — the alias is a path alias, not
+# a way in. The drafted routers had no authentication at all, which on
+# /contracts/executed means anyone who finds the URL can write contract
+# records, so a client moving to these paths still needs its bearer token.
+
+compat_router = APIRouter(prefix="/api/v1", tags=["jwordenai-hub"])
+
+_COMPAT_ROUTES: list[tuple[str, Any, list[str]]] = [
+    ("/health", hub_health, ["GET"]),
+    ("/capabilities", capabilities, ["GET"]),
+    ("/domains", list_domains, ["GET"]),
+    ("/domains/register", register_domain, ["POST"]),
+    ("/domains/bulk-register", bulk_register_domains, ["POST"]),
+    ("/takeoffs/sync", sync_takeoff, ["POST"]),
+    ("/takeoffs", list_takeoffs, ["GET"]),
+    ("/contracts/executed", contract_executed, ["POST"]),
+    ("/contracts", list_contracts, ["GET"]),
+    ("/field-qa/log", log_field_qa, ["POST"]),
+    ("/field-qa", list_field_qa, ["GET"]),
+]
+
+for _path, _endpoint, _methods in _COMPAT_ROUTES:
+    compat_router.add_api_route(
+        _path,
+        _endpoint,
+        methods=_methods,
+        # Hidden from the schema so the docs show one canonical address per
+        # operation; a reader seeing each route twice cannot tell which is real.
+        include_in_schema=False,
+        operation_id=f"compat_{_endpoint.__name__}",
+    )
