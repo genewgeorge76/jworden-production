@@ -1,253 +1,344 @@
 """
-seo.py — AI SEO content generation endpoints for JWordenAI.
+seo.py — SERP engine: programmatic page generation and a sourced keyword store.
 
-Endpoints:
-  POST /api/v1/seo/city-page   → generate SEO copy for a city/service area page
-  POST /api/v1/seo/meta-tags   → generate meta title + description for any URL/topic
-  POST /api/v1/seo/faq         → generate location + service specific FAQ set
+Two halves, deliberately separate.
 
-All endpoints use GPT-4o and fall back to structured templates when
-OPENAI_API_KEY is not set. All require premium auth.
+Generation (`/landing-page`, `/silo`) is pure and deterministic. It needs no
+external data and is correct with nothing connected, so it works today.
+
+Metrics (`/keywords`, `/keywords.csv`, `/status`) report only what has been
+imported, and every row records where its numbers came from. Nothing here
+invents a figure: an empty store returns an empty list and says so, which is
+the correct answer when nothing has been measured yet.
+
+Two import paths, both real:
+
+  * /keywords/import      — your own export (Ahrefs, Keyword Planner, a CSV
+                            you keep by hand). `source` is required.
+  * /keywords/import-gsc  — pulls live from Search Console via the existing
+                            gsc_client, which fails closed with
+                            `not_configured` when the credentials are absent
+                            rather than substituting anything.
+
+Search Console gives impressions, clicks and average position for the site's
+own queries. It does not report search volume or CPC, so those columns stay
+empty on GSC-imported rows instead of being filled from a model.
 """
 
+from __future__ import annotations
+
 import logging
-import os
-from typing import Optional
+from datetime import datetime, timezone
+from typing import Any, Optional
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
 
-from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..database import get_db
+from ..models import SeoKeyword
+from ..services import serp_engine
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/seo", tags=["seo"])
 
 
-# ── Request / Response models ─────────────────────────────────────────────────
-
-class CityPageRequest(BaseModel):
-    city:          str           = Field(..., min_length=2, max_length=100)
-    state:         str           = Field(..., min_length=2, max_length=50)
-    state_code:    str           = Field(..., min_length=2, max_length=2)
-    services:      list[str]     = Field(default_factory=lambda: ["asphalt paving", "sealcoating"])
-    target_length: int           = Field(default=400, ge=100, le=800)
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
 
 
-class MetaTagsRequest(BaseModel):
-    page_title:    str           = Field(..., min_length=5, max_length=200)
-    page_type:     str           = Field(default="service", description="service | location | blog | home")
-    focus_keyword: Optional[str] = Field(default=None, max_length=120)
-    city:          Optional[str] = Field(default=None, max_length=100)
-    service:       Optional[str] = Field(default=None, max_length=100)
+def _row(k: SeoKeyword) -> dict[str, Any]:
+    return {
+        "id": k.id,
+        "keyword": k.keyword,
+        "vertical": k.vertical,
+        "category": k.category,
+        "country": k.country,
+        "volume_monthly": k.volume_monthly,
+        "cpc_usd": k.cpc_usd,
+        "difficulty": k.difficulty,
+        "current_position": k.current_position,
+        "impressions": k.impressions,
+        "clicks": k.clicks,
+        "intent": k.intent,
+        "target_domain": k.target_domain,
+        "source": k.source,
+        "source_captured_at": k.source_captured_at.isoformat() if k.source_captured_at else None,
+    }
 
 
-class FAQGenRequest(BaseModel):
-    city:          Optional[str] = Field(default=None, max_length=100)
-    state_code:    Optional[str] = Field(default=None, max_length=2)
-    service:       str           = Field(default="asphalt paving", max_length=100)
-    count:         int           = Field(default=5, ge=2, le=10)
+# ── Status ────────────────────────────────────────────────────────────────────
 
 
-# ── AI helpers ────────────────────────────────────────────────────────────────
+@router.get("/status", summary="What keyword data exists, and where it came from")
+def seo_status(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+    """
+    Whether a real keyword source is connected, and what is stored.
 
-_SEO_SYSTEM = """You are an SEO specialist writing content for J. Worden & Sons Asphalt Paving — 
-a 4th-generation family-owned contractor based in Chester, Virginia (est. 1984).
+    Reports emptiness plainly. A dashboard that renders plausible rows when
+    nothing is connected teaches you to trust a number that was never
+    measured — which is exactly what the hardcoded keyword array did.
+    """
+    rows = db.query(SeoKeyword).all()
+    by_source: dict[str, int] = {}
+    for r in rows:
+        by_source[r.source] = by_source.get(r.source, 0) + 1
 
-Writing rules:
-• Be naturally conversational — not keyword-stuffed
-• Include the primary keyword 2–3 times per 100 words
-• Mention the company name and phone (804) 446-1296 where appropriate
-• Local relevance: reference specific neighborhoods, roads, or landmarks when known
-• Include a clear value proposition and call-to-action
-• Accurate: do not invent specific statistics; rely on company facts provided
-• Company facts: 40+ years, licensed & insured, KFC national vendor, Pavement Magazine Top 75, free estimates
-"""
-
-
-def _call_openai_seo(system: str, user: str, max_tokens: int = 600) -> str | None:
-    openai_key = os.getenv("OPENAI_API_KEY", "")
-    if not openai_key:
-        return None
+    gsc = {"configured": False, "reason": "gsc_client unavailable"}
     try:
-        from openai import OpenAI  # type: ignore
-        client = OpenAI(api_key=openai_key)
-        resp = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            max_tokens=max_tokens,
-            temperature=0.65,
-        )
-        return (resp.choices[0].message.content or "").strip()
+        from ..services import gsc_client  # noqa: PLC0415
+
+        data = gsc_client.get_gsc_data(days=1)
+        if data.get("not_configured"):
+            gsc = {"configured": False, "reason": data.get("message")}
+        else:
+            gsc = {"configured": True, "reason": None}
     except Exception as exc:  # noqa: BLE001
-        logger.error("SEO OpenAI call failed [endpoint=%s]: %s", "seo_generation", exc)
-        return None
+        logger.warning("seo: gsc probe failed: %s", exc)
+        gsc = {"configured": False, "reason": f"probe_failed: {exc}"}
 
-
-# ── Endpoints ─────────────────────────────────────────────────────────────────
-
-@router.post("/city-page", summary="Generate SEO copy for a city landing page")
-@limiter.limit("20/minute")
-async def generate_city_page_copy(
-    request: Request,
-    req: CityPageRequest,
-    security: dict = Depends(verify_premium_security),
-):
-    """
-    Generate premium SEO copy for a city/service area landing page.
-    Returns: hero_headline, tagline, description, cta_text, h2_headings[]
-    """
-    services_str = ", ".join(req.services)
-    user_prompt = f"""
-Generate SEO-optimized copy for a city landing page.
-
-Page: J. Worden & Sons Asphalt Paving — {req.city}, {req.state}
-Primary services on this page: {services_str}
-Primary keyword: "asphalt paving {req.city} {req.state_code}"
-
-Provide EXACTLY this JSON structure (no markdown fences):
-{{
-  "hero_headline": "concise H1 under 70 chars",
-  "tagline": "1 sentence subheading under 120 chars",
-  "description": "{req.target_length}-word page description with keyword integration",
-  "cta_text": "CTA button text (under 40 chars)",
-  "h2_headings": ["heading 1", "heading 2", "heading 3"],
-  "meta_title": "SEO meta title under 60 chars",
-  "meta_description": "meta description 150–160 chars"
-}}
-"""
-    import json  # noqa: PLC0415
-
-    raw = _call_openai_seo(_SEO_SYSTEM, user_prompt, max_tokens=700)
-    engine = "gpt-4o"
-
-    if raw:
-        try:
-            data = json.loads(raw)
-            data["engine"] = engine
-            return data
-        except json.JSONDecodeError:
-            pass
-
-    # Fallback template
-    engine = "template"
-    city, sc = req.city, req.state_code
     return {
-        "hero_headline":     f"Asphalt Paving Contractor in {city}, {sc}",
-        "tagline":           f"Trusted by {city} homeowners and businesses since 1984 — free estimates.",
-        "description":       f"J. Worden & Sons Asphalt Paving serves {city}, {req.state} with professional {services_str}. Based in Chester, VA, our 4th-generation family-owned team brings 40+ years of expertise to every project in {city}. We are fully licensed, insured, and offer free on-site estimates. Call (804) 446-1296 today.",
-        "cta_text":          f"Free Estimate in {city}",
-        "h2_headings":       [
-            f"Why {city} Chooses J. Worden & Sons",
-            f"Asphalt Services in {city}, {sc}",
-            f"Frequently Asked Questions — Paving in {city}",
-        ],
-        "meta_title":        f"Asphalt Paving in {city}, {sc} | J. Worden & Sons",
-        "meta_description":  f"Professional asphalt paving, sealcoating & crack filling in {city}, {sc}. J. Worden & Sons — 4th-generation contractor, est. 1984. Free estimates: (804) 446-1296.",
-        "engine":            engine,
+        "success": True,
+        "keywords_stored": len(rows),
+        "by_source": by_source,
+        "verticals": sorted({r.vertical for r in rows}),
+        "search_console": gsc,
+        # Generation needs no data source, so it is available regardless.
+        "generation_available": True,
     }
 
 
-@router.post("/meta-tags", summary="Generate meta title and description")
-@limiter.limit("30/minute")
-async def generate_meta_tags(
-    request: Request,
-    req: MetaTagsRequest,
-    security: dict = Depends(verify_premium_security),
+# ── Keyword store ─────────────────────────────────────────────────────────────
+
+
+class KeywordIn(BaseModel):
+    keyword: str = Field(..., min_length=1, max_length=300)
+    vertical: str = Field("pavement", max_length=60)
+    category: Optional[str] = Field(None, max_length=60)
+    country: str = Field("us", min_length=2, max_length=2)
+    volume_monthly: Optional[int] = Field(None, ge=0)
+    cpc_usd: Optional[float] = Field(None, ge=0)
+    difficulty: Optional[int] = Field(None, ge=0, le=100)
+    current_position: Optional[float] = Field(None, ge=0)
+    impressions: Optional[int] = Field(None, ge=0)
+    clicks: Optional[int] = Field(None, ge=0)
+    intent: Optional[str] = Field(None, max_length=60)
+    target_domain: Optional[str] = Field(None, max_length=200)
+
+
+class KeywordImport(BaseModel):
+    # Required, and with no default. A default would let an unsourced import
+    # through under a generic label, which is the hole this closes.
+    source: str = Field(..., min_length=2, max_length=120,
+                        description="Where these numbers came from, e.g. 'ahrefs-export-2026-08-19'")
+    source_captured_at: Optional[datetime] = None
+    keywords: list[KeywordIn] = Field(..., min_length=1, max_length=1000)
+
+
+def _upsert_keyword(db: Session, item: KeywordIn, source: str, captured: Optional[datetime],
+                    tenant_id: str) -> bool:
+    existing = (
+        db.query(SeoKeyword)
+        .filter(
+            SeoKeyword.keyword == item.keyword,
+            SeoKeyword.vertical == item.vertical,
+            SeoKeyword.country == item.country.lower(),
+        )
+        .one_or_none()
+    )
+    created = existing is None
+    row = existing or SeoKeyword(
+        keyword=item.keyword, vertical=item.vertical, country=item.country.lower()
+    )
+    if created:
+        db.add(row)
+
+    # Only overwrite a metric the import actually carries. A GSC import must
+    # not blank the CPC an Ahrefs import supplied earlier — each source knows
+    # some columns and nothing about the others.
+    for field in ("category", "volume_monthly", "cpc_usd", "difficulty",
+                  "current_position", "impressions", "clicks", "intent", "target_domain"):
+        value = getattr(item, field)
+        if value is not None:
+            setattr(row, field, value)
+
+    row.source = source
+    row.source_captured_at = captured or _utcnow()
+    row.tenant_id = tenant_id
+    return created
+
+
+@router.post("/keywords/import", summary="Import keywords from your own export")
+def import_keywords(
+    body: KeywordImport,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ):
-    """Generate optimized meta title (≤60 chars) and meta description (≤160 chars)."""
-    context_parts = [req.page_title]
-    if req.city:    context_parts.append(f"location: {req.city}")
-    if req.service: context_parts.append(f"service: {req.service}")
-    if req.focus_keyword: context_parts.append(f"keyword: {req.focus_keyword}")
+    tenant_id = auth.get("tenant_id") or "default"
+    created = updated = 0
+    for item in body.keywords:
+        if _upsert_keyword(db, item, body.source, body.source_captured_at, tenant_id):
+            created += 1
+        else:
+            updated += 1
+    db.commit()
+    return {"success": True, "source": body.source, "created": created, "updated": updated}
 
-    user_prompt = f"""
-Generate an SEO meta title and meta description for:
-{' | '.join(context_parts)}
-Page type: {req.page_type}
-Company: J. Worden & Sons Asphalt Paving, Chester VA, Est. 1984
 
-Return JSON (no fences):
-{{"meta_title": "under 60 chars", "meta_description": "150–160 chars"}}
-"""
-    import json  # noqa: PLC0415
+@router.post("/keywords/import-gsc", summary="Import live Search Console queries")
+def import_from_search_console(
+    vertical: str = Query("pavement", max_length=60),
+    limit: int = Query(100, ge=1, le=1000),
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Pull the site's own queries from Search Console and store them.
 
-    raw = _call_openai_seo(_SEO_SYSTEM, user_prompt, max_tokens=200)
-    engine = "gpt-4o"
+    GSC reports impressions, clicks and average position — real measurements of
+    how the site actually ranks. It does not report search volume or CPC, so
+    those columns are left empty rather than modelled. A 503 here means the
+    credentials are not set; it never falls back to sample data.
+    """
+    try:
+        from ..services import gsc_client  # noqa: PLC0415
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=503, detail=f"Search Console client unavailable: {exc}")
 
-    if raw:
-        try:
-            data = json.loads(raw)
-            data["engine"] = engine
-            return data
-        except json.JSONDecodeError:
-            pass
+    probe = gsc_client.get_gsc_data(days=1)
+    if probe.get("not_configured"):
+        raise HTTPException(
+            status_code=503,
+            detail=probe.get("message") or "Search Console is not configured.",
+        )
 
-    # Fallback
-    svc  = req.service or "asphalt paving"
-    city = req.city or "Virginia"
+    rows = gsc_client.get_top_keywords(limit=limit)
+    if not rows:
+        return {
+            "success": True,
+            "source": "search-console",
+            "created": 0,
+            "updated": 0,
+            "note": "Search Console returned no queries for the configured site and date range.",
+        }
+
+    tenant_id = auth.get("tenant_id") or "default"
+    captured = _utcnow()
+    created = updated = 0
+    for r in rows:
+        query = (r.get("query") or "").strip()
+        if not query:
+            continue
+        item = KeywordIn(
+            keyword=query[:300],
+            vertical=vertical,
+            impressions=r.get("impressions"),
+            clicks=r.get("clicks"),
+            current_position=r.get("position"),
+        )
+        if _upsert_keyword(db, item, "search-console", captured, tenant_id):
+            created += 1
+        else:
+            updated += 1
+    db.commit()
+    return {"success": True, "source": "search-console", "created": created, "updated": updated}
+
+
+@router.get("/keywords", summary="Stored keywords with a coverage-aware summary")
+def list_keywords(
+    vertical: Optional[str] = None,
+    category: Optional[str] = None,
+    assumed_ctr: Optional[float] = Query(
+        None, ge=0.0, le=1.0,
+        description="Supply a click-through rate to get a modelled monthly value. "
+                    "It is returned beside the figure so the assumption stays visible.",
+    ),
+    limit: int = Query(200, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+    _: dict = Depends(verify_premium_security),
+):
+    q = db.query(SeoKeyword)
+    if vertical:
+        q = q.filter(SeoKeyword.vertical == vertical)
+    if category:
+        q = q.filter(SeoKeyword.category == category)
+    total = q.count()
+    rows = [
+        _row(k)
+        for k in q.order_by(SeoKeyword.volume_monthly.desc().nullslast(), SeoKeyword.keyword)
+        .limit(limit)
+        .offset(offset)
+        .all()
+    ]
     return {
-        "meta_title":       f"{req.page_title} | J. Worden & Sons",
-        "meta_description": f"Expert {svc} in {city} by J. Worden & Sons — 4th-generation contractor since 1984. Licensed & insured. Free estimates: (804) 446-1296.",
-        "engine":           "template",
+        "success": True,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "keywords": rows,
+        "summary": serp_engine.summarise_keywords(rows, assumed_ctr=assumed_ctr),
     }
 
 
-@router.post("/faq", summary="Generate location & service specific FAQs")
-@limiter.limit("20/minute")
-async def generate_faq(
-    request: Request,
-    req: FAQGenRequest,
-    security: dict = Depends(verify_premium_security),
+@router.get("/keywords.csv", summary="Export stored keywords, provenance included",
+            response_class=PlainTextResponse)
+def export_keywords_csv(
+    vertical: Optional[str] = None,
+    db: Session = Depends(get_db),
+    _: dict = Depends(verify_premium_security),
 ):
-    """Generate N location+service specific FAQ pairs for schema markup."""
-    location = f"{req.city}, {req.state_code}" if req.city else "Virginia"
+    q = db.query(SeoKeyword)
+    if vertical:
+        q = q.filter(SeoKeyword.vertical == vertical)
+    rows = [_row(k) for k in q.order_by(SeoKeyword.keyword).all()]
+    return PlainTextResponse(
+        serp_engine.keywords_to_csv(rows),
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="worden_keywords.csv"'},
+    )
 
-    user_prompt = f"""
-Generate {req.count} SEO-optimized FAQ pairs for:
-Location: {location}
-Service: {req.service}
-Company: J. Worden & Sons Asphalt Paving
 
-Return JSON array (no fences):
-[{{"question": "...", "answer": "2–3 sentences, specific and helpful"}}]
+# ── Generation (no data source required) ──────────────────────────────────────
 
-Make each question something a real homeowner or property manager would Google.
-"""
-    import json  # noqa: PLC0415
 
-    raw = _call_openai_seo(_SEO_SYSTEM, user_prompt, max_tokens=800)
-    engine = "gpt-4o"
+@router.get("/landing-page", summary="Deterministic landing page + JSON-LD for one city")
+def landing_page(
+    domain: str = Query(..., min_length=4, max_length=200),
+    city: str = Query(..., min_length=1, max_length=120),
+    state: str = Query("", max_length=60),
+    vertical: str = Query("pavement", max_length=60),
+    _: dict = Depends(verify_premium_security),
+):
+    return {"success": True, **serp_engine.build_landing_page(domain, city, state, vertical)}
 
-    if raw:
-        try:
-            faqs = json.loads(raw)
-            return {"faqs": faqs, "engine": engine, "count": len(faqs)}
-        except json.JSONDecodeError:
-            pass
 
-    # Fallback FAQs
-    svc = req.service
-    loc = location
+class SiloRequest(BaseModel):
+    domain: str = Field(..., min_length=4, max_length=200)
+    vertical: str = Field("pavement", max_length=60)
+    cities: list[tuple[str, str]] = Field(..., min_length=1, max_length=500,
+                                          description="(city, state) pairs")
+    path_template: str = Field("/{state}/{city}/commercial-contractor", max_length=200)
+
+
+@router.post("/silo", summary="Build a programmatic city silo")
+def build_silo(body: SiloRequest, _: dict = Depends(verify_premium_security)):
+    """
+    One page per city, duplicates dropped by path.
+
+    The count returned is the number of pages actually built, not the number
+    of cities submitted — two spellings of one city collapse to one page, and
+    saying otherwise would overstate the silo.
+    """
+    pages = serp_engine.build_city_silo(
+        body.domain, body.cities, body.vertical, body.path_template
+    )
     return {
-        "faqs": [
-            {
-                "question": f"How much does {svc} cost in {loc}?",
-                "answer": f"The cost of {svc} in {loc} depends on project size, base condition, and access. Residential work typically starts around $3–$8 per square foot. Contact us for a free on-site estimate tailored to your property."
-            },
-            {
-                "question": f"How long does {svc} last in {loc}?",
-                "answer": f"Properly installed asphalt in {loc} lasts 20–30 years with regular maintenance. Sealcoating every 3–5 years significantly extends lifespan by protecting against UV, water, and oil damage."
-            },
-            {
-                "question": f"Do you offer free estimates for {svc} in {loc}?",
-                "answer": f"Yes — all estimates from J. Worden & Sons are free and come with no obligation. Call us at (804) 446-1296 or fill out the quote form on our website."
-            },
-        ],
-        "engine": "template",
-        "count": 3,
+        "success": True,
+        "cities_submitted": len(body.cities),
+        "pages_built": len(pages),
+        "pages": pages,
     }

@@ -2264,3 +2264,61 @@ class HubContractExecution(Base):
             f"<HubContractExecution ref={self.contract_ref!r} "
             f"value={self.contract_value} status={self.erp_status!r}>"
         )
+
+
+# ── SEO / SERP engine ─────────────────────────────────────────────────────────
+
+
+class SeoKeyword(Base):
+    """
+    One tracked keyword with its metrics and, required, where they came from.
+
+    `source` is NOT NULL by design. A keyword row can exist with no volume and
+    no CPC — that is honest, it means nobody has measured it yet — but it
+    cannot exist without saying who measured what is there. The version of
+    this engine that shipped as a hardcoded JavaScript array had fifteen rows
+    of precise-looking figures ("2400 / mo", "$58.50") that nothing generated,
+    and a CSV export that handed them to clients under the header
+    "Monthly Searches, Estimated CPC". Requiring provenance is what stops that
+    happening again: an unsourced number cannot be written at all.
+
+    Metrics are nullable independently, so a row imported from Search Console
+    (real impressions and position, no CPC) sits alongside one from a keyword
+    tool without either pretending to carry the other's fields.
+    """
+
+    __tablename__ = "seo_keywords"
+    __table_args__ = (
+        UniqueConstraint("keyword", "vertical", "country", name="uq_seo_keyword_scope"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    keyword = Column(String(300), nullable=False, index=True)
+    vertical = Column(String(60), nullable=False, index=True, default="pavement")
+    category = Column(String(60), nullable=True, index=True)
+    country = Column(String(2), nullable=False, default="us")
+
+    # Every metric optional; absent means unmeasured, not zero.
+    volume_monthly = Column(Integer, nullable=True)
+    cpc_usd = Column(Float, nullable=True)
+    difficulty = Column(Integer, nullable=True)
+    current_position = Column(Float, nullable=True)
+    impressions = Column(Integer, nullable=True)
+    clicks = Column(Integer, nullable=True)
+
+    intent = Column(String(60), nullable=True)
+    target_domain = Column(String(200), nullable=True, index=True)
+
+    # Provenance. Free text so any real origin can be named exactly:
+    # "ahrefs-export-2026-08-19", "search-console", "google-keyword-planner".
+    source = Column(String(120), nullable=False)
+    source_captured_at = Column(DateTime(timezone=True), nullable=True)
+
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<SeoKeyword {self.keyword!r} vol={self.volume_monthly} src={self.source!r}>"

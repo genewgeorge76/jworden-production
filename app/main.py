@@ -317,6 +317,7 @@ from .routers import tenants as tenants_router
 from .routers import tts as tts_router
 from .routers import telematics as telematics_router
 from .routers import jwordenai_hub as jwordenai_hub_router
+from .routers import seo as seo_router
 from .routers import twilio_verify_router as twilio_verify_router
 from .routers import vdot_bids as vdot_bids_router
 from .routers import vector_search as vector_search_router
@@ -810,6 +811,7 @@ app.include_router(telematics_router.router)
 app.include_router(jwordenai_hub_router.router)
 # Same handlers at the bare /api/v1 paths the portfolio clients were written for.
 app.include_router(jwordenai_hub_router.compat_router)
+app.include_router(seo_router.router)
 
 
 # ── Socket.IO ASGI mount ──────────────────────────────────────────────────────
