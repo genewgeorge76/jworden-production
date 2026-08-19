@@ -371,6 +371,40 @@ INTEGRATION WITH OTHER SERVICES:
 === END DRONE KNOWLEDGE ===
 """
 
+def _build_technology_facts() -> str:
+    """
+    Render the verified technology suite into a citable block.
+
+    Generated from `pavement_technologies` rather than retyped, so a citation
+    corrected there cannot go stale here — which is how "AASHTO PP 108" would
+    have survived in a proposal long after being fixed elsewhere. Vendor
+    performance claims are deliberately not included: this block is what
+    Jarvis cites as fact, and a manufacturer percentage repeated without its
+    source becomes a warranty the moment it reaches a proposal.
+    """
+    try:
+        from .pavement_technologies import as_citation_lines  # noqa: PLC0415
+        body = "\n".join(as_citation_lines())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("technology facts unavailable: %s", exc)
+        return ""
+    return (
+        "\n=== VERIFIED CIVIL TECHNOLOGY SUITE (cite these designations exactly) ===\n"
+        f"{body}\n"
+        "\nCitation rules:\n"
+        "• Quote only the designations above. If a standard is not listed here, say so "
+        "rather than supplying one from memory — a wrong designation in a submittal "
+        "gets it rejected.\n"
+        "• Manufacturer performance percentages are not standards. Attribute them to the "
+        "manufacturer or leave them out.\n"
+        "• LEED v4 grades non-roof hardscape on solar reflectance, not SRI.\n"
+        "=== END VERIFIED CIVIL TECHNOLOGY SUITE ===\n"
+    )
+
+
+TECHNOLOGY_FACTS = _build_technology_facts()
+
+
 _PRICING_KEYWORDS = {
     "cost", "price", "rate", "estimate", "quote", "sqft", "sq ft",
     "per foot", "how much", "expensive", "cheap", "afford", "budget",
@@ -414,6 +448,15 @@ _DRONE_KEYWORDS = {
 }
 
 
+_TECHNOLOGY_KEYWORDS = {
+    "thermal", "infrared", "pave-ir", "segregation", "profiling", "icmv",
+    "intelligent", "accelerometer", "roller", "pass-count", "nuclear",
+    "non-nuclear", "pqi", "dielectric", "aramid", "fiber", "fibre", "frac",
+    "reinforced", "hec-22", "manning", "runoff", "hydrology", "albedo",
+    "reflectance", "sri", "leed", "tio2", "cool", "birdbath", "ponding",
+}
+
+
 def assemble_context(
     question: str,
     state_code: Optional[str] = None,
@@ -444,6 +487,7 @@ def assemble_context(
     design_match    = bool(q_words & _DESIGN_KEYWORDS) or any(p in q_phrases for p in ("mood board", "space planning", "interior design"))
     masonry_match   = bool(q_words & _MASONRY_KEYWORDS) or any(p in q_phrases for p in ("brick paver", "stone wall", "retaining wall", "outdoor fireplace"))
     drone_match     = bool(q_words & _DRONE_KEYWORDS) or any(p in q_phrases for p in ("point cloud", "part 107", "aerial mapping", "drone survey"))
+    tech_match      = bool(q_words & _TECHNOLOGY_KEYWORDS) or any(p in q_phrases for p in ("thermal profile", "intelligent compaction", "cool pavement", "aramid fiber", "solar reflectance", "heat island"))
 
     if include_all or pricing_match:
         context_blocks.append(PRICING_FACTS)
@@ -459,6 +503,11 @@ def assemble_context(
         context_blocks.append(MASONRY_FACTS)
     if include_all or drone_match:
         context_blocks.append(DRONE_FACTS)
+    # Also pulled in on a technical question: compaction and density answers
+    # reach for these designations, and citing one from memory is the failure
+    # this block exists to prevent.
+    if TECHNOLOGY_FACTS and (include_all or tech_match or technical_match):
+        context_blocks.append(TECHNOLOGY_FACTS)
 
     # State-specific fragment
     if state_code:

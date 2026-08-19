@@ -953,6 +953,14 @@ class CompactionLog(Base):
     density_pct = Column(Float, nullable=True)  # % of target density
     speed_mph = Column(Float, nullable=True)
     gps_accuracy_ft = Column(Float, nullable=True)
+    # Intelligent Compaction (AASHTO R 111-22): accelerometer-derived stiffness.
+    icmv = Column(Float, nullable=True)
+    # Tex-244-F grades thermal segregation on the temperature DIFFERENTIAL across
+    # the mat, not on an absolute temperature — mat_temp_f alone cannot express it.
+    thermal_differential_f = Column(Float, nullable=True)
+    # How density was obtained, so a reading is traceable to its method:
+    # "electromagnetic" (ASTM D7113 / AASHTO T 343), "nuclear", "core".
+    density_method = Column(String(40), nullable=True)
     notes = Column(Text, nullable=True)
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
     logged_at = Column(

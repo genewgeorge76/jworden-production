@@ -47,6 +47,7 @@ from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services import pavement_technologies
 from ..database import get_db
 from ..models import CompactionLog, HubContractExecution, HubTakeoff, MarketSite
 
@@ -56,10 +57,9 @@ router = APIRouter(prefix="/api/v1/hub", tags=["jwordenai-hub"])
 
 MASTER_NODE_ID = "JWORDENAI-MASTER-AI-NODE"
 
-# The compaction floor every Worden paving spec is written against. A QA record
-# is compared to this rather than trusting a `passed` flag from the caller —
-# the measurement decides, not the sender.
-COMPACTION_FLOOR_PCT = 96.0
+# Acceptance constants come from the verified technology suite, so the floor
+# the QA path enforces and the floor Jarvis quotes cannot drift apart.
+COMPACTION_FLOOR_PCT = pavement_technologies.COMPACTION_FLOOR_PCT
 
 _SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
 _HOSTNAME_RE = re.compile(r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$")
@@ -170,21 +170,28 @@ class HubBody(BaseModel):
 
 
 @router.get("/health", summary="Master-node handshake")
-def hub_health():
+def hub_health(db: Session = Depends(get_db)):
     """
-    Node identity for the portfolio clients' handshake.
+    Node identity and registered-domain count, for the clients' handshake.
 
-    Deliberately constants only, and deliberately unauthenticated: it reports
-    which node answered, not whether anything downstream is well. The app's
-    own readiness lives at /health and /api/v1/jarvis/readiness — a second
-    endpoint claiming OPERATIONAL without checking anything would be a status
-    light wired to the switch rather than the machine.
+    Unauthenticated, and deliberately not reporting OPERATIONAL. The app's own
+    readiness lives at /health and /api/v1/jarvis/readiness — a second endpoint
+    claiming health without checking anything is a status light wired to the
+    switch rather than the machine. `connected_domains` is a count of rows, so
+    it drops to 0 if the registry is empty instead of reporting the length of a
+    hardcoded list.
     """
+    try:
+        registered = db.query(MarketSite).count()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("hub: domain count unavailable: %s", exc)
+        registered = None
     return {
         "status": "ok",
         "node": MASTER_NODE_ID,
         "service": "JWordenAI master-node hub",
         "compaction_floor_pct": COMPACTION_FLOOR_PCT,
+        "connected_domains": registered,
     }
 
 
@@ -200,6 +207,38 @@ class DomainRegistration(HubBody):
     tenant_id: Optional[str] = Field(
         None, max_length=60, validation_alias=AliasChoices("tenant_id", "tenantId")
     )
+
+
+def _upsert_domain(db: Session, body: "DomainRegistration", auth: dict) -> dict[str, Any]:
+    """
+    Create or update one registry row. Flushes but does not commit, so a bulk
+    call commits once and a single call keeps its own transaction boundary.
+    """
+    hostname = normalize_hostname(body.domain)
+    tenant_id = body.tenant_id or auth.get("tenant_id") or "default"
+
+    site = db.query(MarketSite).filter(MarketSite.hostname == hostname).one_or_none()
+    created = site is None
+    if created:
+        site = MarketSite(hostname=hostname, tenant_id=tenant_id)
+        db.add(site)
+
+    site.site_title = body.name or site.site_title or hostname
+    site.route_mode = body.type or site.route_mode or "market-landing"
+    if body.city:
+        site.city_target = body.city
+    if body.region:
+        # `region` is free text in the drafted contract; only a 2-letter value
+        # fits state_target, which is a CHAR(2) column. "Texas (DFW/HOU/ATX/SAT)"
+        # is kept as description rather than truncated into something wrong.
+        region = body.region.strip()
+        if len(region) == 2 and region.isalpha():
+            site.state_target = region.upper()
+        else:
+            site.site_description = f"Region: {region}"
+    site.is_active = 1
+    db.flush()
+    return {"created": created, "site": site, "row": _domain_row(site)}
 
 
 @router.get("/domains", summary="Domains mounted on this master node")
@@ -242,38 +281,61 @@ def register_domain(
     so re-registering the same domain edits the existing row. A second row for
     the same hostname would give the portfolio two answers about one site.
     """
-    hostname = normalize_hostname(body.domain)
-    tenant_id = body.tenant_id or auth.get("tenant_id") or "default"
-
-    site = db.query(MarketSite).filter(MarketSite.hostname == hostname).one_or_none()
-    created = site is None
-    if created:
-        site = MarketSite(hostname=hostname, tenant_id=tenant_id)
-        db.add(site)
-
-    site.site_title = body.name or site.site_title or hostname
-    site.route_mode = body.type or site.route_mode or "market-landing"
-    if body.city:
-        site.city_target = body.city
-    if body.region:
-        # `region` is free text in the drafted contract; only a 2-letter value
-        # can go in state_target, which is a CHAR(2) column.
-        region = body.region.strip()
-        if len(region) == 2 and region.isalpha():
-            site.state_target = region.upper()
-        elif not site.site_description:
-            site.site_description = f"Region: {region}"
-    site.is_active = 1
-
+    result = _upsert_domain(db, body, auth)
     db.commit()
+    site = result["site"]
     db.refresh(site)
 
-    logger.info("hub: domain %s %s", hostname, "registered" if created else "updated")
+    logger.info(
+        "hub: domain %s %s", site.hostname, "registered" if result["created"] else "updated"
+    )
     return {
         "success": True,
-        "action": "DOMAIN_REGISTERED" if created else "DOMAIN_UPDATED",
-        "created": created,
+        "action": "DOMAIN_REGISTERED" if result["created"] else "DOMAIN_UPDATED",
+        "created": result["created"],
         "registered": _domain_row(site),
+    }
+
+
+class BulkDomainRegistration(HubBody):
+    domains: list[DomainRegistration] = Field(..., min_length=1, max_length=200)
+
+
+@router.post("/domains/bulk-register", summary="Register several domains in one call")
+def bulk_register_domains(
+    body: BulkDomainRegistration,
+    db: Session = Depends(get_db),
+    _node: str = Depends(verify_master_node),
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Seed or update the registry in one request.
+
+    Each entry goes through the same path as a single registration, so a bad
+    hostname in the middle of a batch fails that entry and is reported, rather
+    than aborting the batch or being silently skipped. The response says which
+    were created, which updated, and which were rejected and why.
+    """
+    created: list[dict[str, Any]] = []
+    updated: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+
+    for entry in body.domains:
+        try:
+            result = _upsert_domain(db, entry, auth)
+        except HTTPException as exc:
+            rejected.append({"domain": entry.domain, "reason": exc.detail})
+            continue
+        (created if result["created"] else updated).append(result["row"])
+
+    db.commit()
+    return {
+        "success": True,
+        "created": len(created),
+        "updated": len(updated),
+        "rejected": len(rejected),
+        "domains": created + updated,
+        "rejections": rejected,
     }
 
 
@@ -485,6 +547,17 @@ class FieldQaLog(HubBody):
     gps_accuracy_ft: Optional[float] = Field(
         None, ge=0, validation_alias=AliasChoices("gps_accuracy_ft", "gpsAccuracyFt")
     )
+    icmv: Optional[float] = Field(
+        None, ge=0, validation_alias=AliasChoices("icmv", "ICMV", "stiffness")
+    )
+    thermal_differential_f: Optional[float] = Field(
+        None, ge=0,
+        validation_alias=AliasChoices("thermal_differential_f", "thermalDifferentialF"),
+        description="Temperature spread across the mat — what Tex-244-F grades.",
+    )
+    density_method: Optional[str] = Field(
+        None, max_length=40, validation_alias=AliasChoices("density_method", "densityMethod")
+    )
     notes: Optional[str] = None
 
 
@@ -516,6 +589,9 @@ def log_field_qa(
         density_pct=body.density_pct,
         speed_mph=body.speed_mph,
         gps_accuracy_ft=body.gps_accuracy_ft,
+        icmv=body.icmv,
+        thermal_differential_f=body.thermal_differential_f,
+        density_method=body.density_method,
         notes=body.notes,
         tenant_id=auth.get("tenant_id") or "default",
         logged_at=_utcnow(),
@@ -537,5 +613,199 @@ def log_field_qa(
         # null when nothing was measured — an unmeasured pass has no verdict.
         "compaction_standard_passed": passed,
         "claimed_by_caller": claimed,
+        "icmv": entry.icmv,
+        "density_method": entry.density_method,
+        "thermal_differential_f": entry.thermal_differential_f,
+        # Tex-244-F grades on the differential: >25 F moderate, >50 F severe.
+        "thermal_segregation": pavement_technologies.grade_thermal_segregation(
+            body.thermal_differential_f
+        ),
         "logged_at": entry.logged_at.isoformat(),
     }
+
+
+# ── Read-back ─────────────────────────────────────────────────────────────────
+#
+# The drafted router kept INGESTED_TAKEOFFS / EXECUTED_CONTRACTS / PLANT_QA_LOGS
+# as module arrays with nothing to read them. Pushing records into a store you
+# cannot query is the same as not storing them — these are the endpoints that
+# make the writes worth making.
+
+
+def _page(limit: int, offset: int) -> tuple[int, int]:
+    return max(1, min(limit, 500)), max(0, offset)
+
+
+@router.get("/takeoffs", summary="Takeoffs recorded on this node")
+def list_takeoffs(
+    limit: int = 50,
+    offset: int = 0,
+    source_domain: Optional[str] = None,
+    db: Session = Depends(get_db),
+    _node: str = Depends(verify_master_node),
+    _: dict = Depends(verify_premium_security),
+):
+    limit, offset = _page(limit, offset)
+    q = db.query(HubTakeoff)
+    if source_domain:
+        q = q.filter(HubTakeoff.source_domain == normalize_hostname(source_domain))
+    total = q.count()
+    rows = q.order_by(HubTakeoff.recorded_at.desc(), HubTakeoff.id.desc()).limit(limit).offset(offset).all()
+    return {
+        "success": True,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "takeoffs": [
+            {
+                "id": r.id,
+                "takeoff_ref": r.takeoff_ref,
+                "source_domain": r.source_domain,
+                "project_name": r.project_name,
+                "city": r.city,
+                "state_code": r.state_code,
+                "service_type": r.service_type,
+                "measured_area_sqft": r.measured_area_sqft,
+                "measured_depth_in": r.measured_depth_in,
+                "estimated_tons": r.estimated_tons,
+                "confidence": r.confidence,
+                "method": r.method,
+                "recorded_at": r.recorded_at.isoformat() if r.recorded_at else None,
+            }
+            for r in rows
+        ],
+    }
+
+
+@router.get("/contracts", summary="Executed contracts recorded on this node")
+def list_contracts(
+    limit: int = 50,
+    offset: int = 0,
+    db: Session = Depends(get_db),
+    _node: str = Depends(verify_master_node),
+    _: dict = Depends(verify_premium_security),
+):
+    limit, offset = _page(limit, offset)
+    q = db.query(HubContractExecution)
+    total = q.count()
+    rows = (
+        q.order_by(HubContractExecution.executed_at.desc(), HubContractExecution.id.desc())
+        .limit(limit)
+        .offset(offset)
+        .all()
+    )
+    return {
+        "success": True,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        # Deliberately no "total contract value" roll-up: contract_value is
+        # nullable, and summing a column with holes in it produces a portfolio
+        # figure that reads as complete when it is not.
+        "contracts": [
+            {
+                "id": r.id,
+                "contract_ref": r.contract_ref,
+                "source_domain": r.source_domain,
+                "customer_name": r.customer_name,
+                "project_name": r.project_name,
+                "contract_value": r.contract_value,
+                "signer_name": r.signer_name,
+                "erp_status": r.erp_status,
+                "executed_at": r.executed_at.isoformat() if r.executed_at else None,
+            }
+            for r in rows
+        ],
+    }
+
+
+@router.get("/field-qa", summary="Field QA compaction readings recorded on this node")
+def list_field_qa(
+    limit: int = 50,
+    offset: int = 0,
+    project_site_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+    _node: str = Depends(verify_master_node),
+    _: dict = Depends(verify_premium_security),
+):
+    """
+    Readings newest first, each carrying its own pass/fail against the 96%
+    floor. The verdict is recomputed here from the stored density rather than
+    persisted alongside it, so changing the floor cannot leave old rows
+    asserting a verdict the current standard disagrees with.
+    """
+    limit, offset = _page(limit, offset)
+    q = db.query(CompactionLog)
+    if project_site_id is not None:
+        q = q.filter(CompactionLog.project_site_id == project_site_id)
+    total = q.count()
+    rows = q.order_by(CompactionLog.logged_at.desc(), CompactionLog.id.desc()).limit(limit).offset(offset).all()
+    return {
+        "success": True,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "compaction_floor_pct": COMPACTION_FLOOR_PCT,
+        "readings": [
+            {
+                "id": r.id,
+                "roller_id": r.roller_id,
+                "operator_name": r.operator_name,
+                "project_site_id": r.project_site_id,
+                "lat": r.lat,
+                "lng": r.lng,
+                "pass_number": r.pass_number,
+                "mat_temp_f": r.mat_temp_f,
+                "mat_thickness_in": r.mat_thickness_in,
+                "density_pct": r.density_pct,
+                "density_method": r.density_method,
+                "icmv": r.icmv,
+                "thermal_differential_f": r.thermal_differential_f,
+                "thermal_segregation": pavement_technologies.grade_thermal_segregation(
+                    r.thermal_differential_f
+                ),
+                "compaction_standard_passed": (
+                    None if r.density_pct is None else r.density_pct >= COMPACTION_FLOOR_PCT
+                ),
+                "logged_at": r.logged_at.isoformat() if r.logged_at else None,
+            }
+            for r in rows
+        ],
+    }
+
+
+# ── Capabilities ──────────────────────────────────────────────────────────────
+
+
+@router.get("/capabilities", summary="Verified civil technology suite with citations")
+def capabilities(include_corrections: bool = True):
+    """
+    The six technologies with their verified standard designations, so every
+    portfolio site renders the same spec text from one source instead of each
+    keeping its own copy to drift.
+
+    Unauthenticated: these are public standards and the spec pages that show
+    them are public. Nothing here is operational data.
+
+    `corrections` lists the claims from the source document that did not
+    survive checking against the issuing body, with what each should be. They
+    are published rather than silently fixed — anyone holding the earlier
+    version needs to know it was wrong, and which part.
+    """
+    payload: dict[str, Any] = {
+        "success": True,
+        "node": MASTER_NODE_ID,
+        "count": len(pavement_technologies.TECHNOLOGIES),
+        "technologies": pavement_technologies.TECHNOLOGIES,
+        "acceptance": {
+            "compaction_floor_pct": pavement_technologies.COMPACTION_FLOOR_PCT,
+            "thermal_differential_moderate_f": pavement_technologies.THERMAL_DIFFERENTIAL_MODERATE_F,
+            "thermal_differential_severe_f": pavement_technologies.THERMAL_DIFFERENTIAL_SEVERE_F,
+            "aramid_dose_oz_per_ton": pavement_technologies.ARAMID_DOSE_OZ_PER_TON,
+            "leed_v4_sr_aged_min": pavement_technologies.LEED_V4_SR_AGED_MIN,
+            "leed_v4_sr_initial_min": pavement_technologies.LEED_V4_SR_INITIAL_MIN,
+        },
+    }
+    if include_corrections:
+        payload["corrections"] = pavement_technologies.CORRECTIONS
+    return payload
