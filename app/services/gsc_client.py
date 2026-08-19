@@ -26,6 +26,8 @@ import os
 from datetime import date, timedelta
 from typing import Any
 
+from . import runtime_config as _cfg
+
 logger = logging.getLogger(__name__)
 
 # ── Credential helpers ────────────────────────────────────────────────────────
@@ -38,7 +40,11 @@ def _load_credentials() -> Any | None:
     Decode GSC_SERVICE_ACCOUNT_JSON (base64) and return a google-auth
     ServiceAccountCredentials object, or None if the env var is absent.
     """
-    raw = os.getenv("GSC_SERVICE_ACCOUNT_JSON", "").strip()
+    # Runtime store first, then the environment — the same lookup _site_url
+    # uses. Reading os.getenv here while the site URL came from the runtime
+    # store meant a credential set through the admin UI configured only half
+    # the client, and the half that was missing failed silently.
+    raw = _cfg.get("GSC_SERVICE_ACCOUNT_JSON", "").strip()
     if not raw:
         return None
     try:
