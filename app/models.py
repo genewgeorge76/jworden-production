@@ -2172,3 +2172,87 @@ class OrgMember(Base):
 
     def __repr__(self) -> str:
         return f"<OrgMember {self.email!r} org={self.org_id}>"
+
+
+# ── JWordenAI master hub: cross-domain event records ─────────────────────────
+
+
+class HubTakeoff(Base):
+    """
+    A measured takeoff pushed to the master hub by one of the portfolio sites.
+
+    This is the measurement, not the price: area, depth and tonnage as the
+    takeoff tool actually computed them. Pricing lives in `estimates` /
+    `project_estimates`, which is why this table does not carry a dollar
+    figure — a takeoff that invents one reads as a quote.
+
+    `takeoff_ref` is the caller's own identifier and is unique, so a client
+    that retries a sync updates its row instead of creating a second record
+    of the same measurement.
+    """
+
+    __tablename__ = "hub_takeoffs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    takeoff_ref = Column(String(120), nullable=False, unique=True, index=True)
+    source_domain = Column(String(200), nullable=True, index=True)
+    project_name = Column(String(200), nullable=True)
+    address = Column(String(300), nullable=True)
+    city = Column(String(120), nullable=True)
+    state_code = Column(String(2), nullable=True, index=True)
+    service_type = Column(String(60), nullable=True)
+    measured_area_sqft = Column(Float, nullable=True)
+    measured_depth_in = Column(Float, nullable=True)
+    estimated_tons = Column(Float, nullable=True)
+    confidence = Column(Float, nullable=True)  # 0.0–1.0 as reported by the tool
+    method = Column(String(60), nullable=True)  # e.g. "vision", "manual", "gis"
+    raw_payload_json = Column(JSON, nullable=True)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    recorded_at = Column(
+        DateTime(timezone=True), default=_utcnow, nullable=False, index=True
+    )
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"<HubTakeoff ref={self.takeoff_ref!r} domain={self.source_domain!r} "
+            f"area={self.measured_area_sqft}>"
+        )
+
+
+class HubContractExecution(Base):
+    """
+    Record that a contract was executed and locked into the ERP.
+
+    Kept separate from `estimates`: that table tracks our own funnel from lead
+    to signature, whereas this one records what a portfolio site reports back
+    after the fact. Merging them would let an external caller mutate the
+    funnel's own state.
+
+    `contract_ref` is unique so a replayed webhook updates rather than
+    duplicates.
+    """
+
+    __tablename__ = "hub_contract_executions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    contract_ref = Column(String(120), nullable=False, unique=True, index=True)
+    source_domain = Column(String(200), nullable=True, index=True)
+    customer_name = Column(String(200), nullable=True)
+    project_name = Column(String(200), nullable=True)
+    contract_value = Column(Float, nullable=True)
+    signer_name = Column(String(200), nullable=True)
+    erp_status = Column(String(40), nullable=False, default="locked")
+    executed_at = Column(DateTime(timezone=True), nullable=True, index=True)
+    raw_payload_json = Column(JSON, nullable=True)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<HubContractExecution ref={self.contract_ref!r} "
+            f"value={self.contract_value} status={self.erp_status!r}>"
+        )
