@@ -2322,3 +2322,175 @@ class SeoKeyword(Base):
 
     def __repr__(self) -> str:
         return f"<SeoKeyword {self.keyword!r} vol={self.volume_monthly} src={self.source!r}>"
+
+
+# ── Material supply geography ─────────────────────────────────────────────────
+
+
+class MaterialSource(Base):
+    """
+    A plant, quarry or supplier the crews actually buy from.
+
+    Pricing was previously a single state multiplier, so Charlottesville,
+    Richmond and Roanoke all priced identically at VA's 1.02 — which is wrong
+    in the way that matters most, because what separates those markets is haul
+    distance to the plant, not the state they sit in. A ton of surface mix FOB
+    the plant is close to the same price across Virginia; what changes is the
+    trucking to get it to the mat, and that is a function of where this row is.
+
+    Nothing here is seeded. An invented plant with an invented price would
+    produce a delivered cost that looks authoritative and is fiction.
+    """
+
+    __tablename__ = "material_sources"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    operator = Column(String(200), nullable=True)
+    # hma_plant | quarry | ready_mix | supplier
+    source_type = Column(String(40), nullable=False, default="hma_plant", index=True)
+
+    address = Column(String(300), nullable=True)
+    city = Column(String(120), nullable=True, index=True)
+    state = Column(String(2), nullable=True, index=True)
+    lat = Column(Float, nullable=True)
+    lng = Column(Float, nullable=True)
+
+    # HMA plants in Virginia shut for the winter. A source that cannot supply in
+    # February must not be selected for a February job.
+    season_open_month = Column(Integer, nullable=True)   # 1-12, inclusive
+    season_close_month = Column(Integer, nullable=True)  # 1-12, inclusive
+
+    # Minutes of haul this source's mix tolerates before it is too cold to lay.
+    # An operational policy, not a computed cooling curve — the crew sets it.
+    max_haul_minutes = Column(Integer, nullable=True)
+
+    account_number = Column(String(60), nullable=True)
+    phone = Column(String(30), nullable=True)
+    notes = Column(Text, nullable=True)
+    is_active = Column(Boolean, nullable=False, default=True)
+
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<MaterialSource {self.name!r} {self.city},{self.state} type={self.source_type!r}>"
+
+
+class MaterialSourcePrice(Base):
+    """
+    What one material costs FOB a given source, on a given date.
+
+    Quoted prices move with the season and with liquid asphalt, so this is a
+    dated history rather than a single current value: the newest row on or
+    before the job date wins. Overwriting one price row would erase the record
+    of what a bid was actually built on, which is the first thing anyone asks
+    when a job goes sideways.
+
+    `source_note` is required for the same reason it is required on keywords —
+    a price with no origin cannot be defended.
+    """
+
+    __tablename__ = "material_source_prices"
+    __table_args__ = (
+        UniqueConstraint(
+            "source_id", "material_code", "effective_date",
+            name="uq_source_material_date",
+        ),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(Integer, ForeignKey("material_sources.id"), nullable=False, index=True)
+
+    # e.g. hma_sm_9_5a | hma_im_19_0a | hma_bm_25_0a | agg_21a | agg_57 | tack_css1h
+    material_code = Column(String(60), nullable=False, index=True)
+    material_name = Column(String(200), nullable=True)
+    unit = Column(String(20), nullable=False, default="ton")  # ton | cubic_yd | gallon
+
+    fob_price = Column(Float, nullable=False)  # at the plant, before haul
+    effective_date = Column(DateTime(timezone=True), nullable=False, index=True)
+    quoted_by = Column(String(160), nullable=True)
+    source_note = Column(String(200), nullable=False)  # "plant quote 2026-08-19", "VDOT schedule"
+
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<MaterialSourcePrice src={self.source_id} {self.material_code!r} ${self.fob_price}/{self.unit}>"
+
+
+class HaulProfile(Base):
+    """
+    The trucking assumptions a delivered price is built from.
+
+    Separate from the sources because one fleet hauls from every plant, and
+    because these are the numbers that get argued about. Kept as a named,
+    dated row so a bid can say which profile priced it rather than carrying an
+    unattributed number.
+    """
+
+    __tablename__ = "haul_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120), nullable=False, unique=True)
+
+    truck_type = Column(String(60), nullable=True)      # tandem | tri_axle | trailer
+    tons_per_load = Column(Float, nullable=False)
+    truck_cost_per_hour = Column(Float, nullable=False)  # loaded rate, incl. driver
+
+    load_minutes = Column(Float, nullable=False, default=15.0)   # queue + load at plant
+    dump_minutes = Column(Float, nullable=False, default=15.0)   # wait + dump at paver
+    average_speed_mph = Column(Float, nullable=False, default=45.0)
+
+    # Straight-line distance under-reads the road. Multiply haversine by this
+    # when a real road distance is not supplied. 1.0 means "the distance given
+    # is already a road distance".
+    circuity_factor = Column(Float, nullable=False, default=1.25)
+
+    notes = Column(Text, nullable=True)
+    is_default = Column(Boolean, nullable=False, default=False)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<HaulProfile {self.name!r} {self.tons_per_load}t @ ${self.truck_cost_per_hour}/hr>"
+
+
+class LaborMarket(Base):
+    """
+    Crew cost by market, because a state is too coarse to price labor with.
+
+    Richmond, Charlottesville and Roanoke are one state and three labor
+    markets. `radius_miles` makes a market a place with an extent rather than
+    a label, so a job site can be matched to it by coordinates.
+    """
+
+    __tablename__ = "labor_markets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120), nullable=False)          # "Richmond, VA"
+    state = Column(String(2), nullable=False, index=True)
+    lat = Column(Float, nullable=True)
+    lng = Column(Float, nullable=True)
+    radius_miles = Column(Float, nullable=False, default=35.0)
+
+    crew_cost_per_hour = Column(Float, nullable=True)   # loaded crew cost
+    prevailing_wage_required = Column(Boolean, nullable=False, default=False)
+    per_diem_per_day = Column(Float, nullable=True)     # when the job is out of range
+
+    source_note = Column(String(200), nullable=True)
+    is_active = Column(Boolean, nullable=False, default=True)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<LaborMarket {self.name!r} r={self.radius_miles}mi>"
