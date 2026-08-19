@@ -308,6 +308,7 @@ from .routers import scc as scc_router
 from .routers import schedule_sim as schedule_sim_router
 from .routers import search as search_router
 from .routers import seo as seo_router
+from .routers import lifespan as lifespan_router
 from .routers import site_metrics as site_metrics_router
 from .routers import spatial_ai as spatial_ai_router
 from .routers import subcontractors as subcontractors_router
@@ -642,6 +643,7 @@ app.include_router(blog_router.router)
 app.include_router(vector_search_router.router)
 app.include_router(admin_vector_router.router)
 app.include_router(seo_router.router)
+app.include_router(lifespan_router.router)
 app.include_router(retrospectives_router.router)
 app.include_router(safety_router.router)
 app.include_router(cashflow_router.router)
