@@ -25,7 +25,7 @@ read as a fact about the world. So every value below comes from a real source,
 and anything without one is reported absent rather than filled in:
 
     fleet   → truck_positions rows (the same table /api/v1/geo/trucks serves)
-    price   → material_prices.fetch_asphalt_price_index() (EIA/BLS, carries
+    price   → material_prices.fetch_asphalt_price_index() (BLS PPI, carries
               its own `source` field so a fallback is visible as a fallback)
     scans   → ground_scan_reports rows
     crew    → crew_wearables webhook store
@@ -88,21 +88,33 @@ def _fleet(db: Session) -> dict[str, Any]:
 
 
 def _asphalt_price() -> dict[str, Any]:
-    """Commodity index. Keeps the upstream `source` so a fallback stays visible."""
+    """
+    Commodity index. Keeps the upstream `source` so a fallback stays visible.
+
+    `available` is False when the feed fell back to its baseline constant.
+    A baseline is a reference level, not an observation — reporting it as a
+    live index would put a hardcoded number on the dashboard under a
+    "current price" label.
+    """
     try:
         from ..services.material_prices import fetch_asphalt_price_index  # noqa: PLC0415
 
         idx = fetch_asphalt_price_index()
+        live = idx.get("source") not in (None, "fallback")
         return {
-            "available": idx.get("price_per_gallon") is not None,
-            "price_per_gallon": idx.get("price_per_gallon"),
-            "pct_change": idx.get("pct_change"),
+            "available": live,
+            "index_value": idx.get("index_value") if live else None,
+            "unit": idx.get("unit"),
+            "label": idx.get("label"),
+            "pct_change": idx.get("pct_change") if live else None,
             "as_of_date": idx.get("as_of_date"),
             "source": idx.get("source"),
+            "reason": None if live else idx.get("status_message"),
         }
     except Exception as exc:  # noqa: BLE001
         logger.warning("telematics: price index unavailable: %s", exc)
-        return {"available": False, "price_per_gallon": None, "source": None}
+        return {"available": False, "index_value": None, "unit": None, "source": None,
+                "reason": "price_feed_unreachable"}
 
 
 def _scans(db: Session) -> dict[str, Any]:
@@ -171,8 +183,9 @@ def live_snapshot(
         "simulated": False,
         "kpi": {
             "active_trucks": len(fleet["units"]) if fleet["available"] else None,
-            "asphalt_price": price["price_per_gallon"],
-            "asphalt_price_source": price.get("source"),
+            "asphalt_index": price["index_value"],
+            "asphalt_index_unit": price.get("unit"),
+            "asphalt_index_source": price.get("source"),
             "scans_total": scans["total"],
             "scans_last_24h": scans["last_24h"],
             # No telemetry in the schema measures fuel savings. Reported as

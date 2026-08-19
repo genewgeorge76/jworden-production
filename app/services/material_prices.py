@@ -5,7 +5,8 @@ Pulls live prices for the commodities that drive paving / GC project costs:
 
   Code         Series                              Source   Why it matters
   ─────────    ─────────────────────────────────   ──────   ────────────────────────────────
-  asphalt      EIA EPD2F (road oil, weekly)        EIA      Direct binder for HMA paving
+  asphalt      BLS WPU1394 (asphalt paving         BLS      The HMA a paving contractor buys
+                            mixtures & blocks PPI, monthly)
   wti_crude    EIA RWTC (WTI spot, weekly)         EIA      Leading indicator for asphalt
   diesel       EIA EPD2D (US retail diesel, wkly)  EIA      Trucking + equipment fuel pass-through
   natgas       EIA RNGWHHD (Henry Hub, weekly)     EIA      Asphalt plant + cement kiln fuel
@@ -28,7 +29,7 @@ Public API
   fetch_commodity_prices()                                        → dict
       All commodities; cached as a unit.
   fetch_asphalt_price_index()                                     → dict
-      Backward-compat wrapper around the asphalt entry of the above.
+      Asphalt-only view of the above, flattened for single-commodity callers.
   get_price_multiplier_with_materials(state_code, service_type)   → dict
       State labor multiplier × service-weighted commodity multiplier.
 """
@@ -64,19 +65,28 @@ _in_process_cache: dict = {}
 # stable benchmark.
 
 _COMMODITIES: dict[str, dict] = {
+    # Asphalt was previously pointed at EIA product code EPD2F on the
+    # petroleum/pri/wfr route and labelled "Asphalt / Road Oil". EPD2F is
+    # No. 2 fuel oil — not asphalt — so even with a working EIA_API_KEY this
+    # entry would have reported a distillate price under an asphalt label.
+    # EIA publishes no current asphalt price series, so this moves to the BLS
+    # PPI series that does track what a paving contractor actually buys.
+    # BLS also needs no API key, so this commodity stays live whether or not
+    # EIA_API_KEY is configured.
     "asphalt": {
-        "backend":   "eia",
-        "label":     "Asphalt / Road Oil",
-        "unit":      "$/gal",
-        "baseline":  2.85,
-        "url":       "https://api.eia.gov/v2/petroleum/pri/wfr/data/",
-        "facets":    [("facets[product][]", "EPD2F")],
+        "backend":   "bls",
+        "label":     "Asphalt Paving Mixtures & Blocks (PPI)",
+        "unit":      "PPI index",
+        # Q4-2024 mean of WPU1394: Oct 399.422, Nov 397.656, Dec 398.938.
+        "baseline":  398.672,
+        "series_id": "WPU1394",
     },
     "wti_crude": {
         "backend":   "eia",
         "label":     "WTI Crude Oil",
         "unit":      "$/bbl",
-        "baseline":  75.00,
+        # Q4-2024 mean of WTI spot: Oct 71.990, Nov 69.950, Dec 70.120.
+        "baseline":  70.687,
         "url":       "https://api.eia.gov/v2/petroleum/pri/spt/data/",
         "facets":    [("facets[series][]", "RWTC")],
     },
@@ -84,7 +94,8 @@ _COMMODITIES: dict[str, dict] = {
         "backend":   "eia",
         "label":     "On-Highway Diesel (US Avg.)",
         "unit":      "$/gal",
-        "baseline":  3.80,
+        # Q4-2024 mean of US retail diesel: Oct 3.585, Nov 3.522, Dec 3.494.
+        "baseline":  3.534,
         "url":       "https://api.eia.gov/v2/petroleum/pri/gnd/data/",
         "facets":    [("facets[product][]", "EPD2D"), ("facets[duoarea][]", "NUS")],
     },
@@ -92,7 +103,8 @@ _COMMODITIES: dict[str, dict] = {
         "backend":   "eia",
         "label":     "Henry Hub Natural Gas",
         "unit":      "$/MMBtu",
-        "baseline":  3.00,
+        # Q4-2024 mean of Henry Hub spot: Oct 2.20, Nov 2.12, Dec 3.01.
+        "baseline":  2.443,
         "url":       "https://api.eia.gov/v2/natural-gas/pri/fut/data/",
         "facets":    [("facets[series][]", "RNGWHHD")],
     },
@@ -100,7 +112,11 @@ _COMMODITIES: dict[str, dict] = {
         "backend":   "bls",
         "label":     "Construction Sand, Gravel & Crushed Stone (PPI)",
         "unit":      "PPI index",
-        "baseline":  280.0,  # WPU1321 ~ Q4 2024 reference level
+        # Q4-2024 mean of WPU1321: Oct 499.677, Nov 499.723, Dec 500.486.
+        # The previous value (280.0) was not a Q4-2024 level for this series;
+        # against a July-2026 print of 561.7 it produced a 2.01x aggregate
+        # multiplier, inflating every gravel-weighted estimate by 15-30%.
+        "baseline":  499.962,
         "series_id": "WPU1321",
     },
 }
@@ -361,15 +377,22 @@ def fetch_commodity_prices() -> dict:
 
 def fetch_asphalt_price_index() -> dict:
     """
-    Backward-compatible asphalt-only price index.
+    Asphalt-only view of the commodity feed, flattened for callers that want
+    a single number.
 
-    Returns the asphalt entry of `fetch_commodity_prices()` flattened into
-    the original shape so existing callers (router, AI engine) keep working.
+    `price_per_gallon` is kept for older callers but is populated ONLY when
+    the asphalt commodity is genuinely denominated in $/gal. Asphalt is now a
+    BLS PPI index, so that field reads None and `index_value` + `unit` carry
+    the real figure. A field that would have to misstate its own unit is left
+    empty rather than filled with a number that means something else.
     """
     feed = fetch_commodity_prices()
     asph = feed["commodities"]["asphalt"]
     return {
-        "price_per_gallon": asph["price"],
+        "index_value":      asph["price"],
+        "unit":             asph["unit"],
+        "label":            asph["label"],
+        "price_per_gallon": asph["price"] if asph.get("unit") == "$/gal" else None,
         "baseline_price":   asph["baseline"],
         "multiplier":       asph["multiplier"],
         "pct_change":       asph["pct_change"],

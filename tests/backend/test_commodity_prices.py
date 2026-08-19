@@ -44,18 +44,62 @@ def _eia_payload(value: float, period: str = "2026-04-25") -> dict:
     return {"response": {"data": [{"value": value, "period": period}]}}
 
 
-def _bls_payload(value: float, year: str = "2026", period: str = "M03") -> dict:
+def _bls_payload(
+    value: float,
+    year: str = "2026",
+    period: str = "M03",
+    series_id: str = "WPU1321",
+) -> dict:
     return {
         "status": "REQUEST_SUCCEEDED",
         "Results": {
             "series": [
                 {
-                    "seriesID": "WPU1321",
+                    "seriesID": series_id,
                     "data": [{"year": year, "period": period, "value": str(value)}],
                 }
             ]
         },
     }
+
+
+def _fake_transport(ratios: dict[str, float]):
+    """
+    Build `(fake_get, calls)` answering every commodity at
+    `baseline * ratios.get(code, 1.0)`.
+
+    Prices are derived from `_COMMODITIES` rather than hardcoded. The earlier
+    version of these tests pinned the literal baselines, so when the gravel
+    baseline drifted 79% away from the level it claimed to represent, every
+    test still passed — the stub and the bug moved together. Deriving the
+    stub from the registry keeps these tests about the multiplier math and
+    the backend dispatch, which is all they can honestly assert offline.
+    """
+    from app.services import material_prices as mp
+
+    by_eia_url: dict[str, dict] = {}
+    by_bls_series: dict[str, dict] = {}
+    for code, spec in mp._COMMODITIES.items():
+        price = spec["baseline"] * ratios.get(code, 1.0)
+        if spec.get("backend", "eia") == "eia":
+            by_eia_url[spec["url"]] = _eia_payload(price)
+        else:
+            by_bls_series[spec["series_id"]] = _bls_payload(price, series_id=spec["series_id"])
+
+    calls: list[str] = []
+
+    def fake_get(url, params=None, timeout=None):  # noqa: ARG001
+        calls.append(url)
+        if url in by_eia_url:
+            return _FakeResponse(by_eia_url[url])
+        if "bls.gov" in url:
+            series_id = url.rstrip("/").rsplit("/", 1)[-1]
+            if series_id in by_bls_series:
+                return _FakeResponse(by_bls_series[series_id])
+            raise AssertionError(f"unexpected BLS series {series_id}")
+        raise AssertionError(f"unexpected url {url}")
+
+    return fake_get, calls
 
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
@@ -80,30 +124,14 @@ def test_fetch_commodity_prices_no_api_key_uses_fallback(monkeypatch):
 
 
 def test_fetch_commodity_prices_live_path(monkeypatch):
-    """With a key + stubbed httpx, every commodity computes its multiplier from EIA values."""
+    """With stubbed httpx, every commodity computes its multiplier from its own feed."""
     from app.services import material_prices as mp
     monkeypatch.setattr(mp, "_EIA_API_KEY", "test-key")
     monkeypatch.setattr(mp, "_BLS_API_KEY", "")  # use unauthenticated GET path for BLS
 
-    # Map each commodity URL to a fake EIA payload that yields a known price.
-    eia_payloads = {
-        "https://api.eia.gov/v2/petroleum/pri/wfr/data/":      _eia_payload(3.135),   # asphalt: 3.135 / 2.85 = 1.10
-        "https://api.eia.gov/v2/petroleum/pri/spt/data/":      _eia_payload(82.50),   # wti:     82.50 / 75.00 = 1.10
-        "https://api.eia.gov/v2/petroleum/pri/gnd/data/":      _eia_payload(4.18),    # diesel:  4.18  / 3.80  = 1.10
-        "https://api.eia.gov/v2/natural-gas/pri/fut/data/":    _eia_payload(2.70),    # natgas:  2.70  / 3.00  = 0.90
-    }
-    bls_payload = _bls_payload(308.0)  # gravel: 308.0 / 280.0 = 1.10
-
-    calls: list[str] = []
-
-    def fake_get(url, params=None, timeout=None):  # noqa: ARG001
-        calls.append(url)
-        if url in eia_payloads:
-            return _FakeResponse(eia_payloads[url])
-        if "bls.gov" in url:
-            return _FakeResponse(bls_payload)
-        raise AssertionError(f"unexpected url {url}")
-
+    fake_get, calls = _fake_transport({
+        "asphalt": 1.10, "wti_crude": 1.10, "diesel": 1.10, "natgas": 0.90, "gravel": 1.10,
+    })
     monkeypatch.setattr(mp.httpx, "get", fake_get)
 
     feed = mp.fetch_commodity_prices()
@@ -113,9 +141,10 @@ def test_fetch_commodity_prices_live_path(monkeypatch):
     assert pytest.approx(cs["diesel"]["multiplier"],    abs=1e-3) == 1.10
     assert pytest.approx(cs["natgas"]["multiplier"],    abs=1e-3) == 0.90
     assert pytest.approx(cs["gravel"]["multiplier"],    abs=1e-3) == 1.10
-    assert cs["asphalt"]["source"] == "EIA API v2"
+    assert cs["asphalt"]["source"] == "BLS PPI API v2"
     assert cs["gravel"]["source"] == "BLS PPI API v2"
-    assert len(calls) == 5  # one HTTP call per commodity (4 EIA + 1 BLS)
+    assert cs["diesel"]["source"] == "EIA API v2"
+    assert len(calls) == 5  # one HTTP call per commodity (3 EIA + 2 BLS)
 
 
 def test_one_commodity_failure_does_not_break_feed(monkeypatch):
@@ -124,36 +153,68 @@ def test_one_commodity_failure_does_not_break_feed(monkeypatch):
     monkeypatch.setattr(mp, "_EIA_API_KEY", "test-key")
     monkeypatch.setattr(mp, "_BLS_API_KEY", "")
 
+    healthy, _ = _fake_transport({})
+
     def fake_get(url, params=None, timeout=None):  # noqa: ARG001
         if "natural-gas" in url:
             raise RuntimeError("EIA natgas endpoint down")
-        if "bls.gov" in url:
-            return _FakeResponse(_bls_payload(280.0))
-        return _FakeResponse(_eia_payload(75.0 if "spt" in url else (2.85 if "wfr" in url else 3.80)))
+        return healthy(url, params=params, timeout=timeout)
 
     monkeypatch.setattr(mp.httpx, "get", fake_get)
 
     feed = mp.fetch_commodity_prices()
     assert feed["commodities"]["natgas"]["source"] == "fallback"
-    assert feed["commodities"]["asphalt"]["source"] == "EIA API v2"
+    assert feed["commodities"]["asphalt"]["source"] == "BLS PPI API v2"
     assert feed["commodities"]["diesel"]["source"] == "EIA API v2"
     assert feed["commodities"]["wti_crude"]["source"] == "EIA API v2"
     assert feed["commodities"]["gravel"]["source"] == "BLS PPI API v2"
 
 
-def test_backward_compat_asphalt_index_shape(monkeypatch):
-    """fetch_asphalt_price_index keeps its original key shape for legacy callers."""
+def test_asphalt_series_is_the_paving_ppi():
+    """
+    Asphalt must not be pointed at EIA product code EPD2F.
+
+    EPD2F is No. 2 fuel oil. The registry previously requested it under the
+    label "Asphalt / Road Oil", so a working EIA_API_KEY would have put a
+    distillate price into every asphalt-weighted estimate. EIA publishes no
+    current asphalt price series; WPU1394 (BLS) tracks the paving mixture a
+    contractor actually buys and needs no API key.
+    """
     from app.services import material_prices as mp
-    monkeypatch.setattr(mp, "_EIA_API_KEY", "")  # fallback
+    spec = mp._COMMODITIES["asphalt"]
+    assert spec["backend"] == "bls"
+    assert spec["series_id"] == "WPU1394"
+    assert spec["unit"] == "PPI index"
+    assert "EPD2F" not in str(spec)
+
+
+def test_asphalt_index_wrapper_does_not_misstate_its_unit(monkeypatch):
+    """
+    The wrapper exposes `index_value` + `unit`, and leaves `price_per_gallon`
+    empty unless the commodity really is priced per gallon. Asphalt is an
+    index, so a per-gallon field would be a number in the wrong unit — worse
+    than an absent one, because a dollar figure reads as a quotable price.
+    """
+    from app.services import material_prices as mp
+
+    def _no_net(*_a, **_kw):
+        raise RuntimeError("network disabled in test")
+
+    monkeypatch.setattr(mp, "_EIA_API_KEY", "")
+    monkeypatch.setattr(mp.httpx, "get", _no_net)
+    monkeypatch.setattr(mp.httpx, "post", _no_net)
 
     result = mp.fetch_asphalt_price_index()
     expected_keys = {
-        "price_per_gallon", "baseline_price", "multiplier", "pct_change",
-        "as_of_date", "status_message", "source",
+        "index_value", "unit", "label", "price_per_gallon", "baseline_price",
+        "multiplier", "pct_change", "as_of_date", "status_message", "source",
     }
     assert expected_keys.issubset(result.keys())
-    assert result["price_per_gallon"] == 2.85
+    assert result["unit"] == "PPI index"
+    assert result["price_per_gallon"] is None
+    assert result["index_value"] == mp._COMMODITIES["asphalt"]["baseline"]
     assert result["multiplier"] == 1.0
+    assert result["source"] == "fallback"
 
 
 def test_get_price_multiplier_with_materials_legacy_keys_present(monkeypatch):
@@ -185,19 +246,7 @@ def test_service_aware_weighting_paving_vs_sealcoating(monkeypatch):
     monkeypatch.setattr(mp, "_BLS_API_KEY", "")
 
     # Asphalt +20%, everything else at baseline.
-    def fake_get(url, params=None, timeout=None):  # noqa: ARG001
-        if "wfr" in url:                # asphalt
-            return _FakeResponse(_eia_payload(2.85 * 1.20))
-        if "spt" in url:                # WTI
-            return _FakeResponse(_eia_payload(75.00))
-        if "gnd" in url:                # diesel
-            return _FakeResponse(_eia_payload(3.80))
-        if "natural-gas" in url:        # natgas
-            return _FakeResponse(_eia_payload(3.00))
-        if "bls.gov" in url:            # gravel PPI
-            return _FakeResponse(_bls_payload(280.0))
-        raise AssertionError(f"unexpected url {url}")
-
+    fake_get, _ = _fake_transport({"asphalt": 1.20})
     monkeypatch.setattr(mp.httpx, "get", fake_get)
 
     paving = mp.get_price_multiplier_with_materials(None, "paving")
@@ -220,19 +269,7 @@ def test_gravel_drives_concrete_and_civil_pricing(monkeypatch):
     monkeypatch.setattr(mp, "_EIA_API_KEY", "test-key")
     monkeypatch.setattr(mp, "_BLS_API_KEY", "")
 
-    def fake_get(url, params=None, timeout=None):  # noqa: ARG001
-        if "bls.gov" in url:           # gravel +20%
-            return _FakeResponse(_bls_payload(280.0 * 1.20))
-        if "wfr" in url:               # asphalt flat
-            return _FakeResponse(_eia_payload(2.85))
-        if "spt" in url:               # WTI flat
-            return _FakeResponse(_eia_payload(75.00))
-        if "gnd" in url:               # diesel flat
-            return _FakeResponse(_eia_payload(3.80))
-        if "natural-gas" in url:       # natgas flat
-            return _FakeResponse(_eia_payload(3.00))
-        raise AssertionError(f"unexpected url {url}")
-
+    fake_get, _ = _fake_transport({"gravel": 1.20})
     monkeypatch.setattr(mp.httpx, "get", fake_get)
 
     civil = mp.get_price_multiplier_with_materials(None, "civil_site_work")
@@ -245,17 +282,20 @@ def test_gravel_drives_concrete_and_civil_pricing(monkeypatch):
 
 
 def test_bls_uses_post_when_api_key_present(monkeypatch):
-    """When BLS_API_KEY is set, the BLS backend POSTs with the registration key."""
+    """When BLS_API_KEY is set, every BLS commodity POSTs with the registration key."""
     from app.services import material_prices as mp
-    monkeypatch.setattr(mp, "_EIA_API_KEY", "")  # other commodities stay on fallback
+    monkeypatch.setattr(mp, "_EIA_API_KEY", "")  # EIA commodities stay on fallback
     monkeypatch.setattr(mp, "_BLS_API_KEY", "bls-test-key")
 
-    captured: dict = {}
+    captured: list[dict] = []
+    baselines = {c: mp._COMMODITIES[c]["baseline"] for c in ("asphalt", "gravel")}
 
     def fake_post(url, json=None, timeout=None):  # noqa: ARG001, A002
-        captured["url"] = url
-        captured["json"] = json
-        return _FakeResponse(_bls_payload(308.0))
+        captured.append({"url": url, "json": json})
+        series_id = json["seriesid"][0]
+        code = next(c for c, b in baselines.items()
+                    if mp._COMMODITIES[c]["series_id"] == series_id)
+        return _FakeResponse(_bls_payload(baselines[code] * 1.10, series_id=series_id))
 
     def _no_get(*_a, **_kw):
         raise RuntimeError("network disabled")
@@ -264,12 +304,15 @@ def test_bls_uses_post_when_api_key_present(monkeypatch):
     monkeypatch.setattr(mp.httpx, "get", _no_get)
 
     feed = mp.fetch_commodity_prices()
-    gravel = feed["commodities"]["gravel"]
-    assert gravel["source"] == "BLS PPI API v2"
-    assert pytest.approx(gravel["multiplier"], abs=1e-3) == 1.10
-    assert "bls.gov" in captured["url"]
-    assert captured["json"]["registrationkey"] == "bls-test-key"
-    assert captured["json"]["seriesid"] == ["WPU1321"]
+    for code in ("asphalt", "gravel"):
+        entry = feed["commodities"][code]
+        assert entry["source"] == "BLS PPI API v2"
+        assert pytest.approx(entry["multiplier"], abs=1e-3) == 1.10
+
+    assert {c["json"]["seriesid"][0] for c in captured} == {"WPU1394", "WPU1321"}
+    for call in captured:
+        assert "bls.gov" in call["url"]
+        assert call["json"]["registrationkey"] == "bls-test-key"
 
 
 def test_combined_multiplier_includes_state(monkeypatch):
@@ -298,25 +341,10 @@ def test_caching_avoids_repeated_http_calls(monkeypatch):
     monkeypatch.setattr(mp, "_EIA_API_KEY", "test-key")
     monkeypatch.setattr(mp, "_BLS_API_KEY", "")
 
-    call_count = {"n": 0}
-
-    def fake_get(url, params=None, timeout=None):  # noqa: ARG001
-        call_count["n"] += 1
-        if "spt" in url:
-            return _FakeResponse(_eia_payload(75.0))
-        if "wfr" in url:
-            return _FakeResponse(_eia_payload(2.85))
-        if "gnd" in url:
-            return _FakeResponse(_eia_payload(3.80))
-        if "natural-gas" in url:
-            return _FakeResponse(_eia_payload(3.00))
-        if "bls.gov" in url:
-            return _FakeResponse(_bls_payload(280.0))
-        raise AssertionError(f"unexpected url {url}")
-
+    fake_get, calls = _fake_transport({})
     monkeypatch.setattr(mp.httpx, "get", fake_get)
 
     mp.fetch_commodity_prices()
-    first = call_count["n"]
+    first = len(calls)
     mp.fetch_commodity_prices()  # cached
-    assert call_count["n"] == first, "Second call should be served from cache"
+    assert len(calls) == first, "Second call should be served from cache"
