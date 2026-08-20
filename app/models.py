@@ -2740,3 +2740,31 @@ class SocialSignal(Base):
 
     def __repr__(self) -> str:
         return f"<SocialSignal {self.kind!r} {self.review_status!r} {self.url!r}>"
+
+
+class SchedulerHeartbeat(Base):
+    """
+    Proof that a periodic job actually ran.
+
+    Celery beat failing is silent by design: the queue stays empty, the worker
+    reports healthy, and the jobs simply never fire. A scheduled-post queue is
+    the worst place for that — it looks correct right up until someone asks
+    why nothing went out last week.
+
+    So each run stamps itself here, and the status endpoints compare the stamp
+    against the interval. A dispatcher that has not run in far longer than its
+    schedule is reported as stalled rather than idle, because those look
+    identical from the outside and only one of them is fine.
+    """
+
+    __tablename__ = "scheduler_heartbeats"
+
+    id = Column(Integer, primary_key=True, index=True)
+    task_name = Column(String(120), nullable=False, unique=True, index=True)
+    last_run_at = Column(DateTime(timezone=True), nullable=False)
+    last_status = Column(String(20), nullable=False, default="ok")
+    detail = Column(Text, nullable=True)
+    runs = Column(Integer, default=0, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<SchedulerHeartbeat {self.task_name!r} {self.last_run_at}>"

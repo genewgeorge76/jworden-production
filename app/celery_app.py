@@ -38,6 +38,7 @@ celery_app = Celery(
         "app.tasks.autonomy_tasks",
         "app.tasks.self_heal_beat",
         "app.tasks.voice_events",
+        "app.tasks.social_dispatch",
     ],
 )
 
@@ -81,6 +82,13 @@ celery_app.conf.update(
         },
         # Continuous anomaly detection — scans lead volume, HOT rate, COOL surge,
         # and zero-lead gap every 30 minutes during all hours.
+        # Scheduled social posts. Every run stamps scheduler_heartbeats, even
+        # when nothing is due — an idle dispatcher and a dead one are
+        # indistinguishable without it.
+        "dispatch-social-posts-every-5m": {
+            "task": "app.tasks.social_dispatch.dispatch_due_social_posts",
+            "schedule": crontab(minute="*/5"),
+        },
         "anomaly-scan-every-30m": {
             "task": "app.tasks.anomaly_beat.run_anomaly_scan_task",
             "schedule": crontab(minute="*/30"),

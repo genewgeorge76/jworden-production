@@ -23,12 +23,20 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
-from ..models import CompanyClaim, Job, Lead, SocialAccount, SocialPost, SocialSignal
+from ..models import (
+    CompanyClaim,
+    Job,
+    Lead,
+    SocialAccount,
+    SocialPost,
+    SocialSignal,
+)
 from ..services import (
     social_claims,
     social_content,
     social_listening,
     social_publish,
+    social_scheduler,
 )
 from ..services.tenancy import scope, tenant_of
 
@@ -93,7 +101,15 @@ def social_status(db: Session = Depends(get_db),
 
     postable = scope(db.query(Job), Job, tenant).filter(Job.status == "completed").count()
 
+    dispatcher = social_scheduler.heartbeat_status(db)
+    scheduled = posts.filter(SocialPost.status == "scheduled").count()
+
     blockers: list[str] = []
+    if scheduled and dispatcher["state"] != "ok":
+        blockers.append(
+            f"{scheduled} post(s) scheduled but the dispatcher is "
+            f"{dispatcher['state']} — they will not go out"
+        )
     if not accounts:
         blockers.append("no social accounts registered")
     if not postable:
@@ -121,6 +137,7 @@ def social_status(db: Session = Depends(get_db),
                 .filter(SocialSignal.review_status == "new").count(),
             "missing_key": None if social_listening.configured() else "XAI_API_KEY",
         },
+        "scheduler": dispatcher,
         "blockers": blockers,
     }
 
@@ -599,3 +616,94 @@ def convert_signal(signal_id: int, payload: ConvertIn,
     row.reviewed_by = str(auth.get("sub") or auth.get("user") or "") or None
     db.commit()
     return {"ok": True, "lead_id": lead.id, "signal": _signal_dict(row)}
+
+
+class ScheduleIn(BaseModel):
+    scheduled_for: str = Field(
+        description="ISO 8601 with an offset, e.g. 2026-08-21T14:00:00Z. "
+                    "Naive values are rejected — a wall-clock time with no "
+                    "zone publishes at the wrong hour somewhere."
+    )
+
+
+@router.post("/posts/{post_id}/schedule", summary="Queue a post for a time")
+def schedule_post(post_id: int, payload: ScheduleIn,
+                  db: Session = Depends(get_db),
+                  auth: dict = Depends(verify_premium_security)):
+    """
+    Scheduling checks claims now and again at dispatch.
+
+    Passing here is not permission to publish later: an attestation can lapse
+    between the two, which is the case the second check exists for.
+    """
+    tenant = tenant_of(auth)
+    post = scope(db.query(SocialPost), SocialPost, tenant).filter(
+        SocialPost.id == post_id
+    ).first()
+    if post is None:
+        raise HTTPException(status_code=404, detail="no such post")
+    if post.status in {"published", "publishing"}:
+        raise HTTPException(status_code=409,
+                            detail=f"post is {post.status} and cannot be rescheduled")
+
+    try:
+        when = datetime.fromisoformat(payload.scheduled_for.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise HTTPException(status_code=422,
+                            detail=f"bad timestamp {payload.scheduled_for!r}") from exc
+    if when.tzinfo is None:
+        raise HTTPException(
+            status_code=422,
+            detail="scheduled_for needs a timezone offset. A naive time is "
+                   "ambiguous and would publish at the wrong hour.",
+        )
+    if when <= _utcnow():
+        raise HTTPException(status_code=422, detail="scheduled_for is in the past")
+
+    report = _check(db, tenant, post.body)
+    post.claim_report_json = report.as_dict()
+    if not report.publishable:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "error": "unsubstantiated claims",
+                "message": "Scheduling does not defer the claim check.",
+                "claim_report": report.as_dict(),
+            },
+        )
+
+    post.status = "scheduled"
+    post.scheduled_for = when
+    post.claims_cleared_at = _utcnow()
+    post.last_error = None
+    db.commit()
+    db.refresh(post)
+    return {"ok": True, "post": _post_dict(post),
+            "dispatcher": social_scheduler.heartbeat_status(db)}
+
+
+@router.get("/scheduler", summary="Is the dispatcher actually running")
+def scheduler_status(db: Session = Depends(get_db),
+                     auth: dict = Depends(verify_premium_security)):
+    tenant = tenant_of(auth)
+    q = scope(db.query(SocialPost), SocialPost, tenant)
+    return {
+        "ok": True,
+        "dispatcher": social_scheduler.heartbeat_status(db),
+        "interval_seconds": social_scheduler.DISPATCH_INTERVAL_SECONDS,
+        "scheduled": q.filter(SocialPost.status == "scheduled").count(),
+        "publishing": q.filter(SocialPost.status == "publishing").count(),
+        "due_now": len(social_scheduler.due_post_ids(db)),
+    }
+
+
+@router.post("/scheduler/run", summary="Dispatch due posts now")
+async def scheduler_run(db: Session = Depends(get_db),
+                        auth: dict = Depends(verify_premium_security)):
+    """
+    Manual trigger, for when beat is down or you do not want to wait.
+
+    Safe to call alongside the periodic run: claiming is a conditional update,
+    so whichever gets there first wins and the other finds nothing to take.
+    """
+    return {"ok": True, **await social_scheduler.dispatch_due(db)}
