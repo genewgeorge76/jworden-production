@@ -2494,3 +2494,59 @@ class LaborMarket(Base):
 
     def __repr__(self) -> str:
         return f"<LaborMarket {self.name!r} r={self.radius_miles}mi>"
+
+
+class MaterialSourceCandidate(Base):
+    """
+    A supplier discovery turned up, before anyone has confirmed it is real.
+
+    Discovery proposes; it does not enrol. A text search for "asphalt plant"
+    also returns paving contractors, sales offices and long-closed yards, and
+    a candidate promoted automatically would end up priced against as though
+    trucks could load there. Nothing reaches `material_sources` — and therefore
+    nothing reaches a bid — until someone confirms it.
+
+    `provider_place_id` is unique per provider so re-running discovery over the
+    same ground updates candidates instead of stacking duplicates.
+    """
+
+    __tablename__ = "material_source_candidates"
+    __table_args__ = (
+        UniqueConstraint("provider", "provider_place_id", name="uq_candidate_provider_place"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    provider = Column(String(40), nullable=False, default="google_places", index=True)
+    provider_place_id = Column(String(200), nullable=False)
+
+    name = Column(String(200), nullable=False)
+    address = Column(String(300), nullable=True)
+    city = Column(String(120), nullable=True)
+    state = Column(String(2), nullable=True, index=True)
+    lat = Column(Float, nullable=True)
+    lng = Column(Float, nullable=True)
+    phone = Column(String(40), nullable=True)
+    website = Column(String(300), nullable=True)
+
+    # What was searched for, and what the provider thought it was. Kept apart:
+    # the first is our intent, the second is their classification, and neither
+    # is a fact about what the yard actually sells.
+    searched_category = Column(String(60), nullable=False, index=True)
+    provider_primary_type = Column(String(80), nullable=True)
+    business_status = Column(String(40), nullable=True)
+
+    distance_from_search_center_mi = Column(Float, nullable=True)
+    raw_json = Column(JSON, nullable=True)
+
+    # pending | promoted | rejected
+    review_status = Column(String(20), nullable=False, default="pending", index=True)
+    reviewed_at = Column(DateTime(timezone=True), nullable=True)
+    review_note = Column(String(300), nullable=True)
+    promoted_source_id = Column(Integer, nullable=True, index=True)
+
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+    first_seen_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    last_seen_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<MaterialSourceCandidate {self.name!r} {self.searched_category!r} {self.review_status!r}>"

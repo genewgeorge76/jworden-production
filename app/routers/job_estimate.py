@@ -27,6 +27,8 @@ from ..models import HaulProfile, LaborMarket, MaterialSource, MaterialSourcePri
 from ..services import delivered_cost as dc
 from ..services import job_chain as jc
 from ..services import pavement_lifespan as pl
+from ..services.location_resolver import resolve_location
+from ..services.tenancy import scope, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +54,7 @@ class JobRequest(BaseModel):
     base_thickness_in: float = Field(6.0, ge=0, le=24)
     compaction_pct: Optional[float] = Field(None, ge=0, le=110)
 
+    address: Optional[str] = Field(None, min_length=2, max_length=300)
     lat: Optional[float] = Field(None, ge=-90, le=90)
     lng: Optional[float] = Field(None, ge=-180, le=180)
     project_site_id: Optional[int] = None
@@ -68,30 +71,33 @@ class JobRequest(BaseModel):
 
     @model_validator(mode="after")
     def _needs_a_location(self) -> "JobRequest":
-        if self.project_site_id is None and (self.lat is None or self.lng is None):
-            raise ValueError("give either project_site_id or both lat and lng")
+        if self.address is None and self.project_site_id is None and (
+            self.lat is None or self.lng is None
+        ):
+            raise ValueError("give an address, a project_site_id, or both lat and lng")
         return self
 
 
 def _price_material(db: Session, material_code: str, lat: float, lng: float,
-                    haul: dict[str, Any], job_date: datetime) -> Optional[dict[str, Any]]:
+                    haul: dict[str, Any], job_date: datetime,
+                    tenant: str) -> Optional[dict[str, Any]]:
     """Run one material through the costing engine. None when no source exists at all."""
-    sources = db.query(MaterialSource).filter(MaterialSource.is_active.is_(True)).all()
+    sources = scope(db.query(MaterialSource).filter(MaterialSource.is_active.is_(True)),
+                    MaterialSource, tenant).all()
     if not sources:
         return None
 
     evaluated = []
     for s in sources:
-        price_row = (
+        price_row = scope(
             db.query(MaterialSourcePrice)
             .filter(
                 MaterialSourcePrice.source_id == s.id,
                 MaterialSourcePrice.material_code == material_code,
                 MaterialSourcePrice.effective_date <= job_date,
-            )
-            .order_by(MaterialSourcePrice.effective_date.desc())
-            .first()
-        )
+            ),
+            MaterialSourcePrice, tenant,
+        ).order_by(MaterialSourcePrice.effective_date.desc()).first()
         row = dc.evaluate_source(
             source={
                 "id": s.id, "name": s.name, "city": s.city, "state": s.state,
@@ -119,7 +125,7 @@ def _price_material(db: Session, material_code: str, lat: float, lng: float,
 
 @router.post("/job", summary="Quantities, delivered material cost, labor and lifecycle in one call")
 def estimate_job(body: JobRequest, db: Session = Depends(get_db),
-                 _: dict = Depends(verify_premium_security)):
+                 auth: dict = Depends(verify_premium_security)):
     """
     The end-to-end estimate.
 
@@ -129,17 +135,11 @@ def estimate_job(body: JobRequest, db: Session = Depends(get_db),
     carrying a placeholder rate.
     """
     stages: list[dict[str, Any]] = []
+    tenant = tenant_of(auth)
 
-    # ── Location ──
-    lat, lng, label = body.lat, body.lng, None
-    if body.project_site_id is not None:
-        site = db.query(ProjectSite).filter(ProjectSite.id == body.project_site_id).one_or_none()
-        if site is None:
-            raise HTTPException(status_code=404, detail=f"No project site {body.project_site_id}")
-        if site.lat is None or site.lng is None:
-            raise HTTPException(status_code=422,
-                                detail=f"Project site {body.project_site_id} has no coordinates.")
-        lat, lng, label = site.lat, site.lng, (f"{site.city}, {site.state}" if site.city else site.address)
+    where = resolve_location(db, lat=body.lat, lng=body.lng,
+                             address=body.address, project_site_id=body.project_site_id)
+    lat, lng, label = where["lat"], where["lng"], where.get("label")
 
     job_date = body.job_date or _utcnow()
 
@@ -156,12 +156,15 @@ def estimate_job(body: JobRequest, db: Session = Depends(get_db),
     # ── 2. Materials, delivered ──
     profile = None
     if body.haul_profile:
-        profile = db.query(HaulProfile).filter(HaulProfile.name == body.haul_profile).one_or_none()
+        profile = scope(db.query(HaulProfile).filter(HaulProfile.name == body.haul_profile),
+                        HaulProfile, tenant).one_or_none()
         if profile is None:
             raise HTTPException(status_code=404, detail=f"No haul profile '{body.haul_profile}'")
     else:
-        profile = (db.query(HaulProfile).filter(HaulProfile.is_default.is_(True)).one_or_none()
-                   or db.query(HaulProfile).order_by(HaulProfile.id).first())
+        profile = (scope(db.query(HaulProfile).filter(HaulProfile.is_default.is_(True)),
+                         HaulProfile, tenant).one_or_none()
+                   or scope(db.query(HaulProfile), HaulProfile, tenant)
+                        .order_by(HaulProfile.id).first())
 
     priced: dict[str, Optional[dict[str, Any]]] = {"surface": None, "base": None}
     if profile is None:
@@ -179,9 +182,11 @@ def estimate_job(body: JobRequest, db: Session = Depends(get_db),
             "dump_minutes": profile.dump_minutes,
             "circuity_factor": profile.circuity_factor,
         }
-        priced["surface"] = _price_material(db, body.surface_material_code, lat, lng, haul, job_date)
+        priced["surface"] = _price_material(db, body.surface_material_code, lat, lng,
+                                            haul, job_date, tenant)
         if body.base_thickness_in > 0:
-            priced["base"] = _price_material(db, body.base_material_code, lat, lng, haul, job_date)
+            priced["base"] = _price_material(db, body.base_material_code, lat, lng,
+                                             haul, job_date, tenant)
         any_priced = any(p and p.get("delivered_cost_per_ton") is not None for p in priced.values())
         stages.append({
             "stage": "materials", "ok": any_priced,
@@ -199,7 +204,8 @@ def estimate_job(body: JobRequest, db: Session = Depends(get_db),
          "radius_miles": m.radius_miles, "crew_cost_per_hour": m.crew_cost_per_hour,
          "prevailing_wage_required": m.prevailing_wage_required,
          "per_diem_per_day": m.per_diem_per_day}
-        for m in db.query(LaborMarket).filter(LaborMarket.is_active.is_(True)).all()
+        for m in scope(db.query(LaborMarket).filter(LaborMarket.is_active.is_(True)),
+                       LaborMarket, tenant).all()
     ]
     market = dc.market_for_site(markets, lat, lng)
     labor = jc.labor_estimate(market, body.crew_hours)
@@ -235,7 +241,7 @@ def estimate_job(body: JobRequest, db: Session = Depends(get_db),
 
     return {
         "success": True,
-        "site": {"lat": lat, "lng": lng, "label": label},
+        "site": where,
         "job_date": job_date.isoformat(),
         "quantities": quantities,
         "materials": costed,
