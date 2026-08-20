@@ -310,6 +310,7 @@ from .routers import search as search_router
 from .routers import seo as seo_router
 from .routers import lifespan as lifespan_router
 from .routers import costing as costing_router
+from .routers import job_estimate as job_estimate_router
 from .routers import site_metrics as site_metrics_router
 from .routers import spatial_ai as spatial_ai_router
 from .routers import subcontractors as subcontractors_router
@@ -646,6 +647,7 @@ app.include_router(admin_vector_router.router)
 app.include_router(seo_router.router)
 app.include_router(lifespan_router.router)
 app.include_router(costing_router.router)
+app.include_router(job_estimate_router.router)
 app.include_router(retrospectives_router.router)
 app.include_router(safety_router.router)
 app.include_router(cashflow_router.router)

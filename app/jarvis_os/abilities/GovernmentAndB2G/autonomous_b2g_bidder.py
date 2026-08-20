@@ -4,11 +4,20 @@ try:
 except ImportError:
     ProposalGeneratorEngine = None
 
-def calculate_takeoff(*args, **kwargs):
-    return {"sqft": 50000, "tonnage": 3500}
-
-def estimate_price(*args, **kwargs):
-    return {"total_estimate": 175000.00}
+# These were local stubs shadowing the real functions: calculate_takeoff
+# returned {"sqft": 50000, "tonnage": 3500} and estimate_price returned
+# {"total_estimate": 175000.00}, for every input, forever. This module
+# generates UNSOLICITED PROPOSALS TO MUNICIPALITIES, so those constants went
+# out as a quantity and a price on work nobody had measured.
+#
+# The real takeoff is imported instead. It returns tonnage from geometry and
+# refuses to invent a price, which means this module can no longer produce a
+# dollar figure on its own — correctly. A government proposal carries a number
+# somebody stands behind or it carries none.
+try:
+    from app.jarvis_os.abilities.SalesAndEstimation.takeoff import calculate_takeoff
+except ImportError:  # pragma: no cover - import guard for standalone runs
+    calculate_takeoff = None
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - B2G-BIDDER - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -25,21 +34,45 @@ class AutonomousB2GBidder:
         if not isinstance(scan_data, dict):
             scan_data = {}
         logger.info(f"Analyzing infrastructure scan for {municipality_name}...")
-        sqft = float(scan_data.get("estimated_sqft", 50000))
+        sqft = scan_data.get("estimated_sqft")
+        if sqft is None:
+            return {
+                "status": "no_data",
+                "reason": "no measured area supplied. A proposal to a municipality needs a "
+                          "real takeoff — estimated_sqft is required, not defaulted.",
+            }
+        sqft = float(sqft)
         
-        # Calculate materials required
+        if calculate_takeoff is None:
+            return {
+                "status": "unavailable",
+                "reason": "takeoff calculator could not be imported; no proposal generated",
+            }
+
+        # Quantities are geometry and always resolve.
         takeoff_data = calculate_takeoff(area_sqft=sqft, state_code="VA")
-        
-        # Get baseline commercial pricing
-        price_range = estimate_price("paving", "commercial", sqft, state_code="VA")
-        
-        # Apply Davis-Bacon Prevailing Wage Markup (approx +20% for government work)
+
+        # Pricing is not. Rates are specific to a market and a season, and this
+        # module has no location beyond a municipality name, so it cannot reach
+        # the costing engine for a delivered price. It therefore proposes scope
+        # and quantities and stops short of a number.
+        #
+        # Davis-Bacon adds roughly 20% to public work, but a markup on an
+        # unknown base is still unknown, so it is stated as a factor to apply
+        # rather than applied to a placeholder.
         davis_bacon_markup = 1.20
-        base_price = price_range.get("total_estimate", 175000.0) if isinstance(price_range, dict) else 175000.0
-        low_usd = int(price_range.get("low_usd", base_price * 0.85) * davis_bacon_markup) if isinstance(price_range, dict) else 150000
-        high_usd = int(price_range.get("high_usd", base_price * 1.15) * davis_bacon_markup) if isinstance(price_range, dict) else 250000
+        low_usd = None
+        high_usd = None
         
-        logger.error(f"JARVIS FINDING: Subsurface drainage collapsing in {municipality_name}. Prevailing Wage Markup Applied (1.20x).")
+        # This previously logged "JARVIS FINDING: Subsurface drainage collapsing in
+        # <municipality>" for every call. No inspection had happened. Asserting a
+        # structural failure to a city council on the strength of nothing is the
+        # kind of claim that ends a vendor relationship, and it was hardcoded.
+        logger.info(
+            "Drafting unsolicited proposal for %s: %s sq ft, quantities from takeoff, "
+            "no condition finding asserted (none was surveyed).",
+            municipality_name, f"{sqft:,.0f}",
+        )
         
         # 2026-2030 Macro-Economic AI Adaptation Rules
         # Injected from Overnight Evolution Protocol Findings
@@ -68,7 +101,11 @@ class AutonomousB2GBidder:
         proposal_generator = ProposalGeneratorEngine()
         proposal_text = proposal_generator.execute(lead_payload)
         
-        logger.warning(f"JARVIS ACTION: Unsolicited Proposal for ${high_usd:,} generated for {municipality_name}.")
+        logger.warning(
+            "JARVIS ACTION: Unsolicited proposal generated for %s (scope and quantities "
+            "only; no price — rates are market-specific and none were resolved).",
+            municipality_name,
+        )
         logger.warning(f"SECURITY LOCK: Bid drafted but NOT SENT. Waiting for Owner Approval (status: PENDING_APPROVAL).")
         
         # In a real database we would INSERT INTO bids... returning bid_id
@@ -83,7 +120,12 @@ class AutonomousB2GBidder:
             "pricing": {
                 "low": low_usd,
                 "high": high_usd,
-                "markup_applied": "Davis-Bacon Prevailing Wage (20%)"
+                "priced": False,
+                "markup_to_apply": f"Davis-Bacon prevailing wage, x{davis_bacon_markup}",
+                "note": "Scope and quantities only. Price this through "
+                        "POST /api/v1/estimate/job with the site coordinates, so the "
+                        "rate reflects haul distance to a plant that can supply it, "
+                        "then apply the prevailing-wage factor.",
             }
         }
 
