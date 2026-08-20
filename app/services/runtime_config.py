@@ -65,6 +65,10 @@ MANAGED_KEYS: tuple[str, ...] = (
     "ANTHROPIC_API_KEY", "ANTHROPIC_MODEL",
     "OPENAI_API_KEY",
     "GOOGLE_API_KEY", "GEMINI_API_KEY",
+    # Routed-to providers. llm_client has a _ROUTES lane for each of these, so
+    # without them here the lane is unreachable: the key could only be set as a
+    # platform secret, which costs a redeploy. Managed keys are settable live.
+    "XAI_API_KEY", "PERPLEXITY_API_KEY",
     "LLM_FALLBACK_SILENT", "JARVIS_MAX_TIER",
     "JARVIS_MODEL_OVERRIDE", "JARVIS_DISABLE_GEMINI", "LLM_DISABLED_PROVIDERS",
     # Web search

@@ -139,6 +139,8 @@ async def post_test(body: TestRequest, _: str = Depends(_require_owner)):
         return _test_sendgrid()
     if provider == "vapi":
         return _test_vapi()
+    if provider == "xai":
+        return await _test_xai()
     if provider == "google":
         from app.services import google_suite
         return {"ok": True, "results": await google_suite.health_all()}
@@ -179,6 +181,57 @@ async def _test_anthropic() -> dict:
                 "detail": r.text[:200] if r.status_code >= 400 else "ping ok"}
     except Exception as exc:  # noqa: BLE001
         return {"ok": False, "error": str(exc)[:200]}
+
+
+async def _test_xai() -> dict:
+    """
+    Probe xAI by listing models rather than sending a chat turn.
+
+    GET /v1/models costs nothing and answers the question that actually
+    matters: not just "is the key valid" but "does this account have the
+    model the router asks for". A key can authenticate fine and still 404
+    on grok-4.6 if the account is on a plan that does not carry it, and a
+    1-token chat ping would not surface that.
+    """
+    import httpx
+    key = runtime_config.get("XAI_API_KEY")
+    if not key:
+        return {"ok": False, "error": "XAI_API_KEY not set"}
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.get(
+                "https://api.x.ai/v1/models",
+                headers={"Authorization": f"Bearer {key}"},
+            )
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "error": str(exc)[:200]}
+
+    if r.status_code >= 400:
+        return {"ok": False, "status_code": r.status_code, "detail": r.text[:200]}
+
+    try:
+        available = sorted(m.get("id", "") for m in (r.json().get("data") or []))
+    except Exception:  # noqa: BLE001
+        # Authenticated, but the body was not the documented shape. Say so
+        # instead of reporting a model list we did not actually read.
+        return {"ok": True, "status_code": r.status_code,
+                "detail": "authenticated; model list unreadable"}
+
+    wanted = _router_model_for("social_signal")
+    return {
+        "ok":              True,
+        "status_code":     r.status_code,
+        "available":       available,
+        "router_wants":    wanted,
+        "router_model_ok": wanted in available,
+    }
+
+
+def _router_model_for(task: str) -> str:
+    """The model the router would try first for a task, or '' if unrouted."""
+    from app.services.llm_client import _ROUTES
+    chain = _ROUTES.get(task) or []
+    return chain[0][1] if chain else ""
 
 
 async def _test_tavily() -> dict:
