@@ -64,7 +64,18 @@ async def push_gbp_post(location_id: str, content: str) -> dict:
     if not token:
          return {"ok": False, "reason": "GBP_OAUTH_TOKEN missing"}
          
-    url = f"https://mybusiness.googleapis.com/v4/accounts/ACCOUNT_ID/locations/{location_id}/localPosts"
+    # The account id was a literal "ACCOUNT_ID" placeholder here, so every
+    # push resolved to .../accounts/ACCOUNT_ID/... and could only 404. Read it
+    # from config and refuse when it is absent, rather than posting into a URL
+    # that cannot exist.
+    account_id = _cfg.get("GBP_ACCOUNT_ID")
+    if not account_id:
+        return {"ok": False, "reason": "GBP_ACCOUNT_ID missing"}
+
+    url = (
+        "https://mybusiness.googleapis.com/v4/accounts/"
+        f"{account_id}/locations/{location_id}/localPosts"
+    )
     payload = {
         "languageCode": "en-US",
         "summary": content,

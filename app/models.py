@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from sqlalchemy import (
     Boolean,
     Column,
+    Date,
     DateTime,
     Float,
     ForeignKey,
@@ -2550,3 +2551,143 @@ class MaterialSourceCandidate(Base):
 
     def __repr__(self) -> str:
         return f"<MaterialSourceCandidate {self.name!r} {self.searched_category!r} {self.review_status!r}>"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Social publishing
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class CompanyClaim(Base):
+    """
+    A factual assertion the company is willing to stand behind, in writing.
+
+    Marketing copy makes claims — licensed, insured, rated, since 1984. Each
+    one is a statement a regulator or an opposing attorney can test. This is
+    where the company states them once, names the evidence, and dates them.
+
+    `expires_on` is the load-bearing column. A certificate of insurance is
+    valid for a year; a contractor licence renews. When the attestation lapses
+    every post that leans on it stops being publishable on its own, without
+    anyone remembering to check. Claims that genuinely do not expire — a
+    founding year — leave it null.
+
+    `source_note` is required for the same reason it is required on material
+    prices: a number with no provenance is indistinguishable from a guess.
+    """
+
+    __tablename__ = "company_claims"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "key", name="uq_company_claim_tenant_key"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(64), nullable=True, index=True)
+
+    # Matches social_claims.ClaimRule.key — this is what clears a blocked span.
+    key = Column(String(60), nullable=False, index=True)
+    claim_text = Column(Text, nullable=False)
+    source_note = Column(Text, nullable=False)
+    evidence_url = Column(String(500), nullable=True)
+
+    effective_from = Column(Date, nullable=True)
+    expires_on = Column(Date, nullable=True, index=True)
+
+    attested_by = Column(String(120), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<CompanyClaim {self.key!r} expires={self.expires_on}>"
+
+
+class SocialAccount(Base):
+    """
+    One publishing destination — a page, profile or channel.
+
+    Credentials are NOT stored here. The row names the runtime_config key the
+    token lives under; the token itself stays in the managed key store like
+    every other secret. A row can therefore exist, and be planned against,
+    before the platform's app review has come through.
+    """
+
+    __tablename__ = "social_accounts"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "platform", "handle", name="uq_social_account"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(64), nullable=True, index=True)
+
+    platform = Column(String(30), nullable=False, index=True)
+    handle = Column(String(120), nullable=False)
+    display_name = Column(String(200), nullable=True)
+    external_id = Column(String(120), nullable=True)
+
+    # Name of the managed key holding this account's token, e.g. "META_PAGE_TOKEN".
+    credential_key_name = Column(String(80), nullable=True)
+
+    enabled = Column(Boolean, default=True, nullable=False)
+    last_verified_at = Column(DateTime(timezone=True), nullable=True)
+    last_error = Column(Text, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<SocialAccount {self.platform}:{self.handle}>"
+
+
+class SocialPost(Base):
+    """
+    One post, and the record it came from.
+
+    `source_kind` / `source_id` are not decoration. A post about a finished
+    driveway must point at the `jobs` row it describes; a post quoting a price
+    must point at the dated `material_source_prices` row. Content with no
+    source is a claim with no provenance, which is the thing this platform
+    refuses to produce anywhere else — estimates, PCI ratings, delivered cost
+    all fail closed rather than invent, and marketing copy is not the place to
+    make an exception.
+
+    `claim_report_json` is the guardrail's verdict at the moment of the last
+    check, kept so an after-the-fact question — why did this go out, who
+    cleared the licence claim — has an answer.
+    """
+
+    __tablename__ = "social_posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(64), nullable=True, index=True)
+
+    platform = Column(String(30), nullable=False, index=True)
+    account_id = Column(Integer, ForeignKey("social_accounts.id"), nullable=True)
+
+    # draft → queued → published | failed | cancelled
+    status = Column(String(20), default="draft", nullable=False, index=True)
+
+    body = Column(Text, nullable=False)
+    media_json = Column(JSON, nullable=True)
+    link_url = Column(String(500), nullable=True)
+
+    # Provenance: which real row this post describes.
+    source_kind = Column(String(40), nullable=True, index=True)
+    source_id = Column(String(80), nullable=True)
+    source_note = Column(Text, nullable=True)
+
+    claim_report_json = Column(JSON, nullable=True)
+    claims_cleared_at = Column(DateTime(timezone=True), nullable=True)
+
+    scheduled_for = Column(DateTime(timezone=True), nullable=True, index=True)
+    published_at = Column(DateTime(timezone=True), nullable=True)
+    external_post_id = Column(String(200), nullable=True)
+    external_url = Column(String(500), nullable=True)
+    last_error = Column(Text, nullable=True)
+    attempts = Column(Integer, default=0, nullable=False)
+
+    created_by = Column(String(120), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<SocialPost {self.platform} {self.status} src={self.source_kind}:{self.source_id}>"

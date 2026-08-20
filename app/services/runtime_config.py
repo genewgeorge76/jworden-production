@@ -69,6 +69,18 @@ MANAGED_KEYS: tuple[str, ...] = (
     # without them here the lane is unreachable: the key could only be set as a
     # platform secret, which costs a redeploy. Managed keys are settable live.
     "XAI_API_KEY", "PERPLEXITY_API_KEY",
+    # Google Business Profile posting. GBP_ACCOUNT_ID is not optional — the
+    # post URL is /accounts/{account}/locations/{location}/localPosts.
+    "GBP_OAUTH_TOKEN", "GBP_ACCOUNT_ID", "GBP_LOCATION_ID", "GBP_REVIEW_LINK",
+    # Public link a post's call-to-action points at.
+    "SOCIAL_CTA_URL",
+    # Social publishing. Each platform needs its own developer app and, for
+    # Meta and LinkedIn, a review that is granted rather than self-served.
+    "GRAPH_API_VERSION",
+    "META_PAGE_ID", "META_PAGE_ACCESS_TOKEN",
+    "IG_USER_ID", "IG_ACCESS_TOKEN",
+    "LINKEDIN_ORG_URN", "LINKEDIN_ACCESS_TOKEN", "LINKEDIN_API_VERSION",
+    "X_ACCESS_TOKEN",
     "LLM_FALLBACK_SILENT", "JARVIS_MAX_TIER",
     "JARVIS_MODEL_OVERRIDE", "JARVIS_DISABLE_GEMINI", "LLM_DISABLED_PROVIDERS",
     # Web search
