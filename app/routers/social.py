@@ -14,7 +14,7 @@ public, permanent and attributable to the company.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -23,8 +23,13 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
-from ..models import CompanyClaim, Job, SocialAccount, SocialPost
-from ..services import social_claims, social_content, social_publish
+from ..models import CompanyClaim, Job, Lead, SocialAccount, SocialPost, SocialSignal
+from ..services import (
+    social_claims,
+    social_content,
+    social_listening,
+    social_publish,
+)
 from ..services.tenancy import scope, tenant_of
 
 logger = logging.getLogger(__name__)
@@ -109,6 +114,13 @@ def social_status(db: Session = Depends(get_db),
             "expiring_within_a_month": expiring,
         },
         "drivers": social_publish.status_all(),
+        "listening": {
+            "configured": social_listening.configured(),
+            "provider": "xai_x_search",
+            "signals_new": scope(db.query(SocialSignal), SocialSignal, tenant)
+                .filter(SocialSignal.review_status == "new").count(),
+            "missing_key": None if social_listening.configured() else "XAI_API_KEY",
+        },
         "blockers": blockers,
     }
 
@@ -397,3 +409,193 @@ def cancel_post(post_id: int, db: Session = Depends(get_db),
     post.status = "cancelled"
     db.commit()
     return {"ok": True, "post": _post_dict(post)}
+
+
+# ── Listening ────────────────────────────────────────────────────────────────
+
+
+class ListenIn(BaseModel):
+    kind: str = Field(description="One of the signal kinds from /listen/kinds.")
+    place: str = Field(min_length=2, max_length=160,
+                       description="City and state, e.g. 'Richmond, VA'.")
+    from_date: Optional[str] = None
+    to_date: Optional[str] = None
+    allowed_handles: Optional[list[str]] = None
+    excluded_handles: Optional[list[str]] = None
+    extra: str = ""
+    save: bool = Field(default=True, description="Persist cited signals for review.")
+
+
+def _signal_dict(s: SocialSignal) -> dict[str, Any]:
+    return {
+        "id": s.id, "kind": s.kind, "url": s.url, "title": s.title,
+        "excerpt": s.excerpt, "place": s.place, "provider": s.provider,
+        "model": s.model, "review_status": s.review_status,
+        "lead_id": s.lead_id,
+        "first_seen_at": s.first_seen_at.isoformat() if s.first_seen_at else None,
+        "last_seen_at": s.last_seen_at.isoformat() if s.last_seen_at else None,
+    }
+
+
+@router.get("/listen/kinds", summary="What listening can look for")
+def listen_kinds(auth: dict = Depends(verify_premium_security)):
+    return {
+        "ok": True,
+        "configured": social_listening.configured(),
+        "kinds": [{"kind": k, "looks_for": v}
+                  for k, v in social_listening.SIGNAL_KINDS.items()],
+        "note": "Only posts the search actually cites become signals. An "
+                "uncited summary is returned as narrative and never stored.",
+    }
+
+
+@router.post("/listen/run", summary="Search X for signals")
+async def listen_run(payload: ListenIn, db: Session = Depends(get_db),
+                     auth: dict = Depends(verify_premium_security)):
+    tenant = tenant_of(auth)
+    try:
+        result = await social_listening.listen(
+            payload.kind,
+            place=payload.place,
+            from_date=_as_date(payload.from_date),
+            to_date=_as_date(payload.to_date),
+            allowed_handles=payload.allowed_handles,
+            excluded_handles=payload.excluded_handles,
+            extra=payload.extra,
+        )
+    except social_listening.ListeningUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    stored, refreshed = 0, 0
+    if payload.save:
+        for sig in result.signals:
+            row = scope(db.query(SocialSignal), SocialSignal, tenant).filter(
+                SocialSignal.url == sig.url
+            ).first()
+            if row is None:
+                db.add(SocialSignal(
+                    tenant_id=tenant, kind=sig.kind, url=sig.url,
+                    title=sig.title or None, excerpt=sig.excerpt or None,
+                    query=sig.query, place=payload.place,
+                    provider="xai_x_search", model=result.model,
+                ))
+                stored += 1
+            else:
+                row.last_seen_at = _utcnow()
+                refreshed += 1
+        db.commit()
+
+    body = result.as_dict()
+    body.update({"ok": True, "stored": stored, "refreshed": refreshed})
+    return body
+
+
+@router.get("/listen/signals", summary="Signals waiting for review")
+def list_signals(kind: Optional[str] = Query(default=None),
+                 review_status: Optional[str] = Query(default="new"),
+                 limit: int = Query(default=100, ge=1, le=500),
+                 db: Session = Depends(get_db),
+                 auth: dict = Depends(verify_premium_security)):
+    tenant = tenant_of(auth)
+    q = scope(db.query(SocialSignal), SocialSignal, tenant)
+    if kind:
+        q = q.filter(SocialSignal.kind == kind)
+    if review_status:
+        q = q.filter(SocialSignal.review_status == review_status)
+    rows = q.order_by(SocialSignal.id.desc()).limit(limit).all()
+    return {"ok": True, "count": len(rows),
+            "signals": [_signal_dict(r) for r in rows]}
+
+
+class DismissIn(BaseModel):
+    reason: str = Field(min_length=2, max_length=500)
+
+
+@router.post("/listen/signals/{signal_id}/dismiss", summary="Not worth chasing")
+def dismiss_signal(signal_id: int, payload: DismissIn,
+                   db: Session = Depends(get_db),
+                   auth: dict = Depends(verify_premium_security)):
+    tenant = tenant_of(auth)
+    row = scope(db.query(SocialSignal), SocialSignal, tenant).filter(
+        SocialSignal.id == signal_id
+    ).first()
+    if row is None:
+        raise HTTPException(status_code=404, detail="no such signal")
+    row.review_status = "dismissed"
+    row.dismissed_reason = payload.reason
+    row.reviewed_at = _utcnow()
+    row.reviewed_by = str(auth.get("sub") or auth.get("user") or "") or None
+    db.commit()
+    return {"ok": True, "signal": _signal_dict(row)}
+
+
+class ConvertIn(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    email: str = Field(
+        min_length=3, max_length=254,
+        description="Required. `leads.email` is NOT NULL and every other "
+                    "intake path supplies one; a synthesised address would put "
+                    "a contact in the CRM that reaches nobody.",
+    )
+    phone: str = Field(min_length=7, max_length=30, description="Required.")
+    service_type: str = Field(min_length=2, max_length=60, description="Required.")
+    property_type: str = Field(default="commercial", max_length=30)
+    urgency: str = Field(default="unknown", max_length=30)
+    address: Optional[str] = None
+    state_code: Optional[str] = None
+    note: Optional[str] = None
+
+
+@router.post("/listen/signals/{signal_id}/convert", summary="Turn a signal into a lead")
+def convert_signal(signal_id: int, payload: ConvertIn,
+                   db: Session = Depends(get_db),
+                   auth: dict = Depends(verify_premium_security)):
+    """
+    Deliberate, and never automatic.
+
+    A post complaining about a pothole is not a customer. Someone has to read
+    it, decide it is worth a call, and say who it is — which is why `name` and
+    `email` are supplied by the operator rather than scraped from a handle or
+    invented to satisfy the column.
+
+    `leads` requires name, email, phone, service_type, property_type and
+    urgency. An X post carries none of the contact fields. That is not a gap to paper over with a
+    generated one: a lead nobody can reach is worse than no lead, because it
+    sits in the pipeline looking like work. If the contact is not known yet,
+    the signal stays in the review queue where it is honest about what it is.
+    """
+    tenant = tenant_of(auth)
+    row = scope(db.query(SocialSignal), SocialSignal, tenant).filter(
+        SocialSignal.id == signal_id
+    ).first()
+    if row is None:
+        raise HTTPException(status_code=404, detail="no such signal")
+    if row.lead_id:
+        raise HTTPException(status_code=409,
+                            detail=f"already converted to lead {row.lead_id}")
+
+    lead = Lead(
+        tenant_id=tenant,
+        name=payload.name,
+        email=payload.email,
+        phone=payload.phone,
+        service_type=payload.service_type,
+        property_type=payload.property_type,
+        urgency=payload.urgency,
+        address=payload.address,
+        state_code=payload.state_code,
+        message=payload.note or row.excerpt,
+        source=f"social:{row.kind}",
+        raw_data={"signal_id": row.id, "url": row.url, "place": row.place},
+    )
+    db.add(lead)
+    db.flush()
+
+    row.lead_id = lead.id
+    row.review_status = "converted"
+    row.reviewed_at = _utcnow()
+    row.reviewed_by = str(auth.get("sub") or auth.get("user") or "") or None
+    db.commit()
+    return {"ok": True, "lead_id": lead.id, "signal": _signal_dict(row)}

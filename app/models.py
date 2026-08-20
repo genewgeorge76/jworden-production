@@ -2691,3 +2691,52 @@ class SocialPost(Base):
 
     def __repr__(self) -> str:
         return f"<SocialPost {self.platform} {self.status} src={self.source_kind}:{self.source_id}>"
+
+
+class SocialSignal(Base):
+    """
+    A cited post the listening pass found, waiting for a person to judge it.
+
+    `url` is required and unique per tenant. That is the whole guarantee: a
+    row here is something a human can click through and read. A summary with
+    no source never becomes a row, because a summary of social posts with no
+    source cannot be told apart from an invented one — and the model producing
+    it is fluent enough to make the invented version convincing.
+
+    `excerpt` is the model's words about the post, not the post's text. The
+    URL is the record; the excerpt is a pointer to why it surfaced.
+
+    Nothing is scored and nothing converts to a lead automatically. Discovery
+    proposes, a person decides — same rule as supplier discovery, same reason.
+    """
+
+    __tablename__ = "social_signals"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "url", name="uq_social_signal_tenant_url"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(64), nullable=True, index=True)
+
+    kind = Column(String(40), nullable=False, index=True)
+    url = Column(String(600), nullable=False)
+    title = Column(String(300), nullable=True)
+    excerpt = Column(Text, nullable=True)
+
+    query = Column(Text, nullable=True)
+    place = Column(String(160), nullable=True, index=True)
+    provider = Column(String(40), default="xai_x_search", nullable=False)
+    model = Column(String(60), nullable=True)
+
+    # new → reviewed | dismissed | converted
+    review_status = Column(String(20), default="new", nullable=False, index=True)
+    reviewed_at = Column(DateTime(timezone=True), nullable=True)
+    reviewed_by = Column(String(120), nullable=True)
+    dismissed_reason = Column(Text, nullable=True)
+    lead_id = Column(Integer, ForeignKey("leads.id"), nullable=True)
+
+    first_seen_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    last_seen_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<SocialSignal {self.kind!r} {self.review_status!r} {self.url!r}>"
