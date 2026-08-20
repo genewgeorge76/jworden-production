@@ -30,6 +30,7 @@ from ..models import (
     ProjectSite,
 )
 from ..services import delivered_cost as dc
+from ..services.tenancy import scope, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -53,11 +54,12 @@ def _source_dict(s: MaterialSource) -> dict[str, Any]:
 
 
 @router.get("/status", summary="What costing data exists")
-def costing_status(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
-    sources = db.query(MaterialSource).count()
-    prices = db.query(MaterialSourcePrice).count()
-    profiles = db.query(HaulProfile).count()
-    markets = db.query(LaborMarket).count()
+def costing_status(db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
+    tenant = tenant_of(auth)
+    sources = scope(db.query(MaterialSource), MaterialSource, tenant).count()
+    prices = scope(db.query(MaterialSourcePrice), MaterialSourcePrice, tenant).count()
+    profiles = scope(db.query(HaulProfile), HaulProfile, tenant).count()
+    markets = scope(db.query(LaborMarket), LaborMarket, tenant).count()
 
     blocking = []
     if not sources:
@@ -101,7 +103,9 @@ class SourceIn(BaseModel):
 @router.post("/sources", summary="Add or update a plant, quarry or supplier")
 def upsert_source(body: SourceIn, db: Session = Depends(get_db),
                   auth: dict = Depends(verify_premium_security)):
-    row = db.query(MaterialSource).filter(MaterialSource.name == body.name).one_or_none()
+    tenant = tenant_of(auth)
+    row = scope(db.query(MaterialSource).filter(MaterialSource.name == body.name),
+                MaterialSource, tenant).one_or_none()
     created = row is None
     if created:
         row = MaterialSource(name=body.name)
@@ -111,7 +115,7 @@ def upsert_source(body: SourceIn, db: Session = Depends(get_db),
             setattr(row, f, v)
     row.state = row.state.upper() if row.state else None
     row.is_active = True
-    row.tenant_id = auth.get("tenant_id") or "default"
+    row.tenant_id = tenant
     db.commit()
     db.refresh(row)
     return {"success": True, "created": created, "source": _source_dict(row)}
@@ -119,8 +123,9 @@ def upsert_source(body: SourceIn, db: Session = Depends(get_db),
 
 @router.get("/sources", summary="List material sources")
 def list_sources(state: Optional[str] = None, db: Session = Depends(get_db),
-                 _: dict = Depends(verify_premium_security)):
-    q = db.query(MaterialSource).filter(MaterialSource.is_active.is_(True))
+                 auth: dict = Depends(verify_premium_security)):
+    q = scope(db.query(MaterialSource).filter(MaterialSource.is_active.is_(True)),
+              MaterialSource, tenant_of(auth))
     if state:
         q = q.filter(MaterialSource.state == state.upper())
     rows = q.order_by(MaterialSource.state, MaterialSource.city, MaterialSource.name).all()
@@ -152,19 +157,21 @@ def add_price(body: PriceIn, db: Session = Depends(get_db),
     The history is what lets a bid from March be explained in September. An
     update-in-place would erase the number the bid was actually built on.
     """
-    if not db.query(MaterialSource).filter(MaterialSource.id == body.source_id).count():
+    tenant = tenant_of(auth)
+    if not scope(db.query(MaterialSource).filter(MaterialSource.id == body.source_id),
+                 MaterialSource, tenant).count():
         raise HTTPException(status_code=404, detail=f"No source with id {body.source_id}")
 
     eff = body.effective_date or _utcnow()
-    existing = (
+    existing = scope(
         db.query(MaterialSourcePrice)
         .filter(
             MaterialSourcePrice.source_id == body.source_id,
             MaterialSourcePrice.material_code == body.material_code,
             MaterialSourcePrice.effective_date == eff,
-        )
-        .one_or_none()
-    )
+        ),
+        MaterialSourcePrice, tenant,
+    ).one_or_none()
     if existing:
         existing.fob_price = body.fob_price
         existing.unit = body.unit
@@ -179,7 +186,7 @@ def add_price(body: PriceIn, db: Session = Depends(get_db),
             material_name=body.material_name, unit=body.unit,
             fob_price=body.fob_price, effective_date=eff,
             quoted_by=body.quoted_by, source_note=body.source_note,
-            tenant_id=auth.get("tenant_id") or "default",
+            tenant_id=tenant,
         )
         db.add(row)
         created = True
@@ -211,7 +218,9 @@ class HaulIn(BaseModel):
 @router.post("/haul-profiles", summary="Add or update a haul profile")
 def upsert_haul(body: HaulIn, db: Session = Depends(get_db),
                 auth: dict = Depends(verify_premium_security)):
-    row = db.query(HaulProfile).filter(HaulProfile.name == body.name).one_or_none()
+    tenant = tenant_of(auth)
+    row = scope(db.query(HaulProfile).filter(HaulProfile.name == body.name),
+                HaulProfile, tenant).one_or_none()
     created = row is None
     if created:
         row = HaulProfile(name=body.name)
@@ -219,9 +228,11 @@ def upsert_haul(body: HaulIn, db: Session = Depends(get_db),
     for f, v in body.model_dump(exclude_unset=True).items():
         if f != "name":
             setattr(row, f, v)
-    row.tenant_id = auth.get("tenant_id") or "default"
+    row.tenant_id = tenant
     if body.is_default:
-        for other in db.query(HaulProfile).filter(HaulProfile.name != body.name).all():
+        # One default per tenant, not one across the platform.
+        for other in scope(db.query(HaulProfile).filter(HaulProfile.name != body.name),
+                           HaulProfile, tenant).all():
             other.is_default = False
     db.commit()
     db.refresh(row)
@@ -243,7 +254,9 @@ class MarketIn(BaseModel):
 @router.post("/labor-markets", summary="Add or update a labor market")
 def upsert_market(body: MarketIn, db: Session = Depends(get_db),
                   auth: dict = Depends(verify_premium_security)):
-    row = db.query(LaborMarket).filter(LaborMarket.name == body.name).one_or_none()
+    tenant = tenant_of(auth)
+    row = scope(db.query(LaborMarket).filter(LaborMarket.name == body.name),
+                LaborMarket, tenant).one_or_none()
     created = row is None
     if created:
         row = LaborMarket(name=body.name, state=body.state.upper())
@@ -253,7 +266,7 @@ def upsert_market(body: MarketIn, db: Session = Depends(get_db),
             setattr(row, f, v)
     row.state = body.state.upper()
     row.is_active = True
-    row.tenant_id = auth.get("tenant_id") or "default"
+    row.tenant_id = tenant
     db.commit()
     db.refresh(row)
     return {"success": True, "created": created, "id": row.id, "name": row.name}
@@ -280,7 +293,7 @@ class DeliveredRequest(BaseModel):
 
 @router.post("/delivered", summary="Delivered cost per ton at a job site, by source")
 def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
-              _: dict = Depends(verify_premium_security)):
+              auth: dict = Depends(verify_premium_security)):
     """
     Price a material into a site from every source, cheapest delivered first.
 
@@ -302,15 +315,18 @@ def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
         lat, lng = site.lat, site.lng
         site_label = f"{site.city}, {site.state}" if site.city else site.address
 
+    tenant = tenant_of(auth)
     profile = None
     if body.haul_profile:
-        profile = db.query(HaulProfile).filter(HaulProfile.name == body.haul_profile).one_or_none()
+        profile = scope(db.query(HaulProfile).filter(HaulProfile.name == body.haul_profile),
+                        HaulProfile, tenant).one_or_none()
         if profile is None:
             raise HTTPException(status_code=404, detail=f"No haul profile '{body.haul_profile}'")
     else:
         profile = (
-            db.query(HaulProfile).filter(HaulProfile.is_default.is_(True)).one_or_none()
-            or db.query(HaulProfile).order_by(HaulProfile.id).first()
+            scope(db.query(HaulProfile).filter(HaulProfile.is_default.is_(True)),
+                  HaulProfile, tenant).one_or_none()
+            or scope(db.query(HaulProfile), HaulProfile, tenant).order_by(HaulProfile.id).first()
         )
     if profile is None:
         raise HTTPException(
@@ -329,7 +345,8 @@ def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
     }
 
     job_date = body.job_date or _utcnow()
-    sources = db.query(MaterialSource).filter(MaterialSource.is_active.is_(True)).all()
+    sources = scope(db.query(MaterialSource).filter(MaterialSource.is_active.is_(True)),
+                    MaterialSource, tenant).all()
     if not sources:
         raise HTTPException(
             status_code=409,
@@ -339,16 +356,15 @@ def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
 
     evaluated = []
     for s in sources:
-        price_row = (
+        price_row = scope(
             db.query(MaterialSourcePrice)
             .filter(
                 MaterialSourcePrice.source_id == s.id,
                 MaterialSourcePrice.material_code == body.material_code,
                 MaterialSourcePrice.effective_date <= job_date,
-            )
-            .order_by(MaterialSourcePrice.effective_date.desc())
-            .first()
-        )
+            ),
+            MaterialSourcePrice, tenant,
+        ).order_by(MaterialSourcePrice.effective_date.desc()).first()
         row = dc.evaluate_source(
             source=_source_dict(s),
             fob_price=price_row.fob_price if price_row else None,
@@ -368,7 +384,8 @@ def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
          "radius_miles": m.radius_miles, "crew_cost_per_hour": m.crew_cost_per_hour,
          "prevailing_wage_required": m.prevailing_wage_required,
          "per_diem_per_day": m.per_diem_per_day}
-        for m in db.query(LaborMarket).filter(LaborMarket.is_active.is_(True)).all()
+        for m in scope(db.query(LaborMarket).filter(LaborMarket.is_active.is_(True)),
+                       LaborMarket, tenant).all()
     ]
     market = dc.market_for_site(markets, lat, lng)
 

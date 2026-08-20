@@ -40,6 +40,7 @@ from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import SeoKeyword
 from ..services import serp_engine
+from ..services.tenancy import scope, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +75,7 @@ def _row(k: SeoKeyword) -> dict[str, Any]:
 
 
 @router.get("/status", summary="What keyword data exists, and where it came from")
-def seo_status(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+def seo_status(db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
     """
     Whether a real keyword source is connected, and what is stored.
 
@@ -82,7 +83,7 @@ def seo_status(db: Session = Depends(get_db), _: dict = Depends(verify_premium_s
     nothing is connected teaches you to trust a number that was never
     measured — which is exactly what the hardcoded keyword array did.
     """
-    rows = db.query(SeoKeyword).all()
+    rows = scope(db.query(SeoKeyword), SeoKeyword, tenant_of(auth)).all()
     by_source: dict[str, int] = {}
     for r in rows:
         by_source[r.source] = by_source.get(r.source, 0) + 1
@@ -140,15 +141,15 @@ class KeywordImport(BaseModel):
 
 def _upsert_keyword(db: Session, item: KeywordIn, source: str, captured: Optional[datetime],
                     tenant_id: str) -> bool:
-    existing = (
+    existing = scope(
         db.query(SeoKeyword)
         .filter(
             SeoKeyword.keyword == item.keyword,
             SeoKeyword.vertical == item.vertical,
             SeoKeyword.country == item.country.lower(),
-        )
-        .one_or_none()
-    )
+        ),
+        SeoKeyword, tenant_id,
+    ).one_or_none()
     created = existing is None
     row = existing or SeoKeyword(
         keyword=item.keyword, vertical=item.vertical, country=item.country.lower()
@@ -259,9 +260,9 @@ def list_keywords(
     limit: int = Query(200, ge=1, le=1000),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(SeoKeyword)
+    q = scope(db.query(SeoKeyword), SeoKeyword, tenant_of(auth))
     if vertical:
         q = q.filter(SeoKeyword.vertical == vertical)
     if category:
@@ -289,9 +290,9 @@ def list_keywords(
 def export_keywords_csv(
     vertical: Optional[str] = None,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(SeoKeyword)
+    q = scope(db.query(SeoKeyword), SeoKeyword, tenant_of(auth))
     if vertical:
         q = q.filter(SeoKeyword.vertical == vertical)
     rows = [_row(k) for k in q.order_by(SeoKeyword.keyword).all()]
