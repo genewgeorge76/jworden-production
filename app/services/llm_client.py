@@ -22,7 +22,7 @@ Every model has ONE job it does better than the others. No redundancy.
   vision                  → gpt-4o                           → gemini-2.5-pro
   math / long_context     → gemini-2.5-pro                   → claude-sonnet-4-6
   web_research            → perplexity-sonar-pro             → gpt-4o
-  social_signal (X)       → grok-4                           → (none)
+  social_signal (X)       → grok-4.6                         → gpt-5.6-turbo
     fast / classification   → gpt-4o-mini                      → claude-sonnet-4-6
   analytics               → claude-sonnet-4-6                → gpt-4o
 
@@ -42,7 +42,7 @@ Environment variables (set in Railway → Variables)
   ANTHROPIC_API_KEY     — Anthropic (Claude Opus 4, Sonnet 4.5, Haiku 4)
   GOOGLE_API_KEY        — Google AI Studio (Gemini 2.5 Pro)
   PERPLEXITY_API_KEY    — Perplexity (Sonar Pro — live web + citations)
-  XAI_API_KEY           — xAI (Grok 4 — X firehose)
+  XAI_API_KEY           — xAI (Grok 4.6 — X/web search tools)
   LLM_FALLBACK_SILENT   — "1" (default): silently fall through on error.
                            "0": raise on primary failure.
   JARVIS_MAX_TIER       — "opus" (default) | "sonnet". Caps Jarvis spend.
@@ -85,7 +85,7 @@ _ROUTES: dict[str, list[tuple[str, str]]] = {
     "math":            [("google", "gemini-2.5-pro"),         ("openai", "gpt-5.6-turbo")],
     "long_context":    [("google", "gemini-2.5-pro"),         ("openai", "gpt-5.6-turbo")],
     "web_research":    [("perplexity", "sonar-pro"),          ("openai", "gpt-5.6-turbo")],
-    "social_signal":   [("xai", "grok-4"),                    ("openai", "gpt-5.6-turbo")],
+    "social_signal":   [("xai", "grok-4.6"),                    ("openai", "gpt-5.6-turbo")],
     "fast":            [("openai", "gpt-4o-mini"),            ("openai", "gpt-5.6-turbo")],
     "classification":  [("openai", "gpt-5.6-turbo"),          ("openai", "gpt-4o-mini")],
     "city_authority":  [("google", "gemini-2.5-flash"),       ("openai", "gpt-5.6-turbo")],
