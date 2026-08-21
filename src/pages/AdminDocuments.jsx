@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Activity, Archive, CheckCircle2, Copy, Download, Loader2, RefreshCw, ShieldOff, Sparkles, TriangleAlert } from 'lucide-react';
+import { Activity, Archive, CheckCircle2, Copy, Download, Loader2, RefreshCw, ShieldOff, TriangleAlert } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/client';
 import { useAuth } from '@/lib/AuthContext';
@@ -11,10 +11,8 @@ import DocumentUploader from '../components/admin/DocumentUploader';
 import JobProgressEditor from '../components/admin/JobProgressEditor';
 import ExistingDocuments from '../components/admin/ExistingDocuments';
 
-function AdminOpsPanel({ isAdmin, selectedJob, documents, onSeeded, onChanged }) {
-  const [seeding, setSeeding] = useState(false);
+function AdminOpsPanel({ isAdmin, selectedJob, documents, onChanged }) {
   const [actionBusy, setActionBusy] = useState('');
-  const [seedResult, setSeedResult] = useState(null);
   const [seedError, setSeedError] = useState('');
   const [actionMessage, setActionMessage] = useState('');
 
@@ -28,22 +26,6 @@ function AdminOpsPanel({ isAdmin, selectedJob, documents, onSeeded, onChanged })
   const monitoring = monitoringStatus?.monitoring || null;
   const slackReady = Boolean(monitoring?.slack_enabled);
   const datadogReady = Boolean(monitoring?.datadog_enabled);
-
-  const handleSeedDemo = async () => {
-    setSeeding(true);
-    setSeedError('');
-    setActionMessage('');
-    setSeedResult(null);
-    try {
-      const result = await api.seedDemoWorkspace(true);
-      setSeedResult(result);
-      onSeeded?.(result);
-    } catch (error) {
-      setSeedError(error?.message || 'Could not seed demo workspace.');
-    } finally {
-      setSeeding(false);
-    }
-  };
 
   const updateSelectedJob = async (action, payload, message) => {
     if (!selectedJob?.id) return;
@@ -112,34 +94,17 @@ function AdminOpsPanel({ isAdmin, selectedJob, documents, onSeeded, onChanged })
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-2">
-              // Maintenance
+              // Operations
             </p>
             <h2 className="font-display font-black text-foreground text-2xl uppercase tracking-tight">
-              Production Demo Workspace
+              Job Operations
             </h2>
             <p className="font-body text-muted-foreground text-sm mt-2 max-w-2xl">
-              Seeds one polished commercial resurfacing job with portal documents, progress, work order, audit evidence, and ETA data.
+              Select a job to manage its scope, documents, work orders, and client portal packet.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleSeedDemo}
-            disabled={seeding}
-            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-display font-bold text-xs tracking-wider uppercase px-5 py-3 hover:bg-primary/90 transition-colors disabled:opacity-60"
-          >
-            {seeding ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {seeding ? 'Seeding' : 'Seed Demo'}
-          </button>
         </div>
 
-        {seedResult ? (
-          <div className="mt-4 border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-foreground">
-            <p className="font-display font-bold uppercase tracking-wide text-emerald-300">Demo ready</p>
-            <p className="mt-1 text-muted-foreground">
-              {seedResult.job?.title} · Job #{seedResult.job?.id} · {seedResult.documents?.length || 0} client document(s)
-            </p>
-          </div>
-        ) : null}
         {selectedJob ? (
           <div className="mt-5 border-t border-primary/20 pt-4">
             <p className="font-display text-muted-foreground text-xs tracking-[0.25em] uppercase mb-3">
@@ -240,15 +205,6 @@ export default function AdminDocuments() {
     queryClient.invalidateQueries({ queryKey: ['admin-job-docs', selectedJobId] });
   };
 
-  const handleSeeded = (result) => {
-    queryClient.invalidateQueries({ queryKey: ['admin-jobs'] });
-    queryClient.invalidateQueries({ queryKey: ['admin-monitoring-status'] });
-    if (result?.job?.id) {
-      setSelectedJobId(result.job.id);
-      queryClient.invalidateQueries({ queryKey: ['admin-job-docs', result.job.id] });
-    }
-  };
-
   // Admin gate
   if (!isAdmin) {
     return (
@@ -299,7 +255,6 @@ export default function AdminDocuments() {
             isAdmin={isAdmin}
             selectedJob={selectedJob}
             documents={documents}
-            onSeeded={handleSeeded}
             onChanged={handleRefresh}
           />
 

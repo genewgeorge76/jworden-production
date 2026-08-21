@@ -1077,7 +1077,6 @@ export const api = {
   createEstimateFromLead: (leadId, scopeSummary) => protectedRequest('POST', '/api/v1/operations/estimates/from-lead', { lead_id: leadId, scope_summary: scopeSummary }),
   listEstimates: () => protectedRequest('GET', '/api/v1/operations/estimates'),
   createJobFromEstimate: (estimateId, payload = {}) => protectedRequest('POST', '/api/v1/operations/jobs/from-estimate', { estimate_id: estimateId, ...payload }),
-  seedDemoWorkspace: (resetExisting = true) => protectedRequest('POST', '/api/v1/operations/demo/seed', { reset_existing: resetExisting }),
   listJobs: () => protectedRequest('GET', '/api/v1/operations/jobs'),
   getPublicJob: (jobId) => request('GET', `/api/v1/operations/public/jobs/${encodeURIComponent(jobId)}`),
   createWorkOrder: (payload) => protectedRequest('POST', '/api/v1/operations/work-orders', payload),
