@@ -67,6 +67,32 @@ class VisionAnalyzeIn(BaseModel):
     model: Optional[str] = Field(default=None, max_length=60)
 
 
+class ReconTextIn(BaseModel):
+    """
+    Structured findings for Street Recon. The prompt is built server-side
+    from these — the client cannot send free text, so a tenant token is not
+    an open Claude account.
+    """
+    kind: str = Field(..., pattern="^(assessment|mailer|street_summary|street_mailer)$")
+    # Optional: the street-level kinds describe a road, not one property.
+    address: Optional[str] = Field(default=None, max_length=300)
+    street: Optional[str] = Field(default=None, max_length=200)
+    city: Optional[str] = Field(default=None, max_length=120)
+    pci_scores: Optional[list[int]] = Field(default=None, max_length=200)
+    property_type: Optional[str] = Field(default=None, max_length=40)
+    sqft: Optional[float] = Field(default=None, ge=0)
+    pci: Optional[int] = Field(default=None, ge=0, le=100)
+    pci_label: Optional[str] = Field(default=None, max_length=40)
+    service: Optional[str] = Field(default=None, max_length=120)
+    cracking: Optional[int] = Field(default=None, ge=0, le=10)
+    surface: Optional[int] = Field(default=None, ge=0, le=10)
+    drainage: Optional[int] = Field(default=None, ge=0, le=10)
+    edge: Optional[int] = Field(default=None, ge=0, le=10)
+    notes: Optional[str] = Field(default=None, max_length=500)
+    photo_count: Optional[int] = Field(default=0, ge=0)
+    model: Optional[str] = Field(default=None, max_length=60)
+
+
 class ArtifactIn(BaseModel):
     kind: str = Field(default="default", max_length=40)
     ref: Optional[str] = Field(default=None, max_length=120)
@@ -258,3 +284,39 @@ async def vision_analyze(
         tenant_of(auth), findings.get("pavementSqFt"), findings.get("conditionPCI"),
     )
     return findings
+
+
+# ── Street Recon ──────────────────────────────────────────────────────────────
+
+@router.get("/street-recon/status", summary="Can Street Recon generate text?")
+async def recon_status(_: dict = Depends(verify_premium_security)):
+    from ..services import street_recon_ai  # noqa: PLC0415
+
+    return {
+        "configured": street_recon_ai.is_configured(),
+        "default_model": street_recon_ai.DEFAULT_MODEL,
+    }
+
+
+@router.post("/street-recon/text", summary="Write the assessment or the mailer")
+@limiter.limit("20/minute")
+async def recon_text(
+    request: Request,
+    body: ReconTextIn,
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Generate the inspector's assessment or the postcard copy.
+
+    This feature never actually worked: the browser posted to Anthropic with
+    no credential at all, every call failed, and a catch silently substituted
+    canned text that read like a model had written it. Failures now surface as
+    422 so a fallback is a visible choice rather than an invisible default.
+    """
+    from ..services import street_recon_ai  # noqa: PLC0415
+
+    payload = body.model_dump(exclude={"kind", "model"})
+    try:
+        return street_recon_ai.generate(body.kind, payload, model=body.model)
+    except street_recon_ai.ReconError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
