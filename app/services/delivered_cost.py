@@ -76,6 +76,7 @@ def haul_cost_per_ton(
     average_speed_mph: float = 45.0,
     load_minutes: float = 15.0,
     dump_minutes: float = 15.0,
+    known_one_way_minutes: Optional[float] = None,
 ) -> dict[str, Any]:
     """
     Trucking cost per ton, with the cycle broken out.
@@ -83,18 +84,30 @@ def haul_cost_per_ton(
     A truck is paid for the whole cycle, not just the loaded leg, so the return
     trip and both ends of standing time are in here. Costing only the loaded
     miles is the classic way a haul comes in under.
+
+    `known_one_way_minutes` is a measured drive time (Google Routes). When it
+    is present the cycle is timed on it directly, because miles ÷ an assumed
+    average speed is exactly the approximation the measured figure removes — a
+    45 mph assumption is wrong on both the interstate leg and the last mile,
+    and the error compounds over the round trip.
     """
     if tons_per_load <= 0:
         raise ValueError("tons_per_load must be greater than zero")
     speed = max(1.0, float(average_speed_mph))
 
-    one_way_minutes = (float(one_way_miles) / speed) * 60.0
+    if known_one_way_minutes is not None:
+        one_way_minutes = float(known_one_way_minutes)
+        drive_basis = "measured"
+    else:
+        one_way_minutes = (float(one_way_miles) / speed) * 60.0
+        drive_basis = "estimated"
     cycle_minutes = (2 * one_way_minutes) + float(load_minutes) + float(dump_minutes)
     cost = (float(truck_cost_per_hour) * (cycle_minutes / 60.0)) / float(tons_per_load)
 
     return {
         "cost_per_ton": round(cost, 4),
         "one_way_minutes": round(one_way_minutes, 1),
+        "drive_time_basis": drive_basis,
         "cycle_minutes": round(cycle_minutes, 1),
         "loads_per_8h_shift": round((8 * 60) / cycle_minutes, 2) if cycle_minutes else None,
         "tons_per_8h_shift": round(((8 * 60) / cycle_minutes) * tons_per_load, 1)
@@ -126,6 +139,7 @@ def evaluate_source(
     site_lng: float,
     haul: dict[str, Any],
     known_road_miles: Optional[float] = None,
+    known_one_way_minutes: Optional[float] = None,
     job_month: Optional[int] = None,
 ) -> dict[str, Any]:
     """
@@ -159,6 +173,7 @@ def evaluate_source(
         average_speed_mph=haul.get("average_speed_mph", 45.0),
         load_minutes=haul.get("load_minutes", 15.0),
         dump_minutes=haul.get("dump_minutes", 15.0),
+        known_one_way_minutes=known_one_way_minutes,
     )
 
     if not source_is_open(source.get("season_open_month"), source.get("season_close_month"), job_month):
