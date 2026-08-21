@@ -1,0 +1,216 @@
+{
+  "_comment": "Single source of truth for Virginia county pages, read by BOTH app/services/va_market_geo.py (backend) and src/lib/countyPages.js (frontend). Two copies of this roster would drift, and the drift would be silent: a county on one side and not the other produces a page the sitemap advertises and the router 404s, or the reverse. Edit here only.",
+  "_sources": {
+    "districts": "vdot.virginia.gov/about/districts, checked 2026-08-20",
+    "mixes": "VDOT Road and Bridge Specifications, Section 211 (Asphalt Concrete)",
+    "entrance_permit": "Virginia Administrative Code, Title 24, Agency 30, Chapter 151"
+  },
+  "virginiaCountyCount": 95,
+  "schemaType": "GeneralContractor",
+  "districts": [
+    {
+      "key": "bristol",
+      "name": "Bristol District",
+      "counties": [
+        "Bland",
+        "Buchanan",
+        "Dickenson",
+        "Grayson",
+        "Lee",
+        "Russell",
+        "Scott",
+        "Smyth",
+        "Tazewell",
+        "Washington",
+        "Wise",
+        "Wythe"
+      ]
+    },
+    {
+      "key": "salem",
+      "name": "Salem District",
+      "counties": [
+        "Bedford",
+        "Botetourt",
+        "Carroll",
+        "Craig",
+        "Floyd",
+        "Franklin",
+        "Giles",
+        "Henry",
+        "Montgomery",
+        "Patrick",
+        "Pulaski",
+        "Roanoke"
+      ]
+    },
+    {
+      "key": "lynchburg",
+      "name": "Lynchburg District",
+      "counties": [
+        "Amherst",
+        "Appomattox",
+        "Buckingham",
+        "Campbell",
+        "Charlotte",
+        "Cumberland",
+        "Halifax",
+        "Nelson",
+        "Pittsylvania",
+        "Prince Edward"
+      ]
+    },
+    {
+      "key": "richmond",
+      "name": "Richmond District",
+      "counties": [
+        "Amelia",
+        "Brunswick",
+        "Charles City",
+        "Chesterfield",
+        "Dinwiddie",
+        "Goochland",
+        "Hanover",
+        "Henrico",
+        "Lunenburg",
+        "Mecklenburg",
+        "New Kent",
+        "Nottoway",
+        "Powhatan",
+        "Prince George"
+      ]
+    },
+    {
+      "key": "hampton_roads",
+      "name": "Hampton Roads District",
+      "counties": [
+        "Accomack",
+        "Greensville",
+        "Isle of Wight",
+        "James City",
+        "Northampton",
+        "Southampton",
+        "Surry",
+        "Sussex",
+        "York"
+      ]
+    },
+    {
+      "key": "fredericksburg",
+      "name": "Fredericksburg District",
+      "counties": [
+        "Caroline",
+        "Essex",
+        "Gloucester",
+        "King and Queen",
+        "King George",
+        "King William",
+        "Lancaster",
+        "Mathews",
+        "Middlesex",
+        "Northumberland",
+        "Richmond",
+        "Spotsylvania",
+        "Stafford",
+        "Westmoreland"
+      ]
+    },
+    {
+      "key": "culpeper",
+      "name": "Culpeper District",
+      "counties": [
+        "Albemarle",
+        "Culpeper",
+        "Fauquier",
+        "Fluvanna",
+        "Greene",
+        "Louisa",
+        "Madison",
+        "Orange",
+        "Rappahannock"
+      ]
+    },
+    {
+      "key": "staunton",
+      "name": "Staunton District",
+      "counties": [
+        "Alleghany",
+        "Augusta",
+        "Bath",
+        "Clarke",
+        "Frederick",
+        "Highland",
+        "Page",
+        "Rockbridge",
+        "Rockingham",
+        "Shenandoah",
+        "Warren"
+      ]
+    },
+    {
+      "key": "northern_virginia",
+      "name": "Northern Virginia District",
+      "counties": [
+        "Arlington",
+        "Fairfax",
+        "Loudoun",
+        "Prince William"
+      ]
+    }
+  ],
+  "specifications": {
+    "sm_9_5a": {
+      "code": "VDOT SM-9.5A",
+      "description": "9.5 mm nominal maximum aggregate surface mix",
+      "source": "VDOT Road and Bridge Specifications, Section 211 (Asphalt Concrete)"
+    },
+    "sm_12_5a": {
+      "code": "VDOT SM-12.5A",
+      "description": "12.5 mm nominal maximum aggregate surface mix",
+      "source": "VDOT Road and Bridge Specifications, Section 211 (Asphalt Concrete)"
+    },
+    "bm_25_0a": {
+      "code": "VDOT BM-25.0A",
+      "description": "25.0 mm nominal maximum aggregate base mix",
+      "source": "VDOT Road and Bridge Specifications, Section 211 (Asphalt Concrete)"
+    },
+    "entrance_permit": {
+      "code": "24VAC30-151",
+      "description": "Land Use Permit Regulations, which govern commercial entrances onto state-maintained roads",
+      "source": "Virginia Administrative Code, Title 24, Agency 30, Chapter 151"
+    }
+  },
+  "services": {
+    "commercial-asphalt-paving": {
+      "label": "Commercial Asphalt Paving",
+      "specs": [
+        "sm_12_5a",
+        "bm_25_0a"
+      ]
+    },
+    "asphalt-overlay": {
+      "label": "Asphalt Overlay and Resurfacing",
+      "specs": [
+        "sm_9_5a"
+      ]
+    },
+    "parking-lot-paving": {
+      "label": "Parking Lot Paving",
+      "specs": [
+        "sm_9_5a",
+        "bm_25_0a"
+      ]
+    },
+    "commercial-entrance": {
+      "label": "VDOT Commercial Entrance Construction",
+      "specs": [
+        "entrance_permit",
+        "sm_12_5a"
+      ]
+    },
+    "sealcoating": {
+      "label": "Sealcoating and Pavement Preservation",
+      "specs": []
+    }
+  }
+}

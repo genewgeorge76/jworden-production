@@ -46,6 +46,7 @@ const Reviews = lazy(() => import('./pages/Reviews'));
 const Services = lazy(() => import('./pages/Services'));
 const ServiceAreas = lazy(() => import('./pages/ServiceAreas'));
 const CityPage = lazy(() => import('./pages/CityPage'));
+const CountyServicePage = lazy(() => import('./pages/CountyServicePage'));
 const StatePavingPage = lazy(() => import('./pages/StatePavingPage'));
 const LocationsIndex = lazy(() => import('./pages/LocationsIndex'));
 const LocationPage = lazy(() => import('./pages/LocationPage'));
@@ -456,6 +457,11 @@ const AuthenticatedApp = () => {
         <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
         <Route path="/service-areas" element={<PublicLayout><ServiceAreas /></PublicLayout>} />
         <Route path="/service-areas/:slug" element={<PublicLayout><CityPage /></PublicLayout>} />
+        {/* Virginia county pages — 95 counties x 5 services. Generated from
+            src/data/virginiaMarketPages.json, the same file the backend reads.
+            Currently noindex and absent from every sitemap; see
+            CountyServicePage.jsx for the publish switch. */}
+        <Route path="/virginia/:countySlug/:service" element={<PublicLayout><CountyServicePage /></PublicLayout>} />
         <Route path="/states/:stateSlug" element={<PublicLayout><StatePavingPage /></PublicLayout>} />
         <Route path="/locations" element={<LocationsIndex />} />
         <Route path="/locations/richmond-va/:zip" element={<RichmondZipLanding />} />
