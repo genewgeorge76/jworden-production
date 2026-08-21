@@ -7,24 +7,61 @@
  * traces to an entry in the sourced specification table, and there is no
  * search-volume figure anywhere because nothing measures one.
  *
+ * PER-COUNTY FACTS
+ * The template alone produced ninety-five pages differing only by a place
+ * name, which is the doorway-page pattern Google names by that term. What
+ * makes each page its own is src/data/virginiaCountyFacts.json: a measured
+ * elevation and real VDOT project references for that county, every field
+ * fetched by scripts/build-county-facts.mjs rather than authored.
+ *
+ * Elevation is not decoration. Freeze-thaw depth drives base thickness, so a
+ * 3,211 ft county in Bristol genuinely does not take the same section as a
+ * tidewater county at 6 ft. Fourteen counties came back without usable facts
+ * and are marked complete:false; those render the plain template rather than
+ * a page padded to look full.
+ *
  * NOINDEX
- * These pages ship with noindex and are held out of every sitemap while the
- * set is reviewed. Publishing 475 pages before anyone has read one is how a
- * site earns a thin-content problem. Flip NOINDEX_COUNTY_PAGES to false and
- * add the routes to scripts/generate-sitemap.mjs when the content has been
- * signed off — those two changes together are the publish switch, and keeping
- * them together means a page can never be advertised while still noindexed.
+ * The publish switch. It was held closed while the set was thin, and is open
+ * now that each page carries county-specific, sourced content. It must move
+ * together with the sitemap entries in scripts/generate-sitemap.mjs — a page
+ * that is advertised while noindexed, or indexed while unadvertised, is a
+ * mistake in one direction or the other.
  */
 import { useParams, Navigate, Link } from 'react-router-dom';
 
 import SEO from '@/components/SEO';
 import { generatePage, countyFromSlug, SERVICES } from '@/lib/countyPages';
+import COUNTY_FACTS from '@/data/virginiaCountyFacts.json';
 
 // The publish switch. See the note above before changing it.
-export const NOINDEX_COUNTY_PAGES = true;
+export const NOINDEX_COUNTY_PAGES = false;
 
 const BUSINESS_NAME = 'J. Worden & Sons';
-const SITE_DOMAIN = 'www.jwordenasphaltpaving.com';
+
+/**
+ * The host this page is actually being served from.
+ *
+ * This was hardcoded to 'www.jwordenasphaltpaving.com', which is a Sedo
+ * parking page — so every county page's JSON-LD `url` announced the canonical
+ * copy of itself as living on an advertising placeholder. A hardcoded domain
+ * is also wrong for every new host the site factory spins up.
+ *
+ * Falls back to the old constant only during SSR/prerender, where there is no
+ * window; the prerenderer rewrites the host afterwards.
+ */
+function siteDomain() {
+  if (typeof window !== 'undefined' && window.location?.host) {
+    return window.location.host;
+  }
+  return 'www.jwordenasphaltpaving.com';
+}
+
+/** Facts for one county, or null when nothing usable came back. */
+function factsFor(countyName) {
+  const bare = String(countyName).replace(/\s+County$/i, '');
+  const rec = COUNTY_FACTS.counties.find((c) => c.county === bare);
+  return rec && rec.complete ? rec : null;
+}
 
 export default function CountyServicePage() {
   const { countySlug, service } = useParams();
@@ -38,7 +75,7 @@ export default function CountyServicePage() {
   let page;
   try {
     page = generatePage({
-      domain: SITE_DOMAIN,
+      domain: siteDomain(),
       county,
       service,
       businessName: BUSINESS_NAME,
@@ -46,6 +83,8 @@ export default function CountyServicePage() {
   } catch {
     return <Navigate to="/service-areas" replace />;
   }
+
+  const facts = factsFor(page.county);
 
   return (
     <>
@@ -94,6 +133,58 @@ export default function CountyServicePage() {
                   <p className="mt-1 font-mono text-xs text-muted-foreground">
                     {spec.source}
                   </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {facts?.terrain && (
+          <section className="mt-10" aria-labelledby="terrain-heading">
+            <h2 id="terrain-heading" className="text-xl font-semibold text-foreground">
+              Conditions in {page.county}
+            </h2>
+            <div className="mt-4 border-l-2 border-primary bg-muted/40 px-4 py-3">
+              <p className="font-mono text-sm font-medium text-foreground">
+                {facts.terrain.elevation_ft.toLocaleString()} ft above sea level
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {facts.terrain.note}
+              </p>
+              {/* Named so a reader knows this is a measurement, not an
+                  opinion about their county. */}
+              <p className="mt-1 font-mono text-xs text-muted-foreground">
+                Elevation at county centroid — Google Elevation API
+              </p>
+            </div>
+          </section>
+        )}
+
+        {facts?.road_references?.length > 0 && (
+          <section className="mt-10" aria-labelledby="vdot-heading">
+            <h2 id="vdot-heading" className="text-xl font-semibold text-foreground">
+              Recent VDOT work in {page.county}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Published by the Virginia Department of Transportation. Linked
+              rather than reproduced — these are VDOT&rsquo;s notices, not ours.
+            </p>
+            <ul className="mt-4 space-y-3">
+              {facts.road_references.map((ref) => (
+                <li key={ref.url} className="border-l-2 border-muted px-4 py-2">
+                  <a
+                    href={ref.url}
+                    rel="nofollow noopener"
+                    target="_blank"
+                    className="text-sm text-foreground underline underline-offset-2"
+                  >
+                    {ref.title}
+                  </a>
+                  {ref.published && (
+                    <p className="mt-1 font-mono text-xs text-muted-foreground">
+                      {String(ref.published).slice(0, 10)}
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>

@@ -15,7 +15,7 @@
  * Hooked into npm run build via "prebuild" in package.json.
  * ---------------------------------------------------------------
  */
-import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -305,6 +305,25 @@ try {
   console.warn('[sitemap] could not load src/data/regionalMarketProfiles.js:', e.message);
 }
 
+// ── Virginia county pages ────────────────────────────────────────────────────
+const COUNTY_DOMAIN = 'richmondasphaltpaving.com';
+let COUNTY_INDEXABLE_PATHS = [];
+try {
+  const policy = await import(pathToFileURL(resolve(ROOT, 'scripts/lib/county-index-policy.mjs')).href);
+  const marketPages = JSON.parse(readFileSync(resolve(ROOT, 'src/data/virginiaMarketPages.json'), 'utf8'));
+  const factsPath = resolve(ROOT, 'src/data/virginiaCountyFacts.json');
+  const facts = existsSync(factsPath) ? JSON.parse(readFileSync(factsPath, 'utf8')) : { counties: [] };
+  const factCounties = policy.factCountiesFrom(facts);
+  COUNTY_INDEXABLE_PATHS = policy.allCountyRoutes(marketPages)
+    .filter((r) => policy.isIndexable(r, factCounties))
+    .map((r) => policy.countyPath(r.county, r.service));
+  console.log(`[sitemap] ${COUNTY_INDEXABLE_PATHS.length} county pages qualify for ${COUNTY_DOMAIN}`);
+} catch (e) {
+  // A missing facts file means the county set has not been built. That is a
+  // reason to advertise nothing, not a reason to fail the whole sitemap.
+  console.warn('[sitemap] county pages skipped:', e.message);
+}
+
 // ── 3. Build URL list ─────────────────────────────────────────────────────────
 const today = new Date().toISOString().slice(0, 10);
 // ONLY domains this project actually serves. Generating sitemaps here for
@@ -397,6 +416,20 @@ for (const domain of DOMAINS) {
         changefreq: path === '/' ? 'weekly' : 'monthly',
         priority: path === '/' ? '1.0' : '0.8',
       });
+    }
+
+    // Virginia county pages, for the Virginia brand only.
+    //
+    // Which URLs qualify is decided by scripts/lib/county-index-policy.mjs,
+    // the same module build-brand-sites.mjs uses to stamp the robots meta.
+    // It cannot be read from the brand manifest here: this script runs in
+    // `prebuild` and the brand build runs in `postbuild`, so the manifest does
+    // not exist yet. Sharing the rule rather than restating it is what keeps a
+    // sitemap entry from ever pointing at a page that says noindex.
+    if (COUNTY_INDEXABLE_PATHS.length && domain === COUNTY_DOMAIN) {
+      for (const path of COUNTY_INDEXABLE_PATHS) {
+        urls.push({ loc: SITE + path, lastmod: today, changefreq: 'monthly', priority: '0.8' });
+      }
     }
   } else {
   for (const r of STATIC_ROUTES) {

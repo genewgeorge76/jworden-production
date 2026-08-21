@@ -356,6 +356,16 @@ const AuthenticatedApp = () => {
           <Route path="/" element={<MarketLanding />} />
           <Route path="/portal/:public_token" element={<EstimatePortal />} />
           <Route path="/crew" element={<CrewFieldApp />} />
+          {/* The county pages have to live here, not only in the full-site
+              tree below. richmondasphaltpaving.com resolves to market-landing,
+              so every /virginia/* URL was being swallowed by the catch-all
+              redirect underneath and answered with the homepage — 200, wrong
+              content, ninety-five soft 404s that a status-code check reports
+              as healthy. */}
+          <Route
+            path="/virginia/:countySlug/:service"
+            element={<PublicLayout><CountyServicePage /></PublicLayout>}
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

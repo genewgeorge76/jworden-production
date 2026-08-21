@@ -44,7 +44,7 @@
  * Usage:  node scripts/build-brand-sites.mjs        (writes into dist/)
  */
 
-import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -336,6 +336,96 @@ if (!existsSync(profilesPath)) {
 const mod = await import(pathToFileURL(profilesPath).href);
 const PROFILES = mod.REGIONAL_MARKET_PROFILES || {};
 
+// ── Virginia county pages ────────────────────────────────────────────────────
+// These exist as a client route, which was not enough: richmondasphaltpaving.com
+// resolves to market-landing mode, so the raw HTML served for /virginia/* was
+// the generic SPA shell — the Worden Standard OS page, byte-identical across all
+// ninety-five URLs. Emitting real static HTML here means the county pages are
+// the same kind of artifact as the rest of the brand build: their own document,
+// their own self canonical, their own content.
+//
+// Virginia only. The counties are Virginia counties; putting them on the
+// Georgia or Carolina brands would be inventing a service area.
+const { PRIMARY_SERVICE, countySlug, countyPath, isIndexable, factCountiesFrom, allCountyRoutes } =
+  await import(pathToFileURL(resolve(ROOT, 'scripts/lib/county-index-policy.mjs')).href);
+
+const countyData = JSON.parse(
+  readFileSync(resolve(ROOT, 'src/data/virginiaMarketPages.json'), 'utf8'),
+);
+const countyFactsPath = resolve(ROOT, 'src/data/virginiaCountyFacts.json');
+const countyFacts = existsSync(countyFactsPath)
+  ? JSON.parse(readFileSync(countyFactsPath, 'utf8'))
+  : { counties: [] };
+const FACTS_BY_COUNTY = new Map(
+  (countyFacts.counties || []).filter((c) => c.complete).map((c) => [c.county, c]),
+);
+const FACT_COUNTIES = factCountiesFrom(countyFacts);
+
+
+
+/** One county page: full document, self canonical, facts when we have them. */
+function countyPage(p, r) {
+  const countyName = /County$/.test(r.county) ? r.county : `${r.county} County`;
+  const path = countyPath(r.county, r.service);
+  const canonical = `https://www.${p.domain}${path}`;
+  const facts = FACTS_BY_COUNTY.get(r.county) || null;
+  const specs = r.specs.map((k) => countyData.specifications[k]).filter(Boolean);
+
+  const specBlock = specs.length
+    ? `<section class="pad"><div class="wrap"><h2>Specifications</h2><ul class="grid">${
+        specs.map((sp) => `<li><strong>${esc(sp.code)}</strong> — ${esc(sp.description)}<br><small>${esc(sp.source)}</small></li>`).join('')
+      }</ul></div></section>`
+    : '';
+
+  const terrainBlock = facts?.terrain
+    ? `<section class="pad"><div class="wrap"><h2>Conditions in ${esc(countyName)}</h2>
+<p><strong>${facts.terrain.elevation_ft.toLocaleString()} ft above sea level.</strong> ${esc(facts.terrain.note)}</p>
+<p><small>Elevation at county centroid — Google Elevation API.</small></p></div></section>`
+    : '';
+
+  const refBlock = facts?.road_references?.length
+    ? `<section class="pad"><div class="wrap"><h2>Recent VDOT work in ${esc(countyName)}</h2>
+<p>Published by the Virginia Department of Transportation. Linked rather than reproduced.</p>
+<ul class="grid">${facts.road_references.map((ref) =>
+  `<li><a href="${esc(ref.url)}" rel="nofollow noopener">${esc(ref.title)}</a></li>`).join('')}</ul></div></section>`
+    : '';
+
+  const jsonld = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': countyData.schemaType,
+    name: `J. Worden & Sons — ${countyName}`,
+    url: canonical,
+    areaServed: { '@type': 'AdministrativeArea', name: `${countyName}, Virginia` },
+    knowsAbout: specs.length ? specs.map((sp) => `${sp.code} — ${sp.description}`) : [r.label],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(`${r.label} | ${countyName}, VA`)}</title>
+<meta name="description" content="${esc(`${r.label} in ${countyName}, Virginia, in VDOT's ${r.district}. Request an estimate.`)}">
+<link rel="canonical" href="${canonical}">
+<meta name="robots" content="${isIndexable(r, FACT_COUNTIES) ? 'index, follow' : 'noindex, follow'}">
+<script type="application/ld+json">${jsonld}</script>
+<link rel="stylesheet" href="/brand.css">
+</head>
+<body>
+<main>
+<section class="pad"><div class="wrap">
+<p class="eyebrow">VDOT ${esc(r.district)}</p>
+<h1>${esc(`${r.label} in ${countyName}, Virginia`)}</h1>
+<p>${esc(`${r.label} across ${countyName} — parking lots, drive lanes and truck entrances built to Virginia Department of Transportation specifications.`)}</p>
+</div></section>
+${terrainBlock}
+${specBlock}
+${refBlock}
+<section class="pad"><div class="wrap"><a href="/contact">Request an estimate</a></div></section>
+</main>
+</body>
+</html>`;
+}
+
 let pagesWritten = 0;
 const manifest = [];
 
@@ -357,8 +447,36 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     writeFileSync(resolve(dir, 'index.html'), page(p, route), 'utf8');
     pagesWritten += 1;
   }
-  manifest.push({ domain, routes: ROUTES.map((r) => r.path), stateAbbr });
-  console.log(`[brand-sites] ${domain} (${stateAbbr}) — ${ROUTES.length} pages`);
+  // Virginia counties belong only on the Virginia brand.
+  let countyCount = 0;
+  if (stateAbbr === 'VA') {
+    for (const r of allCountyRoutes(countyData)) {
+      const path = countyPath(r.county, r.service);
+      const dir = resolve(DIST, 'brands', domain, path.slice(1));
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(resolve(dir, 'index.html'), countyPage(p, r), 'utf8');
+      countyCount += 1;
+      pagesWritten += 1;
+    }
+  }
+
+  manifest.push({
+    domain,
+    routes: ROUTES.map((r) => r.path),
+    stateAbbr,
+    countyPages: countyCount,
+    // Exactly the county URLs the sitemap may advertise. Written here rather
+    // than recomputed there so the two can never disagree — a page advertised
+    // while noindexed is a contradiction Google reports as an error.
+    indexableCountyPaths: stateAbbr === 'VA'
+      ? allCountyRoutes(countyData).filter((r) => isIndexable(r, FACT_COUNTIES))
+          .map((r) => countyPath(r.county, r.service))
+      : [],
+  });
+  console.log(
+    `[brand-sites] ${domain} (${stateAbbr}) — ${ROUTES.length} pages` +
+    (countyCount ? ` + ${countyCount} county pages` : ''),
+  );
 }
 
 writeFileSync(resolve(DIST, 'brands', 'manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
