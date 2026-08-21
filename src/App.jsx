@@ -46,6 +46,7 @@ const Reviews = lazy(() => import('./pages/Reviews'));
 const Services = lazy(() => import('./pages/Services'));
 const ServiceAreas = lazy(() => import('./pages/ServiceAreas'));
 const CityPage = lazy(() => import('./pages/CityPage'));
+const CountyServicePage = lazy(() => import('./pages/CountyServicePage'));
 const StatePavingPage = lazy(() => import('./pages/StatePavingPage'));
 const LocationsIndex = lazy(() => import('./pages/LocationsIndex'));
 const LocationPage = lazy(() => import('./pages/LocationPage'));
@@ -274,9 +275,23 @@ const AuthenticatedApp = () => {
   // saas-client route_mode /api/v1/factory/resolve returns for them.
   const wordenStandardHostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
   const isWordenStandardDomain = wordenStandardHostname === 'thewordenstandard.com' || wordenStandardHostname === 'www.thewordenstandard.com';
+  // jwordenuniversity.com is the training and testing site. It was falling
+  // through to the tenant lookup, and with no market_sites row for it that
+  // meant it served the SaaS storefront — the same 648 words as
+  // thewordenstandard.com, on a second domain, which is duplicate content
+  // Google has to choose between. Pinned here for the same reason the
+  // storefront is: a mode that depends on a database row nobody has written
+  // yet is a mode that silently does the wrong thing.
+  const isUniversityDomain =
+    wordenStandardHostname === 'jwordenuniversity.com' ||
+    wordenStandardHostname === 'www.jwordenuniversity.com' ||
+    wordenStandardHostname === 'wordenuniversity.com' ||
+    wordenStandardHostname === 'www.wordenuniversity.com';
   const routeMode = isWordenStandardDomain
     ? SITE_ROUTE_MODES.OPERATIONS
-    : (tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE);
+    : isUniversityDomain
+      ? SITE_ROUTE_MODES.UNIVERSITY
+      : (tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE);
   const subdomainMode = detectSubdomainMode();
 
 
@@ -456,6 +471,11 @@ const AuthenticatedApp = () => {
         <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
         <Route path="/service-areas" element={<PublicLayout><ServiceAreas /></PublicLayout>} />
         <Route path="/service-areas/:slug" element={<PublicLayout><CityPage /></PublicLayout>} />
+        {/* Virginia county pages — 95 counties x 5 services. Generated from
+            src/data/virginiaMarketPages.json, the same file the backend reads.
+            Currently noindex and absent from every sitemap; see
+            CountyServicePage.jsx for the publish switch. */}
+        <Route path="/virginia/:countySlug/:service" element={<PublicLayout><CountyServicePage /></PublicLayout>} />
         <Route path="/states/:stateSlug" element={<PublicLayout><StatePavingPage /></PublicLayout>} />
         <Route path="/locations" element={<LocationsIndex />} />
         <Route path="/locations/richmond-va/:zip" element={<RichmondZipLanding />} />
