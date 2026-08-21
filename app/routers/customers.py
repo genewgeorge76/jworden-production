@@ -44,6 +44,7 @@ from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Customer, ServiceHistory
 from ..services.state_data import STATE_MAP, normalize_state_code
+from ..services.tenancy import scope, stamp_for, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -83,8 +84,17 @@ class CustomerOut(BaseModel):
     brand:         Optional[str]
     total_jobs:    int
     total_revenue: float
-    ltv_score:     Optional[float]
-    churn_risk:    Optional[str]
+    # No column backs either of these and nothing in the codebase computes
+    # them. Declared without a default they were *required*, so FastAPI raised
+    # ResponseValidationError while serialising the ORM object and every route
+    # returning a CustomerOut answered 500 — create, fetch by id, and update.
+    # Creating a customer through the API was impossible.
+    #
+    # They stay in the schema so the dashboard's response shape is unchanged,
+    # and they stay null because inventing a lifetime value for a real
+    # customer would be worse than admitting we do not calculate one.
+    ltv_score:     Optional[float] = None
+    churn_risk:    Optional[str]   = None
     created_at:    datetime
 
     class Config:
@@ -122,6 +132,24 @@ def _validate_state(code: Optional[str]) -> Optional[str]:
     return normalize_state_code(code)
 
 
+def _owned_customer(db: Session, customer_id: int, tenant: str) -> Customer:
+    """
+    Fetch a customer the caller is entitled to, or 404.
+
+    `db.get(Customer, id)` looks up by primary key alone, so before this every
+    by-id route let any authenticated tenant read — and via PATCH, overwrite —
+    any other tenant's customer just by counting upward from 1.
+
+    The miss is a 404 rather than a 403 on purpose: a 403 would confirm that a
+    record with that id exists and belongs to somebody, which turns the same
+    counting loop into a census of the platform's customers.
+    """
+    c = scope(db.query(Customer), Customer, tenant).filter(Customer.id == customer_id).first()
+    if not c:
+        raise HTTPException(404, "Customer not found")
+    return c
+
+
 # ── CRUD endpoints ────────────────────────────────────────────────────────────
 
 @router.post("", summary="Create a customer record", response_model=CustomerOut)
@@ -130,11 +158,12 @@ async def create_customer(
     request: Request,
     body: CustomerCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     c = Customer(
         **body.model_dump(exclude={"state_code"}),
         state_code=_validate_state(body.state_code),
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(c)
     db.commit()
@@ -155,11 +184,18 @@ async def list_customers(
     limit:         int           = Query(default=50, ge=1, le=200),
     offset:        int           = Query(default=0,  ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    # Build a stable cache key from all filter parameters
+    tenant = tenant_of(auth)
+    # Build a stable cache key from all filter parameters.
+    #
+    # The tenant belongs in the key, not just in the query. Two tenants asking
+    # for the same page with the same filters hash to the same digest, so a
+    # tenant-blind key hands whoever asks second the rows the first one cached.
+    # That is a cross-tenant read that no amount of query filtering can undo.
     params = json.dumps(
         {
+            "tenant": tenant,
             "state": state_code,
             "type": customer_type,
             "franchise": is_franchise,
@@ -174,7 +210,7 @@ async def list_customers(
     if cached is not None:
         return cached
 
-    q = db.query(Customer)
+    q = scope(db.query(Customer), Customer, tenant)
     if state_code:
         q = q.filter(Customer.state_code == state_code.upper())
     if customer_type:
@@ -222,19 +258,26 @@ async def list_customers(
 @router.get("/stats/overview", summary="CRM statistics overview")
 async def customer_stats(
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    cached = cache_get(KEY_CUSTOMERS_STATS)
+    from sqlalchemy import func  # noqa: PLC0415
+
+    tenant = tenant_of(auth)
+    # Per-tenant key for the same reason as the list endpoint: one shared
+    # "customers:stats" key would serve tenant A's revenue total to tenant B.
+    stats_key = f"{KEY_CUSTOMERS_STATS}:{tenant}"
+    cached = cache_get(stats_key)
     if cached is not None:
         return cached
 
-    total      = db.query(Customer).count()
-    franchise  = db.query(Customer).filter(Customer.is_franchise == 1).count()
-    states     = db.query(Customer.state_code).distinct().count()
-    jobs_total = db.query(ServiceHistory).count()
-    rev_total  = db.query(Customer).with_entities(
-        __import__("sqlalchemy", fromlist=["func"]).func.sum(Customer.total_revenue)
-    ).scalar() or 0.0
+    scoped     = lambda: scope(db.query(Customer), Customer, tenant)  # noqa: E731
+    total      = scoped().count()
+    franchise  = scoped().filter(Customer.is_franchise == 1).count()
+    states     = scoped().with_entities(Customer.state_code).distinct().count()
+    jobs_total = scope(
+        db.query(ServiceHistory), ServiceHistory, tenant
+    ).count()
+    rev_total  = scoped().with_entities(func.sum(Customer.total_revenue)).scalar() or 0.0
     result = {
         "total_customers": total,
         "franchise_accounts": franchise,
@@ -242,7 +285,7 @@ async def customer_stats(
         "total_jobs_on_record": jobs_total,
         "total_revenue_on_record": round(float(rev_total), 2),
     }
-    cache_set(KEY_CUSTOMERS_STATS, result, CUSTOMERS_TTL)
+    cache_set(stats_key, result, CUSTOMERS_TTL)
     return result
 
 
@@ -250,12 +293,9 @@ async def customer_stats(
 async def get_customer(
     customer_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    c = db.get(Customer, customer_id)
-    if not c:
-        raise HTTPException(404, "Customer not found")
-    return c
+    return _owned_customer(db, customer_id, tenant_of(auth))
 
 
 @router.patch("/{customer_id}", summary="Update a customer")
@@ -263,11 +303,9 @@ async def update_customer(
     customer_id: int,
     body: CustomerCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    c = db.get(Customer, customer_id)
-    if not c:
-        raise HTTPException(404, "Customer not found")
+    c = _owned_customer(db, customer_id, tenant_of(auth))
     for k, v in body.model_dump(exclude_unset=True).items():
         if k == "state_code":
             v = _validate_state(v)
@@ -286,13 +324,12 @@ async def update_customer(
 async def get_service_history(
     customer_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    c = db.get(Customer, customer_id)
-    if not c:
-        raise HTTPException(404, "Customer not found")
+    tenant = tenant_of(auth)
+    _owned_customer(db, customer_id, tenant)
     items = (
-        db.query(ServiceHistory)
+        scope(db.query(ServiceHistory), ServiceHistory, tenant)
         .filter(ServiceHistory.customer_id == customer_id)
         .order_by(ServiceHistory.job_date.desc())
         .all()
@@ -305,16 +342,16 @@ async def add_service_history(
     customer_id: int,
     body: ServiceHistoryCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    c = db.get(Customer, customer_id)
-    if not c:
-        raise HTTPException(404, "Customer not found")
+    tenant = tenant_of(auth)
+    c = _owned_customer(db, customer_id, tenant)
 
     entry = ServiceHistory(
         customer_id=customer_id,
         **body.model_dump(exclude={"state_code"}),
         state_code=_validate_state(body.state_code),
+        tenant_id=stamp_for(tenant),
     )
     db.add(entry)
 
@@ -341,7 +378,7 @@ async def import_customers(
     file: UploadFile = File(...),
     source: str = Query(default="import_csv", max_length=60),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Import customers from:
@@ -370,9 +407,22 @@ async def import_customers(
     except Exception as exc:
         raise HTTPException(422, f"Could not parse file: {exc}") from exc
 
+    # Dedupe within the importing tenant only.
+    #
+    # Matching against every email in the table meant a second contractor
+    # importing a customer his competitor already had would see that row
+    # silently counted as "skipped" — his own record never created, no error
+    # raised, and the shortfall only discoverable by counting rows afterwards.
+    # It also answered "is this address already a customer here?" for anyone
+    # allowed to import, which is not a question a tenant should get to ask.
+    tenant = tenant_of(auth)
     existing_emails: set[str] = {
-        e for (e,) in db.query(Customer.email).filter(Customer.email.isnot(None)).all()
+        e
+        for (e,) in scope(db.query(Customer.email), Customer, tenant)
+        .filter(Customer.email.isnot(None))
+        .all()
     }
+    stamp = stamp_for(tenant)
 
     for i, row in enumerate(rows):
         try:
@@ -401,6 +451,7 @@ async def import_customers(
                 notes         = (row.get("notes") or "").strip() or None,
                 external_id   = (row.get("external_id") or row.get("id") or "").strip() or None,
                 source        = source,
+                tenant_id     = stamp,
             )
             db.add(c)
             if email:
