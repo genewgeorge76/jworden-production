@@ -30,6 +30,7 @@ from ..models import (
     ProjectSite,
 )
 from ..services import delivered_cost as dc
+from ..services import google_routes as _routes
 from ..services.tenancy import scope, tenant_of
 
 logger = logging.getLogger(__name__)
@@ -77,6 +78,11 @@ def costing_status(db: Session = Depends(get_db), auth: dict = Depends(verify_pr
         "labor_markets": markets,
         "can_price_delivered": not blocking,
         "blocking": blocking,
+        "distance_basis": (
+            "measured (Google Routes)" if _routes.configured()
+            else "estimated (great-circle × circuity)"
+        ),
+        "measured_distance_available": _routes.configured(),
     }
 
 
@@ -292,7 +298,7 @@ class DeliveredRequest(BaseModel):
 
 
 @router.post("/delivered", summary="Delivered cost per ton at a job site, by source")
-def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
+async def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
               auth: dict = Depends(verify_premium_security)):
     """
     Price a material into a site from every source, cheapest delivered first.
@@ -354,6 +360,23 @@ def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
                    "POST /api/v1/costing/sources.",
         )
 
+    # Measured drive distance and time from Google Routes, when the key is set.
+    # One request per plant, run concurrently; each missing result falls back
+    # to the great-circle estimate rather than blocking the quote. The whole
+    # block is a no-op — and costs nothing — when GOOGLE_MAPS_API_KEY is unset.
+    measured: dict[int, dict] = {}
+    if _routes.configured():
+        import asyncio as _asyncio
+
+        async def _measure(src):
+            if src.lat is None or src.lng is None:
+                return src.id, None
+            return src.id, await _routes.drive(lat, lng, src.lat, src.lng)
+
+        for sid, m in await _asyncio.gather(*[_measure(s) for s in sources]):
+            if m:
+                measured[sid] = m
+
     evaluated = []
     for s in sources:
         price_row = scope(
@@ -365,10 +388,13 @@ def delivered(body: DeliveredRequest, db: Session = Depends(get_db),
             ),
             MaterialSourcePrice, tenant,
         ).order_by(MaterialSourcePrice.effective_date.desc()).first()
+        m = measured.get(s.id)
         row = dc.evaluate_source(
             source=_source_dict(s),
             fob_price=price_row.fob_price if price_row else None,
             site_lat=lat, site_lng=lng, haul=haul,
+            known_road_miles=m["miles"] if m else None,
+            known_one_way_minutes=m["minutes"] if m else None,
             job_month=job_date.month,
         )
         if price_row:
