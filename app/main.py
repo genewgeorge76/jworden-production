@@ -312,6 +312,7 @@ from .routers import lifespan as lifespan_router
 from .routers import costing as costing_router
 from .routers import social as social_router
 from .routers import market_pages as market_pages_router
+from .routers import site_health as site_health_router
 from .routers import job_estimate as job_estimate_router
 from .routers import supplier_discovery_router as supplier_discovery_router
 from .routers import site_metrics as site_metrics_router
@@ -652,6 +653,7 @@ app.include_router(lifespan_router.router)
 app.include_router(costing_router.router)
 app.include_router(social_router.router)
 app.include_router(market_pages_router.router)
+app.include_router(site_health_router.router)
 app.include_router(job_estimate_router.router)
 app.include_router(supplier_discovery_router.router)
 app.include_router(retrospectives_router.router)

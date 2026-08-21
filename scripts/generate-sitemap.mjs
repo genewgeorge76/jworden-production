@@ -357,7 +357,12 @@ const STOREFRONT_DOMAINS = new Map([
 ]);
 // Only the primary domain ships an image sitemap, so only its robots file
 // should advertise one — pointing crawlers at a 404 on the other six hurts.
-const PRIMARY_DOMAIN = 'www.jwordenasphaltpaving.com';
+// Was www.jwordenasphaltpaving.com, which is currently serving a Sedo ad
+// parking page (Netlify account past due) — so the one domain advertising an
+// image sitemap was a domain that does not serve the site. Richmond is the
+// flagship and is live, prerendered and self-canonical. Move this back when
+// jwordenasphaltpaving.com is restored.
+const PRIMARY_DOMAIN = 'richmondasphaltpaving.com';
 
 for (const domain of DOMAINS) {
   const SITE = `https://${domain}`;

@@ -6,10 +6,21 @@ node_modules/
 dist/
 public/
 
-# Exclude all of src/ EXCEPT the config files the backend needs
+# Exclude all of src/ EXCEPT the config files the backend needs.
+#
+# Every un-ignore here is load-bearing at BOOT. va_market_geo.py reads
+# virginiaMarketPages.json at import time; when this file was added to src/
+# without an exception below, every app machine crash-looped with
+# FileNotFoundError and the API served 503 — while CI stayed green, because
+# the test job imports from the repo checkout, which has the file. The image
+# is the only place the exclusion bites. test_docker_image_contents.py now
+# asserts each backend-read file under src/ survives this filter.
 src/
 !src/config/
 !src/config/siteFactoryManifest.json
+!src/data/
+src/data/*
+!src/data/virginiaMarketPages.json
 *.html
 *.jsx
 *.tsx

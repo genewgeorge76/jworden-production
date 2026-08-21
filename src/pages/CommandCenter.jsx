@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import { setOwnerToken, getOwnerToken } from '@/lib/ownerToken'
 import { Activity, AlertTriangle, CalendarDays, CircleCheckBig, CloudRain, Gauge, Loader2, Mail, Phone, ShieldCheck, UserRound, Upload, Bot, Sparkles, RefreshCw, Layers, Globe, Box, Layout, ArrowRight, FileText, Scale, HardHat, Power, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { api } from '@/api/client'
 import InboxTriagePanel from '../components/InboxTriagePanel'
@@ -435,11 +436,11 @@ function KpiCard({ label, value, delta, tone, icon: Icon }) {
         open={Boolean(pendingOwnerAction)}
         title={pendingOwnerAction ? (pendingOwnerAction.kind === 'call' ? 'Confirm Call' : 'Confirm Email') : ''}
         message={pendingOwnerAction ? `Authorize Jarvis to ${pendingOwnerAction.kind} ${pendingOwnerAction.lead?.name || pendingOwnerAction.lead?.phone || pendingOwnerAction.lead?.email}? This requires operator approval.` : ''}
-        defaultToken={typeof window !== 'undefined' ? window.sessionStorage.getItem('OWNER_TOKEN') || '' : ''}
+        defaultToken={typeof window !== 'undefined' ? getOwnerToken() || '' : ''}
         onCancel={() => setPendingOwnerAction(null)}
         onConfirm={(opts) => performPendingOwnerAction(opts)}
       />
-      <SessionUnlockModal open={showUnlockModal} defaultPin="" defaultToken={typeof window !== 'undefined' ? sessionStorage.getItem('OWNER_TOKEN') || '' : ''} onCancel={() => setShowUnlockModal(false)} onUnlock={handleUnlock} />
+      <SessionUnlockModal open={showUnlockModal} defaultPin="" defaultToken={typeof window !== 'undefined' ? getOwnerToken() || '' : ''} onCancel={() => setShowUnlockModal(false)} onUnlock={handleUnlock} />
     </div>
   )
 }
@@ -3915,13 +3916,13 @@ function JarvisChat({ compact = false }) {
               type="password"
               id="owner_token_input"
               placeholder="Owner token"
-              defaultValue={typeof window !== 'undefined' ? window.sessionStorage.getItem('OWNER_TOKEN') || '' : ''}
-              onBlur={(e) => { try { window.sessionStorage.setItem('OWNER_TOKEN', e.target.value || '') } catch { /* noop */ } }}
+              defaultValue={typeof window !== 'undefined' ? getOwnerToken() || '' : ''}
+              onBlur={(e) => { setOwnerToken(e.target.value || '') }}
               className="text-xs px-2 py-1 rounded border border-white/10 bg-white/5 text-white/80"
             />
             <button
               type="button"
-              onClick={() => { try { const v = (document.getElementById('owner_token_input')||{}).value || ''; window.sessionStorage.setItem('OWNER_TOKEN', v); alert('Owner token saved for this session.'); } catch { alert('Could not save token.'); } }}
+              onClick={() => { const v = (document.getElementById('owner_token_input')||{}).value || ''; setOwnerToken(v); alert(v ? 'Owner token saved. It now survives closing the browser.' : 'Owner token cleared.'); }}
               className="text-xs px-2 py-1 rounded bg-white/[0.06] border border-white/10 text-white/70 hover:text-white"
             >Set</button>
           </div>

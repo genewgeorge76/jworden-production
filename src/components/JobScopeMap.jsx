@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { getOwnerToken } from '@/lib/ownerToken'
 import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -85,7 +86,7 @@ export default function JobScopeMap({ job, onSave }) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
+                'Authorization': `Bearer ${getOwnerToken() || ''}`
             },
             body: JSON.stringify(updatedData)
           });

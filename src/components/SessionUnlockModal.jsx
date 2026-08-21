@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { setOwnerToken } from '@/lib/ownerToken'
 import { authenticateWithPin } from '@/api/client'
 
 export default function SessionUnlockModal({ open, defaultPin = '', defaultToken = '', onCancel, onUnlock }) {
@@ -20,7 +21,7 @@ export default function SessionUnlockModal({ open, defaultPin = '', defaultToken
       try {
         // The owner token is an optional extra credential for owner-scoped
         // endpoints; it is NOT what authorises ordinary panels (the JWT is).
-        if (token) sessionStorage.setItem('OWNER_TOKEN', token)
+        if (token) setOwnerToken(token)
       } catch { /* storage unavailable — non-fatal */ }
       onUnlock({ pin, token })
     } catch (err) {
