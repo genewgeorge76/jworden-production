@@ -325,6 +325,7 @@ from .routers import tts as tts_router
 from .routers import telematics as telematics_router
 from .routers import jwordenai_hub as jwordenai_hub_router
 from .routers import seo as seo_router
+from .routers import ferrari_router
 from .routers import twilio_verify_router as twilio_verify_router
 from .routers import vdot_bids as vdot_bids_router
 from .routers import vector_search as vector_search_router
@@ -649,6 +650,7 @@ app.include_router(blog_router.router)
 app.include_router(vector_search_router.router)
 app.include_router(admin_vector_router.router)
 app.include_router(seo_router.router)
+app.include_router(ferrari_router.router)
 app.include_router(lifespan_router.router)
 app.include_router(costing_router.router)
 app.include_router(social_router.router)

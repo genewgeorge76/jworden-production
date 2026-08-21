@@ -2805,3 +2805,50 @@ class SiteHealthCheck(Base):
 
     def __repr__(self) -> str:
         return f"<SiteHealthCheck {self.domain!r} {self.severity!r}>"
+
+
+class FerrariArtifact(Base):
+    """
+    A saved piece of work from a Ferrari module, owned by one tenant.
+
+    The Ferrari tools — Vision Takeoff bids, Dispatch boards, County Assessor
+    lookups, Market Intel snapshots — used to keep everything in the browser's
+    localStorage. That capped them: a bid built on the laptop was invisible in
+    the office, gone on the next device, and impossible to bill a customer for
+    because nothing server-side knew it existed.
+
+    This is the persistence layer that lifts that cap. One row is one saved
+    artifact, addressed by (tenant_id, ferrari, kind, ref). The payload is the
+    module's own JSON — this table does not care what a bid or a board looks
+    like, only whose it is and how to find it again. Keeping the shape opaque
+    means a Ferrari can evolve its own format without a migration here.
+
+    Scoped by tenant_id like every other owned table, so J. Worden's command
+    center and a hosted contractor's are the same tool over different rows.
+    """
+
+    __tablename__ = "ferrari_artifacts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+
+    # Which module produced it, e.g. "vision-takeoff", and the kind within
+    # that module, e.g. "bid" or "board". Indexed together because every list
+    # query filters on both.
+    ferrari = Column(String(40), nullable=False, index=True)
+    kind = Column(String(40), nullable=False, default="default", index=True)
+
+    # A caller-supplied stable reference (a bid number, a job id). Optional;
+    # when set it lets a module upsert its own record rather than duplicate it.
+    ref = Column(String(120), nullable=True, index=True)
+
+    title = Column(String(300), nullable=True)
+    payload = Column(JSON, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"<FerrariArtifact {self.ferrari!r}/{self.kind!r} tenant={self.tenant_id!r}>"
