@@ -40,6 +40,7 @@ celery_app = Celery(
         "app.tasks.voice_events",
         "app.tasks.social_dispatch",
         "app.tasks.site_health_beat",
+        "app.tasks.backup_beat",
     ],
 )
 
@@ -93,6 +94,20 @@ celery_app.conf.update(
         # Does each published domain actually serve the site? Hourly, because
         # a domain can be replaced by a parking page between deploys and the
         # status code will not change when it happens.
+        # Nightly database backup at 07:30 UTC — after the VDOT scrape at
+        # 07:00 so a failed scrape does not delay the backup, and before the
+        # working day in Virginia so the dump reflects a settled database.
+        "database-backup-nightly": {
+            "task": "app.tasks.backup_beat.run_nightly_backup",
+            "schedule": crontab(minute=30, hour=7),
+        },
+        # Asks whether a recent backup exists, which the backup task itself
+        # cannot answer: a schedule that stopped firing reports no failures
+        # because it reports nothing.
+        "backup-freshness-check": {
+            "task": "app.tasks.backup_beat.check_backup_freshness",
+            "schedule": crontab(minute=0, hour=13),
+        },
         "check-published-sites-hourly": {
             "task": "app.tasks.site_health_beat.check_published_sites",
             "schedule": crontab(minute=17),

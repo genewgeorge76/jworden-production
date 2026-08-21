@@ -31,6 +31,7 @@ from typing import Any
 
 from . import email_templates as tmpl
 from . import runtime_config as _cfg
+from .email_templates import lead_field
 
 logger = logging.getLogger(__name__)
 
@@ -226,7 +227,7 @@ def send_quote_confirmation(lead: Any) -> bool:
     Returns:
         True if the email was sent successfully.
     """
-    to_email = getattr(lead, "email", None) or lead.get("email", "")
+    to_email = lead_field(lead, "email")
     if not to_email:
         logger.warning("send_quote_confirmation: no email address on lead — skipping")
         return False
@@ -257,7 +258,7 @@ def send_admin_notification(lead: Any) -> bool:
         return False
 
     subject, html_body, plain_text = tmpl.admin_new_lead(lead)
-    lead_id = getattr(lead, "id", None) or lead.get("id", "?")
+    lead_id = lead_field(lead, "id", default="?")
     logger.info("Sending admin notification for lead #%s to %s", lead_id, admin_email)
     return send_raw(
         to_email=admin_email,
@@ -278,7 +279,7 @@ def send_follow_up(lead: Any, task_type: str) -> bool:
     Returns:
         True if the email was sent successfully.
     """
-    to_email = getattr(lead, "email", None) or lead.get("email", "")
+    to_email = lead_field(lead, "email")
     if not to_email:
         logger.warning("send_follow_up: no email address on lead — skipping")
         return False
@@ -295,7 +296,7 @@ def send_follow_up(lead: Any, task_type: str) -> bool:
         return False
 
     subject, html_body, plain_text = template_fn(lead)
-    lead_id = getattr(lead, "id", None) or lead.get("id", "?")
+    lead_id = lead_field(lead, "id", default="?")
     logger.info(
         "Sending %s follow-up email to %s (lead #%s)",
         task_type,

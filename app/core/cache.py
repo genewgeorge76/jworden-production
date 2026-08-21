@@ -281,6 +281,9 @@ def invalidate_customer_caches(customer_id: Optional[int] = None) -> None:
     cache_delete(KEY_CUSTOMERS_LIST)
     cache_delete(KEY_CUSTOMERS_STATS)
     cache_delete_pattern("customers:list:*")
+    # Stats are cached per tenant ("customers:stats:<tenant>"), so the bare
+    # key above no longer covers them on its own.
+    cache_delete_pattern(f"{KEY_CUSTOMERS_STATS}:*")
     if customer_id is not None:
         cache_delete(KEY_CUSTOMER_DETAIL.format(id=customer_id))
     logger.debug("Customer caches invalidated (id=%s)", customer_id)

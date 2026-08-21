@@ -13,7 +13,7 @@ Returns HTTP 200 when healthy, HTTP 503 when any critical dependency is down.
 import logging
 import time
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 
 from ..core.security import verify_premium_security
@@ -323,3 +323,78 @@ def self_heal_status(_: dict = Depends(verify_premium_security)):
     from ..services.self_heal import get_self_heal_status  # noqa: PLC0415
 
     return get_self_heal_status()
+
+
+@router.get(
+    "/api/v1/ops/backups",
+    summary="Backup status — when was the last one, and is it fresh? (admin only)",
+)
+def backup_status(_: dict = Depends(verify_premium_security)):
+    """
+    What the backup situation actually is, rather than whether a schedule
+    exists. Reports the newest stored backup and its age; `latest: null` means
+    nothing has ever been stored, which is the answer that matters most and
+    the one a "backups: enabled" flag would hide.
+    """
+    from ..services import db_backup  # noqa: PLC0415
+
+    try:
+        newest = db_backup.latest()
+    except db_backup.BackupError as exc:
+        return {
+            "configured": False,
+            "latest": None,
+            "detail": str(exc),
+        }
+
+    age = (newest or {}).get("age_hours")
+    return {
+        "configured": True,
+        "latest": newest,
+        "stale": bool(age is not None and age > 36),
+        "retention_days": db_backup.RETENTION_DAYS,
+        "minimum_kept": db_backup.RETENTION_MIN_KEEP,
+    }
+
+
+@router.post(
+    "/api/v1/ops/backups/run",
+    summary="Take a backup right now (admin only)",
+)
+def run_backup_now(_: dict = Depends(verify_premium_security)):
+    """
+    Run a backup synchronously and report the manifest.
+
+    Worth having separately from the schedule: before a risky operation — a
+    bulk customer import, a migration — the useful thing is a backup taken
+    just now and confirmed restorable, not one from last night.
+    """
+    from ..services import db_backup  # noqa: PLC0415
+
+    try:
+        manifest = db_backup.create_backup()
+    except db_backup.BackupError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    return {"ok": True, "backup": manifest.to_dict()}
+
+
+@router.get(
+    "/api/v1/ops/notification-reach",
+    summary="Can an incoming lead actually reach anybody? (admin only)",
+)
+def notification_reach(_: dict = Depends(verify_premium_security)):
+    """
+    Which lead-notification channels are configured in this process.
+
+    A lead pipeline with no configured channel is indistinguishable from a
+    quiet week: the form accepts the submission, the row is saved, the
+    endpoint returns 200, and the send fails in a background task after the
+    response has gone. This endpoint separates "nothing was sent" from
+    "nothing could be sent".
+
+    Reports booleans and provider names only — never key material.
+    """
+    from ..services import notification_health  # noqa: PLC0415
+
+    return notification_health.check()

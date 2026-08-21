@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from ..core.limiter import limiter
+from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Lead, ContactMessage
 from ..services.audit import write_audit_event
@@ -13,6 +14,7 @@ from ..services.lead_scorer import score_lead
 from ..services.notifications import send_lead_notification
 from ..services.pricing import estimate_price
 from ..services.state_data import normalize_state_code
+from ..services.tenancy import scope, tenant_of
 from ..services.email_service import send_quote_confirmation, send_admin_notification, send_contact_response
 from ..services.google_sheets import sync_lead_to_sheets
 from ..services.geocoding import geocode_address
@@ -457,9 +459,29 @@ async def email_ingest(
         "confidence": parsed.get("confidence", 0.0)
     }
 
-@router.get("", summary="List all leads")
-async def list_leads(request: Request, db: Session = Depends(get_db)):
-    """Return all leads (God Mode cockpit gets everything)."""
-    leads = db.query(Lead).order_by(Lead.created_at.desc()).limit(200).all()
-    # Also fetch contact messages if we want a unified inbox, but for now just Leads
+@router.get("", summary="List leads for the authenticated tenant")
+async def list_leads(
+    request: Request,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Leads belonging to the caller's tenant, newest first.
+
+    This endpoint used to take no credential and return every lead in the
+    table — name, email, phone, street address and message — to anyone who
+    asked. The neighbouring `/api/v1/crm/leads` was locked down and covered by
+    a test, which is most of why this one went unnoticed for so long.
+
+    The operator still gets everything of his own: `scope` resolves his bucket
+    to the legacy NULL rows, "default", "JWORDEN_HQ", and each domain his
+    marketing sites stamp on public submissions.
+    """
+    tenant = tenant_of(auth)
+    leads = (
+        scope(db.query(Lead), Lead, tenant)
+        .order_by(Lead.created_at.desc())
+        .limit(200)
+        .all()
+    )
     return leads
