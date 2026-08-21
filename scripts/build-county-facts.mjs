@@ -85,7 +85,16 @@ async function elevation(lat, lng) {
     `https://maps.googleapis.com/maps/api/elevation/json?locations=${lat},${lng}&key=${GOOGLE_KEY}`,
   );
   if (d.status !== 'OK' || !d.results?.length) return null;
-  return Math.round(d.results[0].elevation * 3.28084);
+  const ft = Math.round(d.results[0].elevation * 3.28084);
+  // A negative elevation in Virginia means the county centroid landed on
+  // water and the API returned bathymetry — York's centroid sits in the York
+  // River and comes back at -10 ft. Nowhere in Virginia is below sea level,
+  // so rather than print a number that is wrong, return nothing and let the
+  // county fall back to the plain template. Tidewater counties that genuinely
+  // sit at 0-9 ft (Northampton, Gloucester, Accomack, Mathews) are real and
+  // are kept.
+  if (ft < 0) return null;
+  return ft;
 }
 
 /**
