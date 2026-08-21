@@ -90,7 +90,7 @@ deploy:api:
     name: production
     url: https://jworden-api.fly.dev
   before_script:
-    - apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null
+    - apt-get update -qq && apt-get install -y -qq curl ca-certificates python3 >/dev/null
     - curl -sL https://fly.io/install.sh | sh
     - export PATH="/root/.fly/bin:$PATH"
     - |
@@ -110,12 +110,65 @@ deploy:api:
       fi
   script:
     - export PATH="/root/.fly/bin:$PATH"
+    # ── Pre-deploy triage ────────────────────────────────────────────────
+    # Added during the 2026-08-21 outage. Machine 286d724c97e768 (app group)
+    # stopped passing /health and stopped answering the Machines API — two
+    # consecutive deploys, including a straight revert of the last change,
+    # failed with "failed to get VM ... request canceled" while both worker
+    # and both beat machines updated cleanly. A machine the control plane
+    # cannot query cannot be rolled, so the deploy dies on it every time and
+    # the app group stays on whatever image it had.
+    #
+    # So, before deploying: show the machine table and recent logs (the crash
+    # reason must end up in CI output, not trapped inside Fly), then restart
+    # each app-group machine that is not in a healthy started state. If a
+    # restart fails — the control-plane-unreachable case — destroy that
+    # machine and re-establish the group at two machines. Destroying sounds
+    # drastic; it is the documented remedy for a wedged Fly machine, the app
+    # is stateless (state lives in Postgres and Redis), and the alternative
+    # is a deploy that can never complete.
+    - |
+      echo "── machine table ──"
+      flyctl machine list -a jworden-api || true
+      echo "── recent logs (crash reasons live here) ──"
+      flyctl logs -a jworden-api --no-tail 2>&1 | tail -150 || true
+    - |
+      set +e
+      flyctl machine list -a jworden-api --json > /tmp/machines.json
+      APP_IDS=$(python3 - <<'PYEOF'
+      import json
+      try:
+          machines = json.load(open('/tmp/machines.json'))
+      except Exception:
+          machines = []
+      for m in machines:
+          group = (m.get('config', {}).get('metadata', {}) or {}).get('fly_process_group')                   or m.get('process_group') or ''
+          if group == 'app':
+              print(m.get('id', ''))
+      PYEOF
+      )
+      echo "app-group machines: ${APP_IDS:-none found}"
+      for mid in $APP_IDS; do
+        echo "── restarting $mid ──"
+        if ! flyctl machine restart "$mid" -a jworden-api; then
+          echo "restart failed — destroying wedged machine $mid"
+          flyctl machine destroy "$mid" -a jworden-api --force || true
+        fi
+      done
+      set -e
     # --remote-only builds on Fly's builders, so CI needs no docker daemon.
     # The release_command in fly.toml runs `python -m app.db_release` first; if
     # the schema step fails the deploy aborts and the old version keeps serving.
     # (It lives in app/, not scripts/, because .dockerignore excludes both
     #  `*.sh` and `scripts/` — a release script there is absent from the image.)
-    - flyctl deploy --remote-only -a jworden-api
+    # --wait-timeout raised from the 5-minute default: a machine coming back
+    # from a restart can take longer to settle, and timing out mid-roll is what
+    # left the group half-updated during the outage.
+    - flyctl deploy --remote-only -a jworden-api --wait-timeout 600
+    # If any app machine was destroyed above, deploy only updates survivors —
+    # re-establish the group at two machines so one bad host cannot take the
+    # API to zero again.
+    - flyctl scale count app=2 -a jworden-api -y || true
   after_script:
     # prove the thing that just shipped is actually answering
     - |
