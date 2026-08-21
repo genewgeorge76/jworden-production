@@ -47,10 +47,24 @@ export default function SEO({
     const rawPath = canonicalPath || currentPath || '/';
     const pathOnly = String(rawPath).split('?')[0].split('#')[0] || '/';
     const normalizedPath = pathOnly !== '/' ? pathOnly.replace(/\/+$/, '') : '/';
-    const canonicalBase =
-      isOperationsDomain && typeof window !== 'undefined'
+    // A page canonicalizes to ITSELF unless the resolved site profile names
+    // somewhere else. The old fallback was a hardcoded PRIMARY_DOMAIN, and any
+    // host without a profile inherited it — which is how jwordenuniversity.com
+    // came to tell Google that the canonical version of its homepage lived on
+    // jwordenasphaltpaving.com, a domain that is currently serving a Sedo ad
+    // parking page. Pointing a live site's canonical at a parked domain asks
+    // Google to drop the live one.
+    //
+    // Self-canonical is also simply the correct default: a hardcoded fallback
+    // is a guess about a host nobody configured, and the guess is wrong for
+    // every new domain the site factory spins up until someone remembers.
+    const selfOrigin =
+      typeof window !== 'undefined'
         ? `${window.location.protocol}//${window.location.host}`
-        : siteProfile?.canonicalUrl || PRIMARY_DOMAIN;
+        : null;
+    const canonicalBase =
+      (isOperationsDomain ? selfOrigin : siteProfile?.canonicalUrl || selfOrigin) ||
+      PRIMARY_DOMAIN;
     const canonicalUrl = `${canonicalBase}${normalizedPath}`;
     const siteName = siteProfile?.label || 'J. Worden & Sons Paving LLC';
 

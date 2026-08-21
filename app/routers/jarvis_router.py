@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, Depends, HTTPException, Header, Request
 from typing import Optional
 import os
 import logging
@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.core.limiter import limiter
 from app.services.jarvis import DEFAULT_ANTHROPIC_MODEL as _DEFAULT_MODEL  # single source of truth for the model default
 
 router = APIRouter(prefix="/api/v1/jarvis", tags=["JARVIS Command Interface"])
@@ -50,6 +51,19 @@ class EmailRequest(BaseModel):
 
 logger = logging.getLogger(__name__)
 
+# Jarvis answers unauthenticated callers on purpose — /jarvis/chat is the public
+# site's assistant, and api/client.js documents falling back to it when
+# /jarvis/command 403s as "the normal path, not an edge case". So it cannot be
+# closed. It also had no rate limit at all, which meant anyone who knew the URL
+# could run Claude Opus on this account for as long as they liked. Verified from
+# outside with no credentials: a full answer, tool calls included.
+#
+# Two clauses. The per-minute figure stops a burst; the per-hour figure stops a
+# patient script pacing itself underneath it. Both sit far above human
+# conversation — nobody types twenty questions in a minute — so an operator will
+# not meet these, and a scraper meets them immediately.
+JARVIS_CHAT_LIMIT = "20/minute;300/hour"
+
 
 def _audit_jarvis_event(
     db: Session,
@@ -74,7 +88,9 @@ def _audit_jarvis_event(
     )
 
 @router.post("/command")
+@limiter.limit(JARVIS_CHAT_LIMIT)
 async def jarvis_command(
+    request: Request,
     payload: JarvisQuery,
     x_owner_token: Optional[str] = Header(None),
     authorization: Optional[str] = Header(None),
@@ -128,7 +144,9 @@ async def jarvis_command(
 
 
 @router.post("/chat", summary="Conversational chat with short-term memory")
+@limiter.limit(JARVIS_CHAT_LIMIT)
 async def jarvis_chat(
+    request: Request,
     payload: JarvisQuery,
     x_owner_token: Optional[str] = Header(None),
     authorization: Optional[str] = Header(None),
@@ -202,7 +220,8 @@ async def jarvis_chat(
     return response
 
 @router.post("/search", summary="Direct web search (Tavily) — bypasses Claude")
-async def jarvis_search(req: WebSearchRequest):
+@limiter.limit(JARVIS_CHAT_LIMIT)
+async def jarvis_search(request: Request, req: WebSearchRequest):
     return await _web_search.search(req.query, deep=req.deep)
 
 @router.post("/call", summary="Direct outbound call (Vapi) — operator-initiated")

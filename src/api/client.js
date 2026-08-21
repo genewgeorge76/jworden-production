@@ -8,6 +8,7 @@
  */
 
 import { getApiBaseUrl } from '@/config/integration'
+import { getOwnerToken, getOwnerSessionId } from '@/lib/ownerToken'
 
 const BASE = getApiBaseUrl()
 const DEFAULT_TIMEOUT_MS = 10_000
@@ -155,9 +156,9 @@ export async function request(method, path, body, options = {}) {
   // Attach owner token and bearer token when present so backend identifies staff_operator / owner_root
   try {
     if (typeof window !== 'undefined') {
-      const owner = window.sessionStorage.getItem('OWNER_TOKEN') || window.localStorage.getItem('OWNER_TOKEN')
+      const owner = getOwnerToken()
       if (owner) headers['X-OWNER-TOKEN'] = owner
-      const sess = window.sessionStorage.getItem('OWNER_SESSION_ID') || null
+      const sess = getOwnerSessionId() || null
       if (sess) headers['X-SESSION-TOKEN'] = sess
       const authToken = authState.token || window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
       if (authToken) headers['Authorization'] = `Bearer ${authToken}`
@@ -199,12 +200,12 @@ async function protectedRequest(method, path, body, options = {}) {
   if (token) headers.Authorization = `Bearer ${token}`
   try {
     if (typeof window !== 'undefined') {
-      const owner = window.sessionStorage.getItem('OWNER_TOKEN') || window.localStorage.getItem('OWNER_TOKEN')
+      const owner = getOwnerToken()
       if (owner) {
         headers['x-owner-token'] = owner
         headers['X-OWNER-TOKEN'] = owner
       }
-      const sess = window.sessionStorage.getItem('OWNER_SESSION_ID') || null
+      const sess = getOwnerSessionId() || null
       if (sess) {
         headers['x-session-token'] = sess
         headers['X-SESSION-TOKEN'] = sess
