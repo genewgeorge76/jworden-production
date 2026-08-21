@@ -57,6 +57,16 @@ def _require_known(ferrari: str) -> str:
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
+class VisionAnalyzeIn(BaseModel):
+    """
+    An aerial image to measure. The key is not in here — that is the point.
+    """
+    image_base64: str = Field(..., min_length=32, description="raw base64, no data: prefix")
+    media_type: str = Field(default="image/png", max_length=40)
+    px_per_ft: Optional[float] = Field(default=None, gt=0, description="omit when uncalibrated")
+    model: Optional[str] = Field(default=None, max_length=60)
+
+
 class ArtifactIn(BaseModel):
     kind: str = Field(default="default", max_length=40)
     ref: Optional[str] = Field(default=None, max_length=120)
@@ -192,3 +202,59 @@ async def delete_artifact(
     db.delete(a)
     db.commit()
     return {"ok": True, "deleted": artifact_id}
+
+
+# ── Vision Takeoff ────────────────────────────────────────────────────────────
+
+@router.get("/vision-takeoff/status", summary="Can vision takeoff run on this server?")
+async def vision_status(_: dict = Depends(verify_premium_security)):
+    """
+    Whether the server holds an Anthropic key.
+
+    Worth its own endpoint: the browser app used to decide this by checking
+    localStorage, and with the key server-side it no longer can. Reports a
+    boolean and the default model, never key material.
+    """
+    from ..services import vision_takeoff_ai as vision_takeoff  # noqa: PLC0415
+
+    return {
+        "configured": vision_takeoff.is_configured(),
+        "default_model": vision_takeoff.DEFAULT_MODEL,
+        "max_image_mb": vision_takeoff.MAX_IMAGE_BYTES // 1024 // 1024,
+    }
+
+
+@router.post("/vision-takeoff/analyze", summary="Measure an aerial image (key stays server-side)")
+@limiter.limit("10/minute")
+async def vision_analyze(
+    request: Request,
+    body: VisionAnalyzeIn,
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Run the takeoff and return findings in the shape the browser already renders.
+
+    Rate limited harder than the artifact routes: each call is a vision request
+    against a paid model, so an accidental loop in the client should cost ten
+    requests a minute rather than a bill.
+    """
+    from ..services import vision_takeoff_ai as vision_takeoff  # noqa: PLC0415
+
+    try:
+        findings = vision_takeoff.analyse(
+            image_base64=body.image_base64,
+            media_type=body.media_type,
+            px_per_ft=body.px_per_ft,
+            model=body.model,
+        )
+    except vision_takeoff.VisionError as exc:
+        # 422: the request was understood and the analysis genuinely could not
+        # be produced. Distinguishable by the client from a 500, and the
+        # message is written to be shown to the operator.
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    logger.info(
+        "vision takeoff ok tenant=%s sqft=%s pci=%s",
+        tenant_of(auth), findings.get("pavementSqFt"), findings.get("conditionPCI"),
+    )
+    return findings
