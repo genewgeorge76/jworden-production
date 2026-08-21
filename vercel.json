@@ -103,6 +103,50 @@
       "permanent": true
     },
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "richmondasphaltpaving.net"
+        }
+      ],
+      "destination": "https://richmondasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.richmondasphaltpaving.net"
+        }
+      ],
+      "destination": "https://richmondasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "savannahpaving.net"
+        }
+      ],
+      "destination": "https://savannahasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.savannahpaving.net"
+        }
+      ],
+      "destination": "https://savannahasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
       "source": "/owner",
       "destination": "/leads",
       "permanent": false
