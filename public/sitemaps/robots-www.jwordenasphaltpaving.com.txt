@@ -11,4 +11,3 @@ Disallow: /add_remaining_pages.js
 Disallow: /pull_request_23_status.txt
 
 Sitemap: https://www.jwordenasphaltpaving.com/sitemap.xml
-Sitemap: https://www.jwordenasphaltpaving.com/image-sitemap.xml
