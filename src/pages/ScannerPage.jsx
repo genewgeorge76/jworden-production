@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { getOwnerToken } from '@/lib/ownerToken'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from '@/api/client'
 import {
@@ -210,7 +211,7 @@ Note: I couldn't process the actual image, so provide helpful general guidance.`
         await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/gallery/upload`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
+            'Authorization': `Bearer ${getOwnerToken() || ''}`
           },
           body: formData
         })

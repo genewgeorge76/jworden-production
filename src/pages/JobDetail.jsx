@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getOwnerToken } from '@/lib/ownerToken'
 import { useSearchParams } from 'react-router-dom';
 import { api } from '@/api/client';
 import { ArrowLeft, Mail, Loader2, Check, AlertCircle, Upload, Image as ImageIcon } from 'lucide-react';
@@ -31,7 +32,7 @@ export default function JobDetail() {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${sessionStorage.getItem('OWNER_TOKEN') || ''}`
+                  'Authorization': `Bearer ${getOwnerToken() || ''}`
               },
               body: JSON.stringify({ url, caption: "Uploaded from dashboard", type: "progress" })
           });
