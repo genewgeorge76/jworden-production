@@ -24,6 +24,16 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    # Re-entrant on purpose. This migration was applied, then the deploy that
+    # carried it was reverted; db_release saw a stamp not in the reverted
+    # repo's chain and re-stamped head — which rewrites only the version row
+    # and leaves the table standing. Re-applying then died on DuplicateTable
+    # and aborted every deploy during the 2026-08-21 outage. The postcondition
+    # of this migration is "the table exists"; if it already does, that
+    # postcondition is met and there is nothing to do.
+    bind = op.get_bind()
+    if sa.inspect(bind).has_table("site_health_checks"):
+        return
     op.create_table(
         "site_health_checks",
         sa.Column("id", sa.Integer(), nullable=False),
