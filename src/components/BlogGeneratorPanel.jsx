@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getOwnerToken } from '@/lib/ownerToken'
 import { useTenant } from '@/lib/TenantContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,8 +25,8 @@ export default function BlogGeneratorPanel() {
   const [copied, setCopied] = useState(false);
 
   const isPro = tenant?.subscription_tier === 'pro' ||
-    !!getOwnerToken() ||
-    !!getOwnerToken();
+    !!sessionStorage.getItem('OWNER_TOKEN') ||
+    !!localStorage.getItem('owner_token');
   const hostname = tenant?.hostname || tenant?.domain || window.location.hostname;
 
   const handleGenerate = async (e) => {
@@ -38,7 +37,7 @@ export default function BlogGeneratorPanel() {
     setResult(null);
 
     try {
-      const token = getOwnerToken();
+      const token = sessionStorage.getItem('OWNER_TOKEN') || localStorage.getItem('owner_token');
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://jworden-api.fly.dev';
       
       const kwList = keywords ? keywords.split(',').map(k => k.trim()) : topic.split(' ');

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getOwnerToken } from '@/lib/ownerToken'
 import { useTenant } from '@/lib/TenantContext';
 import api from '@/api/client';
 import { Button } from '@/components/ui/button';
@@ -37,8 +36,8 @@ export default function SiteFactoryPanel() {
   const [launched, setLaunched] = useState(null);
 
   const isPro = tenant?.subscription_tier === 'pro' ||
-    !!getOwnerToken() ||
-    !!getOwnerToken();
+    !!sessionStorage.getItem('OWNER_TOKEN') ||
+    !!localStorage.getItem('owner_token');
 
   // AI Prompt Studio Generator (Mr. Worden Persona)
   const handleAiArchitect = async () => {
@@ -92,7 +91,7 @@ export default function SiteFactoryPanel() {
     setLaunched(null);
 
     try {
-      const token = getOwnerToken();
+      const token = sessionStorage.getItem('OWNER_TOKEN') || localStorage.getItem('owner_token');
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://jworden-api.fly.dev';
       const res = await fetch(`${baseUrl}/api/v1/factory/sites`, {
         method: 'POST',
