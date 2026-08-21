@@ -275,23 +275,9 @@ const AuthenticatedApp = () => {
   // saas-client route_mode /api/v1/factory/resolve returns for them.
   const wordenStandardHostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
   const isWordenStandardDomain = wordenStandardHostname === 'thewordenstandard.com' || wordenStandardHostname === 'www.thewordenstandard.com';
-  // jwordenuniversity.com is the training and testing site. It was falling
-  // through to the tenant lookup, and with no market_sites row for it that
-  // meant it served the SaaS storefront — the same 648 words as
-  // thewordenstandard.com, on a second domain, which is duplicate content
-  // Google has to choose between. Pinned here for the same reason the
-  // storefront is: a mode that depends on a database row nobody has written
-  // yet is a mode that silently does the wrong thing.
-  const isUniversityDomain =
-    wordenStandardHostname === 'jwordenuniversity.com' ||
-    wordenStandardHostname === 'www.jwordenuniversity.com' ||
-    wordenStandardHostname === 'wordenuniversity.com' ||
-    wordenStandardHostname === 'www.wordenuniversity.com';
   const routeMode = isWordenStandardDomain
     ? SITE_ROUTE_MODES.OPERATIONS
-    : isUniversityDomain
-      ? SITE_ROUTE_MODES.UNIVERSITY
-      : (tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE);
+    : (tenant?.route_mode || tenant?.routeMode || SITE_ROUTE_MODES.FULL_SITE);
   const subdomainMode = detectSubdomainMode();
 
 

@@ -39,7 +39,6 @@ celery_app = Celery(
         "app.tasks.self_heal_beat",
         "app.tasks.voice_events",
         "app.tasks.social_dispatch",
-        "app.tasks.site_health_beat",
     ],
 )
 
@@ -89,13 +88,6 @@ celery_app.conf.update(
         "dispatch-social-posts-every-5m": {
             "task": "app.tasks.social_dispatch.dispatch_due_social_posts",
             "schedule": crontab(minute="*/5"),
-        },
-        # Does each published domain actually serve the site? Hourly, because
-        # a domain can be replaced by a parking page between deploys and the
-        # status code will not change when it happens.
-        "check-published-sites-hourly": {
-            "task": "app.tasks.site_health_beat.check_published_sites",
-            "schedule": crontab(minute=17),
         },
         "anomaly-scan-every-30m": {
             "task": "app.tasks.anomaly_beat.run_anomaly_scan_task",

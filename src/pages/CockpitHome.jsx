@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { getOwnerToken } from '@/lib/ownerToken'
 import { Link } from 'react-router-dom'
 import { api } from '@/api/client'
 import {
@@ -589,7 +588,7 @@ export default function CockpitHome() {
   const [dataLoaded, setDataLoaded] = useState(false)
 
   const ownerPin = typeof window !== 'undefined'
-    ? (getOwnerToken() || '–')
+    ? (window.sessionStorage.getItem('OWNER_TOKEN') || '–')
     : '–'
 
   // ── Load autonomy state ──────────────────────────────────────────────────
@@ -608,7 +607,7 @@ export default function CockpitHome() {
 
   // ── Load KPI data ────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
-    const token = getOwnerToken() || ''
+    const token = sessionStorage.getItem('OWNER_TOKEN') || localStorage.getItem('owner_token') || ''
     const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
 
     const [leadsResult, jobsResult, estimatesResult] = await Promise.allSettled([

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getOwnerToken } from '@/lib/ownerToken'
 import { Mail, CheckCircle, AlertTriangle, Briefcase, Zap, Trash2 } from 'lucide-react';
 
 export default function InboxTriagePanel() {
@@ -18,7 +17,7 @@ export default function InboxTriagePanel() {
       // who views source on the live site. A literal master token previously
       // sat on this line and shipped publicly; if there is no owner session,
       // make no request rather than authenticating with a baked-in secret.
-      const token = getOwnerToken();
+      const token = sessionStorage.getItem('OWNER_TOKEN');
       if (!token) {
         setMessages([]);
         return;
