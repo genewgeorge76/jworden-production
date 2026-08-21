@@ -22,6 +22,7 @@ from pydantic import BaseModel
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..services.pricing import estimate_price
+from ..services.notifications import send_lead_notification
 
 logger = logging.getLogger(__name__)
 
@@ -314,6 +315,29 @@ async def submit_visual_proposal(
             db.commit()
             db.refresh(lead)
             lead_id = lead.id
+
+            # Tell somebody. Every other intake route notifies; this one
+            # saved the lead and went quiet, so a customer who configured a
+            # build in the 3-D visualiser — one of the more engaged things a
+            # visitor can do — landed in the table and nowhere else.
+            #
+            # The payload is built here, inside the session, because the
+            # notifier runs after the response and the ORM object would be
+            # detached by then.
+            notify_payload = {
+                "name": lead.name,
+                "email": lead.email,
+                "phone": lead.phone,
+                "service_type": lead.service_type,
+                "property_type": lead.property_type,
+                "address": lead.address,
+                "project_size_sqft": lead.project_size_sqft,
+                "state_code": lead.state_code,
+                "message": lead.message,
+                "source": lead.source,
+                "db_id": lead.id,
+            }
+            background_tasks.add_task(send_lead_notification, notify_payload)
         finally:
             db.close()
     except Exception as exc:  # noqa: BLE001

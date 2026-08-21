@@ -18,6 +18,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
+
 # ── Brand constants ────────────────────────────────────────────────────────────
 
 COMPANY_NAME = "J. Worden & Sons Asphalt Paving"
@@ -33,12 +34,28 @@ _LIGHT_BG = "#f9f9f9"
 # ── Shared layout helpers ──────────────────────────────────────────────────────
 
 
-def _field(obj: Any, key: str, default: Any = "") -> Any:
+def lead_field(obj: Any, key: str, default: Any = "") -> Any:
     """
     Read a field off either an ORM object or a dict, returning ``default``
-    when the value is missing or falsy. Centralised so we don't write the
-    ``getattr(...) or obj.get(...)`` pattern (which crashes when getattr
-    returns ``None`` on an ORM object that has no ``.get``).
+    when the value is missing or falsy.
+
+    This helper already existed and was correct; it was simply not used by
+    most of the templates, which hand-rolled this instead::
+
+        getattr(lead, "address", None) or lead.get("address", "")
+
+    That spelling crashes for ORM objects. When the attribute exists but is
+    falsy — an unfilled address, no square footage, an empty message —
+    ``getattr`` yields ``None``, the ``or`` falls through to ``.get``, and a
+    ``Lead`` has no ``.get``: AttributeError, on precisely the leads that
+    occur most often, the ones where the customer left the optional boxes
+    alone.
+
+    It failed quietly. The raise happened inside a FastAPI background task, so
+    the HTTP response was already a clean 200 and the lead was already
+    committed; the only symptom was silence where the new-lead email should
+    have been. Public and shared with ``email_service`` so there is one
+    implementation rather than a second hand-rolled copy.
     """
     if isinstance(obj, dict):
         val = obj.get(key)
@@ -202,13 +219,13 @@ def quote_confirmation(lead: Any) -> tuple[str, str, str]:
     Returns:
         (subject, html_body, plain_text_body)
     """
-    name = _field(lead, "name", "Valued Customer")
-    service = _field(lead, "service_type", "paving")
-    urgency = _field(lead, "urgency", "flexible")
-    address = _field(lead, "address", "")
-    message = _field(lead, "message", "")
-    score_label = _field(lead, "score_label", "")
-    state_code = _field(lead, "state_code", "")
+    name = lead_field(lead, "name", "Valued Customer")
+    service = lead_field(lead, "service_type", "paving")
+    urgency = lead_field(lead, "urgency", "flexible")
+    address = lead_field(lead, "address", "")
+    message = lead_field(lead, "message", "")
+    score_label = lead_field(lead, "score_label", "")
+    state_code = lead_field(lead, "state_code", "")
 
     service_display = service.replace("_", " ").title()
     urgency_display = urgency.replace("_", " ").title()
@@ -297,18 +314,18 @@ def admin_new_lead(lead: Any) -> tuple[str, str, str]:
     Returns:
         (subject, html_body, plain_text_body)
     """
-    name = getattr(lead, "name", None) or lead.get("name", "Unknown")
-    email = getattr(lead, "email", None) or lead.get("email", "")
-    phone = getattr(lead, "phone", None) or lead.get("phone", "")
-    service = getattr(lead, "service_type", None) or lead.get("service_type", "")
-    property_type = getattr(lead, "property_type", None) or lead.get("property_type", "")
-    urgency = getattr(lead, "urgency", None) or lead.get("urgency", "")
-    address = getattr(lead, "address", None) or lead.get("address", "")
-    sqft = getattr(lead, "project_size_sqft", None) or lead.get("project_size_sqft", "")
-    score_label = getattr(lead, "score_label", None) or lead.get("score_label", "—")
-    score_value = getattr(lead, "score_value", None) or lead.get("score_value", "—")
-    lead_id = getattr(lead, "id", None) or lead.get("id", "—")
-    message = getattr(lead, "message", None) or lead.get("message", "")
+    name = lead_field(lead, "name", default="Unknown")
+    email = lead_field(lead, "email")
+    phone = lead_field(lead, "phone")
+    service = lead_field(lead, "service_type")
+    property_type = lead_field(lead, "property_type")
+    urgency = lead_field(lead, "urgency")
+    address = lead_field(lead, "address")
+    sqft = lead_field(lead, "project_size_sqft")
+    score_label = lead_field(lead, "score_label", default="—")
+    score_value = lead_field(lead, "score_value", default="—")
+    lead_id = lead_field(lead, "id", default="—")
+    message = lead_field(lead, "message")
     state_code = (
         getattr(lead, "state_code", None)
         or getattr(lead, "state", None)
@@ -422,8 +439,8 @@ def follow_up_hot(lead: Any) -> tuple[str, str, str]:
     Returns:
         (subject, html_body, plain_text_body)
     """
-    name = getattr(lead, "name", None) or lead.get("name", "there")
-    service = getattr(lead, "service_type", None) or lead.get("service_type", "paving")
+    name = lead_field(lead, "name", default="there")
+    service = lead_field(lead, "service_type", default="paving")
     service_display = service.replace("_", " ").title()
 
     subject = f"⚡ Quick Follow-Up on Your {service_display} Quote — {COMPANY_NAME}"
@@ -487,8 +504,8 @@ def follow_up_warm(lead: Any) -> tuple[str, str, str]:
     Returns:
         (subject, html_body, plain_text_body)
     """
-    name = getattr(lead, "name", None) or lead.get("name", "there")
-    service = getattr(lead, "service_type", None) or lead.get("service_type", "paving")
+    name = lead_field(lead, "name", default="there")
+    service = lead_field(lead, "service_type", default="paving")
     service_display = service.replace("_", " ").title()
 
     subject = f"Still Thinking It Over? We're Here to Help — {COMPANY_NAME}"
@@ -559,8 +576,8 @@ def follow_up_cool(lead: Any) -> tuple[str, str, str]:
     Returns:
         (subject, html_body, plain_text_body)
     """
-    name = getattr(lead, "name", None) or lead.get("name", "there")
-    service = getattr(lead, "service_type", None) or lead.get("service_type", "paving")
+    name = lead_field(lead, "name", default="there")
+    service = lead_field(lead, "service_type", default="paving")
     service_display = service.replace("_", " ").title()
 
     subject = f"One Last Thing Before We Close Your File — {COMPANY_NAME}"
