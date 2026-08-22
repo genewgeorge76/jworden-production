@@ -401,6 +401,38 @@ async function run() {
   fs.writeFileSync(path.join(uniDir, 'index.html'), uniHtml, 'utf8');
   generatedCount++;
 
+  // WORDEN_ROOT_HOST — make one host's shell the root document.
+  //
+  // Vercel serves an existing file before it applies a rewrite, so "/" always
+  // resolves to dist/index.html and a host rewrite never runs for the
+  // homepage. Every sub-path on jwordenuniversity.com carried its own
+  // canonical while the one page that gets linked and indexed carried the
+  // shared shell's — which named a parked domain.
+  //
+  // One project has one root document, so the fix is one project per root:
+  // a deployment built with WORDEN_ROOT_HOST=<domain> writes that domain's
+  // shell over dist/index.html. Same bundle, same routes, same API wiring —
+  // only the document served at "/" changes. Unset, nothing happens and the
+  // build is byte-for-byte what it was.
+  // Pass 2 only. In pass 1 dist/index.html is the shell prerender.mjs renders
+  // all ~209 routes from — overwriting it there would stamp university meta
+  // onto every page on the main site.
+  const rootHost = DOMAINS_ONLY ? (process.env.WORDEN_ROOT_HOST || '').trim() : '';
+  if (rootHost) {
+    const candidate = path.join(distDir, `${rootHost}.html`);
+    if (fs.existsSync(candidate)) {
+      fs.copyFileSync(candidate, indexHtmlPath);
+      console.log(`[meta-normalizer] WORDEN_ROOT_HOST=${rootHost}: index.html now serves that host's shell.`);
+    } else {
+      // Loud, because a silent miss here ships the wrong canonical on the
+      // homepage and looks exactly like success.
+      throw new Error(
+        `WORDEN_ROOT_HOST=${rootHost} but ${candidate} was not generated. ` +
+        'Add the host to this script before pointing a project at it.',
+      );
+    }
+  }
+
   // Update index.html for jwordenasphaltpaving.com
   // Pass 2 stops here: index.html is the prerendered homepage at this point and
   // must not be rewritten from a template.
