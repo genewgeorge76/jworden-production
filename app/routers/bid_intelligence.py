@@ -11,6 +11,8 @@ Routes:
 """
 
 import logging
+
+from ..services import llm_client
 import os
 from datetime import datetime, timezone
 from typing import Optional
@@ -204,14 +206,7 @@ async def win_analysis(
     if len(rows) < 2:
         return {"analysis": "Not enough bid data yet. Record at least 2 bid outcomes to unlock AI analysis.", "insights": []}
 
-    api_key = os.getenv("OPENAI_API_KEY", "")
-    if not api_key:
-        return _rule_based_analysis(rows)
-
     try:
-        from openai import OpenAI  # noqa: PLC0415
-        client = OpenAI(api_key=api_key)
-
         bid_summary = "\n".join([
             f"- {r.outcome.upper()} | {r.service_type or '?'} | {r.region or '?'} | "
             f"${r.proposal_amount_low or 0:,.0f}–${r.proposal_amount_high or 0:,.0f} | "
@@ -221,28 +216,34 @@ async def win_analysis(
 
         prompt = (
             "You are a bid strategy analyst for a construction company. "
-            "Analyze the following bid history and return 3-5 specific, actionable insights "
-            "as a JSON array of strings. Focus on: which scopes win most, pricing patterns, "
-            "regional trends, and format recommendations.\n\n"
+            "Analyze the following bid history and return 3-5 specific, actionable insights. "
+            "Focus on: which scopes win most, pricing patterns, regional trends, and "
+            "format recommendations.\n\n"
             f"Bid history:\n{bid_summary}\n\n"
-            "Return ONLY a JSON array of insight strings."
+            'Respond with {"insights": ["...", "..."]}.'
         )
-        resp = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
+        # Through the router, so a dead OpenAI key falls through to Claude
+        # rather than dropping straight to the rule-based summary. The object
+        # wrapper is deliberate: json_chat guarantees an object across every
+        # provider, where response_format={"type":"json_object"} only exists
+        # on OpenAI — a JSON contract that only holds on one provider is a
+        # lane with no fallback.
+        reply = llm_client.json_chat(
+            task="analytics",
+            user=prompt,
             max_tokens=400,
             temperature=0.4,
         )
-        raw = resp.choices[0].message.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        import json  # noqa: PLC0415
-        insights = json.loads(raw)
-        return {"analysis": "AI-powered analysis based on your bid history.", "insights": insights}
+        if reply.error or not isinstance(reply.data.get("insights"), list):
+            logger.warning("win analysis unavailable (%s), using rule-based", reply.error_detail)
+            return _rule_based_analysis(rows)
+        return {
+            "analysis": "AI-powered analysis based on your bid history.",
+            "insights": [str(i) for i in reply.data["insights"]],
+            "engine": reply.model or reply.provider,
+        }
     except Exception as exc:  # noqa: BLE001
-        logger.warning("Win analysis GPT-4o failed: %s", exc)
+        logger.warning("win analysis failed: %s", exc)
         return _rule_based_analysis(rows)
 
 
