@@ -23,6 +23,8 @@ Intent → Action mapping:
 from __future__ import annotations
 
 import logging
+
+from app.services import llm_client
 import os
 import re
 from dataclasses import dataclass, field
@@ -31,6 +33,12 @@ from typing import Literal
 logger = logging.getLogger(__name__)
 
 _OPENAI_KEY = os.getenv("OPENAI_API_KEY", "")
+
+
+def _any_provider() -> bool:
+    """True when at least one LLM provider has a key configured."""
+    return any(llm_client.configured_providers().values())
+
 
 BuyerIntent = Literal["BUYER", "RESEARCHER", "TIRE_KICKER", "BOT"]
 
@@ -141,9 +149,6 @@ def _gpt_qualify(lead_data: dict, rule_result: QualificationResult) -> Qualifica
     import json
 
     try:
-        from openai import OpenAI  # noqa: PLC0415
-
-        client = OpenAI(api_key=_OPENAI_KEY)
         prompt = f"""You are a lead qualification specialist for J. Worden & Sons,
 a commercial asphalt paving contractor. Classify this inbound lead.
 
@@ -165,24 +170,35 @@ Respond with JSON only:
   "flags": ["flag1", "flag2"]
 }}"""
 
-        resp = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
+        # Routed through llm_client rather than the OpenAI SDK directly, so a
+        # dead OPENAI_API_KEY falls through to Claude instead of silently
+        # downgrading every inbound lead to the rule-based score. This is the
+        # first thing that touches a new lead; it is the worst place in the
+        # system for a single provider to be a single point of failure.
+        reply = llm_client.json_chat(
+            task="classification",
+            user=prompt,
             temperature=0.1,
             max_tokens=200,
         )
-        data = json.loads(resp.choices[0].message.content)
+        if reply.error or not reply.data:
+            logger.warning(
+                "AI qualification unavailable (%s), using rule result",
+                reply.error_detail,
+            )
+            return rule_result
+        data = reply.data
         return QualificationResult(
             buyer_intent=data.get("buyer_intent", rule_result.buyer_intent),
             confidence=float(data.get("confidence", rule_result.confidence)),
             action=data.get("action", rule_result.action),
             reason=data.get("reason", rule_result.reason),
             flags=data.get("flags", rule_result.flags),
-            engine="gpt-4o",
+            # The model that actually answered, not the one we hoped would.
+            engine=reply.model or reply.provider,
         )
     except Exception as exc:  # noqa: BLE001
-        logger.warning("GPT-4o qualification failed, using rule result: %s", exc)
+        logger.warning("AI qualification failed, using rule result: %s", exc)
         return rule_result
 
 
@@ -202,7 +218,12 @@ def qualify_lead(lead_data: dict, use_ai: bool = True) -> dict:
     """
     rule_result = _rule_qualify(lead_data)
 
-    if use_ai and _OPENAI_KEY and rule_result.buyer_intent != "BOT":
+    # Gated on "is any provider configured", not on OPENAI_API_KEY. The old
+    # check meant that with OpenAI unset — or its key revoked — the AI pass was
+    # skipped even when Claude was available and healthy, so the fallback chain
+    # could never engage for the one call that decides how a new lead is
+    # treated.
+    if use_ai and _any_provider() and rule_result.buyer_intent != "BOT":
         final = _gpt_qualify(lead_data, rule_result)
     else:
         final = rule_result

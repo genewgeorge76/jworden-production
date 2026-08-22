@@ -15,6 +15,8 @@ from __future__ import annotations
 import base64
 import io
 import logging
+
+from app.services import llm_client
 import os
 from datetime import datetime, timezone
 
@@ -33,41 +35,39 @@ def generate_proposal_text(lead: dict) -> str:
     Call GPT-4o to generate a professional proposal text.
     Falls back to a formatted template if OpenAI is unavailable.
     """
-    openai_key = os.getenv("OPENAI_API_KEY", "")
-    if not openai_key:
-        return _template_proposal(lead)
+    system = (
+        "You are a senior estimator and project manager at J. Worden & Sons, "
+        "a VA Class A General Contractor and Best of Houzz–recognized firm. "
+        "The company provides: asphalt paving, sealcoating, crack filling, "
+        "parking lot construction, general contracting (new builds, QSR/franchise "
+        "ground-up construction), interior design & decorating, cobblestone & brick "
+        "paver patios, and natural stone masonry. "
+        "Write polished, client-ready project proposals. Be specific, confident, "
+        "and professional. Include all sections requested. Tailor the scope of work, "
+        "materials, and specifications to the exact service type requested."
+    )
 
     try:
-        from openai import OpenAI  # type: ignore
-
-        client = OpenAI(api_key=openai_key)
-        prompt = _build_gpt_prompt(lead)
-
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a senior estimator and project manager at J. Worden & Sons, "
-                        "a VA Class A General Contractor and Best of Houzz–recognized firm. "
-                        "The company provides: asphalt paving, sealcoating, crack filling, "
-                        "parking lot construction, general contracting (new builds, QSR/franchise "
-                        "ground-up construction), interior design & decorating, cobblestone & brick "
-                        "paver patios, and natural stone masonry. "
-                        "Write polished, client-ready project proposals. Be specific, confident, "
-                        "and professional. Include all sections requested. Tailor the scope of work, "
-                        "materials, and specifications to the exact service type requested."
-                    ),
-                },
-                {"role": "user", "content": prompt},
-            ],
+        # The "proposal" lane routes OpenAI first and Claude second. Going
+        # through the router rather than the OpenAI SDK is what makes that
+        # second entry mean anything: constructed directly, a revoked key sent
+        # every proposal to the template with nothing to fail over to.
+        reply = llm_client.chat(
+            task="proposal",
+            system=system,
+            user=_build_gpt_prompt(lead),
             max_tokens=1400,
             temperature=0.4,
         )
-        return response.choices[0].message.content or _template_proposal(lead)
+        if reply.error or not reply.text.strip():
+            logger.warning(
+                "proposal generation unavailable (%s), using template",
+                reply.error_detail or "empty response",
+            )
+            return _template_proposal(lead)
+        return reply.text
     except Exception as exc:  # noqa: BLE001
-        logger.error("GPT-4o proposal generation failed: %s", exc)
+        logger.error("proposal generation failed: %s", exc)
         return _template_proposal(lead)
 
 

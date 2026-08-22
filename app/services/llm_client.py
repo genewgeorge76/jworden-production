@@ -566,3 +566,168 @@ def configured_providers() -> dict[str, bool]:
 #: Kept so any caller still importing the old name gets the same answer, with
 #: the docstring above making clear what that answer means.
 provider_status = configured_providers
+
+
+# ── Structured output ────────────────────────────────────────────────────────
+#
+# Most of the direct-SDK call sites this module is replacing asked OpenAI for
+# `response_format={"type": "json_object"}` and then json.loads'd the result.
+# That parameter is OpenAI's, so routing those calls through `chat()` would
+# have silently dropped JSON mode and left every one of them parsing prose.
+#
+# `json_chat` gets the same guarantee a different way — an explicit contract in
+# the system prompt plus a tolerant extractor — so it holds across every
+# provider in the chain rather than only the one that has the flag. That is the
+# whole point: a lane that only works on OpenAI is a lane with no fallback.
+
+_JSON_CONTRACT = (
+    "Return ONLY a single JSON object. No prose before or after it, no "
+    "explanation, and no markdown code fences. If you cannot answer, return "
+    "a JSON object with an \"error\" key explaining why."
+)
+
+
+def extract_json(text: str) -> Optional[dict]:
+    """
+    Pull a JSON object out of a model response.
+
+    Models wrap JSON in fences even when told not to, and some prepend a
+    sentence. Rather than trusting the whole string, this finds the outermost
+    balanced {...} and parses that. Returns None when there is nothing
+    parseable — never a partial or guessed object, because a caller that gets
+    half a bid back is worse off than one that gets nothing.
+    """
+    import json  # noqa: PLC0415
+
+    if not text:
+        return None
+
+    body = text.strip()
+    if body.startswith("```"):
+        # ```json\n{...}\n``` — drop the fence line and anything after the close
+        body = body.split("```")[1]
+        if body.lstrip().lower().startswith("json"):
+            body = body.lstrip()[4:]
+        body = body.strip()
+
+    start = body.find("{")
+    if start == -1:
+        return None
+
+    depth = 0
+    in_string = False
+    escaped = False
+    for i in range(start, len(body)):
+        ch = body[i]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                try:
+                    parsed = json.loads(body[start : i + 1])
+                except ValueError:
+                    return None
+                return parsed if isinstance(parsed, dict) else None
+    return None
+
+
+@dataclass
+class JSONResponse:
+    data: Optional[dict]
+    provider: str
+    model: str
+    error: bool = False
+    fallback_used: bool = False
+    error_detail: Optional[str] = None
+
+
+def json_chat(
+    *,
+    task: str = _DEFAULT_TASK,
+    system: str = "",
+    user: str,
+    history: Optional[list[dict]] = None,
+    max_tokens: int = 800,
+    temperature: float = 0.1,
+    provider_override: Optional[str] = None,
+    model_override: Optional[str] = None,
+) -> JSONResponse:
+    """
+    `chat()` for callers that need a JSON object back.
+
+    Returns `data=None` with `error=True` when no provider answered or when
+    what came back could not be parsed. Callers must check `error` and fall
+    back to their deterministic path — an unparseable response is a failure,
+    not an empty result.
+    """
+    reply = chat(
+        task=task,
+        system=(system + "\n\n" + _JSON_CONTRACT).strip(),
+        user=user,
+        history=history,
+        max_tokens=max_tokens,
+        temperature=temperature,
+        provider_override=provider_override,
+        model_override=model_override,
+    )
+    if reply.error or not reply.text:
+        return JSONResponse(
+            data=None,
+            provider=reply.provider,
+            model=reply.model,
+            error=True,
+            fallback_used=reply.fallback_used,
+            error_detail=reply.error_detail or "no provider answered",
+        )
+
+    data = extract_json(reply.text)
+    if data is None:
+        return JSONResponse(
+            data=None,
+            provider=reply.provider,
+            model=reply.model,
+            error=True,
+            fallback_used=reply.fallback_used,
+            error_detail="response was not parseable JSON",
+        )
+    return JSONResponse(
+        data=data,
+        provider=reply.provider,
+        model=reply.model,
+        error=False,
+        fallback_used=reply.fallback_used,
+    )
+
+
+# ── Async callers ────────────────────────────────────────────────────────────
+#
+# `chat` and `json_chat` are synchronous and every provider SDK call inside
+# them blocks. Several call sites are `async def` FastAPI handlers or
+# background tasks; calling the sync version from there would block the event
+# loop for the whole request, starving every other request on the worker.
+# These offload to the threadpool FastAPI already uses for sync dependencies.
+
+
+async def achat(**kwargs) -> LLMResponse:
+    """Await `chat()` without blocking the event loop."""
+    from starlette.concurrency import run_in_threadpool  # noqa: PLC0415
+
+    return await run_in_threadpool(lambda: chat(**kwargs))
+
+
+async def ajson_chat(**kwargs) -> JSONResponse:
+    """Await `json_chat()` without blocking the event loop."""
+    from starlette.concurrency import run_in_threadpool  # noqa: PLC0415
+
+    return await run_in_threadpool(lambda: json_chat(**kwargs))
