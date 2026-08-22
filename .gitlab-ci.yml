@@ -56,14 +56,26 @@ test:api:
     # ── Tenant isolation ratchet ─────────────────────────────────────────────
     # audit_tenant_isolation.py has supported --max since it was written, and
     # its own docstring describes using it in CI as a ratchet. It was never
-    # wired in, and coverage drifted the wrong way: the comment in main.py
-    # records 16 of 123 queries filtered when it was written, and it is now 20
-    # of 187 — more sites, roughly flat coverage.
+    # wired in.
     #
-    # This does not fix the 167 unfiltered sites. It stops the number growing
-    # while they are worked down. LOWER THIS as sites are fixed; never raise it
-    # to make a pipeline pass.
-    - python3 scripts/audit_tenant_isolation.py --max 167
+    # The alarming figure this comment used to carry -- "16 of 123 filtered",
+    # later "20 of 187" -- was an artifact of the audit itself. It searched the
+    # query chain for the literal string "tenant_id", and the canonical filter
+    # here is scope(query, Model, tenant_of(auth)), which contains no such
+    # string. 75 correctly scoped queries were counted as violations, and any
+    # query fixed the right way left the count unchanged, so this number could
+    # never have come down. Corrected: 95 of 185 filtered, 90 genuinely
+    # unfiltered.
+    #
+    # This does not fix those 90. It stops the number growing while they are
+    # worked down. LOWER THIS as sites are fixed; never raise it to make a
+    # pipeline pass.
+    #
+    # It also does not see by-id lookups at all -- db.get(Model, pk) is not a
+    # db.query() call. 41 of those sit behind tenant auth and are the more
+    # dangerous shape. Use tenancy.get_scoped(); this check will not catch a
+    # missed one.
+    - python3 scripts/audit_tenant_isolation.py --max 90
     # exactly one alembic head: a fork in the migration chain breaks every
     # future deploy, and it is invisible until someone runs upgrade.
     #
