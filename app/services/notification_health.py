@@ -7,17 +7,31 @@ accepts the submission, the row lands in the database, the endpoint returns
 sees, because the send happens in a background task after the response has
 already gone out.
 
-So the question this module answers is deliberately narrow and checkable:
-which delivery channels are configured *right now*, in this process. It does
-not send anything and it does not promise delivery — a configured Resend key
-can still be revoked, and a valid Twilio number can still be unrouteable. It
-distinguishes the two states an operator most needs to tell apart:
+This module answered a narrower question than the one it was asked: which
+channels are *configured*, meaning which environment variables hold a value. It
+never contacted a provider. So a revoked SendGrid key, or — far more commonly —
+a From address that is not a verified sender identity, both reported
 
-    nothing was sent   — a channel exists and the attempt failed
-    nothing could be   — no channel is configured at all
+    {"configured": true, "provider": "sendgrid"}
 
-The second is by far the more common cause of "I'm not getting my leads", and
-it is invisible without something like this.
+while every send returned 403 and no lead notification ever arrived. That is the
+same failure the LLM provider dashboard had: reporting key presence and calling
+it health. Presence is not reachability.
+
+check() still answers the cheap question, because it must never hang. probe()
+answers the real one: it calls the provider, validates the credential, and for
+SendGrid checks whether the From address is actually a verified sender — the
+single most common reason a correctly-configured SendGrid key sends nothing.
+
+Three states are worth distinguishing, not two:
+
+    nothing could be sent  — no channel is configured at all
+    nothing was sent       — a channel exists and the provider rejected it
+    it should have sent    — provider accepted; look at the background task
+
+Secrets are never included in the output. This report is meant to be read while
+debugging and pasted into a chat window, so it carries booleans, provider names
+and provider error text, never key material.
 
 Secrets are never included in the output. This report is meant to be read
 while debugging and pasted into a chat window, so it carries booleans and
@@ -131,3 +145,129 @@ def check() -> dict[str, Any]:
         "sms": sms,
         "summary": summary,
     }
+
+
+# ── Live probes ───────────────────────────────────────────────────────────────
+
+_SENDGRID_SCOPES = "https://api.sendgrid.com/v3/scopes"
+_SENDGRID_SENDERS = "https://api.sendgrid.com/v3/verified_senders"
+_PROBE_TIMEOUT = 8.0
+
+
+def _add_error(result: dict[str, Any], message: str) -> None:
+    """
+    Accumulate problems instead of overwriting them.
+
+    A key can lack the mail.send scope AND name an unverified sender. Assigning
+    result["error"] at each site meant only the last one survived, so an
+    operator fixed one problem, re-ran the probe, and met the next — which is
+    the slowest possible way to learn there were two.
+
+    `error` remains the first (most fundamental) problem so simple readers keep
+    working; `errors` carries all of them.
+    """
+    result.setdefault("errors", []).append(message)
+    result.setdefault("error", message)
+
+
+def _sendgrid_probe(api_key: str, from_email: str) -> dict[str, Any]:
+    """
+    Validate the key, then check the From address against verified senders.
+
+    Both halves matter and they fail differently. A bad key is a 401 on any
+    call. A good key with an unverified From address authenticates perfectly
+    and then rejects every send with 403 "The from address does not match a
+    verified Sender Identity" — which is invisible to a check that only asks
+    whether the key is set.
+    """
+    import httpx  # noqa: PLC0415
+
+    headers = {"Authorization": f"Bearer {api_key}"}
+    result: dict[str, Any] = {"provider": "sendgrid"}
+
+    try:
+        with httpx.Client(timeout=_PROBE_TIMEOUT) as client:
+            scopes = client.get(_SENDGRID_SCOPES, headers=headers)
+    except Exception as exc:  # noqa: BLE001
+        return {**result, "reachable": False, "credential": "unknown",
+                "error": f"{exc.__class__.__name__}: {exc}"}
+
+    if scopes.status_code == 401:
+        return {**result, "reachable": True, "credential": "rejected",
+                "error": "SendGrid rejected the API key (401). It is wrong, revoked, or disabled."}
+    if scopes.status_code >= 400:
+        return {**result, "reachable": True, "credential": "unknown",
+                "error": f"SendGrid returned HTTP {scopes.status_code} for /v3/scopes.",
+                "detail": (scopes.text or "")[:300]}
+
+    result.update({"reachable": True, "credential": "accepted"})
+    try:
+        scope_list = (scopes.json() or {}).get("scopes") or []
+        result["can_send"] = any(s.startswith("mail.send") for s in scope_list)
+        if not result["can_send"]:
+            _add_error(
+                result,
+                "The key authenticates but has no mail.send scope, so it cannot "
+                "send email. Create a key with Mail Send permission.",
+            )
+    except Exception:  # noqa: BLE001
+        pass
+
+    if not from_email:
+        result["sender_verified"] = None
+        _add_error(result, "SENDGRID_FROM_EMAIL is not set; nothing to verify.")
+        return result
+
+    try:
+        with httpx.Client(timeout=_PROBE_TIMEOUT) as client:
+            senders = client.get(_SENDGRID_SENDERS, headers=headers)
+        if senders.status_code == 200:
+            verified = {
+                (e.get("from_email") or "").lower()
+                for e in (senders.json() or {}).get("results", [])
+                if e.get("verified")
+            }
+            ok = from_email.lower() in verified
+            result["sender_verified"] = ok
+            result["from_email"] = from_email
+            if not ok:
+                _add_error(
+                    result,
+                    f"{from_email} is not a verified sender on this SendGrid "
+                    f"account, so every send is rejected with 403. Verify it "
+                    f"under Settings -> Sender Authentication.",
+                )
+                result["verified_senders"] = sorted(verified)
+        else:
+            # Not fatal: this endpoint needs its own scope, and a domain-
+            # authenticated sender does not appear here at all.
+            result["sender_verified"] = None
+            result["sender_check"] = f"HTTP {senders.status_code} from /v3/verified_senders"
+    except Exception as exc:  # noqa: BLE001
+        result["sender_verified"] = None
+        result["sender_check"] = f"{exc.__class__.__name__}: {exc}"
+
+    return result
+
+
+def probe() -> dict[str, Any]:
+    """
+    Contact the configured email provider and report what it says.
+
+    Unlike check(), this makes network calls. It is admin-only and deliberately
+    not called on a hot path.
+    """
+    report: dict[str, Any] = {"checked": "live probe"}
+    api_key = (os.getenv("SENDGRID_API_KEY") or "").strip()
+    if not api_key:
+        report["email"] = {
+            "provider": None,
+            "configured": False,
+            "error": "SENDGRID_API_KEY is not set.",
+        }
+        return report
+
+    report["email"] = _sendgrid_probe(
+        api_key, (os.getenv("SENDGRID_FROM_EMAIL") or "").strip()
+    )
+    return report

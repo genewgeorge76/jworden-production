@@ -398,3 +398,34 @@ def notification_reach(_: dict = Depends(verify_premium_security)):
     from ..services import notification_health  # noqa: PLC0415
 
     return notification_health.check()
+
+
+@router.get(
+    "/api/v1/ops/notification-probe",
+    summary="Ask the email provider whether it would actually accept a send (admin only)",
+)
+def notification_probe(_: dict = Depends(verify_premium_security)):
+    """
+    Contact SendGrid and report what it says.
+
+    The sibling endpoint above reports which channels are CONFIGURED. That is
+    the cheap question and it must stay cheap, but it is not the question an
+    operator is asking when leads stop arriving. A key that is set reports
+    configured: true whether or not SendGrid will accept a single message.
+
+    Two failures this catches that presence-checking cannot:
+
+      * the key is revoked or has no mail.send scope
+      * SENDGRID_FROM_EMAIL is not a verified sender identity, so the key
+        authenticates and every send is rejected 403
+
+    The second is the most common reason a correctly-configured SendGrid
+    integration delivers nothing, and it is completely invisible from the
+    outside — the lead saves, the endpoint returns 200, and the failure happens
+    in a background task after the response has gone.
+
+    Makes network calls. Admin only, and never on a hot path.
+    """
+    from ..services import notification_health  # noqa: PLC0415
+
+    return notification_health.probe()
