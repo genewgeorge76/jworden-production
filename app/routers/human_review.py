@@ -24,6 +24,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..core.limiter import limiter
 from ..database import get_db
 from ..models import HumanReviewQueue
@@ -61,9 +62,11 @@ async def list_queue(
     limit:         int           = Query(default=50, ge=1, le=200),
     offset:        int           = Query(default=0,  ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(HumanReviewQueue).filter(HumanReviewQueue.status == status)
+    q = scope(db.query(HumanReviewQueue), HumanReviewQueue, tenant_of(auth)).filter(
+        HumanReviewQueue.status == status
+    )
     if decision_type:
         q = q.filter(HumanReviewQueue.decision_type == decision_type)
     total = q.count()
@@ -75,7 +78,7 @@ async def list_queue(
 async def get_item(
     item_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     return _get_item_or_404(db, item_id)
 
@@ -85,7 +88,7 @@ async def approve_item(
     item_id: int,
     body: ReviewDecision,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     item = _get_item_or_404(db, item_id)
     if item.status != "pending":
@@ -146,7 +149,7 @@ async def reject_item(
     item_id: int,
     body: ReviewDecision,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     item = _get_item_or_404(db, item_id)
     if item.status != "pending":
@@ -168,11 +171,23 @@ async def reject_item(
 @router.get("/stats", summary="Human review queue statistics")
 async def review_stats(
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    pending  = db.query(HumanReviewQueue).filter(HumanReviewQueue.status == "pending").count()
-    approved = db.query(HumanReviewQueue).filter(HumanReviewQueue.status == "approved").count()
-    rejected = db.query(HumanReviewQueue).filter(HumanReviewQueue.status == "rejected").count()
+    pending  = (
+        scope(db.query(HumanReviewQueue), HumanReviewQueue, tenant_of(auth))
+        .filter(HumanReviewQueue.status == "pending")
+        .count()
+    )
+    approved = (
+        scope(db.query(HumanReviewQueue), HumanReviewQueue, tenant_of(auth))
+        .filter(HumanReviewQueue.status == "approved")
+        .count()
+    )
+    rejected = (
+        scope(db.query(HumanReviewQueue), HumanReviewQueue, tenant_of(auth))
+        .filter(HumanReviewQueue.status == "rejected")
+        .count()
+    )
     total    = pending + approved + rejected
 
     avg_conf = (

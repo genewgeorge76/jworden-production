@@ -29,6 +29,14 @@ This is static analysis over source text, not a proof.
     constrains tenancy indirectly) is reported as unfiltered. False positive.
   - A query mentioning `tenant_id` in a nearby unrelated line is counted as
     filtered. False negative.
+  - `scope(...)` and `get_scoped(...)` from app/services/tenancy.py count as
+    filtered, since that is what they do.
+  - By-id lookups are largely invisible: `db.get(Model, pk)` is not a
+    `db.query(...)` call and is not matched at all. 41 of those sit behind
+    tenant auth across the routers, and they are the more dangerous shape --
+    a leaky list returns rows the caller did not ask for, a leaky by-id hands
+    over exactly the row an attacker names. Use tenancy.get_scoped() for them;
+    this script will not tell you when you have missed one.
   - Only `db.query(...)` is matched. `session.execute(select(...))` and raw SQL
     are not seen at all.
 
@@ -87,8 +95,18 @@ def audit() -> tuple[int, int, int, list[str]]:
                 if not table or table not in scoped:
                     not_applicable += 1
                     continue
-                chain = "\n".join(lines[i : i + CHAIN_LINES])
-                if "tenant_id" in chain:
+                # The chain window starts a line EARLIER than the match, because
+                # the canonical fix wraps the query:
+                #     scope(db.query(Job), Job, tenant_of(auth))
+                # and when that is split across lines the `scope(` sits above
+                # the `db.query(` this loop found.
+                chain = "\n".join(lines[max(0, i - 1) : i + CHAIN_LINES])
+                # scope() and get_scoped() ARE the tenant filter -- they are how
+                # app/services/tenancy.py expresses one. Matching only the
+                # literal "tenant_id" counted every correctly-scoped query as
+                # unfiltered, so fixing a site left the number unchanged and the
+                # ratchet could never come down.
+                if "tenant_id" in chain or "scope(" in chain:
                     filtered += 1
                 else:
                     unfiltered += 1
