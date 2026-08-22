@@ -356,6 +356,28 @@ async def lifespan(app: FastAPI):
     )
     verify_state_logic_integrity(raise_on_error=True)
     logger.info("State logic integrity check passed (50 states + DC parity).")
+
+    # Which variable is supplying the token signing key, by NAME — never the
+    # value. Answering "what actually signs our tokens" used to require
+    # reading four call sites and then guessing at the deployment's
+    # environment; STAFF_JWT_SECRET being unset in production went unnoticed
+    # that way for as long as the staff portal existed.
+    from .core import jwt_secrets  # noqa: PLC0415
+
+    platform_src = jwt_secrets.platform_secret_source()
+    staff_src = jwt_secrets.staff_secret_source()
+    if platform_src == "unconfigured":
+        logger.error(
+            "NO JWT SIGNING SECRET IS CONFIGURED. Token issuing and "
+            "verification will return 503. Set one of: %s",
+            ", ".join(jwt_secrets.PLATFORM_VARS),
+        )
+    else:
+        logger.info(
+            "JWT signing: platform key from %s, staff key from %s",
+            platform_src,
+            staff_src,
+        )
     if should_auto_create_tables():
         create_all_tables()
     else:

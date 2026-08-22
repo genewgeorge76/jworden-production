@@ -18,7 +18,20 @@ leads routers use, so the isolation guarantees — and the owner-bucket trap
 handling — are identical rather than reinvented.
 """
 
-from __future__ import annotations
+# NOTE: `from __future__ import annotations` is deliberately NOT used here.
+#
+# With it, every annotation becomes a string that FastAPI must resolve later.
+# slowapi's @limiter.limit wraps the endpoint, and on the pinned FastAPI
+# (0.115.12) the resolution happens against the WRAPPER's module globals, where
+# this module's request models do not exist. The annotation stays a ForwardRef,
+# FastAPI decides it cannot be a body model, and falls back to treating it as a
+# QUERY parameter -- so every POST to these routes returned
+#     422 {"loc": ["query", "body"], "msg": "Field required"}
+# no matter what was sent.
+#
+# It was invisible locally because a dev sandbox had FastAPI 0.141, which
+# resolves this correctly; CI and the Docker image install the pinned 0.115.12.
+# See tests/backend/test_body_models_are_not_query_params.py.
 
 import logging
 from typing import Any, Optional
