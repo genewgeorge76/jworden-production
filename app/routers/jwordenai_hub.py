@@ -47,6 +47,7 @@ from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, stamp_for, tenant_of
 from ..services import pavement_technologies
 from ..database import get_db
 from ..models import CompactionLog, HubContractExecution, HubTakeoff, MarketSite
@@ -245,7 +246,7 @@ def _upsert_domain(db: Session, body: "DomainRegistration", auth: dict) -> dict[
 def list_domains(
     db: Session = Depends(get_db),
     _node: str = Depends(verify_master_node),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Every domain registered against this node, newest first.
@@ -255,7 +256,7 @@ def list_domains(
     so the response describes the system rather than an aspiration for it.
     """
     sites = (
-        db.query(MarketSite)
+        scope(db.query(MarketSite), MarketSite, tenant_of(auth))
         .order_by(MarketSite.created_at.desc(), MarketSite.hostname)
         .all()
     )
@@ -392,7 +393,7 @@ def sync_takeoff(
     """
     ref = (body.takeoff_ref or "").strip()
     row = (
-        db.query(HubTakeoff).filter(HubTakeoff.takeoff_ref == ref).one_or_none()
+        scope(db.query(HubTakeoff), HubTakeoff, tenant_of(auth)).filter(HubTakeoff.takeoff_ref == ref).one_or_none()
         if ref
         else None
     )
@@ -400,7 +401,8 @@ def sync_takeoff(
     if created:
         # A placeholder keeps the NOT NULL/unique column satisfied until the
         # row has an id to name itself after.
-        row = HubTakeoff(takeoff_ref=ref or f"pending-{_utcnow().timestamp()}")
+        row = HubTakeoff(takeoff_ref=ref or f"pending-{_utcnow().timestamp()}",
+        tenant_id=stamp_for(tenant_of(auth)))
         db.add(row)
 
     row.source_domain = normalize_hostname(body.source_domain) if body.source_domain else None
@@ -480,7 +482,7 @@ def contract_executed(
     """
     ref = (body.contract_ref or "").strip()
     row = (
-        db.query(HubContractExecution)
+        scope(db.query(HubContractExecution), HubContractExecution, tenant_of(auth))
         .filter(HubContractExecution.contract_ref == ref)
         .one_or_none()
         if ref
@@ -488,7 +490,8 @@ def contract_executed(
     )
     created = row is None
     if created:
-        row = HubContractExecution(contract_ref=ref or f"pending-{_utcnow().timestamp()}")
+        row = HubContractExecution(contract_ref=ref or f"pending-{_utcnow().timestamp()}",
+        tenant_id=stamp_for(tenant_of(auth)))
         db.add(row)
 
     row.source_domain = normalize_hostname(body.source_domain) if body.source_domain else None
@@ -643,10 +646,10 @@ def list_takeoffs(
     source_domain: Optional[str] = None,
     db: Session = Depends(get_db),
     _node: str = Depends(verify_master_node),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     limit, offset = _page(limit, offset)
-    q = db.query(HubTakeoff)
+    q = scope(db.query(HubTakeoff), HubTakeoff, tenant_of(auth))
     if source_domain:
         q = q.filter(HubTakeoff.source_domain == normalize_hostname(source_domain))
     total = q.count()
@@ -683,10 +686,10 @@ def list_contracts(
     offset: int = 0,
     db: Session = Depends(get_db),
     _node: str = Depends(verify_master_node),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     limit, offset = _page(limit, offset)
-    q = db.query(HubContractExecution)
+    q = scope(db.query(HubContractExecution), HubContractExecution, tenant_of(auth))
     total = q.count()
     rows = (
         q.order_by(HubContractExecution.executed_at.desc(), HubContractExecution.id.desc())
@@ -726,7 +729,7 @@ def list_field_qa(
     project_site_id: Optional[int] = None,
     db: Session = Depends(get_db),
     _node: str = Depends(verify_master_node),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Readings newest first, each carrying its own pass/fail against the 96%
@@ -735,7 +738,7 @@ def list_field_qa(
     asserting a verdict the current standard disagrees with.
     """
     limit, offset = _page(limit, offset)
-    q = db.query(CompactionLog)
+    q = scope(db.query(CompactionLog), CompactionLog, tenant_of(auth))
     if project_site_id is not None:
         q = q.filter(CompactionLog.project_site_id == project_site_id)
     total = q.count()

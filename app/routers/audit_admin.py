@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import AuditEvent
 
@@ -14,9 +15,9 @@ def list_audit_events(
     event_type: str | None = None,
     entity_type: str | None = None,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    query = db.query(AuditEvent)
+    query = scope(db.query(AuditEvent), AuditEvent, tenant_of(auth))
     if event_type:
         query = query.filter(AuditEvent.event_type == event_type)
     if entity_type:

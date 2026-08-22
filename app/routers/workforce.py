@@ -21,6 +21,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import WorkforceMember
 
@@ -102,9 +103,9 @@ async def list_workforce(
     trade: Optional[str] = Query(default=None),
     available: Optional[int] = Query(default=None),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(WorkforceMember)
+    q = scope(db.query(WorkforceMember), WorkforceMember, tenant_of(auth))
     if member_type:
         q = q.filter(WorkforceMember.member_type == member_type)
     if trade:
@@ -121,7 +122,7 @@ async def create_member(
     request: Request,
     req: WorkforceCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     m = WorkforceMember(
         name=req.name,
@@ -134,6 +135,7 @@ async def create_member(
         phone=req.phone,
         email=req.email,
         notes=req.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(m)
     db.commit()
@@ -148,9 +150,9 @@ async def update_member(
     member_id: int,
     req: WorkforceUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    m = db.get(WorkforceMember, member_id)
+    m = get_scoped(db, WorkforceMember, member_id, tenant_of(auth))
     if not m:
         raise HTTPException(status_code=404, detail="Member not found")
     data = req.model_dump(exclude_none=True)
@@ -173,9 +175,9 @@ async def delete_member(
     request: Request,
     member_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    m = db.get(WorkforceMember, member_id)
+    m = get_scoped(db, WorkforceMember, member_id, tenant_of(auth))
     if not m:
         raise HTTPException(status_code=404, detail="Member not found")
     db.delete(m)
@@ -191,10 +193,10 @@ async def available_query(
     request: Request,
     scope: str = Query(default=""),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return available members qualified for the given scope/trade."""
-    q = db.query(WorkforceMember).filter(WorkforceMember.available == 1)
+    q = scope(db.query(WorkforceMember), WorkforceMember, tenant_of(auth)).filter(WorkforceMember.available == 1)
     if scope:
         q = q.filter(WorkforceMember.trade.ilike(f"%{scope}%"))
     rows = q.order_by(WorkforceMember.name.asc()).all()
@@ -209,11 +211,11 @@ async def expiring_certs(
     request: Request,
     days_ahead: int = Query(default=90, ge=1, le=365),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     now = datetime.now(timezone.utc)
     cutoff = now + timedelta(days=days_ahead)
-    rows = db.query(WorkforceMember).all()
+    rows = scope(db.query(WorkforceMember), WorkforceMember, tenant_of(auth)).all()
 
     alerts = []
     for m in rows:

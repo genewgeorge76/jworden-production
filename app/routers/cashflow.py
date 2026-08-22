@@ -20,7 +20,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
-from ..services.tenancy import get_scoped, scope, tenant_of
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import CashFlowAlert, CashFlowEntry
 
@@ -105,6 +105,7 @@ async def create_entry(
         description=req.description,
         source=req.source,
         source_id=req.source_id,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(entry)
     db.commit()
@@ -238,7 +239,8 @@ async def set_alert(
         row.alert_email = req.alert_email
         row.updated_at = datetime.now(timezone.utc)
     else:
-        row = CashFlowAlert(threshold_amount=req.threshold_amount, alert_email=req.alert_email)
+        row = CashFlowAlert(threshold_amount=req.threshold_amount, alert_email=req.alert_email,
+        tenant_id=stamp_for(tenant_of(auth)))
         db.add(row)
     db.commit()
     db.refresh(row)

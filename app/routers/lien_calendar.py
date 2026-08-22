@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import LienCalendarEntry
 from ..services.lien_calendar import calculate_deadlines, get_upcoming_deadlines
@@ -60,7 +61,7 @@ def _parse_date(date_str: str) -> datetime:
 async def calculate_lien_deadlines(
     request: Request,
     req: LienCalcRequest,
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Calculate preliminary notice, lien filing, and foreclosure deadlines
@@ -79,7 +80,7 @@ async def track_lien_project(
     request: Request,
     req: LienTrackRequest,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Save a project to the lien calendar and return calculated deadlines."""
     start = _parse_date(req.project_start_date)
@@ -106,6 +107,7 @@ async def track_lien_project(
         lien_filing_deadline=_parse_opt(deadlines.get("lien_filing_deadline")),
         foreclosure_deadline=_parse_opt(deadlines.get("foreclosure_deadline")),
         notes=req.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(entry)
     db.commit()
@@ -120,7 +122,7 @@ async def upcoming_deadlines(
     request: Request,
     days_ahead: int = Query(default=30, ge=1, le=365),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return LienCalendarEntry records with deadlines within days_ahead."""
     deadlines = get_upcoming_deadlines(db, days_ahead=days_ahead)
@@ -135,10 +137,10 @@ async def list_entries(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return all lien calendar entries with optional state filter."""
-    q = db.query(LienCalendarEntry)
+    q = scope(db.query(LienCalendarEntry), LienCalendarEntry, tenant_of(auth))
     if state_code:
         q = q.filter(LienCalendarEntry.state_code == state_code.upper())
 

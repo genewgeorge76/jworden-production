@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import Innovation
 
@@ -79,9 +80,9 @@ async def list_innovations(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(Innovation)
+    q = scope(db.query(Innovation), Innovation, tenant_of(auth))
     if category:
         q = q.filter(Innovation.category == category)
     if result:
@@ -97,7 +98,7 @@ async def create_innovation(
     request: Request,
     req: InnovationCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     if req.result not in ("pass", "fail", "adopted"):
         raise HTTPException(status_code=422, detail="result must be pass | fail | adopted")
@@ -109,6 +110,7 @@ async def create_innovation(
         result=req.result,
         category=req.category,
         notes=req.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(innov)
     db.commit()
@@ -123,9 +125,9 @@ async def update_innovation(
     innov_id: int,
     req: InnovationUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    innov = db.get(Innovation, innov_id)
+    innov = get_scoped(db, Innovation, innov_id, tenant_of(auth))
     if not innov:
         raise HTTPException(status_code=404, detail="Innovation not found")
     for key, val in req.model_dump(exclude_none=True).items():
@@ -145,9 +147,9 @@ async def delete_innovation(
     request: Request,
     innov_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    innov = db.get(Innovation, innov_id)
+    innov = get_scoped(db, Innovation, innov_id, tenant_of(auth))
     if not innov:
         raise HTTPException(status_code=404, detail="Innovation not found")
     db.delete(innov)
@@ -162,9 +164,9 @@ async def delete_innovation(
 async def adopted_methods(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    adopted = db.query(Innovation).filter(Innovation.result == "adopted").order_by(Innovation.date_tested.desc()).all()
+    adopted = scope(db.query(Innovation), Innovation, tenant_of(auth)).filter(Innovation.result == "adopted").order_by(Innovation.date_tested.desc()).all()
     by_category: dict[str, list] = {}
     total_cost = 0.0
     for i in adopted:

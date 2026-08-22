@@ -31,7 +31,7 @@ from ..models import (
 )
 from ..services import delivered_cost as dc
 from ..services import google_routes as _routes
-from ..services.tenancy import scope, tenant_of
+from ..services.tenancy import scope, stamp_for, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +114,8 @@ def upsert_source(body: SourceIn, db: Session = Depends(get_db),
                 MaterialSource, tenant).one_or_none()
     created = row is None
     if created:
-        row = MaterialSource(name=body.name)
+        row = MaterialSource(name=body.name,
+        tenant_id=stamp_for(tenant_of(auth)))
         db.add(row)
     for f, v in body.model_dump(exclude_unset=True).items():
         if f != "name":
@@ -229,7 +230,8 @@ def upsert_haul(body: HaulIn, db: Session = Depends(get_db),
                 HaulProfile, tenant).one_or_none()
     created = row is None
     if created:
-        row = HaulProfile(name=body.name)
+        row = HaulProfile(name=body.name,
+        tenant_id=stamp_for(tenant_of(auth)))
         db.add(row)
     for f, v in body.model_dump(exclude_unset=True).items():
         if f != "name":
@@ -265,7 +267,8 @@ def upsert_market(body: MarketIn, db: Session = Depends(get_db),
                 LaborMarket, tenant).one_or_none()
     created = row is None
     if created:
-        row = LaborMarket(name=body.name, state=body.state.upper())
+        row = LaborMarket(name=body.name, state=body.state.upper(),
+        tenant_id=stamp_for(tenant_of(auth)))
         db.add(row)
     for f, v in body.model_dump(exclude_unset=True).items():
         if f not in ("name", "state"):

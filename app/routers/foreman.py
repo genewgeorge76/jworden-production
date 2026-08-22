@@ -36,6 +36,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import Lead, PermitLead, ProjectSite, TruckPosition
 
@@ -301,7 +302,7 @@ def _rag_foreman_chat(
     response_model=ForemanChatResponse,
     summary="4D Virtual Foreman — RAG-powered Q&A",
 )
-async def foreman_chat(req: ForemanChatRequest, _: dict = Depends(verify_premium_security)):
+async def foreman_chat(req: ForemanChatRequest, auth: dict = Depends(verify_premium_security)):
     """
     Natural language Q&A about active sites, leads, trucks, and field operations.
 
@@ -329,7 +330,7 @@ async def foreman_chat(req: ForemanChatRequest, _: dict = Depends(verify_premium
 # ── Executive Dashboard Status ────────────────────────────────────────────────
 
 @router.get("/api/v1/foreman/status", summary="Executive dashboard summary")
-def foreman_status(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+def foreman_status(db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
     """
     Returns a high-level snapshot of the JWordenAI command center:
       - Active site count and statuses
@@ -342,9 +343,9 @@ def foreman_status(db: Session = Depends(get_db), _: dict = Depends(verify_premi
         sites_by_status[s.status] = sites_by_status.get(s.status, 0) + 1
 
     lead_counts = {
-        "HOT":  db.query(Lead).filter(Lead.score_label == "HOT").count(),
-        "WARM": db.query(Lead).filter(Lead.score_label == "WARM").count(),
-        "COOL": db.query(Lead).filter(Lead.score_label == "COOL").count(),
+        "HOT":  scope(db.query(Lead), Lead, tenant_of(auth)).filter(Lead.score_label == "HOT").count(),
+        "WARM": scope(db.query(Lead), Lead, tenant_of(auth)).filter(Lead.score_label == "WARM").count(),
+        "COOL": scope(db.query(Lead), Lead, tenant_of(auth)).filter(Lead.score_label == "COOL").count(),
     }
 
     permit_counts = {
@@ -392,7 +393,7 @@ _MAX_IMAGE_BYTES = 20 * 1024 * 1024   # 20 MB
 async def vision_measure(
     file: UploadFile = File(...),
     site_id: int | None = None,
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Upload a project photo and enqueue it for AI lot-measurement inference.
@@ -445,7 +446,7 @@ async def vision_measure(
     "/api/v1/ai/vision-result/{job_id}",
     summary="Poll for vision inference result",
 )
-def vision_result(job_id: str, _: dict = Depends(verify_premium_security)):
+def vision_result(job_id: str, auth: dict = Depends(verify_premium_security)):
     """
     Poll for the result of a vision inference job.
     Results are stored in Redis with a 24-hour TTL.

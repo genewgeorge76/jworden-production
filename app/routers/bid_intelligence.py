@@ -23,6 +23,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import ProposalOutcome
 
@@ -78,9 +79,9 @@ def _out_dict(o: ProposalOutcome) -> dict:
 async def list_outcomes(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    rows = db.query(ProposalOutcome).order_by(ProposalOutcome.outcome_recorded_at.desc()).all()
+    rows = scope(db.query(ProposalOutcome), ProposalOutcome, tenant_of(auth)).order_by(ProposalOutcome.outcome_recorded_at.desc()).all()
     return {"total": len(rows), "outcomes": [_out_dict(o) for o in rows]}
 
 
@@ -90,7 +91,7 @@ async def create_outcome(
     request: Request,
     req: OutcomeCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     if req.outcome not in ("won", "lost", "no-decision"):
         raise HTTPException(status_code=422, detail="outcome must be won | lost | no-decision")
@@ -105,6 +106,7 @@ async def create_outcome(
         competitor_name=req.competitor_name,
         competitor_price=req.competitor_price,
         notes=req.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(o)
     db.commit()
@@ -119,9 +121,9 @@ async def update_outcome(
     outcome_id: int,
     req: OutcomeUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    o = db.get(ProposalOutcome, outcome_id)
+    o = get_scoped(db, ProposalOutcome, outcome_id, tenant_of(auth))
     if not o:
         raise HTTPException(status_code=404, detail="Outcome not found")
     fields = req.model_dump(exclude_none=True)
@@ -145,9 +147,9 @@ async def delete_outcome(
     request: Request,
     outcome_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    o = db.get(ProposalOutcome, outcome_id)
+    o = get_scoped(db, ProposalOutcome, outcome_id, tenant_of(auth))
     if not o:
         raise HTTPException(status_code=404, detail="Outcome not found")
     db.delete(o)
@@ -162,9 +164,9 @@ async def delete_outcome(
 async def summary(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    rows = db.query(ProposalOutcome).all()
+    rows = scope(db.query(ProposalOutcome), ProposalOutcome, tenant_of(auth)).all()
     total = len(rows)
     won = sum(1 for r in rows if r.outcome == "won")
     lost = sum(1 for r in rows if r.outcome == "lost")
@@ -200,9 +202,9 @@ async def summary(
 async def win_analysis(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    rows = db.query(ProposalOutcome).order_by(ProposalOutcome.outcome_recorded_at.desc()).limit(100).all()
+    rows = scope(db.query(ProposalOutcome), ProposalOutcome, tenant_of(auth)).order_by(ProposalOutcome.outcome_recorded_at.desc()).limit(100).all()
     if len(rows) < 2:
         return {"analysis": "Not enough bid data yet. Record at least 2 bid outcomes to unlock AI analysis.", "insights": []}
 

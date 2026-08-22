@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, tenant_of
 from ..database import get_db
 from ..models import Lead, InboxMessage
 from ..services.email_service import (
@@ -79,7 +80,7 @@ class SyncResponse(BaseModel):
 async def trigger_email_sync(
     request: Request,
     background_tasks: BackgroundTasks,
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Fires the IMAP email sync in the background and returns immediately.
@@ -105,7 +106,7 @@ async def trigger_email_sync(
 async def send_test_email(
     request: Request,
     body: TestEmailRequest,
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Send a test email using one of the available templates.
@@ -196,7 +197,7 @@ async def send_test_email(
 @limiter.limit("60/minute")
 async def list_templates(
     request: Request,
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Return metadata for all registered email templates.
@@ -223,7 +224,7 @@ async def resend_confirmation(
     request: Request,
     lead_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Resend the quote confirmation email to the customer for a given lead.
@@ -231,7 +232,7 @@ async def resend_confirmation(
     Useful when the original email was not delivered or the customer requests
     a copy. Also triggers a fresh admin notification.
     """
-    lead = db.get(Lead, lead_id)
+    lead = get_scoped(db, Lead, lead_id, tenant_of(auth))
     if lead is None:
         raise HTTPException(status_code=404, detail=f"Lead #{lead_id} not found")
 
@@ -277,7 +278,7 @@ async def resend_confirmation(
 async def get_triage_summary(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Returns all parsed InboxMessage records from the last 24 hours,

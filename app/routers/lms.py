@@ -425,6 +425,8 @@ from datetime import datetime, timedelta, timezone
 from fastapi import Query, Request
 
 from app.core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
+from app.services.tenancy import scope, stamp_for, tenant_of
 from app.data.worden_university import COURSES as WU_COURSES, PASS_MARK, CERT_VALID_DAYS
 from app.models import Certification, ExamAttempt, WorkforceMember
 
@@ -689,10 +691,10 @@ def my_record(email: str = Query(...), db: Session = Depends(get_db)):
 @router.get("/roster", summary="Company-wide training roster (admin)")
 def roster(
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     now = _now()
-    certs = db.query(Certification).filter(Certification.revoked == False).all()  # noqa: E712
+    certs = scope(db.query(Certification), Certification, tenant_of(auth)).filter(Certification.revoked == False).all()  # noqa: E712
     people: dict = {}
     for c in certs:
         p = people.setdefault(
@@ -715,7 +717,7 @@ def roster(
                 ),
             }
         )
-    total_attempts = db.query(ExamAttempt).count()
+    total_attempts = scope(db.query(ExamAttempt), ExamAttempt, tenant_of(auth)).count()
     roster_list = sorted(people.values(), key=lambda p: (p["name"] or p["email"]).lower())
     return {
         "courses_available": [
@@ -824,7 +826,7 @@ class MemberAdd(BaseModel):
 def create_org(
     payload: OrgCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     name = (payload.name or "").strip()
     email = (payload.billing_email or "").strip().lower()

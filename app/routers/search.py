@@ -30,6 +30,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import BlogPost, PageContent
 from ..services import search_service
@@ -131,7 +132,7 @@ async def reindex_all(
         )
 
     # Index all blog posts
-    blog_posts = db.query(BlogPost).all()
+    blog_posts = scope(db.query(BlogPost), BlogPost, tenant_of(security)).all()
     blog_ok = 0
     blog_fail = 0
     for post in blog_posts:
