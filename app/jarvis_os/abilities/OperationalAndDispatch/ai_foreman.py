@@ -54,11 +54,26 @@ class AIForeman:
         # 4. Evaluate Subcontractor Schedules
         if intel.get("grading_completed_early", False):
             issues.append("UPDATE: Grading completed ahead of schedule.")
+            request = "Grading finished early. Pull concrete pour forward by 2 days."
             resp = self.foreman_api.trigger_vendor_communication(
-                vendor_id="VEND-CONCRETE-01", 
-                message="Grading finished early. Please pull concrete pour schedule forward by 2 days."
+                vendor_id="VEND-CONCRETE-01",
+                message=request,
             )
-            commands.append(f"DISPATCH [Foreman AI API]: {resp.get('response')}")
+            # This used to append resp["response"] verbatim — the string
+            # "Vendor notified. AI negotiating schedule shift." — which the
+            # client returned unconditionally without making any request. A
+            # foreman read that as confirmation the concrete sub had been
+            # told, and nobody had been told anything.
+            #
+            # Only claim contact when the client says it happened.
+            if resp.get("performed") and resp.get("ok"):
+                commands.append(f"DISPATCH [Foreman AI]: {resp.get('response')}")
+            else:
+                commands.append(
+                    "ACTION REQUIRED — CALL THE CONCRETE SUB YOURSELF: "
+                    f"{request} This was NOT sent automatically "
+                    f"({resp.get('error', 'vendor dispatch unavailable')})."
+                )
             
         # Formulate final response
         if not issues:
