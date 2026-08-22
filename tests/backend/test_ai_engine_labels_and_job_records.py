@@ -209,7 +209,13 @@ async def test_failed_course_generation_is_recorded_not_swallowed(
     the request still succeeds, and the failure is retrievable afterwards
     instead of vanishing into a background task.
     """
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    # Every provider unset, not just OpenAI: the generator now gates on "is any
+    # provider configured", so clearing one key would leave Claude eligible and
+    # the job would try to run.
+    for var in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY",
+                "GOOGLE_AI_API_KEY", "GOOGLE_API_KEY", "PERPLEXITY_API_KEY",
+                "XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"):
+        monkeypatch.delenv(var, raising=False)
 
     res = await client.post(
         "/lms/ai-generate",
@@ -226,7 +232,7 @@ async def test_failed_course_generation_is_recorded_not_swallowed(
 
     assert record["status"] == "failed"
     assert record["error"], "a failed generation with no stated reason is the bug"
-    assert "OPENAI_API_KEY" in record["error"]
+    assert "provider" in record["error"].lower(), record["error"]
     assert record["course_id"] is None
     assert record["finished_at"] is not None
 
@@ -243,7 +249,10 @@ async def test_generation_job_survives_as_a_record_of_the_attempt(
     Even the queued state is written before anything runs, so an attempt that
     dies mid-flight leaves a row rather than nothing.
     """
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    for var in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY",
+                "GOOGLE_AI_API_KEY", "GOOGLE_API_KEY", "PERPLEXITY_API_KEY",
+                "XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"):
+        monkeypatch.delenv(var, raising=False)
     _, dbmod = app_modules
     from app.models import CourseGenerationJob
 

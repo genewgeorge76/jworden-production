@@ -5,16 +5,16 @@ from pydantic import BaseModel
 from typing import List, Optional
 import os
 import json
-from openai import AsyncOpenAI
 
 from app.database import get_db
+from app.services import llm_client
 from app.models import Course, CourseModule, Lesson, Enrollment, Progress
 
 router = APIRouter(prefix="/lms", tags=["LMS"])
 
-# Engine used for AI course generation. Recorded on every generation job, so
-# the syllabus in the catalog can be traced to the model that wrote it.
-_COURSE_MODEL = os.getenv("LMS_COURSE_MODEL", "gpt-4o").strip() or "gpt-4o"
+# Generation goes through llm_client's "reasoning" lane, so the model is chosen
+# by the routing table rather than pinned here. The engine recorded on each job
+# is whichever provider actually answered — see _generate_course_bg.
 
 # ── Pydantic Schemas ──────────────────────────────────────────────────────────
 
@@ -211,16 +211,13 @@ async def _generate_course_bg(
         job.status = "running"
         db.commit()
 
-        api_key = os.getenv("OPENAI_API_KEY", "").strip()
-        if not api_key:
+        if not any(llm_client.configured_providers().values()):
             _finish(
                 "failed",
-                error="OPENAI_API_KEY is not set — no engine available to generate a syllabus.",
+                error="No LLM provider is configured — nothing available to generate a syllabus.",
             )
-            logger.warning("course generation %s: no OPENAI_API_KEY", job_id)
+            logger.warning("course generation %s: no provider configured", job_id)
             return
-
-        client = AsyncOpenAI(api_key=api_key)
 
         system_prompt = (
             "You are an elite instructional designer and veteran construction engineer for J. Worden University. "
@@ -254,27 +251,28 @@ async def _generate_course_bg(
             "Write detailed lesson markdown bodies."
         )
 
-        resp = await client.chat.completions.create(
-            model=_COURSE_MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt},
-            ],
-            response_format={"type": "json_object"},
+        # ajson_chat: the async wrapper, because this runs in a background task
+        # on the event loop — the blocking version would stall every other
+        # request on the worker. Routed, so a dead OpenAI key generates the
+        # syllabus on Claude instead of failing the job outright.
+        reply = await llm_client.ajson_chat(
+            task="reasoning",
+            system=system_prompt,
+            user=prompt,
             temperature=0.4,
+            max_tokens=4000,
         )
-
-        raw = (resp.choices[0].message.content or "").strip()
-        if not raw:
-            _finish("failed", engine=_COURSE_MODEL, error="Model returned an empty response.")
+        if reply.error or not reply.data:
+            _finish("failed", error=reply.error_detail or "no provider produced a syllabus")
             return
 
-        course_data = json.loads(raw)
+        engine_used = reply.model or reply.provider
+        course_data = reply.data
         for required in ("title", "slug", "description"):
             if not str(course_data.get(required) or "").strip():
                 _finish(
                     "failed",
-                    engine=_COURSE_MODEL,
+                    engine=engine_used,
                     error=f"Model response is missing required field {required!r}; no course written.",
                 )
                 return
@@ -321,7 +319,7 @@ async def _generate_course_bg(
 
         _finish(
             "succeeded",
-            engine=_COURSE_MODEL,
+            engine=engine_used,
             course_id=course.id,
             modules_created=modules_created,
             lessons_created=lessons_created,
@@ -337,7 +335,7 @@ async def _generate_course_bg(
         try:
             _finish(
                 "failed",
-                engine=_COURSE_MODEL,
+                engine=locals().get("engine_used"),
                 error=provider_health.redact(f"{exc.__class__.__name__}: {exc}")[:2000],
             )
         except Exception:  # noqa: BLE001
