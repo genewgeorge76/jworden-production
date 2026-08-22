@@ -264,6 +264,7 @@ class BiometricAlert(BaseModel):
 async def handle_biometric_alert(
     request: Request,
     req: BiometricAlert,
+    auth: dict = Depends(verify_premium_security),
     # No auth verify here so the wearable link can hit it fast if it bypasses standard auth
 ):
     """Bridge for the Crew App to alert of heat/vital danger."""
@@ -280,8 +281,8 @@ async def handle_biometric_alert(
     
     return {"status": "dispatched", "message": "Emergency notifications triggered"}
     """Aggregate safety score per job site (talks count, incidents count, recordables)."""
-    talks = db.query(SafetyToolboxTalk).all()
-    incidents = db.query(SafetyIncident).all()
+    talks = scope(db.query(SafetyToolboxTalk), SafetyToolboxTalk, tenant_of(auth)).all()
+    incidents = scope(db.query(SafetyIncident), SafetyIncident, tenant_of(auth)).all()
 
     sites: dict[str, dict] = {}
 

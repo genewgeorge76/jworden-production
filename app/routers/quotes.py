@@ -19,6 +19,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import PavingEvaluation  # noqa: PLC0415
 
@@ -44,6 +45,7 @@ _DAMAGE_NEEDS_BASE_REHAB: frozenset[str] = frozenset({"alligator_cracking"})
 def generate_automated_quote(
     evaluation_id: int,
     db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ) -> dict:
     """
     Generate a priced asphalt quote from an existing PavingEvaluation record.
@@ -56,7 +58,7 @@ def generate_automated_quote(
     - All jobs quoted to VDOT 6-inch base standards.
     """
     eval_record = (
-        db.query(PavingEvaluation)
+        scope(db.query(PavingEvaluation), PavingEvaluation, tenant_of(auth))
         .filter(PavingEvaluation.id == evaluation_id)
         .first()
     )

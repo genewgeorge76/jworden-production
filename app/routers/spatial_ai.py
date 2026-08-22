@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, stamp_for, tenant_of
 from ..database import get_db
 from ..services.vision_inspector import detect_deviations
 
@@ -157,12 +158,13 @@ async def verify_as_built(
 # ── Cost estimation endpoints ─────────────────────────────────────────────────
 
 @router.get("/estimate/{site_id}", summary="Get estimate lines for a project site")
-def get_estimate_lines(site_id: int, db: Session = Depends(get_db)):
+def get_estimate_lines(site_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """Return all estimate lines for a project site."""
     from ..models import ProjectEstimate  # noqa: PLC0415
 
     lines = (
-        db.query(ProjectEstimate)
+        scope(db.query(ProjectEstimate), ProjectEstimate, tenant_of(auth))
         .filter(ProjectEstimate.project_site_id == site_id)
         .order_by(ProjectEstimate.created_at)
         .all()
@@ -189,12 +191,13 @@ def get_estimate_lines(site_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/estimate/{site_id}/summary", summary="Cost estimate summary with category breakdown")
-def get_estimate_summary(site_id: int, db: Session = Depends(get_db)):
+def get_estimate_summary(site_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """Return total project cost with breakdown by category."""
     from ..models import ProductItem, ProjectEstimate  # noqa: PLC0415
 
     lines = (
-        db.query(ProjectEstimate)
+        scope(db.query(ProjectEstimate), ProjectEstimate, tenant_of(auth))
         .filter(ProjectEstimate.project_site_id == site_id)
         .all()
     )
@@ -205,7 +208,7 @@ def get_estimate_summary(site_id: int, db: Session = Depends(get_db)):
     item_ids = [l.item_id for l in lines if l.item_id]
     catalog = {
         row.id: row.category
-        for row in db.query(ProductItem).filter(ProductItem.id.in_(item_ids)).all()
+        for row in scope(db.query(ProductItem), ProductItem, tenant_of(auth)).filter(ProductItem.id.in_(item_ids)).all()
     }
 
     categories: dict[str, float] = {}
@@ -224,7 +227,8 @@ def get_estimate_summary(site_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/estimate", status_code=201, summary="Add an estimate line")
-def create_estimate_line(body: EstimateLineCreate, db: Session = Depends(get_db)):
+def create_estimate_line(body: EstimateLineCreate, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """
     Add a cost estimate line item.  If item_id is provided and item_name is
     omitted, the name and rates are copied from the product catalog automatically.
@@ -237,7 +241,7 @@ def create_estimate_line(body: EstimateLineCreate, db: Session = Depends(get_db)
     unit       = body.unit
 
     if body.item_id:
-        catalog_item = db.query(ProductItem).filter(ProductItem.id == body.item_id).first()
+        catalog_item = scope(db.query(ProductItem), ProductItem, tenant_of(auth)).filter(ProductItem.id == body.item_id).first()
         if catalog_item:
             base_rate  = base_rate  or catalog_item.base_rate
             labor_rate = labor_rate or catalog_item.labor_rate
@@ -257,6 +261,7 @@ def create_estimate_line(body: EstimateLineCreate, db: Session = Depends(get_db)
         total_cost=total,
         notes=body.notes,
         created_by=body.created_by,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(line)
     db.commit()
@@ -265,10 +270,11 @@ def create_estimate_line(body: EstimateLineCreate, db: Session = Depends(get_db)
 
 
 @router.delete("/estimate/{line_id}", summary="Remove an estimate line")
-def delete_estimate_line(line_id: int, db: Session = Depends(get_db)):
+def delete_estimate_line(line_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     from ..models import ProjectEstimate  # noqa: PLC0415
 
-    line = db.query(ProjectEstimate).filter(ProjectEstimate.id == line_id).first()
+    line = scope(db.query(ProjectEstimate), ProjectEstimate, tenant_of(auth)).filter(ProjectEstimate.id == line_id).first()
     if not line:
         raise HTTPException(status_code=404, detail="Estimate line not found.")
     db.delete(line)
@@ -282,10 +288,11 @@ def delete_estimate_line(line_id: int, db: Session = Depends(get_db)):
 def list_catalog(
     category: Optional[str] = Query(None, description="Filter by category"),
     db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ):
     from ..models import ProductItem  # noqa: PLC0415
 
-    q = db.query(ProductItem).filter(ProductItem.is_active == True)  # noqa: E712
+    q = scope(db.query(ProductItem), ProductItem, tenant_of(auth)).filter(ProductItem.is_active == True)  # noqa: E712
     if category:
         q = q.filter(ProductItem.category == category.lower())
     items = q.order_by(ProductItem.category, ProductItem.name).all()
@@ -319,10 +326,11 @@ def add_catalog_item(body: CatalogItemCreate, db: Session = Depends(get_db)):
 
 
 @catalog_router.put("/{item_id}", summary="Update catalog item pricing")
-def update_catalog_item(item_id: int, body: CatalogItemUpdate, db: Session = Depends(get_db)):
+def update_catalog_item(item_id: int, body: CatalogItemUpdate, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     from ..models import ProductItem  # noqa: PLC0415
 
-    item = db.query(ProductItem).filter(ProductItem.id == item_id).first()
+    item = scope(db.query(ProductItem), ProductItem, tenant_of(auth)).filter(ProductItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Catalog item not found.")
     for field, value in body.model_dump(exclude_none=True).items():

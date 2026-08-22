@@ -41,6 +41,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, stamp_for, tenant_of
 from ..database import get_db
 from ..services.ad_signals import (
     build_google_ads_exclusion_payload,
@@ -132,7 +133,8 @@ def get_url_exclusions(
 
 
 @router.post("/url-exclusions", status_code=201, summary="Add URL exclusion")
-def add_url_exclusion(body: ExclusionCreate, db: Session = Depends(get_db)):
+def add_url_exclusion(body: ExclusionCreate, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """
     Add a custom URL path to the AI Max exclusion list.
     Paths added here will be included in the `ads_paste` export.
@@ -143,7 +145,7 @@ def add_url_exclusion(body: ExclusionCreate, db: Session = Depends(get_db)):
     if not pattern.startswith("/"):
         pattern = "/" + pattern
 
-    existing = db.query(AdUrlExclusion).filter(AdUrlExclusion.path_pattern == pattern).first()
+    existing = scope(db.query(AdUrlExclusion), AdUrlExclusion, tenant_of(auth)).filter(AdUrlExclusion.path_pattern == pattern).first()
     if existing:
         if not existing.is_active:
             existing.is_active = True
@@ -156,6 +158,7 @@ def add_url_exclusion(body: ExclusionCreate, db: Session = Depends(get_db)):
         reason=body.reason,
         created_by=body.created_by,
         is_active=True,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(row)
     db.commit()
@@ -164,11 +167,12 @@ def add_url_exclusion(body: ExclusionCreate, db: Session = Depends(get_db)):
 
 
 @router.delete("/url-exclusions/{exclusion_id}", summary="Remove URL exclusion")
-def remove_url_exclusion(exclusion_id: int, db: Session = Depends(get_db)):
+def remove_url_exclusion(exclusion_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """Soft-deactivate a custom URL exclusion (sets is_active=False)."""
     from ..models import AdUrlExclusion  # noqa: PLC0415
 
-    row = db.query(AdUrlExclusion).filter(AdUrlExclusion.id == exclusion_id).first()
+    row = scope(db.query(AdUrlExclusion), AdUrlExclusion, tenant_of(auth)).filter(AdUrlExclusion.id == exclusion_id).first()
     if not row:
         raise HTTPException(status_code=404, detail="Exclusion not found.")
     row.is_active = False
@@ -221,6 +225,7 @@ def get_anomalies(
     include_resolved: bool = Query(False, description="Include resolved alerts"),
     severity: Optional[str] = Query(None, description="Filter by severity: LOW|MEDIUM|HIGH|CRITICAL"),
     db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Retrieve current anomaly alerts for key business metrics.
@@ -228,7 +233,7 @@ def get_anomalies(
     """
     from ..models import AnomalyAlert  # noqa: PLC0415
 
-    q = db.query(AnomalyAlert).order_by(AnomalyAlert.detected_at.desc())
+    q = scope(db.query(AnomalyAlert), AnomalyAlert, tenant_of(auth)).order_by(AnomalyAlert.detected_at.desc())
     if not include_resolved:
         q = q.filter(AnomalyAlert.resolved_at == None)  # noqa: E711
     if severity:
@@ -281,11 +286,12 @@ def run_anomaly_scan(db: Session = Depends(get_db)):
 
 
 @router.post("/anomalies/{alert_id}/resolve", summary="Resolve an anomaly alert")
-def resolve_anomaly(alert_id: int, db: Session = Depends(get_db)):
+def resolve_anomaly(alert_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """Mark an anomaly alert as resolved (sets resolved_at timestamp)."""
     from ..models import AnomalyAlert  # noqa: PLC0415
 
-    alert = db.query(AnomalyAlert).filter(AnomalyAlert.id == alert_id).first()
+    alert = scope(db.query(AnomalyAlert), AnomalyAlert, tenant_of(auth)).filter(AnomalyAlert.id == alert_id).first()
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found.")
     alert.resolved_at = datetime.now(timezone.utc)

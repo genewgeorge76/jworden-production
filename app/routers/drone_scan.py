@@ -26,6 +26,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import DroneScan, ProjectSite
 
@@ -173,10 +174,11 @@ def ingest_drone_scan(
     response_model=List[DroneScanResponse],
     dependencies=[Depends(verify_premium_security)],
 )
-def list_drone_scans(site_id: int, db: Session = Depends(get_db)):
+def list_drone_scans(site_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """Return all drone scans for a site, newest first."""
     return (
-        db.query(DroneScan)
+        scope(db.query(DroneScan), DroneScan, tenant_of(auth))
         .filter(DroneScan.project_site_id == site_id)
         .order_by(DroneScan.scanned_at.desc())
         .all()
@@ -188,9 +190,10 @@ def list_drone_scans(site_id: int, db: Session = Depends(get_db)):
     response_model=DroneScanResponse,
     dependencies=[Depends(verify_premium_security)],
 )
-def get_drone_scan(scan_id: int, db: Session = Depends(get_db)):
+def get_drone_scan(scan_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """Return a single drone scan record."""
-    scan = db.query(DroneScan).filter(DroneScan.id == scan_id).first()
+    scan = scope(db.query(DroneScan), DroneScan, tenant_of(auth)).filter(DroneScan.id == scan_id).first()
     if not scan:
         raise HTTPException(status_code=404, detail=f"Drone scan {scan_id} not found.")
     return scan

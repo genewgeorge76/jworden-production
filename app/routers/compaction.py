@@ -23,6 +23,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import CompactionLog
 
@@ -120,6 +121,7 @@ def compaction_heatmap(
     site_id: int,
     limit: int = Query(2000, ge=1, le=10000),
     db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Return all compaction pings for a site as a GeoJSON-compatible array.
@@ -139,7 +141,7 @@ def compaction_heatmap(
       }
     """
     records: List[CompactionLog] = (
-        db.query(CompactionLog)
+        scope(db.query(CompactionLog), CompactionLog, tenant_of(auth))
         .filter(CompactionLog.project_site_id == site_id)
         .order_by(CompactionLog.logged_at.desc())
         .limit(limit)
@@ -169,7 +171,8 @@ def compaction_heatmap(
     "/compaction-summary/{site_id}",
     dependencies=[Depends(verify_premium_security)],
 )
-def compaction_summary(site_id: int, db: Session = Depends(get_db)):
+def compaction_summary(site_id: int, db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """
     Aggregate compaction stats per roller for a project site.
 
@@ -177,7 +180,7 @@ def compaction_summary(site_id: int, db: Session = Depends(get_db)):
     compliance flag (True when avg density >= 92% of target).
     """
     records: List[CompactionLog] = (
-        db.query(CompactionLog)
+        scope(db.query(CompactionLog), CompactionLog, tenant_of(auth))
         .filter(CompactionLog.project_site_id == site_id)
         .all()
     )

@@ -13,7 +13,7 @@ level (it dynamically imports and runs modules by id).
 
 WHAT THE REGISTRY ACTUALLY CONTAINS — measured, not assumed:
 
-  109 registered   107 real implementations   2 unimplemented
+  109 registered   23 real implementations   86 gated
 
 Measured by loading the registry, not counted by hand — the line above used to
 read "109 real implementations, 0 unimplemented" while MultiTenantSaaS.
@@ -25,6 +25,18 @@ one for as long as it existed. The two are:
                                            not resolve; it made no request and
                                            returned {"status": "success"} with
                                            invented receipt ids until 2026-08-22
+  84 further modules                       manufacture their answer with the
+                                           random module — see
+                                           _is_random_simulator below
+
+The 84 are the reason this count moved from 107 to 23. They are not
+implementations with a random element; the draw IS the result, and it happens
+per call, so the same question returns a different answer every time in exactly
+the shape a real one takes. Among them: a DOT pay factor that rolls a density
+and issues an under-compaction penalty, an OSHA silica exposure reading that
+rolls whether the crew is using water suppression, a subcontractor ranker that
+rolls OSHA violations and returns APPROVED, and Davis-Bacon prevailing wages.
+Every one was reachable through POST /api/v1/abilities/execute.
 
 The registry previously held 162 entries, 53 of which were generated
 scaffolds sharing one signature: they imported psutil, reported host CPU and
@@ -62,6 +74,7 @@ Search uses simple keyword scoring — no external dependencies.
 """
 from __future__ import annotations
 
+import ast
 import asyncio
 import importlib
 import inspect
@@ -128,7 +141,55 @@ def _shell_check(path_str: str) -> bool:
     #    output string, so execute() raises NameError.
     if "self.implemented = False" in src:
         return True
-    return "psutil.cpu_percent" in src and "Host CPU Allocation" in src
+    if "psutil.cpu_percent" in src and "Host CPU Allocation" in src:
+        return True
+    return _is_random_simulator(src)
+
+
+def _is_random_simulator(src: str) -> bool:
+    """
+    True when the module manufactures its answer with the random module.
+
+    84 of the 109 registered abilities did this. They are not implementations
+    with a random element; the random draw IS the result:
+
+        dot_density_pay_factor      random.uniform(89.5, 96.5) -> average
+                                    density -> pay factor -> "UNDER_COMPACTED_
+                                    PENALTY". A payment decision on a DOT job.
+        osha_silica_exposure_bot    random.random() > 0.15 decides whether the
+                                    crew is using water suppression, then rolls
+                                    a silica concentration and labels it
+                                    "Massive violation" or "Within limits". A
+                                    worker-health exposure reading.
+        contractor_ranker           rolls OSHA violations and on-time delivery,
+                                    then returns "APPROVED" or "PROBATIONARY"
+                                    for a subcontractor.
+        compaction_density_profiler rolls roller passes, CMV and mat
+                                    temperature against a 96% Marshall floor.
+        union_prevailing_wage       Davis-Bacon rates, drawn at random.
+
+    Because the draw happens per call, the same question returns a different
+    answer every time, and every answer is shaped exactly like a real one. That
+    is worse than a fixed stub: a constant is eventually noticed.
+
+    Detected by AST rather than a text search — several of these modules now
+    carry docstrings explaining what they used to claim, and matching the word
+    "random" in prose would gate the explanation rather than the code. Only a
+    `random.*` CALL inside a function body counts.
+    """
+    try:
+        tree = ast.parse(src)
+    except SyntaxError:  # pragma: no cover
+        return False
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        for call in ast.walk(node):
+            if isinstance(call, ast.Call):
+                func = ast.unparse(call.func)
+                if func.startswith("random."):
+                    return True
+    return False
 
 
 def _is_template_shell(entry: dict) -> bool:
@@ -307,12 +368,14 @@ def execute_os_ability(module_id: str, params: dict | None = None, strict: bool 
             "module_id": module_id,
             "error": (
                 f"'{module_id}' is registered but not implemented, so it "
-                f"cannot be called. It has declared itself a placeholder "
-                f"(self.implemented = False) or is a generated scaffold that "
-                f"reports host CPU/memory telemetry in place of "
-                f"{entry.get('category', 'domain')} logic. Either way it would "
-                f"return nothing real; see the module docstring for what is "
-                f"missing."
+                f"cannot be called. It is one of: a module that declared itself "
+                f"a placeholder (self.implemented = False); a generated scaffold "
+                f"reporting host CPU/memory telemetry in place of "
+                f"{entry.get('category', 'domain')} logic; or a simulator that "
+                f"manufactures its answer with the random module, returning a "
+                f"different result on every call in the shape of a real one. "
+                f"None of them would return anything true. See the module "
+                f"docstring for what is missing."
             ),
         }
 

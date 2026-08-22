@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import SiteEvaluation
 
@@ -18,7 +19,8 @@ router = APIRouter(prefix="/api/v1/site-metrics", tags=["site-metrics"])
 
 
 @router.get("", dependencies=[Depends(verify_premium_security)])
-def get_site_metrics(db: Session = Depends(get_db)):
+def get_site_metrics(db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security)):
     """
     Return monthly compliance + ad-ROI snapshots formatted for the Tremor AreaChart.
 
@@ -26,7 +28,7 @@ def get_site_metrics(db: Session = Depends(get_db)):
       [{ "month": "Jan", "Regional Compliance": 82.0, "Ad ROI": 2.4 }, ...]
     """
     evaluations = (
-        db.query(SiteEvaluation)
+        scope(db.query(SiteEvaluation), SiteEvaluation, tenant_of(auth))
         .order_by(SiteEvaluation.last_checked.asc())
         .all()
     )
