@@ -25,6 +25,8 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+
+from app.services import llm_client
 import math
 import os
 import uuid
@@ -210,7 +212,8 @@ def _worker_schedule_optimizer(task: TaskNode) -> dict:
     ctx = task.inputs
     site_id = ctx.get("project_id", "unknown")
     delay_days = ctx.get("delay_days", 0)
-    if _OPENAI_KEY:
+    # Any configured provider, not OpenAI specifically.
+    if any(llm_client.configured_providers().values()):
         try:  # noqa: SIM105
             from ..services.simulation_agent import simulate_delay  # noqa: PLC0415
             tasks_snapshot = ctx.get("tasks", [

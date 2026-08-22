@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import json
 import logging
+
+from app.services import llm_client
 import os
 from typing import Any, Optional
 
@@ -80,7 +82,10 @@ def simulate_delay(
         "disruption_scenario": scenario,
     }, indent=2)
 
-    if _OPENAI_KEY:
+    # "Is any provider configured", not "is OPENAI_API_KEY set". The old check
+    # skipped the AI path entirely when OpenAI was unset or revoked, even with
+    # Claude configured and healthy — so the fallback chain could never engage.
+    if any(llm_client.configured_providers().values()):
         return _run_ai_simulation(user_content)
     return _rule_based_simulation(tasks, scenario, project_start)
 
@@ -88,21 +93,23 @@ def simulate_delay(
 def _run_ai_simulation(user_content: str) -> dict:
     """Call GPT-4o for intelligent what-if analysis."""
     try:
-        from openai import OpenAI
-        client = OpenAI(api_key=_OPENAI_KEY)
-        resp = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user",   "content": user_content},
-            ],
+        # json_chat rather than the OpenAI SDK: response_format is an
+        # OpenAI-only parameter, so the JSON guarantee it gave this call held
+        # for exactly one provider. Through the router it holds for all of
+        # them, and a dead key reschedules on Claude instead of silently
+        # dropping every simulation to the rule-based path.
+        reply = llm_client.json_chat(
+            task="reasoning",
+            system=_SYSTEM_PROMPT,
+            user=user_content,
             temperature=0.2,
             max_tokens=1200,
-            response_format={"type": "json_object"},
         )
-        raw = resp.choices[0].message.content
-        result = json.loads(raw)
-        result["_source"] = "gpt-4o"
+        if reply.error or not reply.data:
+            raise RuntimeError(reply.error_detail or "no provider answered")
+        result = dict(reply.data)
+        # The model that answered, not the one we hoped for.
+        result["_source"] = reply.model or reply.provider
         return result
     except Exception as exc:
         logger.error("AI simulation failed: %s", exc)
