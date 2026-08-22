@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { renderRegionalBody } from './regional-content.mjs';
+import { canonicalOrigin, canonicalUrl } from './lib/site-hosts.mjs';
 
 // TWO-PASS DESIGN — read this before changing the call order in package.json.
 //
@@ -256,7 +257,12 @@ async function run() {
 
   for (const domain of domains) {
     const tenant = REGIONAL_MARKET_PROFILES[domain];
-    const canonicalBase = `https://www.${domain}`;
+      // Canonical host from the shared module, not a hardcoded `www.`. This is
+    // the third place in the build that decided a canonical hostname, and the
+    // three disagreed: here and build-brand-sites.mjs stamped www, while
+    // generate-sitemap.mjs advertised the apex. Google was handed a sitemap of
+    // apex URLs whose pages each named a different host as the real one.
+    const canonicalBase = canonicalUrl(domain, '/');
     const title = `${tenant.heroHeadline || tenant.marketName} | ${tenant.marketName}`;
     const desc = `${tenant.heroBody || ''} Contact us at ${tenant.phoneDisplay || ''}`.substring(0, 160).trim();
 
@@ -332,6 +338,49 @@ async function run() {
   opsHtml = upsertMetaName(opsHtml, 'twitter:image:alt', opsAlt);
 
   fs.writeFileSync(path.join(distDir, 'thewordenstandard.com.html'), opsHtml, 'utf8');
+  generatedCount++;
+
+  // jwordenuniversity.com — the training and certification site.
+  //
+  // It has no REGIONAL_MARKET_PROFILES entry (it sells nothing and serves no
+  // market), so it fell through to dist/index.html — the SPA fallback — and
+  // inherited that file's canonical. Which is to say it told Google its real
+  // address was www.jwordenasphaltpaving.com: a domain that is currently
+  // parked and serving a Sedo ad page. A site that names a parking page as its
+  // canonical asks to be dropped from the index in favour of the ads.
+  //
+  // It must NOT redirect — it is a real, separate site with its own content
+  // (App.jsx pins these hosts to UNIVERSITY route mode). It needs its own
+  // shell, for the same reason thewordenstandard.com above has one.
+  //
+  // Copy is taken from what the page actually says, not invented for the tag.
+  const uniTitle = 'J. Worden University | Asphalt Training & Certification';
+  const uniDesc = 'Training tracks, course modules and graded certification exams for asphalt crews — the training site of J. Worden & Sons.';
+  const uniCanonical = canonicalUrl('jwordenuniversity.com', '/');
+  const uniImage = `${canonicalOrigin('jwordenuniversity.com')}/og-default.jpg`;
+  const uniAlt = 'J. Worden University — asphalt engineering training and certification';
+
+  let uniHtml = upsertTitle(rawHtml, uniTitle);
+  uniHtml = upsertDescription(uniHtml, uniDesc);
+  uniHtml = upsertCanonical(uniHtml, uniCanonical);
+  uniHtml = upsertRobotsMeta(uniHtml, 'index, follow');
+
+  uniHtml = upsertMetaProperty(uniHtml, 'og:title', uniTitle);
+  uniHtml = upsertMetaProperty(uniHtml, 'og:description', uniDesc);
+  uniHtml = upsertMetaProperty(uniHtml, 'og:url', uniCanonical);
+  uniHtml = upsertMetaProperty(uniHtml, 'og:image', uniImage);
+  uniHtml = upsertMetaProperty(uniHtml, 'og:image:alt', uniAlt);
+  uniHtml = upsertMetaProperty(uniHtml, 'og:site_name', 'J. Worden University');
+  uniHtml = upsertMetaProperty(uniHtml, 'og:type', 'website');
+  uniHtml = upsertMetaProperty(uniHtml, 'og:locale', 'en_US');
+
+  uniHtml = upsertMetaName(uniHtml, 'twitter:card', 'summary_large_image');
+  uniHtml = upsertMetaName(uniHtml, 'twitter:title', uniTitle);
+  uniHtml = upsertMetaName(uniHtml, 'twitter:description', uniDesc);
+  uniHtml = upsertMetaName(uniHtml, 'twitter:image', uniImage);
+  uniHtml = upsertMetaName(uniHtml, 'twitter:image:alt', uniAlt);
+
+  fs.writeFileSync(path.join(distDir, 'jwordenuniversity.com.html'), uniHtml, 'utf8');
   generatedCount++;
 
   // Update index.html for jwordenasphaltpaving.com

@@ -19,8 +19,11 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync } from 
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { canonicalOrigin } from './lib/site-hosts.mjs';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
+
 const DEFAULT_SITE = 'https://www.jwordenasphaltpaving.com';
 const GENERATED_BLOGS_DIR = resolve(ROOT, 'src/pages/generated-blogs');
 const SITE = String(process.env.SITEMAP_SITE_URL || process.env.VITE_SITE_URL || DEFAULT_SITE)
@@ -349,7 +352,11 @@ const DOMAINS = [
   'savannahasphaltpaving.com',
   'carolinablacktop.com',
   'www.jwordenasphaltpaving.com',
-  'thewordenstandard.com'
+  'thewordenstandard.com',
+  // The training site. Its own domain, its own content, its own sitemap —
+  // previously it had none, so /robots.txt and /sitemap.xml both 404'd and the
+  // shell it served named the parked flagship as its canonical.
+  'jwordenuniversity.com'
 ];
 
 try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch (e) {}
@@ -373,6 +380,18 @@ const STOREFRONT_DOMAINS = new Map([
       '/login', '/advisory/',
     ],
   }],
+  // jwordenuniversity.com — the training and certification site. Only "/" is
+  // public marketing; the course player, exams and every authed surface behind
+  // it must stay out of the index. Same shape as the storefront above, and the
+  // Disallow list must stay in sync with the noindex header sources in
+  // vercel.json.
+  ['jwordenuniversity.com', {
+    urls: ['/'],
+    disallow: [
+      '/lms', '/command-center', '/leads', '/portal', '/staff', '/dashboard',
+      '/admin', '/super-admin', '/jarvis', '/login', '/register',
+    ],
+  }],
 ]);
 // Only the primary domain ships an image sitemap, so only its robots file
 // should advertise one — pointing crawlers at a 404 on the other six hurts.
@@ -384,7 +403,12 @@ const STOREFRONT_DOMAINS = new Map([
 const PRIMARY_DOMAIN = 'richmondasphaltpaving.com';
 
 for (const domain of DOMAINS) {
-  const SITE = `https://${domain}`;
+  // The canonical host for this domain, from the same module that stamps the
+  // canonical onto the page itself. Advertising a URL whose page then names a
+  // different hostname is the contradiction Search Console reports as
+  // "Alternate page with proper canonical tag" — every submitted URL dropped
+  // in favour of a host the sitemap never mentioned.
+  const SITE = canonicalOrigin(domain);
 
   if (STOREFRONT_DOMAINS.has(domain)) {
     const { urls: storefrontPaths, disallow } = STOREFRONT_DOMAINS.get(domain);
