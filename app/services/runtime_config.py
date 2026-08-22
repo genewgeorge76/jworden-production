@@ -69,6 +69,8 @@ MANAGED_KEYS: tuple[str, ...] = (
     # without them here the lane is unreachable: the key could only be set as a
     # platform secret, which costs a redeploy. Managed keys are settable live.
     "XAI_API_KEY", "PERPLEXITY_API_KEY",
+    # Aliases — see KEY_ALIASES below.
+    "SPACEX_API_KEY", "SPACEX",
     # Google Business Profile posting. GBP_ACCOUNT_ID is not optional — the
     # post URL is /accounts/{account}/locations/{location}/localPosts.
     "GBP_OAUTH_TOKEN", "GBP_ACCOUNT_ID", "GBP_LOCATION_ID", "GBP_REVIEW_LINK",
@@ -306,3 +308,54 @@ def reload() -> int:
     with _LOCK:
         _CACHE = None
         return len(_load())
+
+
+# ── Credential aliases ───────────────────────────────────────────────────────
+#
+# One credential, more than one name in the wild. The operator's xAI key is
+# stored on Fly as SPACEX: Grok is xAI's model, xAI is Musk's company, and the
+# name was reasonable to whoever typed it. The code reads XAI_API_KEY.
+#
+# Left alone that is a working, paid-for key sitting inert because of a
+# spelling, failing in the quietest way available — `configured()` returns
+# False, the social listening lane never runs, and nothing anywhere reports an
+# error, because from the code's point of view no key was ever set.
+#
+# So the canonical name is consulted first and the known aliases after it.
+# Renaming the secret to XAI_API_KEY is still the tidier end state; this makes
+# the tidying optional rather than load-bearing.
+KEY_ALIASES: dict[str, tuple[str, ...]] = {
+    "XAI_API_KEY": ("XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"),
+}
+
+
+def first(*names: str, default: str = "") -> str:
+    """The first of `names` that resolves to a non-empty value."""
+    for name in names:
+        value = (get(name) or "").strip()
+        if value:
+            return value
+    return default
+
+
+def key_for(canonical: str, default: str = "") -> str:
+    """
+    Resolve a credential by its canonical name, honouring known aliases.
+
+    Always prefer this over `get()` for provider keys, so a credential set
+    under an alias is found rather than silently treated as absent.
+    """
+    return first(*KEY_ALIASES.get(canonical, (canonical,)), default=default)
+
+
+def alias_used(canonical: str) -> str | None:
+    """
+    Which name actually supplied the credential, or None when it is unset.
+
+    Reported by the admin/status surfaces so an operator can see that a key is
+    being picked up from a non-standard name rather than wondering why.
+    """
+    for name in KEY_ALIASES.get(canonical, (canonical,)):
+        if (get(name) or "").strip():
+            return name
+    return None

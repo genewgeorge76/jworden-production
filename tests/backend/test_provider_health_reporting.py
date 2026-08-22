@@ -193,3 +193,79 @@ async def test_engine_label_names_the_model_when_the_key_works(monkeypatch):
         provider_health.engine_label("openai", live="gpt-4o", fallback="rule-based")
         == "gpt-4o"
     )
+
+
+# ── Credential aliases ────────────────────────────────────────────────────────
+#
+# The operator's xAI key is stored on Fly under the name SPACEX. Read literally,
+# XAI_API_KEY is unset and every xAI surface reports "not configured" — a paid,
+# working credential sitting inert because of a spelling, and failing in the
+# quietest way there is: no error anywhere, because from the code's point of
+# view no key was ever set.
+
+
+def test_a_key_stored_under_an_alias_is_found(monkeypatch):
+    from app.services import runtime_config
+
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.setenv("SPACEX", "xai-real-key")
+
+    assert runtime_config.key_for("XAI_API_KEY") == "xai-real-key"
+    assert provider_health.is_configured("xai") is True
+
+
+def test_the_canonical_name_wins_over_an_alias(monkeypatch):
+    from app.services import runtime_config
+
+    monkeypatch.setenv("XAI_API_KEY", "canonical")
+    monkeypatch.setenv("SPACEX", "alias")
+    assert runtime_config.key_for("XAI_API_KEY") == "canonical"
+    assert runtime_config.alias_used("XAI_API_KEY") == "XAI_API_KEY"
+
+
+def test_the_report_names_which_variable_supplied_the_key(monkeypatch):
+    """
+    A credential picked up from an alias looks identical to one from the
+    canonical name until something needs renaming.
+    """
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.setenv("SPACEX", "xai-real-key")
+    assert provider_health.cached("xai")["key_name"] == "SPACEX"
+
+
+def test_an_alias_does_not_leak_a_key_into_the_report(monkeypatch):
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.setenv("SPACEX", "xai-super-secret-value")
+    assert "xai-super-secret-value" not in repr(provider_health.cached("xai"))
+
+
+def test_the_router_and_the_probe_agree_about_an_aliased_key(monkeypatch):
+    """
+    The two must never disagree. A probe reporting "not configured" for a key
+    the router happily uses sends an operator hunting a problem that is not
+    there — and the reverse hides a real one.
+    """
+    from app.services import llm_client
+
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.setenv("SPACEX", "xai-real-key")
+
+    assert llm_client.configured_providers()["xai"] is True
+    assert provider_health.is_configured("xai") is True
+
+
+def test_a_key_set_through_the_admin_store_is_seen_without_a_redeploy(monkeypatch):
+    """
+    XAI_API_KEY is a MANAGED_KEY — settable live via the admin integrations
+    endpoint. Probing os.environ alone would report it absent moments after an
+    operator set it.
+    """
+    from app.services import runtime_config
+
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.delenv("SPACEX", raising=False)
+    monkeypatch.setattr(
+        runtime_config, "get",
+        lambda name, default="": "xai-from-store" if name == "XAI_API_KEY" else default,
+    )
+    assert provider_health.is_configured("xai") is True

@@ -273,7 +273,8 @@ def _get_xai() -> Any:
     global _xai_client
     if _xai_client is not None:
         return _xai_client
-    key = _cfg.get("XAI_API_KEY")
+    # key_for, not get: the operator stores this credential under an alias.
+    key = _cfg.key_for("XAI_API_KEY")
     if not key:
         return None
     try:
@@ -559,7 +560,7 @@ def configured_providers() -> dict[str, bool]:
         "anthropic":  bool(_cfg.get("ANTHROPIC_API_KEY")),
         "google":     bool(_google_key()),
         "perplexity": bool(_cfg.get("PERPLEXITY_API_KEY")),
-        "xai":        bool(_cfg.get("XAI_API_KEY")),
+        "xai":        bool(_cfg.key_for("XAI_API_KEY")),
     }
 
 
