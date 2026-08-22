@@ -14,6 +14,8 @@ Supports tone modes:
 from __future__ import annotations
 
 import logging
+
+from app.services import llm_client
 import os
 from typing import Optional
 
@@ -68,7 +70,7 @@ def generate_review_response(
     Prefer `generate_review_response_detailed` — it returns the same draft
     alongside the name of the engine that actually produced it. Callers that
     infer the engine from `os.getenv("OPENAI_API_KEY")` label a template
-    response "gpt-4o" whenever the key is set but not working.
+    response a model name whenever a key is set but not working.
     """
     return generate_review_response_detailed(
         review_text=review_text,
@@ -87,19 +89,13 @@ def generate_review_response_detailed(
     """
     Generate a review response and report which engine produced it.
 
-    Returns (draft, engine) where engine is "gpt-4o" or "template". The engine
-    is determined by what ran, not by what is configured, so a revoked key
-    shows up as "template" instead of being reported as a model response.
+    Returns (draft, engine) where engine is the model that actually answered
+    (which after a fallback is not the one the routing table lists first) or
+    "template" when no provider produced a draft. Determined by what ran,
+    not by what is configured, so a revoked key shows up as "template"
+    instead of being reported as a model response.
     """
-    openai_key = os.getenv("OPENAI_API_KEY", "")
-    if not openai_key:
-        return _template_response(review_text, reviewer_name, rating, tone), "template"
-
     try:
-        from openai import OpenAI  # type: ignore
-
-        client = OpenAI(api_key=openai_key)
-
         # Build context message
         name_str = f"Reviewer name: {reviewer_name}" if reviewer_name else "Reviewer name: not provided"
         tone_instructions = {
@@ -118,25 +114,31 @@ Tone instruction: {tone_instructions}
 Write the review response now:
 """
 
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": user_message},
-            ],
+        # "review_reply" routes OpenAI then Claude. Built through the router so
+        # the second entry is reachable — the direct SDK client made this an
+        # OpenAI-only lane whose only fallback was the template.
+        reply = llm_client.chat(
+            task="review_reply",
+            system=_SYSTEM_PROMPT,
+            user=user_message,
             max_tokens=200,
             temperature=0.6,
         )
-        draft = (response.choices[0].message.content or "").strip()
+        if reply.error:
+            logger.warning("review response unavailable: %s", reply.error_detail)
+            return _template_response(review_text, reviewer_name, rating, tone), "template"
+        draft = reply.text.strip()
         if not draft:
             # An empty completion is a failure with a 200 attached. Falling
             # through to the template is right; calling it "gpt-4o" is not.
-            logger.warning("OpenAI review response returned empty content")
+            logger.warning("review response returned empty content")
             return _template_response(review_text, reviewer_name, rating, tone), "template"
-        return draft, "gpt-4o"
+        # The model that answered, which after a fallback is not the one the
+        # routing table lists first.
+        return draft, reply.model or reply.provider
 
     except Exception as exc:  # noqa: BLE001
-        logger.error("OpenAI review response (tone=%s, rating=%d) failed: %s", tone, rating, exc)
+        logger.error("review response (tone=%s, rating=%d) failed: %s", tone, rating, exc)
         return _template_response(review_text, reviewer_name, rating, tone), "template"
 
 

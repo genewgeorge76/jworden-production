@@ -87,10 +87,30 @@ class _Spec:
 
     def key(self) -> str:
         for name in self.env:
-            value = (os.getenv(name) or "").strip()
-            if value:
+            if (value := self._lookup(name)):
                 return value
         return ""
+
+    def key_name(self) -> Optional[str]:
+        """Which env name supplied the credential, or None when unset."""
+        for name in self.env:
+            if self._lookup(name):
+                return name
+        return None
+
+    @staticmethod
+    def _lookup(name: str) -> str:
+        """
+        Runtime store first, then the process environment.
+
+        Several of these are MANAGED_KEYS, settable live through the admin
+        integrations endpoint without a redeploy. Reading os.environ alone
+        would report a key as absent moments after an operator set it, and
+        send them to debug a provider that is already working.
+        """
+        from .runtime_config import get as _cfg_get  # noqa: PLC0415
+
+        return (_cfg_get(name) or "").strip()
 
     def headers(self, key: str) -> dict[str, str]:
         headers = dict(self.extra_headers)
@@ -137,7 +157,10 @@ _SPECS: dict[str, _Spec] = {
     "xai": _Spec(
         "xai",
         "xAI (Grok)",
-        ("XAI_API_KEY",),
+        # Aliases mirror runtime_config.KEY_ALIASES — a probe that reports
+        # "not configured" for a key the router happily uses would send an
+        # operator hunting for a problem that is not there.
+        ("XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"),
         "https://api.x.ai/v1/models",
     ),
     "elevenlabs": _Spec(
@@ -266,6 +289,10 @@ def _shape(pid: str, result: dict[str, Any], *, checked_at: Optional[str], age: 
         "id": spec.id,
         "label": spec.label,
         "configured": bool(spec.key()),
+        # Which variable actually supplied it. Worth reporting: a credential
+        # picked up from an alias looks identical to one from the canonical
+        # name until something needs renaming.
+        "key_name": spec.key_name(),
         "checked_at": checked_at,
         "age_seconds": None if age is None else round(age, 1),
         **result,
