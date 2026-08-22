@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import GradeLog, MediaFile
 from ..services.igrade_engine import get_grade_stats, run_self_correction_sweep
@@ -88,7 +89,7 @@ def _media_dict(m: MediaFile) -> dict:
 async def igrade_stats(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return grade distribution, average confidence, and correction rates."""
     stats = get_grade_stats(db=db)
@@ -106,9 +107,9 @@ async def list_grade_logs(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(GradeLog)
+    q = scope(db.query(GradeLog), GradeLog, tenant_of(auth))
     if grade:
         q = q.filter(GradeLog.grade == grade.upper())
     if decision_type:
@@ -125,7 +126,7 @@ async def list_grade_logs(
 async def self_correction_sweep(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Analyze recent corrections and GradeLog to surface knowledge improvement
@@ -148,9 +149,9 @@ async def list_media_files(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(MediaFile)
+    q = scope(db.query(MediaFile), MediaFile, tenant_of(auth))
     if file_type:
         q = q.filter(MediaFile.file_type == file_type)
     if project_name:
@@ -170,7 +171,7 @@ async def create_media_file(
     request: Request,
     req: MediaFileCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     m = MediaFile(
         filename=req.filename,
@@ -184,6 +185,7 @@ async def create_media_file(
         project_name=req.project_name,
         tags=req.tags,
         ai_description=req.ai_description,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(m)
     db.commit()
@@ -197,9 +199,9 @@ async def delete_media_file(
     request: Request,
     file_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    m = db.get(MediaFile, file_id)
+    m = get_scoped(db, MediaFile, file_id, tenant_of(auth))
     if not m:
         raise HTTPException(status_code=404, detail="Media file not found")
     db.delete(m)

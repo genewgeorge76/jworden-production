@@ -9,6 +9,9 @@ import os
 from app.database import get_db
 from app.models import Estimate
 
+from ..core.security import verify_premium_security
+from ..services.tenancy import stamp_for, tenant_of
+
 router = APIRouter(prefix="/portal", tags=["Customer Portal"])
 
 # ── Pydantic Schemas ──────────────────────────────────────────────────────────
@@ -64,10 +67,35 @@ def get_estimate_public(public_token: str, db: Session = Depends(get_db)):
 import uuid
 
 @router.post("/estimates/internal", response_model=EstimatePortalOut)
-def create_estimate_internal(req: CreateEstimateInternal, tenant_id: str = "default", db: Session = Depends(get_db)):
-    """Create an estimate from the internal Cockpit."""
+def create_estimate_internal(
+    req: CreateEstimateInternal,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Create an estimate from the internal Cockpit.
+
+    THIS WAS OPEN TO THE INTERNET AND TOOK THE TENANT FROM THE QUERY STRING.
+
+    It had no auth dependency, and the router carries none either, so the
+    deployed OpenAPI listed it with no security requirement while comparable
+    endpoints declare OAuth2. `tenant_id: str = "default"` was a query
+    parameter, so any anonymous caller could POST an estimate attributed to any
+    tenant they named, with any total_amount and deposit_amount, already marked
+    status="sent" -- and then drive it through the Stripe checkout route.
+
+    Everything about the fix is forced by that: the caller must authenticate,
+    and the tenant comes from the authenticated identity. It is no longer
+    something a caller can assert about itself.
+
+    The other endpoints in this router are capability-based on purpose -- they
+    are reached with a public_token (uuid4, 122 bits) that the customer holds,
+    and holding it IS the authorization. Those stay open and unscoped by tenant,
+    because there is no authenticated caller to take a tenant from. This one is
+    different: it MINTS the token.
+    """
     new_est = Estimate(
-        tenant_id=tenant_id,
+        tenant_id=stamp_for(tenant_of(auth)),
         estimate_number=f"EST-{str(uuid.uuid4())[:8].upper()}",
         public_token=uuid.uuid4().hex,
         service_type=req.service_type,

@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, tenant_of
 from ..database import get_db
 from ..models import Lead
 from ..services.audit import write_audit_event
@@ -66,7 +67,7 @@ async def generate_proposal(
     request: Request,
     req: ProposalRequest = Body(...),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     lead = db.get(Lead, req.lead_id)
     if not lead:
@@ -158,9 +159,9 @@ async def send_proposal(
     lead_id: int,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    lead = db.get(Lead, lead_id)
+    lead = get_scoped(db, Lead, lead_id, tenant_of(auth))
     if not lead:
         raise HTTPException(status_code=404, detail='Lead not found')
     if not lead.email or '@' not in lead.email:

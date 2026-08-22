@@ -46,7 +46,7 @@ import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Iterable, Optional, Protocol
+from typing import Any, Iterable, Optional, Protocol, ClassVar
 from urllib.parse import quote, urlparse
 
 logger = logging.getLogger(__name__)
@@ -204,28 +204,70 @@ class R2Destination:
     region: str = "auto"
     timeout: float = 300.0
 
+    #: Each setting, in the order its names are tried.
+    #:
+    #: THE SECOND NAME IN EACH ROW IS WHY BACKUPS WERE NOT RUNNING.
+    #:
+    #: This class only ever read the R2_* names. The deployment has S3-compatible
+    #: object storage provisioned and configured under Fly's Tigris naming —
+    #: AWS_ENDPOINT_URL_S3, BUCKET_NAME, AWS_ACCESS_KEY_ID,
+    #: AWS_SECRET_ACCESS_KEY, AWS_REGION — so from_env() raised "R2 is not
+    #: configured", the caller fell back to LocalDestination, and every backup
+    #: was written to /tmp on the same ephemeral machine as the database.
+    #:
+    #: The bucket existed the whole time. Nothing was missing except agreement
+    #: about what the variables are called. Both spellings are accepted now, and
+    #: the R2_* names still win so an explicit override keeps working.
+    ENV_ALIASES: ClassVar[dict[str, tuple[str, ...]]] = {
+        "endpoint": ("R2_ENDPOINT", "AWS_ENDPOINT_URL_S3", "S3_ENDPOINT_URL"),
+        "bucket": ("R2_BUCKET", "BUCKET_NAME", "S3_BUCKET"),
+        "access_key_id": ("R2_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"),
+        "secret_access_key": ("R2_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"),
+        "region": ("R2_REGION", "AWS_REGION"),
+    }
+
+    @classmethod
+    def _first_set(cls, field: str) -> "tuple[str | None, str | None]":
+        """(variable_name, value) for the first alias that is set and non-empty."""
+        for name in cls.ENV_ALIASES[field]:
+            value = (os.getenv(name) or "").strip()
+            if value:
+                return name, value
+        return None, None
+
+    @classmethod
+    def configured_from(cls) -> "dict[str, str]":
+        """
+        Which variable supplied each setting, by NAME — never the value.
+
+        For diagnostics. "Is object storage configured" was answerable only by
+        reading this source and guessing at the environment, which is how a
+        provisioned bucket went unused.
+        """
+        return {
+            field: (cls._first_set(field)[0] or "unset")
+            for field in cls.ENV_ALIASES
+        }
+
     @classmethod
     def from_env(cls) -> "R2Destination":
-        missing = [
-            name
-            for name in (
-                "R2_ENDPOINT",
-                "R2_BUCKET",
-                "R2_ACCESS_KEY_ID",
-                "R2_SECRET_ACCESS_KEY",
-            )
-            if not (os.getenv(name) or "").strip()
-        ]
+        required = ("endpoint", "bucket", "access_key_id", "secret_access_key")
+        values = {field: cls._first_set(field)[1] for field in cls.ENV_ALIASES}
+
+        missing = [f for f in required if not values.get(f)]
         if missing:
             raise BackupError(
-                "R2 is not configured — missing " + ", ".join(missing)
+                "Object storage is not configured — no value found for "
+                + "; ".join(
+                    f"{f} (tried {', '.join(cls.ENV_ALIASES[f])})" for f in missing
+                )
             )
         return cls(
-            endpoint=os.environ["R2_ENDPOINT"].rstrip("/"),
-            bucket=os.environ["R2_BUCKET"],
-            access_key_id=os.environ["R2_ACCESS_KEY_ID"],
-            secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
-            region=os.getenv("R2_REGION", "auto"),
+            endpoint=values["endpoint"].rstrip("/"),
+            bucket=values["bucket"],
+            access_key_id=values["access_key_id"],
+            secret_access_key=values["secret_access_key"],
+            region=values.get("region") or "auto",
         )
 
     # ── signing ──────────────────────────────────────────────────────────────

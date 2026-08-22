@@ -21,6 +21,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import SubcontractorPerformance, SubcontractorRoster
 from ..services.subcontractor_monitor import get_compliance_summary, get_expiring_certs
@@ -100,9 +101,9 @@ async def list_subcontractors(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(SubcontractorRoster)
+    q = scope(db.query(SubcontractorRoster), SubcontractorRoster, tenant_of(auth))
     if is_active is not None:
         q = q.filter(SubcontractorRoster.is_active == is_active)
     if state_code:
@@ -123,7 +124,7 @@ async def create_subcontractor(
     request: Request,
     req: SubcontractorCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     sub = SubcontractorRoster(
         name=req.name,
@@ -139,6 +140,7 @@ async def create_subcontractor(
         insurance_carrier=req.insurance_carrier,
         notes=req.notes,
         is_active=1,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(sub)
     db.commit()
@@ -153,9 +155,9 @@ async def update_subcontractor(
     sub_id: int,
     req: SubcontractorUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    sub = db.get(SubcontractorRoster, sub_id)
+    sub = get_scoped(db, SubcontractorRoster, sub_id, tenant_of(auth))
     if not sub:
         raise HTTPException(status_code=404, detail="Subcontractor not found")
 
@@ -180,9 +182,9 @@ async def deactivate_subcontractor(
     request: Request,
     sub_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    sub = db.get(SubcontractorRoster, sub_id)
+    sub = get_scoped(db, SubcontractorRoster, sub_id, tenant_of(auth))
     if not sub:
         raise HTTPException(status_code=404, detail="Subcontractor not found")
 
@@ -198,7 +200,7 @@ async def expiring_certs(
     request: Request,
     days_ahead: int = Query(default=30, ge=1, le=365),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return subcontractors with license, insurance, or bond expiring within days_ahead."""
     expiring = get_expiring_certs(db, days_ahead=days_ahead)
@@ -245,10 +247,10 @@ async def get_performance(
     request: Request,
     sub_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     rows = (
-        db.query(SubcontractorPerformance)
+        scope(db.query(SubcontractorPerformance), SubcontractorPerformance, tenant_of(auth))
         .filter(SubcontractorPerformance.subcontractor_id == sub_id)
         .order_by(SubcontractorPerformance.project_date.desc())
         .all()
@@ -279,7 +281,7 @@ async def add_performance(
     sub_id: int,
     req: PerformanceCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     perf = SubcontractorPerformance(
         subcontractor_id=sub_id,
@@ -291,6 +293,7 @@ async def add_performance(
         rehire_recommended=req.rehire_recommended,
         notes=req.notes,
         project_date=_parse_dt(req.project_date),
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(perf)
     db.commit()
@@ -304,9 +307,9 @@ async def delete_performance(
     request: Request,
     perf_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    perf = db.get(SubcontractorPerformance, perf_id)
+    perf = get_scoped(db, SubcontractorPerformance, perf_id, tenant_of(auth))
     if not perf:
         raise HTTPException(status_code=404, detail="Performance record not found")
     db.delete(perf)

@@ -35,6 +35,7 @@ from ..core.cache import (
 )
 from ..core.limiter import CRM_LIMIT, limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, tenant_of
 from ..database import get_db
 from ..models import Lead
 
@@ -67,7 +68,7 @@ async def list_crm_leads(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return paginated leads, optionally filtered by pipeline_stage and score_label."""
     # Build a stable cache key from the query parameters
@@ -81,7 +82,7 @@ async def list_crm_leads(
     if cached is not None:
         return cached
 
-    q = db.query(Lead)
+    q = scope(db.query(Lead), Lead, tenant_of(auth))
     if pipeline_stage:
         q = q.filter(Lead.pipeline_stage == pipeline_stage)
     if score_label:
@@ -124,7 +125,7 @@ async def update_stage(
     lead_id: int,
     body: StageUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Move a lead to a new pipeline stage. Sets appropriate timestamps automatically."""
     if body.pipeline_stage not in _VALID_STAGES:
@@ -133,7 +134,7 @@ async def update_stage(
             detail=f"Invalid stage. Must be one of: {', '.join(sorted(_VALID_STAGES))}",
         )
 
-    lead = db.get(Lead, lead_id)
+    lead = get_scoped(db, Lead, lead_id, tenant_of(auth))
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
 
@@ -162,7 +163,7 @@ async def update_stage(
 async def get_funnel(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return aggregate lead counts by pipeline stage for funnel visualization."""
     cached = cache_get(KEY_CRM_FUNNEL)

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { api } from '@/api/client'
+import { api, request } from '@/api/client'
 import {
   Calculator,
   Copy,
@@ -414,20 +414,25 @@ export default function EstimatePage() {
       await api.entities.Lead.create(payload)
 
       // Also create the Estimate Portal instance
-      const estRes = await fetch((import.meta.env.VITE_API_BASE_URL || '') + '/api/v1/portal/estimates/internal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              customer_name: customerName || 'Cockpit Estimate',
-              customer_email: customerEmail || '',
-              service_type: service,
-              scope_summary: `Square Footage: ${sqftNum}\nCondition: ${condition}\n${notes || ''}`,
-              total_amount: finalTotal,
-              deposit_amount: finalDeposit
-          })
+      // Two things were wrong with this call and it had never succeeded.
+      //
+      // The path was /api/v1/portal/estimates/internal. The router is mounted
+      // at /portal, so that path does not exist and every request 404'd —
+      // estData.public_token was always undefined and the portal link was
+      // never generated.
+      //
+      // It also used a bare fetch() with only Content-Type, sending no
+      // credentials, while the endpoint now requires authentication. request()
+      // attaches the bearer and owner tokens the rest of the app uses.
+      const estData = await request('POST', '/portal/estimates/internal', {
+          customer_name: customerName || 'Cockpit Estimate',
+          customer_email: customerEmail || '',
+          service_type: service,
+          scope_summary: `Square Footage: ${sqftNum}\nCondition: ${condition}\n${notes || ''}`,
+          total_amount: finalTotal,
+          deposit_amount: finalDeposit
       })
-      const estData = await estRes.json()
-      if (estData.public_token) {
+      if (estData?.public_token) {
           setPortalLink(`${window.location.origin}/portal/${estData.public_token}`)
       }
 

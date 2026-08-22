@@ -26,7 +26,7 @@ from ..models import MaterialSource, MaterialSourceCandidate
 from ..services import runtime_config
 from ..services import supplier_discovery as sd
 from ..services.location_resolver import resolve_location
-from ..services.tenancy import scope, tenant_of
+from ..services.tenancy import scope, stamp_for, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -180,6 +180,7 @@ def search(body: SearchRequest, db: Session = Depends(get_db),
                 provider_place_id=cand["provider_place_id"],
                 review_status="pending",
                 first_seen_at=now,
+        tenant_id=stamp_for(tenant_of(auth)),
             )
             db.add(row)
             created += 1

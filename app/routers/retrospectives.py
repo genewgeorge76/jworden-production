@@ -24,6 +24,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import ProjectRetrospective
 
@@ -87,9 +88,9 @@ async def list_retrospectives(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(ProjectRetrospective)
+    q = scope(db.query(ProjectRetrospective), ProjectRetrospective, tenant_of(auth))
     if project_type:
         q = q.filter(ProjectRetrospective.project_type.ilike(f"%{project_type}%"))
     if region:
@@ -105,7 +106,7 @@ async def create_retrospective(
     request: Request,
     req: RetrospectiveCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     retro = ProjectRetrospective(
         project_name=req.project_name,
@@ -118,6 +119,7 @@ async def create_retrospective(
         soil_conditions=req.soil_conditions,
         design_conflicts=req.design_conflicts,
         lessons_learned=req.lessons_learned,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(retro)
     db.commit()
@@ -132,9 +134,9 @@ async def update_retrospective(
     retro_id: int,
     req: RetrospectiveUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    retro = db.get(ProjectRetrospective, retro_id)
+    retro = get_scoped(db, ProjectRetrospective, retro_id, tenant_of(auth))
     if not retro:
         raise HTTPException(status_code=404, detail="Retrospective not found")
     for key, val in req.model_dump(exclude_none=True).items():
@@ -154,9 +156,9 @@ async def delete_retrospective(
     request: Request,
     retro_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    retro = db.get(ProjectRetrospective, retro_id)
+    retro = get_scoped(db, ProjectRetrospective, retro_id, tenant_of(auth))
     if not retro:
         raise HTTPException(status_code=404, detail="Retrospective not found")
     db.delete(retro)
@@ -170,9 +172,9 @@ async def ai_tag_retrospective(
     request: Request,
     retro_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    retro = db.get(ProjectRetrospective, retro_id)
+    retro = get_scoped(db, ProjectRetrospective, retro_id, tenant_of(auth))
     if not retro:
         raise HTTPException(status_code=404, detail="Retrospective not found")
 
@@ -191,10 +193,10 @@ async def surface_lessons(
     project_type: str = Query(default=""),
     region: str = Query(default=""),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """Return up to 3 retrospectives most relevant to the given project type and region."""
-    q = db.query(ProjectRetrospective)
+    q = scope(db.query(ProjectRetrospective), ProjectRetrospective, tenant_of(auth))
     results = []
 
     # Exact-match candidates first

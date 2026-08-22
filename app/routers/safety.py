@@ -22,6 +22,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import SafetyIncident, SafetyToolboxTalk
 from ..services.notifications import send_safety_alert
@@ -100,9 +101,9 @@ async def list_toolbox_talks(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(SafetyToolboxTalk)
+    q = scope(db.query(SafetyToolboxTalk), SafetyToolboxTalk, tenant_of(auth))
     if job_site:
         q = q.filter(SafetyToolboxTalk.job_site.ilike(f"%{job_site}%"))
     total = q.count()
@@ -116,7 +117,7 @@ async def create_toolbox_talk(
     request: Request,
     req: ToolboxCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     talk = SafetyToolboxTalk(
         job_site=req.job_site,
@@ -126,6 +127,7 @@ async def create_toolbox_talk(
         crew_count=req.crew_count,
         signed_off=req.signed_off,
         notes=req.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(talk)
     db.commit()
@@ -139,10 +141,10 @@ async def delete_toolbox_talk(
     request: Request,
     talk_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     from fastapi import HTTPException  # noqa: PLC0415
-    talk = db.get(SafetyToolboxTalk, talk_id)
+    talk = get_scoped(db, SafetyToolboxTalk, talk_id, tenant_of(auth))
     if not talk:
         raise HTTPException(status_code=404, detail="Talk not found")
     db.delete(talk)
@@ -161,9 +163,9 @@ async def list_incidents(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(SafetyIncident)
+    q = scope(db.query(SafetyIncident), SafetyIncident, tenant_of(auth))
     if job_site:
         q = q.filter(SafetyIncident.job_site.ilike(f"%{job_site}%"))
     if incident_type:
@@ -179,7 +181,7 @@ async def create_incident(
     request: Request,
     req: IncidentCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     incident = SafetyIncident(
         job_site=req.job_site,
@@ -190,6 +192,7 @@ async def create_incident(
         corrective_action=req.corrective_action,
         osha_recordable=req.osha_recordable,
         days_away=req.days_away,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(incident)
     db.commit()
@@ -203,10 +206,10 @@ async def delete_incident(
     request: Request,
     incident_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     from fastapi import HTTPException  # noqa: PLC0415
-    incident = db.get(SafetyIncident, incident_id)
+    incident = get_scoped(db, SafetyIncident, incident_id, tenant_of(auth))
     if not incident:
         raise HTTPException(status_code=404, detail="Incident not found")
     db.delete(incident)
@@ -222,13 +225,13 @@ async def osha_rate(
     request: Request,
     total_hours_worked: float = Query(default=200000.0, ge=1),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     OSHA TRIR formula: (Number of Recordable Incidents × 200,000) / Total Hours Worked
     200,000 = 100 employees × 50 weeks × 40 hours
     """
-    recordable_count = db.query(SafetyIncident).filter(SafetyIncident.osha_recordable == 1).count()
+    recordable_count = scope(db.query(SafetyIncident), SafetyIncident, tenant_of(auth)).filter(SafetyIncident.osha_recordable == 1).count()
     trir = (recordable_count * 200_000) / total_hours_worked if total_hours_worked > 0 else 0.0
     return {
         "recordable_incidents": recordable_count,
@@ -244,7 +247,7 @@ async def osha_rate(
 async def site_scores(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     return {"message": "Safety scoring module active"}
 

@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import stamp_for, tenant_of
 from ..database import get_db
 from ..models import GroundScanReport
 from ..services.vision_takeoff import aerial_view_lookup, measure_image_areas, solar_lookup
@@ -297,7 +298,7 @@ def _ground_scan_analysis(req: GroundScanRequest) -> dict:
 
 @router.post("/ground-scan", summary="Analyze civil-tech utility locating and subsurface scan before digging")
 @limiter.limit("30/minute")
-async def ground_scan(request: Request, req: GroundScanRequest, db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+async def ground_scan(request: Request, req: GroundScanRequest, db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
     analysis = _ground_scan_analysis(req)
     report = GroundScanReport(
         project_site_id=req.project_site_id,
@@ -311,6 +312,7 @@ async def ground_scan(request: Request, req: GroundScanRequest, db: Session = De
         confidence=analysis["confidence"],
         recommendation=analysis["recommendation"],
         notes=req.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(report)
     db.commit()

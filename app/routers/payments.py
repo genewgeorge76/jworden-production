@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import Lead, PaymentTransaction
 from ..services.pricing import estimate_price
@@ -30,7 +31,7 @@ async def create_checkout_session(
     request: Request,
     body: CheckoutRequest,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     lead = db.get(Lead, body.lead_id)
     if not lead:
@@ -80,6 +81,7 @@ async def create_checkout_session(
         amount_usd=deposit_amount,
         currency='usd',
         status='pending',
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(tx)
     db.commit()
@@ -141,10 +143,10 @@ async def payment_status(
     request: Request,
     lead_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     tx = (
-        db.query(PaymentTransaction)
+        scope(db.query(PaymentTransaction), PaymentTransaction, tenant_of(auth))
         .filter(PaymentTransaction.lead_id == lead_id)
         .order_by(PaymentTransaction.created_at.desc())
         .first()

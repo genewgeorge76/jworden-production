@@ -23,6 +23,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..database import get_db
 from ..models import ProjectMetric
 
@@ -99,9 +100,9 @@ def _metric_dict(m: ProjectMetric) -> dict:
 async def list_metrics(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    rows = db.query(ProjectMetric).order_by(ProjectMetric.created_at.desc()).all()
+    rows = scope(db.query(ProjectMetric), ProjectMetric, tenant_of(auth)).order_by(ProjectMetric.created_at.desc()).all()
     return {"total": len(rows), "metrics": [_metric_dict(m) for m in rows]}
 
 
@@ -111,7 +112,7 @@ async def create_metric(
     request: Request,
     req: MetricCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     m = ProjectMetric(
         project_name=req.project_name,
@@ -124,6 +125,7 @@ async def create_metric(
         punch_list_items=req.punch_list_items,
         punch_list_closed=req.punch_list_closed,
         completion_date=_parse_dt(req.completion_date),
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(m)
     db.commit()
@@ -138,9 +140,9 @@ async def update_metric(
     metric_id: int,
     req: MetricUpdate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    m = db.get(ProjectMetric, metric_id)
+    m = get_scoped(db, ProjectMetric, metric_id, tenant_of(auth))
     if not m:
         raise HTTPException(status_code=404, detail="Metric not found")
     for key, val in req.model_dump(exclude_none=True).items():
@@ -160,9 +162,9 @@ async def delete_metric(
     request: Request,
     metric_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    m = db.get(ProjectMetric, metric_id)
+    m = get_scoped(db, ProjectMetric, metric_id, tenant_of(auth))
     if not m:
         raise HTTPException(status_code=404, detail="Metric not found")
     db.delete(m)
@@ -177,9 +179,9 @@ async def delete_metric(
 async def trends(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    rows = db.query(ProjectMetric).order_by(ProjectMetric.completion_date.asc()).all()
+    rows = scope(db.query(ProjectMetric), ProjectMetric, tenant_of(auth)).order_by(ProjectMetric.completion_date.asc()).all()
     if not rows:
         return {"count": 0, "averages": {}, "projects": []}
 
@@ -221,9 +223,9 @@ async def generate_case_study(
     request: Request,
     metric_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    m = db.get(ProjectMetric, metric_id)
+    m = get_scoped(db, ProjectMetric, metric_id, tenant_of(auth))
     if not m:
         raise HTTPException(status_code=404, detail="Metric not found")
 

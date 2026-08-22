@@ -13,7 +13,7 @@ from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Estimate, Job, Lead, ProjectDocument, WorkOrder
 from ..services.audit import write_audit_event
-from ..services.tenancy import get_scoped, scope, tenant_of
+from ..services.tenancy import get_scoped, scope, stamp_for, tenant_of
 from ..services.pricing import estimate_price
 
 router = APIRouter(prefix="/api/v1/operations", tags=["operations"])
@@ -204,6 +204,7 @@ def create_estimate_from_lead(
         amount_low=pricing["low_usd"] if pricing else None,
         amount_high=pricing["high_usd"] if pricing else None,
         state_code=lead.state_code,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(estimate)
     db.commit()
@@ -283,6 +284,7 @@ def create_job_from_estimate(
         state_code=estimate.state_code,
         scheduled_start=body.scheduled_start,
         scheduled_end=body.scheduled_end,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     estimate.status = "converted"
     db.add(job)
@@ -479,6 +481,7 @@ def create_work_order(
         assigned_crew=body.assigned_crew,
         scheduled_for=body.scheduled_for,
         notes=body.notes,
+        tenant_id=stamp_for(tenant_of(auth)),
     )
     db.add(work_order)
     db.commit()
@@ -589,6 +592,7 @@ async def upload_project_document(
         file_url=file_url,
         visible_to_client=visible_to_client,
         uploaded_by=security.get("user"),
+        tenant_id=stamp_for(tenant_of(security)),
     )
     db.add(document)
     db.commit()
