@@ -78,7 +78,10 @@ class DroneScanResponse(BaseModel):
 
 def _generate_ai_summary(scan_type: str, findings_json: Optional[str], risk_level: str) -> Optional[str]:
     """Generate a plain-English deviation summary via GPT-4o if key is set."""
-    if not _OPENAI_KEY or not findings_json:
+    # Gate on any configured provider: this call is routed through
+    # llm_client, so requiring OPENAI_API_KEY specifically would skip a
+    # summary that Claude could have written.
+    if not any(llm_client.configured_providers().values()) or not findings_json:
         return None
     try:
         findings = json.loads(findings_json) if isinstance(findings_json, str) else findings_json

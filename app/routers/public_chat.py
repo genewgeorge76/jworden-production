@@ -134,20 +134,13 @@ class PublicChatResponse(BaseModel):
 _openai_client = None
 
 
-def _get_openai_client():
-    global _openai_client
-    api_key = os.getenv("OPENAI_API_KEY", "")
-    if not api_key:
-        return None
-    if _openai_client is not None:
-        return _openai_client
-    try:
-        from openai import OpenAI  # type: ignore
-        _openai_client = OpenAI(api_key=api_key)
-        return _openai_client
-    except Exception as exc:  # noqa: BLE001
-        logger.error("Could not create OpenAI client for public concierge: %s", exc)
-        return None
+# The direct OpenAI client that used to live here is gone.
+#
+# _call_openai already routes through llm_client, which walks the whole
+# provider chain. Keeping a hand-rolled OpenAI client underneath it did not
+# add a fallback — it added a second attempt at the provider that had just
+# failed, and it was the only thing in this file that could not fail over to
+# Claude. The stub below remains as the last resort.
 
 
 def _stub_response(message: str, service_type: str | None = None) -> str:
@@ -243,21 +236,9 @@ def _call_openai(messages: list[dict]) -> str:
     except Exception as exc:
         logger.warning("llm_client fast call failed: %s", exc)
 
-    client = _get_openai_client()
-    if client is None:
-        return ""
-    try:
-        resp = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=messages,
-            max_tokens=300,
-            temperature=0.72,
-            timeout=20,
-        )
-        return (resp.choices[0].message.content or "").strip()
-    except Exception as exc:  # noqa: BLE001
-        logger.error("OpenAI public concierge call failed: %s", exc, exc_info=True)
-        return ""
+    # No provider answered. The caller falls back to _stub_response, which is
+    # the honest end of the chain for a public-facing concierge.
+    return ""
 
 
 def _pick_quick_replies(
