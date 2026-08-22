@@ -48,6 +48,7 @@ from ..services.ad_signals import (
     get_all_exclusions,
 )
 from ..services.anomaly_detector import persist_anomalies, run_all_checks
+from ..services import provider_health
 from ..services.lead_qualifier import qualify_lead
 
 logger = logging.getLogger(__name__)
@@ -86,12 +87,26 @@ class LeadQualifyRequest(BaseModel):
 # ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @router.get("/status", summary="AI Max subsystem health check")
-def ads_status():
-    """Reports which AI Max subsystems are operational."""
+async def ads_status():
+    """
+    Reports which AI Max subsystems are operational.
+
+    `lead_qualifier` names the engine that will actually classify the next
+    lead. It is resolved by probing OpenAI rather than by checking that
+    OPENAI_API_KEY is a non-empty string: `_gpt_qualify` falls back to the
+    rule-based result on any error, so a revoked key silently downgrades the
+    qualifier while a presence check keeps reporting "gpt-4o".
+    """
+    qualifier = await provider_health.check("openai")
     return {
         "url_exclusion_manager": "ready",
         "crm_export": "ready",
-        "lead_qualifier": "gpt-4o" if os.getenv("OPENAI_API_KEY") else "rule-based",
+        "lead_qualifier": (
+            "gpt-4o"
+            if qualifier["status"] == provider_health.LIVE
+            else "rule-based"
+        ),
+        "lead_qualifier_detail": qualifier["detail"],
         "anomaly_detector": "ready",
         "google_ads_connected": bool(os.getenv("GOOGLE_ADS_DEVELOPER_TOKEN")),
         "site_domain": os.getenv("GOOGLE_ADS_SITE_DOMAIN", "jworden.com"),

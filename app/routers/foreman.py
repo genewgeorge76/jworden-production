@@ -189,7 +189,9 @@ def _stub_foreman_chat(question: str) -> str:
     )
 
 
-def _rag_foreman_chat(question: str, context: str | None) -> tuple[str, list[str]]:
+def _rag_foreman_chat(
+    question: str, context: str | None
+) -> tuple[str, list[str], str]:
     """
     LangChain RAG-powered Virtual Foreman chat.
 
@@ -210,7 +212,7 @@ def _rag_foreman_chat(question: str, context: str | None) -> tuple[str, list[str
 
         openai_key = os.getenv("OPENAI_API_KEY", "")
         if not openai_key:
-            return _stub_foreman_chat(question), []
+            return _stub_foreman_chat(question), [], "stub"
 
         # Build in-memory Chroma store from seed documents
         # In production, persist the store to disk or pgvector and index
@@ -283,13 +285,15 @@ def _rag_foreman_chat(question: str, context: str | None) -> tuple[str, list[str
 
         user_q = f"[Context: {context}] {question}" if context else question
         result = qa_chain.invoke({"query": user_q})
-        answer = result.get("result", _stub_foreman_chat(question))
+        answer = (result.get("result") or "").strip()
+        if not answer:
+            return _stub_foreman_chat(question), [], "stub"
         sources = list({doc.metadata.get("source", "") for doc in result.get("source_documents", []) if doc.metadata.get("source")})
-        return answer, sources
+        return answer, sources, "langchain_rag"
 
     except Exception as exc:  # noqa: BLE001
         logger.error("LangChain RAG chat failed: %s", exc)
-        return _stub_foreman_chat(question), []
+        return _stub_foreman_chat(question), [], "stub"
 
 
 @router.post(
@@ -303,11 +307,17 @@ async def foreman_chat(req: ForemanChatRequest, _: dict = Depends(verify_premium
 
     Uses LangChain + Chroma RAG when OPENAI_API_KEY is set.
     Falls back to a curated stub for offline/development use.
+
+    `engine` is reported by whichever path produced the answer. It used to be
+    assigned here from `bool(os.getenv("OPENAI_API_KEY"))` before the call ran,
+    so any RAG failure — a revoked key most of all — returned a canned stub
+    answer labelled "langchain_rag". The stub speaks in specifics ("a weather
+    hold today will affect the Broad Street job timeline"), which makes that
+    label the difference between a hint and a false report from the field.
     """
     openai_key = os.getenv("OPENAI_API_KEY", "")
     if openai_key:
-        answer, sources = _rag_foreman_chat(req.question, req.context)
-        engine = "langchain_rag"
+        answer, sources, engine = _rag_foreman_chat(req.question, req.context)
     else:
         answer = _stub_foreman_chat(req.question)
         sources = []

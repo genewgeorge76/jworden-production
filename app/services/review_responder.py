@@ -64,10 +64,36 @@ def generate_review_response(
 
     Returns:
         A draft response string, or a fallback template on OpenAI error.
+
+    Prefer `generate_review_response_detailed` — it returns the same draft
+    alongside the name of the engine that actually produced it. Callers that
+    infer the engine from `os.getenv("OPENAI_API_KEY")` label a template
+    response "gpt-4o" whenever the key is set but not working.
+    """
+    return generate_review_response_detailed(
+        review_text=review_text,
+        reviewer_name=reviewer_name,
+        rating=rating,
+        tone=tone,
+    )[0]
+
+
+def generate_review_response_detailed(
+    review_text: str,
+    reviewer_name: str | None = None,
+    rating: int = 5,
+    tone: str = "grateful",
+) -> tuple[str, str]:
+    """
+    Generate a review response and report which engine produced it.
+
+    Returns (draft, engine) where engine is "gpt-4o" or "template". The engine
+    is determined by what ran, not by what is configured, so a revoked key
+    shows up as "template" instead of being reported as a model response.
     """
     openai_key = os.getenv("OPENAI_API_KEY", "")
     if not openai_key:
-        return _template_response(review_text, reviewer_name, rating, tone)
+        return _template_response(review_text, reviewer_name, rating, tone), "template"
 
     try:
         from openai import OpenAI  # type: ignore
@@ -101,11 +127,17 @@ Write the review response now:
             max_tokens=200,
             temperature=0.6,
         )
-        return (response.choices[0].message.content or "").strip()
+        draft = (response.choices[0].message.content or "").strip()
+        if not draft:
+            # An empty completion is a failure with a 200 attached. Falling
+            # through to the template is right; calling it "gpt-4o" is not.
+            logger.warning("OpenAI review response returned empty content")
+            return _template_response(review_text, reviewer_name, rating, tone), "template"
+        return draft, "gpt-4o"
 
     except Exception as exc:  # noqa: BLE001
         logger.error("OpenAI review response (tone=%s, rating=%d) failed: %s", tone, rating, exc)
-        return _template_response(review_text, reviewer_name, rating, tone)
+        return _template_response(review_text, reviewer_name, rating, tone), "template"
 
 
 def _template_response(

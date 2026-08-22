@@ -2852,3 +2852,50 @@ class FerrariArtifact(Base):
 
     def __repr__(self) -> str:
         return f"<FerrariArtifact {self.ferrari!r}/{self.kind!r} tenant={self.tenant_id!r}>"
+
+
+class CourseGenerationJob(Base):
+    """
+    One attempt to generate an LMS course, recorded whether or not it worked.
+
+    The generator runs as a FastAPI background task, and background tasks have
+    nowhere to return to. `POST /lms/ai-generate` answers `{"status":
+    "generating"}` and the request is over; if the generation then fails there
+    is no response left to fail, no exception anybody sees, and — because the
+    course row is only written on success — no artifact to notice the absence
+    of. The failure handler was a bare `print`.
+
+    So the attempt gets a row before it starts. A course that never appears now
+    has a record saying why, and `GET /lms/ai-generate/{job_id}` can answer
+    the question the caller was never able to ask.
+    """
+
+    __tablename__ = "lms_course_generation_jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=True, index=True, default="default")
+
+    topic = Column(String(500), nullable=False)
+    category = Column(String(100), nullable=True)
+    difficulty = Column(String(50), nullable=True)
+
+    # queued | running | succeeded | failed
+    status = Column(String(20), nullable=False, default="queued", index=True)
+
+    # Which engine produced the syllabus. Recorded rather than inferred, so a
+    # generation attributed to a model was actually answered by one.
+    engine = Column(String(60), nullable=True)
+
+    course_id = Column(Integer, nullable=True, index=True)
+    modules_created = Column(Integer, nullable=True)
+    lessons_created = Column(Integer, nullable=True)
+
+    # Operator-facing failure reason. Provider errors can echo a request URL,
+    # so anything written here goes through provider_health.redact first.
+    error = Column(Text, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    finished_at = Column(DateTime(timezone=True), nullable=True)
+
+    def __repr__(self) -> str:
+        return f"<CourseGenerationJob {self.id} {self.status!r} topic={self.topic!r}>"
