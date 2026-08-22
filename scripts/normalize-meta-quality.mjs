@@ -383,6 +383,24 @@ async function run() {
   fs.writeFileSync(path.join(distDir, 'jwordenuniversity.com.html'), uniHtml, 'utf8');
   generatedCount++;
 
+  // The same shell again, as a directory index.
+  //
+  // The flat file above is what the host rewrite serves for every path — and
+  // it works for every path except "/". At the root Vercel resolves
+  // dist/index.html from the filesystem and the host rewrite never runs, so
+  // the university homepage — the one page that actually gets linked and
+  // indexed — kept the shared shell's canonical while every sub-path had the
+  // right one.
+  //
+  // The brand domains do not have this problem because their rewrite targets
+  // a directory under dist/brands/<domain>/. This mirrors that shape exactly,
+  // so "/" has its own file to resolve to rather than falling through to the
+  // shared index.
+  const uniDir = path.join(distDir, 'brands', 'jwordenuniversity.com');
+  fs.mkdirSync(uniDir, { recursive: true });
+  fs.writeFileSync(path.join(uniDir, 'index.html'), uniHtml, 'utf8');
+  generatedCount++;
+
   // Update index.html for jwordenasphaltpaving.com
   // Pass 2 stops here: index.html is the prerendered homepage at this point and
   // must not be rewritten from a template.
