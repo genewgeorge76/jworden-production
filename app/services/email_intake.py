@@ -1,5 +1,7 @@
 import json
 import logging
+
+from app.services import llm_client
 import os
 from typing import Dict, Any
 
@@ -25,8 +27,11 @@ def extract_lead_from_email(subject: str, body: str, from_email: str, from_name:
     """
     Use GPT-4o to extract lead entities from an unstructured email.
     """
-    if not _OPENAI_KEY:
-        logger.warning("No OPENAI_API_KEY set. Falling back to stub entities for email intake.")
+    # Any configured provider, not OpenAI specifically. A revoked key used to
+    # send every inbound email to the stub — which classifies real customers as
+    # unknown leads — even with Claude configured and healthy.
+    if not any(llm_client.configured_providers().values()):
+        logger.warning("No LLM provider configured. Falling back to stub entities for email intake.")
         stub = _stub_entities()
         stub["email"] = from_email
         stub["name"] = from_name or "Unknown Email Lead"
@@ -34,10 +39,6 @@ def extract_lead_from_email(subject: str, body: str, from_email: str, from_name:
         return stub
 
     try:
-        from openai import OpenAI  # type: ignore
-
-        client = OpenAI(api_key=_OPENAI_KEY)
-        
         system_prompt = (
             "You are a lead data extraction and email triage assistant for J. Worden & Sons Asphalt Paving. "
             "Extract the following from the incoming email and return as JSON:\n"
@@ -66,23 +67,26 @@ def extract_lead_from_email(subject: str, body: str, from_email: str, from_name:
             f"Body:\n{body}"
         )
 
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_content},
-            ],
+        # json_chat rather than response_format: that parameter is OpenAI's, so
+        # the JSON guarantee held for one provider only. The fence-stripping
+        # below it existed because the guarantee already leaked; extract_json
+        # handles that centrally now.
+        reply = llm_client.json_chat(
+            task="classification",
+            system=system_prompt,
+            user=user_content,
             max_tokens=500,
             temperature=0.1,
-            response_format={"type": "json_object"}
         )
-        text = response.choices[0].message.content or "{}"
-        
-        # Clean up Markdown formatting if API ignored response_format (fallback)
-        if "```" in text:
-            text = text.split("```")[1].lstrip("json").strip()
-            
-        data = json.loads(text)
+        if reply.error or not reply.data:
+            logger.warning("email triage unavailable (%s), using stub", reply.error_detail)
+            stub = _stub_entities()
+            stub["email"] = from_email
+            stub["name"] = from_name or "Unknown Email Lead"
+            stub["message"] = f"Subject: {subject}\n\n{body}"[:2000]
+            return stub
+
+        data = dict(reply.data)
         
         # Ensure email defaults to sender if not found in body
         if not data.get("email"):

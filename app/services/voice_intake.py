@@ -21,6 +21,8 @@ from __future__ import annotations
 import io
 import json
 import logging
+
+from app.services import llm_client
 import os
 from typing import Optional
 
@@ -77,43 +79,39 @@ def extract_lead_entities(transcript: str) -> dict:
     Returns:
       {name, phone, email, address, service_type, urgency, message, confidence}
     """
-    if not _OPENAI_KEY:
+    # Any configured provider. Gating on OPENAI_API_KEY meant a revoked key
+    # sent every phone lead to the stub even with Claude healthy — and a stub
+    # entity set on a real caller is a lost lead.
+    if not any(llm_client.configured_providers().values()):
         return _stub_entities()
 
     try:
-        from openai import OpenAI  # type: ignore
-
-        client = OpenAI(api_key=_OPENAI_KEY)
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a lead data extraction assistant for an asphalt paving company. "
-                        "Extract the following from this phone call transcript and return as JSON: "
-                        "name (customer full name or 'Unknown'), "
-                        "phone (phone number or null), "
-                        "email (email or null), "
-                        "address (project address or null), "
-                        "service_type (one of: paving, sealcoating, crackfill, parking_lot, driveway, or 'unknown'), "
-                        "property_type (residential or commercial, default residential), "
-                        "urgency (asap, within_1_week, within_1_month, or flexible), "
-                        "project_size_sqft (number or null), "
-                        "message (brief summary of what they want), "
-                        "confidence (0.0-1.0 how confident you are in the extraction). "
-                        "Return only valid JSON."
-                    ),
-                },
-                {"role": "user", "content": f"Transcript:\n{transcript}"},
-            ],
+        system_prompt = (
+            "You are a lead data extraction assistant for an asphalt paving company. "
+            "Extract the following from this phone call transcript and return as JSON: "
+            "name (customer full name or 'Unknown'), "
+            "phone (phone number or null), "
+            "email (email or null), "
+            "address (project address or null), "
+            "service_type (one of: paving, sealcoating, crackfill, parking_lot, driveway, or 'unknown'), "
+            "property_type (residential or commercial, default residential), "
+            "urgency (asap, within_1_week, within_1_month, or flexible), "
+            "project_size_sqft (number or null), "
+            "message (brief summary of what they want), "
+            "confidence (0.0-1.0 how confident you are in the extraction). "
+            "Return only valid JSON."
+        )
+        reply = llm_client.json_chat(
+            task="classification",
+            system=system_prompt,
+            user=f"Transcript:\n{transcript}",
             max_tokens=400,
             temperature=0.2,
         )
-        text = response.choices[0].message.content or "{}"
-        if "```" in text:
-            text = text.split("```")[1].lstrip("json").strip()
-        return json.loads(text)
+        if reply.error or not reply.data:
+            logger.warning("entity extraction unavailable: %s", reply.error_detail)
+            return _stub_entities()
+        return reply.data
     except Exception as exc:  # noqa: BLE001
         logger.error("Entity extraction error: %s", exc)
         return _stub_entities()
