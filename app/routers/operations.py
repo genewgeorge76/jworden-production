@@ -13,6 +13,7 @@ from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Estimate, Job, Lead, ProjectDocument, WorkOrder
 from ..services.audit import write_audit_event
+from ..services.tenancy import get_scoped, scope, tenant_of
 from ..services.pricing import estimate_price
 
 router = APIRouter(prefix="/api/v1/operations", tags=["operations"])
@@ -151,10 +152,13 @@ def _serialize_document_collection(items: list[ProjectDocument]) -> dict:
 def list_recent_leads(
     limit: int = 12,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
+    # scope(): the operator sees his whole bucket (legacy NULLs, "default",
+    # JWORDEN_HQ and his publishing domains); a hosted client sees only its own
+    # tenant_id. Unscoped, this returned every tenant's leads to any caller.
     leads = (
-        db.query(Lead)
+        scope(db.query(Lead), Lead, tenant_of(auth))
         .order_by(Lead.created_at.desc())
         .limit(min(limit, 50))
         .all()
@@ -180,9 +184,9 @@ def list_recent_leads(
 def create_estimate_from_lead(
     body: EstimateFromLeadRequest = Body(...),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    lead = db.get(Lead, body.lead_id)
+    lead = get_scoped(db, Lead, body.lead_id, tenant_of(auth))
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
 
@@ -227,9 +231,11 @@ def create_estimate_from_lead(
 
 
 @router.get("/estimates")
-def list_estimates(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+def list_estimates(db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
+    # Scoped on Estimate. The outer-joined Lead rides along on the FK, so
+    # filtering the driving entity is what bounds the result set.
     items = (
-        db.query(Estimate, Lead)
+        scope(db.query(Estimate, Lead), Estimate, tenant_of(auth))
         .outerjoin(Lead, Estimate.lead_id == Lead.id)
         .order_by(Estimate.created_at.desc())
         .all()
@@ -260,9 +266,9 @@ def list_estimates(db: Session = Depends(get_db), _: dict = Depends(verify_premi
 def create_job_from_estimate(
     body: JobFromEstimateRequest = Body(...),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    estimate = db.get(Estimate, body.estimate_id)
+    estimate = get_scoped(db, Estimate, body.estimate_id, tenant_of(auth))
     if not estimate:
         raise HTTPException(status_code=404, detail="Estimate not found")
 
@@ -306,12 +312,18 @@ def create_job_from_estimate(
 def list_jobs(
     client_email: str | None = Query(default=None),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    items = db.query(Job).order_by(Job.created_at.desc()).all()
+    tenant = tenant_of(auth)
+    items = scope(db.query(Job), Job, tenant).order_by(Job.created_at.desc()).all()
+    # The lead lookup is scoped too. Bounding it only by the FK ids would be
+    # safe today because those ids come from already-scoped jobs, but it stops
+    # being safe the moment a job can reference a lead it does not own.
     leads = {
         lead.id: lead
-        for lead in db.query(Lead).filter(Lead.id.in_([item.lead_id for item in items if item.lead_id])).all()
+        for lead in scope(db.query(Lead), Lead, tenant)
+        .filter(Lead.id.in_([item.lead_id for item in items if item.lead_id]))
+        .all()
     }
     serialized = [_serialize_job(item, leads.get(item.lead_id)) for item in items]
     if client_email:
@@ -325,6 +337,9 @@ def list_jobs(
 
 @router.get("/public/jobs/{job_id}")
 def get_public_job(job_id: int, db: Session = Depends(get_db)):
+    # Public on purpose: a customer opens this with a job id and gets a
+    # field-limited payload (see the key allow-list below). No tenant filter,
+    # because there is no authenticated caller to take a tenant from.
     job = db.get(Job, job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
@@ -348,8 +363,8 @@ def get_public_job(job_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/jobs/{job_id}")
-def get_job(job_id: int, db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
-    job = db.get(Job, job_id)
+def get_job(job_id: int, db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
+    job = get_scoped(db, Job, job_id, tenant_of(auth))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     lead = db.get(Lead, job.lead_id) if job.lead_id else None
@@ -362,9 +377,9 @@ async def update_job_scope(
     job_id: int,
     payload: dict,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security)
+    auth: dict = Depends(verify_premium_security)
 ):
-    job = db.query(Job).filter(Job.id == job_id).first()
+    job = get_scoped(db, Job, job_id, tenant_of(auth))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     
@@ -384,10 +399,10 @@ async def add_job_picture(
     job_id: int,
     payload: dict,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security)
+    auth: dict = Depends(verify_premium_security)
 ):
     import datetime
-    job = db.query(Job).filter(Job.id == job_id).first()
+    job = get_scoped(db, Job, job_id, tenant_of(auth))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     
@@ -411,9 +426,9 @@ def update_job(
     job_id: int,
     body: JobUpdateRequest = Body(...),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    job = db.get(Job, job_id)
+    job = get_scoped(db, Job, job_id, tenant_of(auth))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
@@ -451,9 +466,9 @@ def update_job(
 def create_work_order(
     body: WorkOrderCreateRequest = Body(...),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    job = db.get(Job, body.job_id)
+    job = get_scoped(db, Job, body.job_id, tenant_of(auth))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
@@ -489,9 +504,12 @@ def create_work_order(
 
 
 @router.get("/jobs/{job_id}/work-orders")
-def list_work_orders(job_id: int, db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+def list_work_orders(job_id: int, db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
+    # Scoped on WorkOrder itself rather than trusting the job_id in the path:
+    # an unscoped read here listed any job's work orders to any caller who
+    # guessed the id.
     items = (
-        db.query(WorkOrder)
+        scope(db.query(WorkOrder), WorkOrder, tenant_of(auth))
         .filter(WorkOrder.job_id == job_id)
         .order_by(WorkOrder.created_at.desc())
         .all()
@@ -517,9 +535,9 @@ def list_project_documents(
     client_email: str | None = Query(default=None),
     visible_to_client: bool | None = Query(default=None),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    query = db.query(ProjectDocument)
+    query = scope(db.query(ProjectDocument), ProjectDocument, tenant_of(auth))
     if job_id is not None:
         query = query.filter(ProjectDocument.job_id == job_id)
     if client_email:
@@ -543,7 +561,7 @@ async def upload_project_document(
     db: Session = Depends(get_db),
     security: dict = Depends(verify_premium_security),
 ):
-    job = db.get(Job, job_id)
+    job = get_scoped(db, Job, job_id, tenant_of(security))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
@@ -601,7 +619,7 @@ def update_project_document(
     db: Session = Depends(get_db),
     security: dict = Depends(verify_premium_security),
 ):
-    document = db.get(ProjectDocument, document_id)
+    document = get_scoped(db, ProjectDocument, document_id, tenant_of(security))
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
 
@@ -640,7 +658,7 @@ def delete_project_document(
     db: Session = Depends(get_db),
     security: dict = Depends(verify_premium_security),
 ):
-    document = db.get(ProjectDocument, document_id)
+    document = get_scoped(db, ProjectDocument, document_id, tenant_of(security))
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
 
@@ -662,9 +680,9 @@ def delete_project_document(
 
 
 @router.get("/diamond-jobs")
-def get_diamond_jobs(db: Session = Depends(get_db), _: dict = Depends(verify_premium_security)):
+def get_diamond_jobs(db: Session = Depends(get_db), auth: dict = Depends(verify_premium_security)):
     try:
-        items = db.query(Job).all()
+        items = scope(db.query(Job), Job, tenant_of(auth)).all()
         diamond_jobs = [item for item in items if item.job_number and len(str(item.job_number)) == 36 and not str(item.job_number).startswith("JOB-")]
         
         active = [_serialize_job(j) for j in diamond_jobs if j.status == 'active']
@@ -753,7 +771,7 @@ from fastapi import BackgroundTasks
 def trigger_diamond_sync(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security)
+    auth: dict = Depends(verify_premium_security)
 ):
     background_tasks.add_task(run_diamond_sync_process)
     return {"status": "started", "message": "Diamond Solutions sync scraper started in the background."}

@@ -29,6 +29,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import scope, tenant_of
 from ..database import get_db
 from ..models import BlogPost
 from ..services.vector_search_service import vector_search_service
@@ -287,7 +288,11 @@ async def generate_draft(
     # Ensure unique slug
     base_slug = slug
     counter = 1
-    while db.query(BlogPost).filter(BlogPost.slug == slug).first():
+    while (
+        scope(db.query(BlogPost), BlogPost, tenant_of(security))
+        .filter(BlogPost.slug == slug)
+        .first()
+    ):
         slug = f"{base_slug}-{counter}"
         counter += 1
 
@@ -344,7 +349,11 @@ async def create_post(
     security: dict = Depends(verify_premium_security),
 ):
     slug = req.slug or _slugify(req.title)
-    if db.query(BlogPost).filter(BlogPost.slug == slug).first():
+    if (
+        scope(db.query(BlogPost), BlogPost, tenant_of(security))
+        .filter(BlogPost.slug == slug)
+        .first()
+    ):
         raise HTTPException(status_code=409, detail=f"Slug '{slug}' already exists")
 
     now = datetime.now(timezone.utc) if req.status == "published" else None
@@ -394,7 +403,11 @@ async def update_post(
     db: Session = Depends(get_db),
     security: dict = Depends(verify_premium_security),
 ):
-    post = db.query(BlogPost).filter(BlogPost.slug == slug).first()
+    post = (
+        scope(db.query(BlogPost), BlogPost, tenant_of(security))
+        .filter(BlogPost.slug == slug)
+        .first()
+    )
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
@@ -443,7 +456,11 @@ async def publish_post(
     db: Session = Depends(get_db),
     security: dict = Depends(verify_premium_security),
 ):
-    post = db.query(BlogPost).filter(BlogPost.slug == slug).first()
+    post = (
+        scope(db.query(BlogPost), BlogPost, tenant_of(security))
+        .filter(BlogPost.slug == slug)
+        .first()
+    )
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
     if post.status == "published":
@@ -482,7 +499,11 @@ async def delete_post(
     db: Session = Depends(get_db),
     security: dict = Depends(verify_premium_security),
 ):
-    post = db.query(BlogPost).filter(BlogPost.slug == slug).first()
+    post = (
+        scope(db.query(BlogPost), BlogPost, tenant_of(security))
+        .filter(BlogPost.slug == slug)
+        .first()
+    )
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 

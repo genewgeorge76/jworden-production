@@ -387,9 +387,17 @@ async def lifespan(app: FastAPI):
 
     # ── Tenant isolation guard ────────────────────────────────────────────────
     # Log-only by default: reports queries that read tenant-scoped tables without
-    # a tenant_id filter, and changes nothing. A static audit
-    # (scripts/audit_tenant_isolation.py) found only 16 of 123 such queries are
-    # filtered, so this exists to show which of those are real at runtime before
+    # a tenant_id filter, and changes nothing.
+    #
+    # The figure that used to sit here -- "only 16 of 123 such queries are
+    # filtered" -- was wrong, and wrong in the alarming direction. The audit
+    # matched the literal string "tenant_id" in the query chain, and the
+    # canonical way this codebase filters is scope(query, Model, tenant_of(auth))
+    # from services/tenancy.py, which does not contain that string. 75 correctly
+    # scoped queries were being counted as unscoped. Corrected, the audit reports
+    # 95 of 185 filtered.
+    #
+    # So this guard exists to find the genuine remainder at runtime before
     # anything starts enforcing. Set TENANT_GUARD_MODE=enforce only once the log
     # is quiet and every deliberate cross-tenant caller is wrapped in
     # allow_cross_tenant(). TENANT_GUARD_MODE=off disables it entirely.

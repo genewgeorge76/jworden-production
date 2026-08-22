@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
+from ..services.tenancy import get_scoped, scope, tenant_of
 from ..database import get_db
 from ..models import CashFlowAlert, CashFlowEntry
 
@@ -76,9 +77,9 @@ async def list_entries(
     limit: int = Query(default=100, ge=1, le=500),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    q = db.query(CashFlowEntry)
+    q = scope(db.query(CashFlowEntry), CashFlowEntry, tenant_of(auth))
     if entry_type:
         q = q.filter(CashFlowEntry.entry_type == entry_type)
     total = q.count()
@@ -92,7 +93,7 @@ async def create_entry(
     request: Request,
     req: EntryCreate,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     if req.entry_type not in ("income", "expense"):
         raise HTTPException(status_code=422, detail="entry_type must be 'income' or 'expense'")
@@ -117,9 +118,9 @@ async def delete_entry(
     request: Request,
     entry_id: int,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    entry = db.get(CashFlowEntry, entry_id)
+    entry = get_scoped(db, CashFlowEntry, entry_id, tenant_of(auth))
     if not entry:
         raise HTTPException(status_code=404, detail="Entry not found")
     db.delete(entry)
@@ -134,7 +135,7 @@ async def delete_entry(
 async def forecast(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Bucket all future entries into 13 weekly buckets from today.
@@ -151,7 +152,7 @@ async def forecast(
         we = ws + timedelta(weeks=1)
         weeks.append({"label": f"{ws.month}/{ws.day}", "start": ws, "end": we, "income": 0.0, "expense": 0.0})
 
-    entries = db.query(CashFlowEntry).all()
+    entries = scope(db.query(CashFlowEntry), CashFlowEntry, tenant_of(auth)).all()
     for e in entries:
         edate = e.expected_date
         if edate.tzinfo is None:
@@ -173,7 +174,11 @@ async def forecast(
         w["cumulative"] = round(cumulative, 2)
 
     # Get alert threshold
-    alert_row = db.query(CashFlowAlert).filter(CashFlowAlert.is_active == 1).first()
+    alert_row = (
+        scope(db.query(CashFlowAlert), CashFlowAlert, tenant_of(auth))
+        .filter(CashFlowAlert.is_active == 1)
+        .first()
+    )
     threshold = alert_row.threshold_amount if alert_row else 10_000.0
 
     # Clean output (remove start/end datetime objects)
@@ -198,9 +203,13 @@ async def forecast(
 async def get_alert(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    row = db.query(CashFlowAlert).filter(CashFlowAlert.is_active == 1).first()
+    row = (
+        scope(db.query(CashFlowAlert), CashFlowAlert, tenant_of(auth))
+        .filter(CashFlowAlert.is_active == 1)
+        .first()
+    )
     if not row:
         return {"threshold_amount": 10000.0, "alert_email": None, "configured": False}
     return {
@@ -217,9 +226,13 @@ async def set_alert(
     request: Request,
     req: AlertUpsert,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
-    row = db.query(CashFlowAlert).filter(CashFlowAlert.is_active == 1).first()
+    row = (
+        scope(db.query(CashFlowAlert), CashFlowAlert, tenant_of(auth))
+        .filter(CashFlowAlert.is_active == 1)
+        .first()
+    )
     if row:
         row.threshold_amount = req.threshold_amount
         row.alert_email = req.alert_email

@@ -14,7 +14,7 @@ from ..services.lead_scorer import score_lead
 from ..services.notifications import send_lead_notification
 from ..services.pricing import estimate_price
 from ..services.state_data import normalize_state_code
-from ..services.tenancy import scope, tenant_of
+from ..services.tenancy import scope, tenant_of, tenant_for_hostname
 from ..services.email_service import send_quote_confirmation, send_admin_notification, send_contact_response
 from ..services.google_sheets import sync_lead_to_sheets
 from ..services.geocoding import geocode_address
@@ -23,14 +23,33 @@ router = APIRouter(prefix="/api/v1/leads", tags=["leads"])
 
 logger = logging.getLogger(__name__)
 
-def get_tenant_id(request: Request) -> str:
+def request_hostname(request: Request) -> str | None:
+    """The host a public request arrived on, Origin preferred over Host."""
     origin = request.headers.get("origin")
-    host = request.headers.get("host")
     if origin:
         return origin.replace("http://", "").replace("https://", "").split(":")[0]
+    host = request.headers.get("host")
     if host:
         return host.split(":")[0]
-    return "default"
+    return None
+
+
+def get_tenant_id(request: Request, db: Session) -> str:
+    """
+    The tenant that owns a lead submitted on this host.
+
+    This used to return the hostname itself. No tenant is ever named after a
+    hostname -- the operator is "default"/"JWORDEN_HQ" and a provisioned client
+    gets a uuid4 -- so every public lead was stamped with a tenant_id belonging
+    to nobody. Harmless while the cockpit read every row regardless of tenant;
+    fatal the moment those reads are scoped, because the operator's own leads
+    would vanish from his pipeline while the forms kept returning 200.
+
+    Resolved against MarketSite, which factory.py writes per registered
+    hostname. Unknown hosts belong to the operator -- see
+    services/tenancy.tenant_for_hostname for why that does not widen access.
+    """
+    return tenant_for_hostname(db, request_hostname(request))
 
 
 class QuoteRequest(BaseModel):
@@ -145,7 +164,7 @@ async def submit_quote(
         latitude=lat,
         longitude=lng,
         raw_data=lead_data,
-        tenant_id=get_tenant_id(request),
+        tenant_id=get_tenant_id(request, db),
     )
     db.add(db_lead)
     db.commit()
@@ -246,7 +265,7 @@ async def submit_contact(
         email=req.email,
         phone=req.phone,
         message=req.message,
-        tenant_id=get_tenant_id(request),
+        tenant_id=get_tenant_id(request, db),
     )
     db.add(db_msg)
     db.commit()
@@ -336,7 +355,7 @@ async def submit_website_lead(
         email=email,
         phone=req.phone,
         message=message_body,
-        tenant_id=get_tenant_id(request),
+        tenant_id=get_tenant_id(request, db),
     )
     db.add(db_msg)
     db.commit()
