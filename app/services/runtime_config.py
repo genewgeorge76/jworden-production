@@ -105,6 +105,8 @@ MANAGED_KEYS: tuple[str, ...] = (
     "GOOGLE_MAPS_API_KEY", "GOOGLE_PAGESPEED_API_KEY",
     # Live search intelligence (Google Trends / SerpAPI for hotspot heatmap)
     "SERPAPI_KEY", "GOOGLE_TRENDS_GEO", "SEARCH_PULSE_TERMS",
+    # Parcel data (county-assessor / visualizer parcel lookup)
+    "REGRID_API_KEY",
     # Licensing / tier (controls which premium features are exposed)
     "LICENSE_TIER",
     # Crew wearable health monitoring (per-provider HMAC secrets + thresholds)

@@ -22,6 +22,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from ..core.limiter import limiter
+from ..services import runtime_config as _cfg
 from ..core.security import verify_premium_security
 from ..services.pricing import estimate_price
 from ..services.notifications import send_lead_notification
@@ -107,13 +108,29 @@ def _geocode_address(address: str) -> dict | None:
 
 def _estimate_parcel_sqft(address: str) -> dict:
     """
-    Best-effort parcel size estimation.
+    Parcel size, measured or absent.
 
-    Priority:
-      1. Regrid Parcel API (REGRID_API_KEY) — returns real parcel polygon + sq ft
-      2. Fallback: return a sensible default estimate so the UI always has data
+      1. Regrid Parcel API (REGRID_API_KEY) — real parcel polygon + sq ft
+      2. Otherwise: no number at all.
+
+    THERE IS NO DEFAULT ESTIMATE ANY MORE.
+
+    This used to return sqft_estimated=8500 for every address it could not
+    look up, labelled source="default_estimate", confidence="low". The label
+    was honest and made no difference: Visualizer.jsx does
+
+        sqft: result.sqft_estimated || prev.sqft
+
+    so 8500 landed in the sqft field and was priced. The same figure for a
+    townhouse driveway and a distribution yard.
+
+    Returning None instead is what makes that expression correct rather than
+    dangerous — `||` falls through to whatever the operator actually typed, so
+    the UI keeps a real number instead of overwriting it with a invented one.
     """
-    regrid_key = os.getenv("REGRID_API_KEY", "")
+    # Runtime store first so a key set through the admin UI is honoured; the
+    # env var still works.
+    regrid_key = _cfg.get("REGRID_API_KEY", "").strip()
 
     if regrid_key:
         try:
@@ -140,12 +157,18 @@ def _estimate_parcel_sqft(address: str) -> dict:
         except Exception as exc:  # noqa: BLE001
             logger.warning("Regrid lookup failed: %s", exc)
 
-    # Fallback: sensible residential default
+    # No measurement available. Say so, carry no number.
     return {
-        "sqft_estimated": 8500,
-        "source": "default_estimate",
-        "confidence": "low",
+        "sqft_estimated": None,
+        "source": "unavailable",
+        "confidence": "none",
         "parcel_id": None,
+        "message": (
+            "Parcel size could not be looked up"
+            + ("." if regrid_key else " — REGRID_API_KEY is not configured.")
+            + " Enter the square footage manually; nothing is being estimated "
+              "on your behalf."
+        ),
     }
 
 

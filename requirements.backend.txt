@@ -73,6 +73,11 @@ passlib==1.7.4
 bcrypt==5.0.0
 
 google-api-python-client==2.115.0
+# GA4 reporting. ga4_client.py imports google.analytics.data_v1beta and this
+# package was never pinned, so the import raised, _build_client() returned
+# None, and every GA4 call reported "not configured" no matter how good the
+# credentials were. Verified compatible with the pins above.
+google-analytics-data==0.18.9
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.0
 apscheduler
