@@ -48,7 +48,11 @@ test:api:
     # pytest was already installed here (requirements.backend.txt line 66) and
     # never invoked. The suite needs no services — conftest points DATABASE_URL
     # at a sqlite file in tmp_path and unsets REDIS_URL and CELERY_BROKER_URL.
-    - python3 -m pytest -q
+    # -m "not network": a few tests hit real public APIs (USDA Soil Data
+    # Access) to prove an integration reads live data rather than a fixture.
+    # Valuable to run by hand; a third party being down must not redden this
+    # pipeline. Run them locally with: pytest -m network
+    - python3 -m pytest -q -m "not network"
     # tests/ outside pytest.ini's testpaths. test_worker_topology.py imports
     # celery, which is installed here but not in every dev sandbox, which is
     # why it is run explicitly rather than folded into testpaths.
