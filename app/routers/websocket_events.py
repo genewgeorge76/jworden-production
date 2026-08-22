@@ -43,6 +43,7 @@ from datetime import datetime, timezone
 
 import socketio  # type: ignore
 
+from ..core import jwt_secrets
 from ..database import SessionLocal
 from ..models import ChatSession
 
@@ -72,15 +73,19 @@ def _verify_admin_token(token: str) -> bool:
     master_key = os.getenv("JWORDEN_MASTER_KEY", "")
     if master_key and token == master_key:
         return True
-    secret = os.getenv("JWT_SECRET_KEY", "")
-    if secret:
-        try:
-            from jose import jwt  # noqa: PLC0415
-            jwt.decode(token, secret, algorithms=["HS256"])
-            return True
-        except Exception:  # noqa: BLE001
-            pass
-    return False
+    # Same resolver as the HTTP path — see core/jwt_secrets.py. Reading only
+    # JWT_SECRET_KEY here meant this feed rejected tokens the rest of the API
+    # accepted whenever the secret lived under one of the other names.
+    try:
+        secret = jwt_secrets.platform_secret()
+    except jwt_secrets.SigningSecretUnavailable:
+        return False
+    try:
+        from jose import jwt  # noqa: PLC0415
+        jwt.decode(token, secret, algorithms=[jwt_secrets.ALGORITHM])
+        return True
+    except Exception:  # noqa: BLE001
+        return False
 
 
 # ── Room helper ───────────────────────────────────────────────────────────────

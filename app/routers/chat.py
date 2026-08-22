@@ -52,6 +52,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSock
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from ..core import jwt_secrets
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import ChatSession
@@ -100,16 +101,21 @@ def _verify_admin_token(token: str) -> bool:
     if master_key and token == master_key:
         return True
 
-    secret = os.getenv("JWT_SECRET_KEY", "")
-    if secret:
-        try:
-            from jose import jwt, JWTError  # noqa: PLC0415
-            jwt.decode(token, secret, algorithms=["HS256"])
-            return True
-        except Exception:  # noqa: BLE001
-            pass
-
-    return False
+    # Was JWT_SECRET_KEY only, while /api/v1/auth/login signed with
+    # JWORDEN_JWT_SECRET or the master key. On any deployment that set one of
+    # those and not JWT_SECRET_KEY, a token good for every HTTP endpoint was
+    # rejected here — an admin stayed signed in on the dashboard while live
+    # chat refused them, with nothing logged that named the cause.
+    try:
+        secret = jwt_secrets.platform_secret()
+    except jwt_secrets.SigningSecretUnavailable:
+        return False
+    try:
+        from jose import jwt  # noqa: PLC0415
+        jwt.decode(token, secret, algorithms=[jwt_secrets.ALGORITHM])
+        return True
+    except Exception:  # noqa: BLE001
+        return False
 
 
 # ── Pydantic schemas ──────────────────────────────────────────────────────────

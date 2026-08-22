@@ -13,7 +13,18 @@ level (it dynamically imports and runs modules by id).
 
 WHAT THE REGISTRY ACTUALLY CONTAINS — measured, not assumed:
 
-  109 registered   109 real implementations   0 unimplemented
+  109 registered   107 real implementations   2 unimplemented
+
+Measured by loading the registry, not counted by hand — the line above used to
+read "109 real implementations, 0 unimplemented" while MultiTenantSaaS.
+tenant_isolator was already opted out, so the header overstated the system by
+one for as long as it existed. The two are:
+
+  MultiTenantSaaS.tenant_isolator          declared placeholder
+  OperationalAndDispatch.foreman_ai_client wraps api.foremanai.co, which does
+                                           not resolve; it made no request and
+                                           returned {"status": "success"} with
+                                           invented receipt ids until 2026-08-22
 
 The registry previously held 162 entries, 53 of which were generated
 scaffolds sharing one signature: they imported psutil, reported host CPU and
@@ -27,7 +38,8 @@ reading the tree.
 
 They were deleted on 2026-08-22 and the registry regenerated from source by
 scripts/build_ability_registry.py. Every remaining entry is a real
-implementation.
+implementation except the two named above, which are gated and refused rather
+than allowed to answer.
 
 The scaffold detection below is deliberately KEPT. It reads the source rather
 than a list, so a shell reintroduced by the next generator run is caught and
@@ -285,16 +297,22 @@ def execute_os_ability(module_id: str, params: dict | None = None, strict: bool 
         return {"ok": False, "error": f"module_id '{module_id}' not found in registry."}
 
     if not entry.get("implemented", True):
-        # Fail with the real reason rather than the NameError the scaffold raises.
+        # Fail with the real reason rather than the NameError the scaffold
+        # raises. Two different things land here and they need different
+        # explanations — a generated psutil shell, and a module that opted out
+        # because the service it wraps does not exist yet.
         return {
             "ok": False,
             "implemented": False,
             "module_id": module_id,
             "error": (
-                f"'{module_id}' is a generated scaffold, not a working ability. It reports "
-                f"host CPU/memory telemetry instead of {entry.get('category', 'domain')} logic, "
-                f"and its output string interpolates an undefined 'class_name'. It needs a real "
-                f"implementation before it can be called."
+                f"'{module_id}' is registered but not implemented, so it "
+                f"cannot be called. It has declared itself a placeholder "
+                f"(self.implemented = False) or is a generated scaffold that "
+                f"reports host CPU/memory telemetry in place of "
+                f"{entry.get('category', 'domain')} logic. Either way it would "
+                f"return nothing real; see the module docstring for what is "
+                f"missing."
             ),
         }
 

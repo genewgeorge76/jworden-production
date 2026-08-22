@@ -5,6 +5,8 @@ from fastapi import HTTPException, Security
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
+from . import jwt_secrets
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 _ALGORITHM = "HS256"
@@ -27,9 +29,14 @@ def verify_premium_security(token: str = Security(oauth2_scheme)):
     """
     Verify a bearer token using either:
       1. A long-lived master API key stored in JWORDEN_MASTER_KEY env var, or
-      2. A JWT signed with JWT_SECRET_KEY env var.
+      2. A JWT signed with the platform secret (see core/jwt_secrets.py for
+         the resolution order, which is shared with the issuing side and the
+         WebSocket endpoints).
 
-    Neither key is hard-coded; both must be supplied at runtime.
+    Neither key is hard-coded. That sentence used to sit directly above a
+    chain ending in `os.getenv(..., "fallback_secret")`, so an unconfigured
+    deployment verified tokens against a string committed to this repository
+    and the "not configured" guard below it could never fire.
     """
     if _auth_disabled():
         return {"user": "AuthBypass", "tenant_id": "JWORDEN_HQ", "auth_mode": "none"}
@@ -42,13 +49,21 @@ def verify_premium_security(token: str = Security(oauth2_scheme)):
     if master_key and token == master_key:
         return {"user": "Admin", "tenant_id": "JWORDEN_HQ"}
 
-    # JWT path
-    secret = os.getenv("JWT_SECRET_KEY", os.getenv("JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret")))
-    if not secret:
+    # JWT path. One resolver, no default at the end of it: when nothing is
+    # configured this raises and the request is refused, instead of quietly
+    # accepting whatever a known constant happens to validate.
+    try:
+        secret = jwt_secrets.platform_secret()
+    except jwt_secrets.SigningSecretUnavailable as exc:
+        logger.error("Token presented but no signing secret is configured: %s", exc)
         raise HTTPException(
-            status_code=500,
-            detail="Server authentication is not configured. Set JWT_SECRET_KEY.",
-        )
+            status_code=503,
+            detail=(
+                "Server authentication is not configured. Set one of: "
+                + ", ".join(jwt_secrets.PLATFORM_VARS)
+            ),
+        ) from exc
+
     try:
         payload = jwt.decode(token, secret, algorithms=[_ALGORITHM])
         return {

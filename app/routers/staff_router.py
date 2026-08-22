@@ -43,6 +43,7 @@ from sqlalchemy.orm import Session
 
 from ..database import SessionLocal
 from ..models import DailyCheckIn, StaffUser, WorkerDocument, WorkerProfile, STAFF_ROLES, WORKER_TYPES, WORKER_STATUS_VALUES
+from ..core import jwt_secrets
 from ..services import staff_auth
 from ..services.staff_compliance import (
     CDL_REQUIREMENTS,
@@ -190,7 +191,19 @@ def login(body: LoginBody, db: Session = Depends(_get_db)):
     ).first()
     if not user or not staff_auth.verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="bad credentials")
-    token = staff_auth.create_token(user.id, user.username, user.role)
+    try:
+        token = staff_auth.create_token(user.id, user.username, user.role)
+    except jwt_secrets.SigningSecretUnavailable as exc:
+        # Correct credentials, but nothing to sign with. Say that, rather than
+        # handing back a token signed with a constant anybody can read.
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Staff login is unavailable: no JWT signing secret is "
+                "configured. Set STAFF_JWT_SECRET, or one of: "
+                + ", ".join(jwt_secrets.PLATFORM_VARS)
+            ),
+        ) from exc
     return {"token": token, "username": user.username, "role": user.role}
 
 
