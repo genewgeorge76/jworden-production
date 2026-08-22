@@ -24,6 +24,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from ..core.security import verify_premium_security
+from ..services import provider_health
 from ..services.simulation_agent import simulate_delay
 
 logger = logging.getLogger(__name__)
@@ -52,12 +53,26 @@ class SimulateRequest(BaseModel):
 # ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @router.get("/sim-status", dependencies=[Depends(verify_premium_security)])
-def sim_status():
-    """Confirm which simulation engine is active."""
+async def sim_status():
+    """
+    Confirm which simulation engine is active.
+
+    This used to read `"gpt-4o" if os.getenv("OPENAI_API_KEY")`, which reports
+    the AI engine as active for a key that has been revoked — the simulator
+    would then quietly run its rule-based path while this endpoint insisted
+    otherwise. It now asks OpenAI.
+    """
+    health = await provider_health.check("openai")
+    live = health["status"] == provider_health.LIVE
     return {
-        "status":   "ok",
-        "engine":   "gpt-4o" if os.getenv("OPENAI_API_KEY") else "rule-based",
-        "ai_active": bool(os.getenv("OPENAI_API_KEY")),
+        "status":    "ok",
+        "engine":    "gpt-4o" if live else "rule-based",
+        "ai_active": live,
+        "provider":  {
+            "status": health["status"],
+            "detail": health["detail"],
+            "checked_at": health["checked_at"],
+        },
     }
 
 

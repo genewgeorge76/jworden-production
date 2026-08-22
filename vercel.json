@@ -88,7 +88,7 @@
           "value": "www.richmondasphaltpros.com"
         }
       ],
-      "destination": "https://www.richmondasphaltpaving.com/$1",
+      "destination": "https://richmondasphaltpaving.com/$1",
       "permanent": true
     },
     {
@@ -99,7 +99,7 @@
           "value": "richmondasphaltpros.com"
         }
       ],
-      "destination": "https://www.richmondasphaltpaving.com/$1",
+      "destination": "https://richmondasphaltpaving.com/$1",
       "permanent": true
     },
     {
@@ -144,6 +144,83 @@
         }
       ],
       "destination": "https://savannahasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.richmondasphaltpaving.com"
+        }
+      ],
+      "destination": "https://richmondasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.carolinablacktop.com"
+        }
+      ],
+      "destination": "https://carolinablacktop.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.obxpaving.com"
+        }
+      ],
+      "destination": "https://obxpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.atlantaasphaltpavingpros.com"
+        }
+      ],
+      "destination": "https://atlantaasphaltpavingpros.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.asphaltpavingkansascity.com"
+        }
+      ],
+      "destination": "https://asphaltpavingkansascity.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.savannahasphaltpaving.com"
+        }
+      ],
+      "destination": "https://savannahasphaltpaving.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jwordenuniversity.com"
+        }
+      ],
+      "destination": "https://jwordenuniversity.com/$1",
       "permanent": true
     },
     {
@@ -226,6 +303,16 @@
         }
       ],
       "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?jwordenuniversity\\.com"
+        }
+      ],
+      "destination": "/jwordenuniversity.com.html"
     },
     {
       "source": "/(.*)",

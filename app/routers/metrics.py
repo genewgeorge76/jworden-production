@@ -31,6 +31,7 @@ from ..services.celery_health import (
     check_redis_connection,
 )
 from ..services import jarvis_observability as _jarvis_observability
+from ..services import provider_health
 
 logger = logging.getLogger(__name__)
 
@@ -51,53 +52,6 @@ def _sentry_probe_url_from_dsn(dsn: str | None) -> str | None:
     if not parsed.scheme or not parsed.netloc:
         return None
     return f"{parsed.scheme}://{parsed.netloc}/api/0/"
-
-
-async def _probe_provider(
-    client: httpx.AsyncClient,
-    *,
-    method: str,
-    url: str,
-    configured: bool,
-    headers: dict[str, str] | None = None,
-    json_payload: dict[str, Any] | None = None,
-) -> dict[str, Any]:
-    if not configured:
-        return {
-            "up": False,
-            "status": "not_configured",
-            "status_code": None,
-            "latency_ms": None,
-            "detail": "Missing credentials",
-        }
-
-    t0 = time.monotonic()
-    try:
-        response = await client.request(
-            method,
-            url,
-            headers=headers,
-            json=json_payload,
-        )
-        latency_ms = round((time.monotonic() - t0) * 1000, 2)
-        up = 200 <= response.status_code < 300
-        detail = "ok" if up else f"HTTP {response.status_code}"
-        return {
-            "up": up,
-            "status": "ok" if up else "degraded",
-            "status_code": response.status_code,
-            "latency_ms": latency_ms,
-            "detail": detail,
-        }
-    except Exception as exc:  # noqa: BLE001
-        latency_ms = round((time.monotonic() - t0) * 1000, 2)
-        return {
-            "up": False,
-            "status": "error",
-            "status_code": None,
-            "latency_ms": latency_ms,
-            "detail": str(exc),
-        }
 
 
 # ── Celery metrics ────────────────────────────────────────────────────────────
@@ -274,10 +228,23 @@ async def ai_metrics(
         round(_ai_counters["failed_calls"] / total * 100, 2) if total > 0 else 0.0
     )
 
-    openai_configured = bool(os.getenv("OPENAI_API_KEY", ""))
+    # `openai_configured` answers "is a key set", which is not the question
+    # anyone reading this endpoint is actually asking. It stays for callers
+    # that already parse it, next to the probe result that can tell a working
+    # key from a revoked one.
+    health = provider_health.cached("openai")
 
     return {
-        "openai_configured": openai_configured,
+        "openai_configured": bool(health["configured"]),
+        "openai_health": {
+            "status": health["status"],
+            "detail": health["detail"],
+            "checked_at": health["checked_at"],
+            "note": (
+                "Probed by GET /api/v1/metrics/providers. 'unverified' means no "
+                "probe has run in this worker process yet, not that the key is bad."
+            ),
+        },
         "total_calls": total,
         "successful_calls": _ai_counters["successful_calls"],
         "failed_calls": _ai_counters["failed_calls"],
@@ -342,11 +309,14 @@ async def provider_metrics(
     This endpoint uses lightweight API probes and reports whether each provider
     is configured and currently reachable from the backend environment.
     """
-    openai_api_key = os.getenv("OPENAI_API_KEY", "").strip()
-    gemini_api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    perplexity_api_key = os.getenv("PERPLEXITY_API_KEY", "").strip()
-    anthropic_api_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
-    xai_api_key = os.getenv("XAI_API_KEY", "").strip()
+    # AI providers go through the shared health service: results are cached,
+    # credentials travel in headers rather than query strings, and every
+    # surface in the app classifies an HTTP response the same way.
+    ai = await provider_health.check_all(
+        ("openai", "google", "perplexity", "anthropic", "xai"),
+        max_age=float(os.getenv("PROVIDER_PROBE_TTL_SECONDS", "60")),
+    )
+
     x_bearer_token = os.getenv("X_BEARER_TOKEN", "").strip()
     dropbox_access_token = os.getenv("DROPBOX_ACCESS_TOKEN", "").strip()
     google_photos_access_token = os.getenv("GOOGLE_PHOTOS_ACCESS_TOKEN", "").strip()
@@ -356,51 +326,14 @@ async def provider_metrics(
 
     timeout = httpx.Timeout(connect=3.0, read=4.0, write=4.0, pool=4.0)
     async with httpx.AsyncClient(timeout=timeout) as client:
-        openai = await _probe_provider(
-            client,
-            method="GET",
-            url="https://api.openai.com/v1/models",
-            configured=_is_configured(openai_api_key),
-            headers={"Authorization": f"Bearer {openai_api_key}"},
-        )
-        gemini = await _probe_provider(
-            client,
-            method="GET",
-            url=f"https://generativelanguage.googleapis.com/v1beta/models?key={gemini_api_key}",
-            configured=_is_configured(gemini_api_key),
-        )
-        perplexity = await _probe_provider(
-            client,
-            method="GET",
-            url="https://api.perplexity.ai/models",
-            configured=_is_configured(perplexity_api_key),
-            headers={"Authorization": f"Bearer {perplexity_api_key}"},
-        )
-        claude = await _probe_provider(
-            client,
-            method="GET",
-            url="https://api.anthropic.com/v1/models",
-            configured=_is_configured(anthropic_api_key),
-            headers={
-                "x-api-key": anthropic_api_key,
-                "anthropic-version": "2023-06-01",
-            },
-        )
-        grok = await _probe_provider(
-            client,
-            method="GET",
-            url="https://api.x.ai/v1/models",
-            configured=_is_configured(xai_api_key),
-            headers={"Authorization": f"Bearer {xai_api_key}"},
-        )
-        x_api = await _probe_provider(
+        x_api = await provider_health.probe(
             client,
             method="GET",
             url="https://api.x.com/2/users/me",
             configured=_is_configured(x_bearer_token),
             headers={"Authorization": f"Bearer {x_bearer_token}"},
         )
-        dropbox = await _probe_provider(
+        dropbox = await provider_health.probe(
             client,
             method="POST",
             url="https://api.dropboxapi.com/2/users/get_current_account",
@@ -411,14 +344,14 @@ async def provider_metrics(
             },
             json_payload={},
         )
-        gphotos = await _probe_provider(
+        gphotos = await provider_health.probe(
             client,
             method="GET",
             url="https://photoslibrary.googleapis.com/v1/albums?pageSize=1",
             configured=_is_configured(google_photos_access_token),
             headers={"Authorization": f"Bearer {google_photos_access_token}"},
         )
-        sentry = await _probe_provider(
+        sentry = await provider_health.probe(
             client,
             method="GET",
             url=sentry_probe_url or "https://sentry.io/api/0/",
@@ -428,50 +361,27 @@ async def provider_metrics(
     if _is_configured(sentry_dsn) and not sentry_probe_url:
         sentry = {
             "up": False,
-            "status": "error",
+            "status": provider_health.DEGRADED,
             "status_code": None,
             "latency_ms": None,
             "detail": "Invalid SENTRY_DSN format",
         }
 
+    def _ai_row(pid: str, label: str, **extra: Any) -> dict[str, Any]:
+        row = dict(ai.get(pid) or provider_health.cached(pid))
+        row["label"] = label
+        row.update(extra)
+        return row
+
     providers: list[dict[str, Any]] = [
-        {
-            "id": "openai",
-            "label": "OpenAI",
-            "configured": _is_configured(openai_api_key),
-            **openai,
-        },
-        {
-            "id": "gemini",
-            "label": "Gemini",
-            "configured": _is_configured(gemini_api_key),
-            **gemini,
-        },
-        {
-            "id": "perplexity",
-            "label": "Perplexity",
-            "configured": _is_configured(perplexity_api_key),
-            **perplexity,
-        },
-        {
-            "id": "claude",
-            "label": "Claude",
-            "configured": _is_configured(anthropic_api_key),
-            **claude,
-        },
-        {
-            "id": "codex",
-            "label": "Codex",
-            "configured": _is_configured(openai_api_key),
-            "model": codex_model,
-            **openai,
-        },
-        {
-            "id": "grok",
-            "label": "Grok",
-            "configured": _is_configured(xai_api_key),
-            **grok,
-        },
+        _ai_row("openai", "OpenAI"),
+        _ai_row("google", "Gemini"),
+        _ai_row("perplexity", "Perplexity"),
+        _ai_row("anthropic", "Claude"),
+        # Codex runs on the OpenAI credential, so its health is OpenAI's health
+        # — but it keeps its own row because it has its own model setting.
+        _ai_row("openai", "Codex", id="codex", model=codex_model),
+        _ai_row("xai", "Grok"),
         {
             "id": "x",
             "label": "X API",
@@ -500,6 +410,11 @@ async def provider_metrics(
 
     up_count = sum(1 for p in providers if p.get("up"))
     configured_count = sum(1 for p in providers if p.get("configured"))
+    rejected = [
+        p["id"]
+        for p in providers
+        if p.get("status") == provider_health.INVALID_CREDENTIALS
+    ]
 
     return {
         "status": "ok",
@@ -508,6 +423,9 @@ async def provider_metrics(
             "providers_total": len(providers),
             "providers_up": up_count,
             "providers_configured": configured_count,
+            # Configured-but-rejected is the state that hides: the key is set,
+            # every presence check passes, and the provider refuses it.
+            "credentials_rejected": rejected,
         },
         "providers": providers,
     }

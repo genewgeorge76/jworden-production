@@ -546,8 +546,14 @@ def chat(
     )
 
 
-def provider_status() -> dict[str, bool]:
-    """Lightweight health check — which providers have an API key configured."""
+def configured_providers() -> dict[str, bool]:
+    """
+    Which providers have an API key present. NOT a health check.
+
+    A revoked key is a non-empty string, so every entry here can be True while
+    every call fails. For "does the key work", use
+    `app.services.provider_health.check()`, which asks the provider.
+    """
     return {
         "openai":     bool(_cfg.get("OPENAI_API_KEY")),
         "anthropic":  bool(_cfg.get("ANTHROPIC_API_KEY")),
@@ -555,3 +561,8 @@ def provider_status() -> dict[str, bool]:
         "perplexity": bool(_cfg.get("PERPLEXITY_API_KEY")),
         "xai":        bool(_cfg.get("XAI_API_KEY")),
     }
+
+
+#: Kept so any caller still importing the old name gets the same answer, with
+#: the docstring above making clear what that answer means.
+provider_status = configured_providers

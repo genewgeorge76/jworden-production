@@ -12,6 +12,10 @@ from app.models import Course, CourseModule, Lesson, Enrollment, Progress
 
 router = APIRouter(prefix="/lms", tags=["LMS"])
 
+# Engine used for AI course generation. Recorded on every generation job, so
+# the syllabus in the catalog can be traced to the model that wrote it.
+_COURSE_MODEL = os.getenv("LMS_COURSE_MODEL", "gpt-4o").strip() or "gpt-4o"
+
 # ── Pydantic Schemas ──────────────────────────────────────────────────────────
 
 class LessonOut(BaseModel):
@@ -158,15 +162,66 @@ def get_course(slug: str, tenant_id: str = "default", db: Session = Depends(get_
 
 # ── AI Generation Background Task ─────────────────────────────────────────────
 
-async def _generate_course_bg(topic: str, category: str, difficulty: str, tenant_id: str, db: Session):
-    """Background task to fully generate a course curriculum via OpenAI."""
+async def _generate_course_bg(
+    job_id: int,
+    topic: str,
+    category: str,
+    difficulty: str,
+    tenant_id: str,
+) -> None:
+    """
+    Generate a course curriculum and record what happened.
+
+    Two things were wrong with the previous version, and they hid each other.
+
+    The session came in as `Depends(get_db)`. That dependency closes the
+    session in a `finally` when the *request* ends, and a background task by
+    definition runs after that — so every write here was attempted on a closed
+    session. The generator could not have succeeded even with a working key.
+
+    And the failure handler was `print(...)`. A background task has no response
+    left to fail; the endpoint had already answered `{"status": "generating"}`.
+    With the course row written only on success, a failure left nothing at all:
+    no error surfaced, no row, no way for the operator who asked for a course
+    to discover that none was coming.
+
+    Now the task opens its own session and stamps the outcome onto the job row
+    that `POST /lms/ai-generate` handed back, so "it never appeared" always has
+    an answer attached to it.
+    """
+    from app.database import SessionLocal  # noqa: PLC0415
+    from app.models import CourseGenerationJob  # noqa: PLC0415
+    from app.services import provider_health  # noqa: PLC0415
+
+    db = SessionLocal()
+    job = db.get(CourseGenerationJob, job_id)
+    if job is None:
+        logger.error("course generation job %s vanished before it ran", job_id)
+        db.close()
+        return
+
+    def _finish(status: str, **fields) -> None:
+        job.status = status
+        job.finished_at = datetime.now(timezone.utc)
+        for key, value in fields.items():
+            setattr(job, key, value)
+        db.commit()
+
     try:
-        api_key = os.getenv("OPENAI_API_KEY")
+        job.status = "running"
+        db.commit()
+
+        api_key = os.getenv("OPENAI_API_KEY", "").strip()
         if not api_key:
+            _finish(
+                "failed",
+                error="OPENAI_API_KEY is not set — no engine available to generate a syllabus.",
+            )
+            logger.warning("course generation %s: no OPENAI_API_KEY", job_id)
             return
-            
+
         client = AsyncOpenAI(api_key=api_key)
-        
+
         system_prompt = (
             "You are an elite instructional designer and veteran construction engineer for J. Worden University. "
             "Your task is to generate a full JSON syllabus for a course. "
@@ -192,22 +247,38 @@ async def _generate_course_bg(topic: str, category: str, difficulty: str, tenant
             '  ]\n'
             "}"
         )
-        
-        prompt = f"Create a comprehensive, expert-level course on '{topic}'. The category is {category} and difficulty is {difficulty}. Write detailed lesson markdown bodies."
-        
+
+        prompt = (
+            f"Create a comprehensive, expert-level course on '{topic}'. "
+            f"The category is {category} and difficulty is {difficulty}. "
+            "Write detailed lesson markdown bodies."
+        )
+
         resp = await client.chat.completions.create(
-            model="gpt-4o",
+            model=_COURSE_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": prompt},
             ],
             response_format={"type": "json_object"},
-            temperature=0.4
+            temperature=0.4,
         )
-        
-        course_data = json.loads(resp.choices[0].message.content)
-        
-        # Save to DB
+
+        raw = (resp.choices[0].message.content or "").strip()
+        if not raw:
+            _finish("failed", engine=_COURSE_MODEL, error="Model returned an empty response.")
+            return
+
+        course_data = json.loads(raw)
+        for required in ("title", "slug", "description"):
+            if not str(course_data.get(required) or "").strip():
+                _finish(
+                    "failed",
+                    engine=_COURSE_MODEL,
+                    error=f"Model response is missing required field {required!r}; no course written.",
+                )
+                return
+
         course = Course(
             title=course_data["title"],
             slug=course_data["slug"],
@@ -216,47 +287,123 @@ async def _generate_course_bg(topic: str, category: str, difficulty: str, tenant
             difficulty=difficulty,
             estimated_hours=course_data.get("estimated_hours", 1.0),
             is_published=True,
-            tenant_id=tenant_id
+            tenant_id=tenant_id,
         )
         db.add(course)
         db.commit()
         db.refresh(course)
-        
+
+        modules_created = 0
+        lessons_created = 0
         for m_idx, mod in enumerate(course_data.get("modules", [])):
             module = CourseModule(
                 course_id=course.id,
                 title=mod["title"],
                 order_index=m_idx,
-                description=mod.get("description", "")
+                description=mod.get("description", ""),
             )
             db.add(module)
             db.commit()
             db.refresh(module)
-            
+            modules_created += 1
+
             for l_idx, less in enumerate(mod.get("lessons", [])):
-                lesson = Lesson(
-                    module_id=module.id,
-                    title=less["title"],
-                    order_index=l_idx,
-                    body_markdown=less.get("body_markdown", "")
+                db.add(
+                    Lesson(
+                        module_id=module.id,
+                        title=less["title"],
+                        order_index=l_idx,
+                        body_markdown=less.get("body_markdown", ""),
+                    )
                 )
-                db.add(lesson)
+                lessons_created += 1
             db.commit()
-            
-    except Exception as e:
-        print(f"Error generating course {topic}: {str(e)}")
+
+        _finish(
+            "succeeded",
+            engine=_COURSE_MODEL,
+            course_id=course.id,
+            modules_created=modules_created,
+            lessons_created=lessons_created,
+        )
+        logger.info(
+            "course generation %s succeeded: course=%s modules=%d lessons=%d",
+            job_id, course.id, modules_created, lessons_created,
+        )
+
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("course generation %s failed: %s", job_id, exc)
+        db.rollback()
+        try:
+            _finish(
+                "failed",
+                engine=_COURSE_MODEL,
+                error=provider_health.redact(f"{exc.__class__.__name__}: {exc}")[:2000],
+            )
+        except Exception:  # noqa: BLE001
+            logger.exception("could not record failure for course generation %s", job_id)
+    finally:
+        db.close()
 
 
 @router.post("/ai-generate")
 async def generate_course(
-    req: GenerateCourseRequest, 
+    req: GenerateCourseRequest,
     background_tasks: BackgroundTasks,
-    tenant_id: str = "default", 
-    db: Session = Depends(get_db)
+    tenant_id: str = "default",
+    db: Session = Depends(get_db),
 ):
-    """Trigger an AI generation of a new course."""
-    background_tasks.add_task(_generate_course_bg, req.topic, req.category, req.difficulty, tenant_id, db)
-    return {"status": "generating", "message": f"Course '{req.topic}' is being generated in the background."}
+    """
+    Trigger an AI generation of a new course.
+
+    Returns a `job_id`. Poll `GET /lms/ai-generate/{job_id}` for the outcome —
+    generation happens after this response is sent, so this endpoint cannot
+    report success, and it no longer implies any.
+    """
+    from app.models import CourseGenerationJob  # noqa: PLC0415
+
+    job = CourseGenerationJob(
+        tenant_id=tenant_id,
+        topic=req.topic,
+        category=req.category,
+        difficulty=req.difficulty,
+        status="queued",
+    )
+    db.add(job)
+    db.commit()
+    db.refresh(job)
+
+    background_tasks.add_task(
+        _generate_course_bg, job.id, req.topic, req.category, req.difficulty, tenant_id
+    )
+    return {
+        "status": "queued",
+        "job_id": job.id,
+        "poll": f"/lms/ai-generate/{job.id}",
+        "message": f"Course '{req.topic}' was queued for generation.",
+    }
+
+
+@router.get("/ai-generate/{job_id}")
+def course_generation_status(job_id: int, db: Session = Depends(get_db)):
+    """Report the outcome of one course generation attempt, including failure."""
+    from app.models import CourseGenerationJob  # noqa: PLC0415
+
+    job = db.get(CourseGenerationJob, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="No such generation job")
+    return {
+        "job_id": job.id,
+        "status": job.status,
+        "topic": job.topic,
+        "engine": job.engine,
+        "course_id": job.course_id,
+        "modules_created": job.modules_created,
+        "lessons_created": job.lessons_created,
+        "error": job.error,
+        "created_at": job.created_at.isoformat() if job.created_at else None,
+        "finished_at": job.finished_at.isoformat() if job.finished_at else None,
+    }
 
 
 # ══════════════════════════════════════════════════════════════════════════════

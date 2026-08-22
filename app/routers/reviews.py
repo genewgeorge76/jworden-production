@@ -139,18 +139,22 @@ async def generate_review_response(
     Returns a draft — Mr. Worden approves before publishing.
     Requires premium authentication (X-API-Key header).
     """
-    import os  # noqa: PLC0415
-    from ..services.review_responder import generate_review_response as _gen  # noqa: PLC0415
+    from ..services.review_responder import (  # noqa: PLC0415
+        generate_review_response_detailed as _gen,
+    )
 
     tone = req.tone if req.tone in ("grateful", "professional", "apologetic") else "grateful"
-    draft = _gen(
+    # The engine comes back from the generator rather than being inferred from
+    # the environment: a revoked OPENAI_API_KEY still satisfies a presence
+    # check, so `"gpt-4o" if os.getenv(...)` labelled template drafts as model
+    # output — on the one field an operator would use to tell them apart.
+    draft, engine = _gen(
         review_text=req.review_text,
         reviewer_name=req.reviewer_name,
         rating=req.rating,
         tone=tone,
     )
 
-    engine = "gpt-4o" if os.getenv("OPENAI_API_KEY") else "template"
     logger.info(
         "Review response generated: tenant=%s rating=%d tone=%s engine=%s",
         security.get("tenant_id"), req.rating, tone, engine,

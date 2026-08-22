@@ -27,7 +27,9 @@
  * host -> /brands/<domain>/$1, so nothing on the main site can intercept it.
  *
  * Every generated page has:
- *   - its own canonical (https://www.<domain><route>) — no cross-domain leakage
+ *   - its own canonical, on the domain's canonical host (see
+ *     scripts/lib/site-hosts.mjs) — no cross-domain leakage, and no
+ *     disagreement with the hostname the sitemap advertises
  *   - a unique, length-tuned title + meta description
  *   - genuinely market-specific copy from regionalMarketProfiles (state DOT
  *     spec, subgrade behaviour, climate failure mode) rather than spun filler
@@ -47,6 +49,11 @@
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+
+// Which hostname is canonical for a domain. Shared with generate-sitemap.mjs
+// so a page's canonical and the <loc> advertising it cannot disagree — they
+// did, and the mismatch quietly nullified every sitemap on the network.
+import { canonicalUrl } from './lib/site-hosts.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = resolve(ROOT, 'dist');
@@ -185,7 +192,7 @@ function schema(p, route, canonical) {
 
 function page(p, route) {
   const c = copyFor(route.key, p);
-  const canonical = `https://www.${p.domain}${route.path === '/' ? '/' : route.path}`;
+  const canonical = canonicalUrl(p.domain, route.path);
   const tel = `tel:+1${String(p.phoneDisplay || '804-446-1296').replace(/\D/g, '')}`;
   const nav = ROUTES.filter((r) => r.path !== route.path)
     .map((r) => `<a href="${r.path}">${esc(({ home: 'Home', commercial: 'Commercial', residential: 'Residential', services: 'Services', areas: 'Service Areas', contact: 'Contact' })[r.key])}</a>`)
@@ -367,7 +374,7 @@ const FACT_COUNTIES = factCountiesFrom(countyFacts);
 function countyPage(p, r) {
   const countyName = /County$/.test(r.county) ? r.county : `${r.county} County`;
   const path = countyPath(r.county, r.service);
-  const canonical = `https://www.${p.domain}${path}`;
+  const canonical = canonicalUrl(p.domain, path);
   const facts = FACTS_BY_COUNTY.get(r.county) || null;
   const specs = r.specs.map((k) => countyData.specifications[k]).filter(Boolean);
 
