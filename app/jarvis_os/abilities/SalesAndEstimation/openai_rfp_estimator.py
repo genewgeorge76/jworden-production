@@ -1,41 +1,112 @@
-import os
+"""
+RFP estimator — reads a commercial paving RFP and proposes a bid.
+
+Reachable as SalesAndEstimation.openai_rfp_estimator through
+POST /api/v1/abilities/execute.
+
+TWO THINGS WERE WRONG HERE, AND THE SECOND ONE COULD COST MONEY.
+
+1. It built its own AsyncOpenAI client, so a revoked OPENAI_API_KEY meant no
+   estimate at all rather than one from Claude. It now goes through
+   llm_client, which walks the whole provider chain.
+
+2. Far worse: every failure path returned `_mock_analysis()` — a hardcoded
+   dict claiming 150,000 sqft, 1,875.5 tons, $1,125,300 of materials and a
+   **$1,850,000 recommended bid**, with a win probability of "HIGH". The same
+   numbers for every RFP, whatever the document said, returned in exactly the
+   shape a real estimate takes.
+
+   That fired when the key was missing AND on any exception. A bid is a
+   number somebody acts on. Inventing one and labelling it "Fallback
+   calculation" is worse than returning nothing, because nothing is obviously
+   nothing and a confident $1.85M is not.
+
+   There is no mock any more. When no provider answers, or the response
+   cannot be parsed, or a required field is missing, this returns
+   `ok: False` with a reason and NO numbers.
+"""
+
 import json
 import logging
-from openai import AsyncOpenAI
+
+from app.services import llm_client
 
 logger = logging.getLogger(__name__)
 
+#: Every field a caller is entitled to treat as an estimate. If the model does
+#: not return all of them, the result is not an estimate and is refused.
+REQUIRED_FIELDS = (
+    "estimated_sqft",
+    "estimated_asphalt_tons",
+    "materials_cost",
+    "recommended_bid_price",
+)
+
+_SYSTEM = "You are a highly advanced estimation AI that only outputs valid JSON."
+
+
+def _unavailable(reason: str) -> dict:
+    """
+    The honest answer when no estimate could be produced.
+
+    Deliberately carries no numeric fields at all — not zeros, not nulls
+    beside a plausible-looking total. A caller that reads this and renders a
+    bid has to notice `ok: False` first.
+    """
+    return {
+        "ok": False,
+        "error": reason,
+        "estimate": None,
+        "note": (
+            "No estimate was produced. This response contains no figures on "
+            "purpose: a fabricated bid is worse than an absent one."
+        ),
+    }
+
+
 class OpenAIRFPEstimator:
     """
-    OpenAI Deep Reasoning RFP Estimator
-    Utilizes the newest ChatGPT models (gpt-4o / o1-ready) to deeply analyze
-    heavy commercial paving RFPs and generate calculated cost estimates.
+    Deep-reasoning RFP estimator.
+
+    Named for the provider it was originally written against; it now routes
+    through llm_client and may be answered by any configured provider.
     """
-    def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            logger.warning("OPENAI_API_KEY not found in environment.")
-        # Initialize the official Async OpenAI client
-        self.client = AsyncOpenAI(api_key=self.api_key) if self.api_key else None
-        # We use gpt-4o for JSON guaranteed structure, perfectly mimicking deep reasoning.
-        # Ready to drop in "o1-preview" when API structured JSON support drops.
-        self.model = "gpt-4o"
 
     def execute(self, params: dict = None) -> dict:
         params = params or {}
-        rfp_text = params.get("rfp_text") or params.get("query") or params.get("prompt") or "Standard commercial parking lot asphalt paving RFP"
-        import asyncio
+        rfp_text = (
+            params.get("rfp_text")
+            or params.get("query")
+            or params.get("prompt")
+            or ""
+        ).strip()
+        # No silent default RFP. The previous version substituted "Standard
+        # commercial parking lot asphalt paving RFP" for a missing argument
+        # and then priced it, so a caller who forgot the parameter got a bid
+        # for a document that does not exist.
+        if not rfp_text:
+            return _unavailable("No RFP text supplied (expected 'rfp_text').")
+
+        import asyncio  # noqa: PLC0415
+
         try:
             return asyncio.run(self.analyze_commercial_rfp(rfp_text))
-        except Exception:
-            return self._mock_analysis()
+        except RuntimeError:
+            # Already inside a running loop — the ability registry calls
+            # execute() synchronously, so this is the caller's problem to fix
+            # rather than something to paper over with a fake number.
+            return _unavailable(
+                "Estimator invoked from inside a running event loop; "
+                "await analyze_commercial_rfp() directly."
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("RFP estimation failed")
+            return _unavailable(f"{exc.__class__.__name__}: {exc}")
 
     async def analyze_commercial_rfp(self, rfp_text: str) -> dict:
-        """
-        Takes raw text from an RFP (up to 128k tokens) and reasons through the math.
-        """
-        if not self.client:
-            return self._mock_analysis()
+        """Read an RFP and return a costed bid, or an explicit refusal."""
+        if not any(llm_client.configured_providers().values()):
+            return _unavailable("No LLM provider is configured.")
 
         prompt = f"""
 You are the elite Chief Estimator for a multi-million dollar paving company.
@@ -54,31 +125,40 @@ Return your final reasoning and estimates STRICTLY in this JSON format:
 --- RFP TEXT ---
 {rfp_text}
 """
-        try:
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a highly advanced estimation AI that only outputs valid JSON."},
-                    {"role": "user", "content": prompt}
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.2
-            )
-            
-            result_json = response.choices[0].message.content
-            return json.loads(result_json)
-            
-        except Exception as e:
-            logger.error(f"OpenAI RFP Estimation failed: {str(e)}")
-            return self._mock_analysis()
+        # ajson_chat: async, because this is awaited from request handlers, and
+        # JSON-contracted across every provider rather than via OpenAI's
+        # response_format, which only one provider implements.
+        reply = await llm_client.ajson_chat(
+            task="reasoning",
+            system=_SYSTEM,
+            user=prompt,
+            temperature=0.2,
+            max_tokens=1500,
+        )
+        if reply.error or not reply.data:
+            return _unavailable(reply.error_detail or "No provider answered.")
 
-    def _mock_analysis(self) -> dict:
-        """Fallback for tests or if the key is missing."""
+        data = reply.data
+        missing = [f for f in REQUIRED_FIELDS if data.get(f) is None]
+        if missing:
+            return _unavailable(
+                f"Model response was missing required field(s): {', '.join(missing)}."
+            )
+
+        # Booleans are ints in Python, so `True` would sail through a numeric
+        # check and price as 1. Reject anything that is not a real number.
+        for field in REQUIRED_FIELDS:
+            value = data[field]
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                return _unavailable(f"Field {field!r} was not a number: {value!r}")
+            if value < 0:
+                return _unavailable(f"Field {field!r} was negative: {value!r}")
+
         return {
-            "estimated_sqft": 150000,
-            "estimated_asphalt_tons": 1875.5,
-            "materials_cost": 1125300,
-            "recommended_bid_price": 1850000,
-            "win_probability_score": "HIGH",
-            "reasoning": "Fallback calculation. Assuming 150k sqft at standard depth yields ~1875 tons. Added 60% margin."
+            "ok": True,
+            "estimate": data,
+            # The model that actually answered, not the one the routing table
+            # lists first.
+            "engine": reply.model or reply.provider,
+            "fallback_used": reply.fallback_used,
         }
