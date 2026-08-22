@@ -305,6 +305,16 @@
       "destination": "/index.html"
     },
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?jwordenuniversity\\.com"
+        }
+      ],
+      "destination": "/brands/jwordenuniversity.com/index.html"
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
