@@ -1,6 +1,14 @@
 import requests, json
 
-NETLIFY_TOKEN = "nfc_UCNyMNjyfWcZWLLsUnyuQpSTZCh1EDmT55ed"
+import os
+
+# The token was hardcoded here and committed. A Netlify personal access
+# token is full control of the account: DNS zones, site deploys, and the
+# domains it serves. Read access to this repository was enough to use it.
+#
+# Removing the literal does not undo that — it remains in git history — so
+# the token must be REVOKED in the Netlify account and reissued.
+NETLIFY_TOKEN = os.environ["NETLIFY_AUTH_TOKEN"]
 VERCEL_IP     = "76.76.21.21"
 VERCEL_CNAME  = "cname.vercel-dns.com"
 

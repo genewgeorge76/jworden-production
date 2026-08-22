@@ -1,5 +1,27 @@
-$GD_KEY    = "dKNtgiYynXQb_MUrpJZy3UX6PABmrkpmRr2"
-$GD_SECRET = "7Eixwe4tX7ZTo8wJe8mBni"
+# GoDaddy credentials come from the environment, never from this file.
+#
+# They were hardcoded here, and in three sibling scripts, and committed. A
+# GoDaddy key and secret are DNS write access to every domain on the account —
+# 26 of them — which means whoever holds them can repoint the websites, move
+# the MX records and read the mail, or pass a domain-control validation and
+# issue certificates. Read access to this repository was enough to do all of
+# that.
+#
+# Deleting the literals does not undo it: they are still in git history, so
+# the pair has to be ROTATED in the GoDaddy account. Treat the old key as
+# burned.
+#
+#   $env:GODADDY_API_KEY    = "..."
+#   $env:GODADDY_API_SECRET = "..."
+
+$GD_KEY    = $env:GODADDY_API_KEY
+$GD_SECRET = $env:GODADDY_API_SECRET
+
+if (-not $GD_KEY -or -not $GD_SECRET) {
+    Write-Error "GODADDY_API_KEY and GODADDY_API_SECRET must be set in the environment."
+    exit 1
+}
+
 $GD_HEADERS = @{
     "Authorization" = "sso-key ${GD_KEY}:${GD_SECRET}"
     "Content-Type"  = "application/json"
