@@ -33,28 +33,17 @@ try:
     if not _BROKER_URL:
         raise RuntimeError("CELERY_BROKER_URL / REDIS_URL not configured")
 
-    celery_app = Celery("jworden_followups", broker=_BROKER_URL, backend=_BROKER_URL)
-    celery_app.conf.update(
-        task_serializer="json",
-        accept_content=["json"],
-        result_serializer="json",
-        timezone="UTC",
-        enable_utc=True,
-        beat_schedule={
-            "check-hot-leads": {
-                "task": "app.services.follow_up_tasks.check_hot_leads",
-                "schedule": crontab(minute="*/15"),
-            },
-            "check-warm-leads": {
-                "task": "app.services.follow_up_tasks.check_warm_leads",
-                "schedule": crontab(minute="*/15"),
-            },
-            "check-cool-leads": {
-                "task": "app.services.follow_up_tasks.check_cool_leads",
-                "schedule": crontab(minute="*/15"),
-            },
-        },
-    )
+    # NO SECOND CELERY APP, AND NO BEAT SCHEDULE HERE.
+    #
+    # This module used to build Celery("jworden_followups") with its own
+    # beat_schedule for the three checks below. Nothing ever ran that app —
+    # fly.toml starts worker and beat against app.celery_app only — so the
+    # schedule read as complete in the source and fired exactly never.
+    #
+    # The tasks now live in app/tasks/follow_up_beat.py, registered on the app
+    # that actually runs, and the schedule lives in app/celery_app.py beside
+    # every other periodic job. Task registration is per-app: re-adding a
+    # second Celery instance here would silently detach them again.
     _CELERY_AVAILABLE = True
 except (ImportError, RuntimeError) as _e:
     celery_app = None  # type: ignore
@@ -244,18 +233,10 @@ def _run_cool_check():
         logger.error("check_cool_leads error: %s", exc)
 
 
-if _CELERY_AVAILABLE and celery_app:
-    @celery_app.task(name="app.services.follow_up_tasks.check_hot_leads")
-    def check_hot_leads():
-        _run_hot_check()
-
-    @celery_app.task(name="app.services.follow_up_tasks.check_warm_leads")
-    def check_warm_leads():
-        _run_warm_check()
-
-    @celery_app.task(name="app.services.follow_up_tasks.check_cool_leads")
-    def check_cool_leads():
-        _run_cool_check()
+# The Celery task shims for these three now live in
+# app/tasks/follow_up_beat.py, bound to app.celery_app. They call
+# _run_hot_check / _run_warm_check / _run_cool_check above, which remain the
+# only implementation.
 
 
 # ── Public scheduling API ─────────────────────────────────────────────────────

@@ -41,6 +41,7 @@ celery_app = Celery(
         "app.tasks.social_dispatch",
         "app.tasks.site_health_beat",
         "app.tasks.backup_beat",
+        "app.tasks.follow_up_beat",
     ],
 )
 
@@ -97,6 +98,22 @@ celery_app.conf.update(
         # Nightly database backup at 07:30 UTC — after the VDOT scrape at
         # 07:00 so a failed scrape does not delay the backup, and before the
         # working day in Virginia so the dump reflects a settled database.
+        # Lead follow-up. These three ran on a second Celery app that no
+        # process starts, so the pipeline had never fired: a HOT lead going
+        # uncontacted past its SLA was supposed to raise a notification and
+        # never once did. Registered here, on the app beat actually runs.
+        "check-hot-leads": {
+            "task": "app.tasks.follow_up_beat.check_hot_leads",
+            "schedule": crontab(minute="*/15"),
+        },
+        "check-warm-leads": {
+            "task": "app.tasks.follow_up_beat.check_warm_leads",
+            "schedule": crontab(minute="*/15"),
+        },
+        "check-cool-leads": {
+            "task": "app.tasks.follow_up_beat.check_cool_leads",
+            "schedule": crontab(minute="*/15"),
+        },
         "database-backup-nightly": {
             "task": "app.tasks.backup_beat.run_nightly_backup",
             "schedule": crontab(minute=30, hour=7),
