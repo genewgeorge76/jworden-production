@@ -20,6 +20,8 @@ from __future__ import annotations
 import base64
 import json
 import logging
+
+from app.services import llm_client
 import os
 from typing import Optional
 
@@ -190,8 +192,7 @@ def parse_permit_pdf(file_bytes: bytes) -> dict:
     Returns:
       {permit_number, address, permit_type, expiry_date, contractor, scope}
     """
-    client = _get_openai_client()
-    if not client:
+    if not any(llm_client.configured_providers().values()):
         return _stub_permit()
 
     system_prompt = (
@@ -208,8 +209,23 @@ def parse_permit_pdf(file_bytes: bytes) -> dict:
         if not text.strip():
             return {**_stub_permit(), "error": "Could not extract text from PDF"}
 
-        result = _gpt_json_call(client, system_prompt, f"Parse this permit:\n\n{text}")
-        result.setdefault("engine", "gpt-4o")
+        # Text only, so this one goes through the router. The contract and
+        # blueprint analysers above stay on the OpenAI SDK: both send
+        # image_url payloads, and no provider in the fallback chain accepts
+        # them, so routing them would replace a working call with a broken one.
+        reply = llm_client.json_chat(
+            task="reasoning",
+            system=system_prompt,
+            user=f"Parse this permit:\n\n{text}",
+            max_tokens=1000,
+            temperature=0.2,
+        )
+        if reply.error or not reply.data:
+            logger.warning("permit parsing unavailable: %s", reply.error_detail)
+            return {**_stub_permit(), "error": reply.error_detail or "no provider answered"}
+        result = dict(reply.data)
+        # The model that answered, not the one the routing table lists first.
+        result.setdefault("engine", reply.model or reply.provider)
         return result
     except Exception as exc:  # noqa: BLE001
         logger.error("parse_permit_pdf error: %s", exc)

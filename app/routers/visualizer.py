@@ -13,6 +13,8 @@ but no auth requirement (matches the existing quote form pattern).
 """
 
 import logging
+
+from ..services import llm_client
 import os
 from typing import Optional
 
@@ -244,7 +246,6 @@ def _ai_proposal_narrative(build_config: dict) -> str:
             if k in build_config
         }
 
-        client   = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         config_s = _json.dumps(safe_config, indent=2)
         prompt   = (
             "You are a proposal writer for J. Worden & Sons, a 4th-generation contractor. "
@@ -253,12 +254,10 @@ def _ai_proposal_narrative(build_config: dict) -> str:
             "and size. Close by noting a free on-site consultation is included.\n\n"
             f"Configuration:\n{config_s}"
         )
-        resp = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=400,
-        )
-        return resp.choices[0].message.content or _build_proposal_narrative(build_config)
+        reply = llm_client.chat(task="proposal", user=prompt, max_tokens=400)
+        if reply.error or not reply.text.strip():
+            return _build_proposal_narrative(build_config)
+        return reply.text
     except Exception as exc:  # noqa: BLE001
         logger.debug("AI proposal narrative failed, using stub: %s", exc)
         return _build_proposal_narrative(build_config)
@@ -393,33 +392,25 @@ async def ai_design_suggestions(request: Request, req: AIDesignRequest):
     configuration.  Falls back to curated static suggestions when OpenAI is
     not configured.
     """
-    openai_key = os.getenv("OPENAI_API_KEY", "")
-
-    if openai_key:
+    # Any configured provider, not OpenAI specifically — the old gate skipped
+    # this entirely when OpenAI was unset, even with Claude available.
+    if any(llm_client.configured_providers().values()):
         try:
-            from openai import OpenAI  # type: ignore  # noqa: PLC0415
-
-            client = OpenAI(api_key=openai_key)
             prompt = (
                 "You are Jay Worden, an AI design consultant for J. Worden & Sons contractors. "
                 f"A customer is planning a {req.sqft:,.0f} sq ft {req.property_type} {req.build_type.replace('_', ' ')} "
                 f"in {req.state_code or 'their area'}. "
                 "Give 3 specific, practical upgrade suggestions (each 1–2 sentences) that would increase "
                 "property value and durability. Be specific to the build type and size. "
-                "Format: return a JSON array of objects with keys 'title' and 'description'."
+                'Respond with {"suggestions": [{"title": "...", "description": "..."}]}.'
             )
-            resp = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=350,
-                response_format={"type": "json_object"},
-            )
-            import json as _json  # noqa: PLC0415
-            text = resp.choices[0].message.content or "{}"
-            parsed = _json.loads(text)
-            suggestions = parsed.get("suggestions", parsed) if isinstance(parsed, dict) else parsed
-            if isinstance(suggestions, list):
-                return {"suggestions": suggestions[:4]}
+            # json_chat, not response_format: that parameter is OpenAI-only, so
+            # the JSON guarantee it provided held for exactly one provider.
+            reply = llm_client.json_chat(task="fast", user=prompt, max_tokens=350)
+            if not reply.error and reply.data:
+                suggestions = reply.data.get("suggestions")
+                if isinstance(suggestions, list) and suggestions:
+                    return {"suggestions": suggestions[:4]}
         except Exception as exc:  # noqa: BLE001
             logger.debug("AI suggestions failed: %s", exc)
 

@@ -41,24 +41,10 @@ HUMAN_REVIEW_THRESHOLD: float = float(
 )
 
 # Module-level OpenAI client singleton — avoids creating a new httpx session per request.
-_openai_client: Any = None
-
-
-def _get_openai_client() -> Any:
-    """Return a shared OpenAI client, or None if the API key is not set."""
-    global _openai_client
-    api_key = os.getenv("OPENAI_API_KEY", "")
-    if not api_key:
-        return None
-    if _openai_client is not None:
-        return _openai_client
-    try:
-        from openai import OpenAI  # type: ignore
-        _openai_client = OpenAI(api_key=api_key)
-        return _openai_client
-    except Exception as exc:  # noqa: BLE001
-        logger.error("Could not create OpenAI client: %s", exc)
-        return None
+# The OpenAI client factory that used to live here is gone: it was dead code.
+# Every call site in this module goes through _call_openai, which has routed
+# through llm_client for some time. A constructed-but-unused provider client is
+# worse than none — it looks like a working fallback in a grep.
 
 # Domain keywords — questions touching these topics are "in domain" for this AI
 _PAVING_DOMAIN = {
