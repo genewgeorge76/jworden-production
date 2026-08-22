@@ -25,7 +25,15 @@ import os
 from datetime import date, timedelta
 from typing import Any
 
+from . import runtime_config as _cfg
+
 logger = logging.getLogger(__name__)
+
+# _cfg was referenced by _property_id() and _load_credentials() and never
+# imported, so every GA4 call raised NameError before it got anywhere near a
+# credential. Combined with google-analytics-data not being in requirements,
+# this module had three independent reasons it could not work, and reported
+# none of them: the router turned the failure into "not configured".
 
 # ── Credential helpers ────────────────────────────────────────────────────────
 
@@ -37,7 +45,12 @@ def _load_credentials() -> Any | None:
     Decode GA4_SERVICE_ACCOUNT_JSON (base64) and return a google-auth
     ServiceAccountCredentials object, or None if the env var is absent.
     """
-    raw = os.getenv("GA4_SERVICE_ACCOUNT_JSON", "").strip()
+    # Runtime store first, then the environment — the same lookup _property_id
+    # uses. gsc_client carries this note for the same reason: reading os.getenv
+    # here while the property id came from the runtime store meant a credential
+    # set through the admin UI configured only half the client, and the half
+    # that was missing failed silently.
+    raw = _cfg.get("GA4_SERVICE_ACCOUNT_JSON", "").strip()
     if not raw:
         return None
     try:
@@ -54,18 +67,40 @@ def _load_credentials() -> Any | None:
         return None
 
 
-def _build_client() -> Any | None:
-    """Return an authenticated GA4 BetaAnalyticsDataClient, or None."""
+class GA4Unavailable(RuntimeError):
+    """Why GA4 could not be reached, in words that name the actual fix."""
+
+
+def _build_client() -> Any:
+    """
+    Return an authenticated GA4 client, or raise GA4Unavailable saying why.
+
+    This used to return None for every failure, and the caller turned that into
+    "Set GA4_SERVICE_ACCOUNT_JSON". That message was wrong in the case that was
+    actually happening: google-analytics-data was not in requirements at all, so
+    the import below raised ImportError and GA4 reported itself unconfigured no
+    matter how correct the credentials were. Somebody could have set the
+    service account, seen "not configured", and gone looking at Google Cloud.
+    """
     creds = _load_credentials()
     if creds is None:
-        return None
+        raise GA4Unavailable(
+            "GA4_SERVICE_ACCOUNT_JSON is not set (base64-encoded service "
+            "account JSON)."
+        )
     try:
         from google.analytics.data_v1beta import BetaAnalyticsDataClient  # type: ignore
-
+    except ImportError as exc:
+        raise GA4Unavailable(
+            "the google-analytics-data package is not installed — this is a "
+            "deployment problem, not a credentials problem: "
+            f"{exc}"
+        ) from exc
+    try:
         return BetaAnalyticsDataClient(credentials=creds)
     except Exception as exc:  # noqa: BLE001
         logger.error("GA4 client build failed: %s", exc)
-        return None
+        raise GA4Unavailable(f"{exc.__class__.__name__}: {exc}") from exc
 
 
 def _property_id() -> str:
@@ -149,12 +184,10 @@ def get_ga4_data(days: int = 28) -> dict:
             "message": "Set GA4_PROPERTY_ID and GA4_SERVICE_ACCOUNT_JSON environment variables to enable Google Analytics 4 data.",
         }
 
-    client = _build_client()
-    if client is None:
-        return {
-            "not_configured": True,
-            "message": "Set GA4_SERVICE_ACCOUNT_JSON environment variable (base64-encoded service account JSON) to enable Google Analytics 4 data.",
-        }
+    try:
+        client = _build_client()
+    except GA4Unavailable as exc:
+        return {"not_configured": True, "message": f"GA4 is unavailable: {exc}"}
 
     start, end = _date_range(days)
 
@@ -234,8 +267,16 @@ def get_top_pages(limit: int = 20) -> list[dict]:
     Each entry includes pagePath, sessions, activeUsers, conversions, bounceRate.
     """
     prop = _property_id()
-    client = _build_client()
-    if not prop or client is None:
+    if not prop:
+        return []
+    try:
+        client = _build_client()
+    except GA4Unavailable as exc:
+        # These three helpers return a list, so there is nowhere to put a
+        # reason. Log it rather than returning [] in silence — an empty list
+        # and "GA4 is not installed" look identical to a caller and mean very
+        # different things.
+        logger.warning("GA4 report skipped: %s", exc)
         return []
 
     start, end = _date_range(28)
@@ -256,8 +297,16 @@ def get_conversion_funnel() -> list[dict]:
     Each step shows sessions and the drop-off rate from the previous step.
     """
     prop = _property_id()
-    client = _build_client()
-    if not prop or client is None:
+    if not prop:
+        return []
+    try:
+        client = _build_client()
+    except GA4Unavailable as exc:
+        # These three helpers return a list, so there is nowhere to put a
+        # reason. Log it rather than returning [] in silence — an empty list
+        # and "GA4 is not installed" look identical to a caller and mean very
+        # different things.
+        logger.warning("GA4 report skipped: %s", exc)
         return []
 
     start, end = _date_range(28)
@@ -316,8 +365,16 @@ def get_conversion_rate_by_page(limit: int = 20) -> list[dict]:
     Only includes pages with at least 10 sessions to filter noise.
     """
     prop = _property_id()
-    client = _build_client()
-    if not prop or client is None:
+    if not prop:
+        return []
+    try:
+        client = _build_client()
+    except GA4Unavailable as exc:
+        # These three helpers return a list, so there is nowhere to put a
+        # reason. Log it rather than returning [] in silence — an empty list
+        # and "GA4 is not installed" look identical to a caller and mean very
+        # different things.
+        logger.warning("GA4 report skipped: %s", exc)
         return []
 
     start, end = _date_range(28)
