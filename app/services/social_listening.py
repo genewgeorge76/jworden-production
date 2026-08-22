@@ -111,7 +111,7 @@ class ListenResult:
 
 
 def configured() -> bool:
-    return bool(_cfg.get("XAI_API_KEY"))
+    return bool(_cfg.key_for("XAI_API_KEY"))
 
 
 def _model() -> str:
@@ -273,7 +273,7 @@ async def listen(
     extra: str = "",
     timeout: float = 90.0,
 ) -> ListenResult:
-    key = _cfg.get("XAI_API_KEY")
+    key = _cfg.key_for("XAI_API_KEY")
     if not key:
         raise ListeningUnavailable(
             "XAI_API_KEY is not set. Set it via the admin integrations endpoint; "

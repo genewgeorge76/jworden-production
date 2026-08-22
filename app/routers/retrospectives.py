@@ -12,6 +12,8 @@ Routes:
 
 import json
 import logging
+
+from ..services import llm_client
 import os
 from datetime import datetime, timezone
 from typing import Optional
@@ -237,13 +239,7 @@ async def surface_lessons(
 
 def _generate_tags(retro: ProjectRetrospective) -> list[str]:
     """Generate AI tags using GPT-4o; fall back to rule-based tags."""
-    api_key = os.getenv("OPENAI_API_KEY", "")
-    if not api_key:
-        return _rule_based_tags(retro)
-
     try:
-        from openai import OpenAI  # noqa: PLC0415
-        client = OpenAI(api_key=api_key)
         text = "\n".join(filter(None, [
             f"Project type: {retro.project_type}",
             f"Region: {retro.region}",
@@ -252,33 +248,27 @@ def _generate_tags(retro: ProjectRetrospective) -> list[str]:
             f"Design conflicts: {retro.design_conflicts}",
             f"Lessons: {retro.lessons_learned}",
         ]))
-        resp = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a construction project risk analyst. "
-                        "Return a JSON array of 3-8 short tags (strings) that best categorize "
-                        "the risk factors and lessons from this project retrospective. "
-                        "Tags should be lowercase kebab-case, e.g. 'drainage-issue', 'supply-delay', 'soil-instability'. "
-                        "Return ONLY the JSON array, no explanation."
-                    ),
-                },
-                {"role": "user", "content": text},
-            ],
+        # Routed, and asking for an object rather than a bare array: json_chat
+        # gives the same JSON guarantee on every provider in the chain.
+        reply = llm_client.json_chat(
+            task="classification",
+            system=(
+                "You are a construction project risk analyst. Return 3-8 short tags "
+                "categorising the risk factors and lessons from this project "
+                "retrospective. Tags are lowercase kebab-case, e.g. 'drainage-issue', "
+                "'supply-delay', 'soil-instability'. "
+                'Respond with {"tags": ["...", "..."]}.'
+            ),
+            user=text,
             max_tokens=150,
             temperature=0.3,
         )
-        raw = resp.choices[0].message.content.strip()
-        # Strip markdown code fences if present
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        return json.loads(raw)
+        if reply.error or not isinstance(reply.data.get("tags"), list):
+            logger.warning("AI tagging unavailable (%s), using rule-based", reply.error_detail)
+            return _rule_based_tags(retro)
+        return [str(t) for t in reply.data["tags"]][:8]
     except Exception as exc:  # noqa: BLE001
-        logger.warning("GPT-4o tagging failed, using rule-based: %s", exc)
+        logger.warning("AI tagging failed, using rule-based: %s", exc)
         return _rule_based_tags(retro)
 
 

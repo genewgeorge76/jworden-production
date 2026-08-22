@@ -13,21 +13,25 @@ level (it dynamically imports and runs modules by id).
 
 WHAT THE REGISTRY ACTUALLY CONTAINS — measured, not assumed:
 
-  162 registered   109 real implementations   53 unimplemented
+  109 registered   109 real implementations   0 unimplemented
 
-52 of the 53 are generated scaffolds sharing one signature: they import psutil, report host CPU and
-memory percentages in place of any domain logic, and interpolate an
-undefined `class_name` into their output (so calling one raises NameError).
-`escrow_engine`, `ai_brain`, `cognitive_twin`, `stripe_connect_payout` and
-48 others are in this group. The 53rd is tenant_isolator, a different
-kind of fake — see that module's own docstring — the names promise domain engines, the bodies
-are machine telemetry. Their docstrings claim "no-placeholder concrete
-logic", which is the opposite of what they contain; do not trust that string.
+The registry previously held 162 entries, 53 of which were generated
+scaffolds sharing one signature: they imported psutil, reported host CPU and
+memory percentages in place of any domain logic, and returned a paragraph
+reading "Status: NOMINAL AND ENGAGED". Their docstrings claimed
+"no-placeholder concrete logic", which was the opposite of what they
+contained. They were gated — tagged `implemented: false` at load and refused
+by execute_os_ability — so they never returned fabricated engine output, but
+they inflated every count of what this system could do and mislead anyone
+reading the tree.
 
-They are tagged `implemented: false` at registry load, surfaced as such in
-search results, and rejected by execute_os_ability() with an explanation
-rather than the confusing NameError. Replacing one with real logic is all
-it takes to flip the flag — the detection reads the source, not a list.
+They were deleted on 2026-08-22 and the registry regenerated from source by
+scripts/build_ability_registry.py. Every remaining entry is a real
+implementation.
+
+The scaffold detection below is deliberately KEPT. It reads the source rather
+than a list, so a shell reintroduced by the next generator run is caught and
+gated automatically instead of being counted as a working ability.
 
 PARAMETER POLICY — read before changing:
 

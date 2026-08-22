@@ -15,6 +15,8 @@ Requires premium security on all endpoints.
 
 import json
 import logging
+
+from ..services import llm_client
 import os
 from datetime import datetime
 from typing import List, Optional
@@ -86,8 +88,6 @@ def _generate_ai_summary(scan_type: str, findings_json: Optional[str], risk_leve
         findings = []
 
     try:
-        from openai import OpenAI  # local import to avoid startup cost when unused
-        client = OpenAI(api_key=_OPENAI_KEY)
         prompt = (
             f"A drone {scan_type} scan of a paving site detected {count} deviation(s) "
             f"with an overall risk level of {risk_level}.\n"
@@ -95,15 +95,21 @@ def _generate_ai_summary(scan_type: str, findings_json: Optional[str], risk_leve
             "Write a concise (2-3 sentence) field summary a foreman can act on immediately. "
             "Focus on the highest-severity items and the recommended corrective action."
         )
-        resp = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
+        reply = llm_client.chat(
+            task="fast",
+            user=prompt,
             max_tokens=200,
             temperature=0.3,
         )
-        return resp.choices[0].message.content.strip()
+        if reply.error or not reply.text.strip():
+            # Returning None omits the summary rather than inventing one. A
+            # foreman acting on a fabricated field summary is the failure this
+            # guards against.
+            logger.warning("drone scan AI summary unavailable: %s", reply.error_detail)
+            return None
+        return reply.text.strip()
     except Exception as exc:
-        logger.warning("Drone scan AI summary failed: %s", exc)
+        logger.warning("drone scan AI summary failed: %s", exc)
         return None
 
 
