@@ -19,7 +19,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 import bcrypt
 
-from ..core import bruteforce
+from ..core import bruteforce, jwt_secrets
 from ..core.bruteforce import identity_from_request
 from ..core.limiter import AUTH_LIMIT, limiter
 from ..database import get_db
@@ -81,10 +81,31 @@ def auth_status() -> AuthStatusResponse:
     )
 
 
+def _signing_secret() -> str:
+    """
+    Resolve the platform signing secret, or refuse to issue a token.
+
+    Refusing is the point. The previous default meant "unconfigured" and
+    "configured" produced tokens that were indistinguishable to the caller,
+    and only one of them was secret.
+    """
+    try:
+        return jwt_secrets.platform_secret()
+    except jwt_secrets.SigningSecretUnavailable as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Cannot issue a token: no JWT signing secret is configured. "
+                "Set one of: " + ", ".join(jwt_secrets.PLATFORM_VARS)
+            ),
+        ) from exc
+
+
 def _issue_admin_jwt() -> str:
-    jwt_secret = os.getenv(
-        "JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret")
-    )
+    # Same resolver the verifying side uses. Previously this chain ended in
+    # "fallback_secret", so an unconfigured deployment minted admin tokens
+    # signed with a literal from this repository.
+    jwt_secret = _signing_secret()
     payload = {
         "sub": "admin",
         "tenant_id": "JWORDEN_HQ",
@@ -326,7 +347,7 @@ def login_user(
     # Issue JWT containing tenant_id and role. Named `claims`, not `payload`:
     # the request body is `payload` now, and rebinding it here would leave a
     # trap for the next edit that reads payload.email below this line.
-    jwt_secret = os.getenv("JWORDEN_JWT_SECRET", os.getenv("JWORDEN_MASTER_KEY", "fallback_secret"))
+    jwt_secret = _signing_secret()
     claims = {
         "sub": user.email,
         "tenant_id": user.tenant_id,
