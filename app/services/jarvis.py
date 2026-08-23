@@ -731,6 +731,17 @@ async def _ask_chat_brain(query: str, persona: str, autonomy: dict, session_id: 
         "Be natural, human, warm, witty, and exceptionally intelligent. Answer questions directly, smoothly, and conversationally."
         "\n" + mem_snippet + advisory_context + "\n"
         "For legal/compliance questions, answer in advisory form with practical operational guidance."
+        # This lane builds its own prompt and does not include
+        # JARVIS_SYSTEM_PROMPT, so everything added there was absent here — and
+        # this is the lane that answers most conversation. Asked in production
+        # what compaction standard the Worden Standard requires, Jarvis said it
+        # did not have it on hand, while the ops lane knew perfectly well.
+        #
+        # The whole system prompt does not belong here: it carries tool
+        # instructions for tools this lane does not call, and would flatten the
+        # conversational register the lane exists for. The facts and the
+        # honesty rule do belong, because they must hold in every register.
+        "\n\n" + WORDEN_STANDARDS
     )
 
     try:

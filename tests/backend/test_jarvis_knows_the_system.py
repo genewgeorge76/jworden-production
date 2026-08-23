@@ -246,3 +246,63 @@ async def test_the_dispatcher_refuses_a_tool_the_role_lacks():
     )
     assert result["ok"] is False
     assert "Role policy" in result["error"]
+
+
+# ── Every lane, not just the one that was edited ────────────────────────────
+
+def test_the_standards_reach_the_conversational_lane():
+    """
+    _ask_chat_brain builds its own system prompt and does not include
+    JARVIS_SYSTEM_PROMPT, so adding the standards there left this lane without
+    them — and this is the lane that answers most conversation.
+
+    In production, asked what compaction standard the Worden Standard requires,
+    Jarvis answered that it did not have it on hand. The ops lane knew; the
+    conversational one had never been told.
+    """
+    import inspect
+
+    source = inspect.getsource(jarvis._ask_chat_brain)
+    assert "WORDEN_STANDARDS" in source
+
+
+def test_every_lane_that_builds_its_own_prompt_carries_the_standards():
+    """
+    The general form of the bug, so a fourth lane cannot be added without them.
+
+    A lane is any coroutine that assembles a `system` string and calls the
+    router. Each one either composes JARVIS_SYSTEM_PROMPT or names
+    WORDEN_STANDARDS directly; a lane doing neither answers as though the
+    company had no standards.
+    """
+    import inspect
+
+    lanes = [
+        jarvis._ask_fast_ops_brain,
+        jarvis._ask_chat_brain,
+        jarvis._ask_claude_internal,
+    ]
+
+    missing = []
+    for lane in lanes:
+        source = inspect.getsource(lane)
+        if "system" not in source:
+            continue
+        if "JARVIS_SYSTEM_PROMPT" not in source and "WORDEN_STANDARDS" not in source:
+            missing.append(lane.__name__)
+
+    assert not missing, (
+        "these lanes build a system prompt carrying neither the standards nor "
+        f"the prompt that contains them: {missing}"
+    )
+
+
+def test_the_standards_block_states_all_four():
+    """The four are non-negotiable, so the block is asserted whole."""
+    for fact in (
+        "96% Marshall Unit Weight",
+        "VDOT Section 315",
+        "$9 per ton",
+        "Zero-Downtime DOT Medical",
+    ):
+        assert fact in jarvis.WORDEN_STANDARDS, fact
