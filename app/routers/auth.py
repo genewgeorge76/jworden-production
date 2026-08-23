@@ -314,7 +314,34 @@ def register_tenant(
     db.commit()
     
     logger.info(f"New SaaS Tenant Registered: {tenant_id} ({payload.companyName})")
-    return {"status": "success", "tenant_id": tenant_id}
+
+    # Issue a token with the tenant, so registration hands back a usable
+    # session rather than an id the caller cannot do anything with.
+    #
+    # WITHOUT THIS, NOBODY COULD SUBSCRIBE.
+    #
+    # The signup flow is: register, then POST /api/v1/billing/checkout to get a
+    # Stripe URL. The billing router declares auth at router level, and
+    # registration returned {"status", "tenant_id"} and no credential — so the
+    # very next call in the flow was rejected and the customer saw "Failed to
+    # create checkout session". A brand-new registrant has no other way to get
+    # a token, and the endpoint that takes their money is behind one.
+    claims = {
+        "sub": new_user.email,
+        "tenant_id": tenant_id,
+        "role": getattr(new_user, "role", "owner"),
+        "exp": datetime.now(timezone.utc) + timedelta(seconds=_TOKEN_EXPIRE_SECONDS),
+        "iat": datetime.now(timezone.utc),
+    }
+    token = jwt.encode(claims, _signing_secret(), algorithm=_ALGORITHM)
+
+    return {
+        "status": "success",
+        "tenant_id": tenant_id,
+        "access_token": token,
+        "token_type": "bearer",
+        "expires_in": _TOKEN_EXPIRE_SECONDS,
+    }
 
 
 class LoginRequest(BaseModel):

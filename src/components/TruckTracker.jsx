@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
+import { getAuthToken } from '@/api/client'
 
 const STATUS_STYLES = {
   en_route: { dot: 'bg-brand-amber', label: 'En Route', text: 'text-brand-amber' },
@@ -158,7 +159,17 @@ export default function TruckTracker() {
   // WebSocket real-time updates
   useEffect(() => {
     const BASE = import.meta.env.VITE_API_BASE_URL || window.location.origin
-    const wsUrl = BASE.replace(/^https?/, (m) => (m === 'https' ? 'wss' : 'ws')) + '/ws/dashboard'
+    // /ws/dashboard now requires a credential. It used to accept any
+    // connection and push live truck positions and lead counts every five
+    // seconds to whoever asked. The browser WebSocket API cannot set headers
+    // on the handshake, so the token goes in the query string — which the
+    // server also accepts from an Authorization header for non-browser
+    // clients.
+    const token = getAuthToken()
+    const wsUrl =
+      BASE.replace(/^https?/, (m) => (m === 'https' ? 'wss' : 'ws')) +
+      '/ws/dashboard' +
+      (token ? `?token=${encodeURIComponent(token)}` : '')
 
     let ws
     let reconnectTimer

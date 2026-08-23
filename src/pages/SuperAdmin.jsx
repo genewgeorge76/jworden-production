@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Shield, Brain, Activity, Users, DollarSign, AlertCircle, ArrowUpRight, Rocket, GraduationCap, FileCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { request } from '@/api/client';
 
 export default function SuperAdmin() {
   const [telemetry, setTelemetry] = useState(null);
@@ -14,10 +15,11 @@ export default function SuperAdmin() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/superadmin/telemetry`);
-      if (res.ok) {
-        setTelemetry(await res.json());
-      }
+      // request() attaches the bearer and owner tokens. A bare fetch() sent no
+      // credentials, which was fine while this endpoint was open to the
+      // internet — it no longer is, and it never should have been: it returns
+      // every tenant's company name, tier and MRR.
+      setTelemetry(await request('GET', '/api/v1/superadmin/telemetry'));
     } catch (err) {
       console.error("Telemetry fetch failed", err);
     } finally {
@@ -28,16 +30,17 @@ export default function SuperAdmin() {
   const handleIntervene = async (tenantId) => {
     setIntervening(tenantId);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/superadmin/intervene`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenant_id: tenantId,
-          message: "Deploy Jarvis for engagement assistance"
-        })
+      const res = await request('POST', '/api/v1/superadmin/intervene', {
+        tenant_id: tenantId,
+        message: "Deploy Jarvis for engagement assistance"
       });
-      if (res.ok) {
+      // The endpoint no longer claims a dispatch it did not make: it returns
+      // delivered:false with a reason, because no email or SMS is wired to this
+      // route. Reflect that rather than telling the operator it was handled.
+      if (res && res.delivered) {
         alert("Jarvis has been dispatched to assist the customer.");
+      } else {
+        alert(res?.detail || "Nothing was sent — contact the customer directly.");
       }
     } catch (err) {
       console.error(err);

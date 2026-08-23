@@ -60,6 +60,24 @@ function handleAuthRejection(status, detail) {
   }
 }
 
+export function getAuthToken() {
+  // The bearer token, for callers that cannot go through request() — a
+  // WebSocket handshake takes no custom headers from the browser API, so
+  // /ws/dashboard receives it as a query parameter instead.
+  if (typeof window === 'undefined') return ''
+  try {
+    return (
+      authState.token ||
+      window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ||
+      window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ||
+      ''
+    )
+  } catch {
+    return ''
+  }
+}
+
+
 function restoreStoredAuthToken() {
   if (typeof window === 'undefined') return false
   const token = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
@@ -129,6 +147,30 @@ export async function authenticateWithPin(pin) {
   storeAuthToken(response.access_token, Math.floor(Date.now() / 1000) + (response.expires_in || 86_400))
   return authState.token
 }
+
+export async function registerTenant(payload) {
+  // Sign-up, and the session that has to follow it.
+  //
+  // /api/v1/auth/register used to return {status, tenant_id} and no
+  // credential, while the very next step in the flow — POST
+  // /api/v1/billing/checkout — sits behind router-level auth. A brand-new
+  // registrant had no way to obtain a token, so the checkout call was rejected
+  // and the customer saw "Failed to create checkout session". Nobody could
+  // subscribe.
+  //
+  // The endpoint now returns an access_token. Storing it here, next to the
+  // other sign-in paths, keeps credential handling in one place rather than
+  // spread across page components.
+  const response = await request('POST', '/api/v1/auth/register', payload)
+  if (response?.access_token) {
+    storeAuthToken(
+      response.access_token,
+      Math.floor(Date.now() / 1000) + (response.expires_in || 86_400)
+    )
+  }
+  return response
+}
+
 
 export async function authenticateWithPassword(email, password) {
   // Tenant sign-in, as opposed to authenticateWithPin above which is the
