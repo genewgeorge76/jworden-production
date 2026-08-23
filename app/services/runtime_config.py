@@ -330,8 +330,26 @@ def reload() -> int:
 # So the canonical name is consulted first and the known aliases after it.
 # Renaming the secret to XAI_API_KEY is still the tidier end state; this makes
 # the tidying optional rather than load-bearing.
+# Widened after the health report still said "not configured" against a key the
+# operator confirmed was set: three spellings were not enough. Grok, xAI and
+# SpaceX are all reasonable names for the same secret depending on whether you
+# are thinking of the model, the company, or the other company, and each has an
+# obvious _API_KEY and _KEY form.
+#
+# Cheap to be generous here. The cost of an extra name in this tuple is one
+# dictionary lookup; the cost of a missing one is a paid credential sitting
+# inert with nothing anywhere reporting an error.
 KEY_ALIASES: dict[str, tuple[str, ...]] = {
-    "XAI_API_KEY": ("XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"),
+    "XAI_API_KEY": (
+        "XAI_API_KEY",
+        "XAI_KEY",
+        "SPACEX_API_KEY",
+        "SPACEX_KEY",
+        "SPACEX",
+        "GROK_API_KEY",
+        "GROK_KEY",
+        "GROK",
+    ),
 }
 
 
