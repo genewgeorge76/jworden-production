@@ -26,6 +26,7 @@ import base64
 import json
 import logging
 import os
+import secrets
 import uuid
 from datetime import datetime, timezone
 from typing import Set
@@ -37,6 +38,7 @@ from sqlalchemy.orm import Session
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..services.tenancy import scope, tenant_of
+from ..core import jwt_secrets
 from ..database import get_db
 from ..models import Lead, PermitLead, ProjectSite, TruckPosition
 
@@ -75,24 +77,124 @@ class _ConnectionManager:
 manager = _ConnectionManager()
 
 
+#: A dashboard socket is a long-lived, unthrottled connection; a short key must
+#: never open one. Reads the same variable core/security.py uses for the HTTP
+#: master-key path so the two stay in step rather than drifting apart.
+MIN_MASTER_KEY_LENGTH = int(os.getenv("MIN_MASTER_KEY_LENGTH", "32"))
+
+
+def _verify_dashboard_token(token: str) -> bool:
+    """
+    Accept the master key or a valid platform JWT.
+
+    Same contract as chat.py and websocket_events.py, resolved through
+    core/jwt_secrets so all three agree on what signs a token — they did not
+    always, and a token good over HTTP was silently refused by the sockets.
+
+    The master key must clear MIN_MASTER_KEY_LENGTH here too. A dashboard
+    socket is exactly the kind of long-lived, unthrottled connection a short
+    key should never open.
+    """
+    if not token:
+        return False
+
+    master_key = os.getenv("JWORDEN_MASTER_KEY", "").strip()
+    if (
+        master_key
+        and len(master_key) >= MIN_MASTER_KEY_LENGTH
+        and secrets.compare_digest(token, master_key)
+    ):
+        return True
+
+    try:
+        secret = jwt_secrets.platform_secret()
+    except jwt_secrets.SigningSecretUnavailable:
+        return False
+    try:
+        from jose import jwt as _jwt  # noqa: PLC0415
+
+        _jwt.decode(token, secret, algorithms=[jwt_secrets.ALGORITHM])
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def _dashboard_identity(ws: WebSocket) -> tuple[str, str]:
+    """(token, tenant) for a socket connection, from ?token= or Authorization."""
+    token = ws.query_params.get("token", "")
+    if not token:
+        header = ws.headers.get("authorization", "")
+        if header.lower().startswith("bearer "):
+            token = header[7:].strip()
+
+    tenant = DEFAULT_TENANT
+    if token:
+        try:
+            secret = jwt_secrets.platform_secret()
+            from jose import jwt as _jwt  # noqa: PLC0415
+
+            claims = _jwt.decode(token, secret, algorithms=[jwt_secrets.ALGORITHM])
+            tenant = (claims.get("tenant_id") or DEFAULT_TENANT).strip() or DEFAULT_TENANT
+        except Exception:  # noqa: BLE001
+            # Master-key connections carry no claims; they are the operator.
+            tenant = DEFAULT_TENANT
+    return token, tenant
+
+
 @router.websocket("/ws/dashboard")
 async def dashboard_websocket(ws: WebSocket, db: Session = Depends(get_db)):
     """
     Real-time dashboard WebSocket.
 
-    Push a dashboard_update frame every 5 seconds containing:
+    Pushes a dashboard_update frame every 5 seconds:
       - live truck positions
       - HOT lead count and latest alert
       - active site count
+
+    THIS SOCKET HAD NO AUTHENTICATION.
+
+    It took `ws` and `db` and nothing else. Anyone able to open a WebSocket to
+    this URL received live truck GPS positions and lead counts every five
+    seconds, indefinitely. A continuous feed is worse than a REST endpoint
+    serving the same data: there is no request to notice in a log, and the leak
+    keeps delivering for as long as the socket stays open.
+
+    chat.py and websocket_events.py both authenticate. This one was missed, and
+    its counts were unscoped on top of that — every tenant's HOT leads summed
+    into one number.
+
+    The tenant is resolved once at connect. A long-lived stream has no request
+    cycle to re-derive an identity from, so it is captured with the handshake
+    and used for every frame.
     """
+    token, tenant = _dashboard_identity(ws)
+    if not _verify_dashboard_token(token):
+        # Closed before accept(), so an unauthorised client never receives a
+        # single frame. 1008 is the policy-violation close code.
+        await ws.close(code=1008, reason="unauthorized")
+        logger.warning("dashboard socket rejected: missing or invalid token")
+        return
+
     await manager.connect(ws)
     try:
         while True:
             # Build lightweight dashboard snapshot
-            trucks = db.query(TruckPosition).all()
-            hot_leads = db.query(Lead).filter(Lead.score_label == "HOT").count()
-            active_sites = db.query(ProjectSite).filter(ProjectSite.status == "active").count()
-            new_permit_leads = db.query(PermitLead).filter(PermitLead.priority_label == "HOT").count()
+            trucks = scope(db.query(TruckPosition), TruckPosition, tenant).all()
+            hot_leads = (
+                scope(db.query(Lead), Lead, tenant)
+                .filter(Lead.score_label == "HOT")
+                .count()
+            )
+            active_sites = (
+                scope(db.query(ProjectSite), ProjectSite, tenant)
+                .filter(ProjectSite.status == "active")
+                .count()
+            )
+            new_permit_leads = (
+                scope(db.query(PermitLead), PermitLead, tenant)
+                .filter(PermitLead.priority_label == "HOT")
+                .count()
+            )
 
             frame = {
                 "type": "dashboard_update",

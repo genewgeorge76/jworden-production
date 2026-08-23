@@ -29,7 +29,8 @@ from sqlalchemy.orm import Session
 
 from ..core.limiter import limiter
 from ..core.security import verify_premium_security
-from ..services.tenancy import scope, tenant_of
+from .leads import request_hostname
+from ..services.tenancy import scope, tenant_for_hostname, tenant_of
 from ..database import get_db
 from ..models import BlogPost
 from ..services.vector_search_service import vector_search_service
@@ -211,7 +212,15 @@ def list_posts(
     category: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    query = db.query(BlogPost).filter(BlogPost.status == "published")
+    # Public, so there is no authenticated caller to take a tenant from — the
+    # host the request arrived on is the only identity available, and it is the
+    # right one: a visitor on a client's domain should see that client's posts,
+    # not the whole platform's. tenant_for_hostname resolves it against
+    # MarketSite and falls back to the operator for anything unregistered.
+    tenant = tenant_for_hostname(db, request_hostname(request))
+    query = scope(db.query(BlogPost), BlogPost, tenant).filter(
+        BlogPost.status == "published"
+    )
     if category and category != "all":
         query = query.filter(BlogPost.category == category)
     total = query.count()
@@ -234,9 +243,15 @@ def list_posts(
 @router.get("/{slug}", summary="Get a single blog post")
 @limiter.limit("120/minute")
 def get_post(slug: str, request: Request, db: Session = Depends(get_db)):
-    post = db.query(BlogPost).filter(
-        BlogPost.slug == slug, BlogPost.status == "published"
-    ).first()
+    # Scoped for the same reason as the list above, and it matters more here:
+    # slugs are unique per tenant, not globally, so an unscoped lookup by slug
+    # could serve one client's article on another client's domain.
+    tenant = tenant_for_hostname(db, request_hostname(request))
+    post = (
+        scope(db.query(BlogPost), BlogPost, tenant)
+        .filter(BlogPost.slug == slug, BlogPost.status == "published")
+        .first()
+    )
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 

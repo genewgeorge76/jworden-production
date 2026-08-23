@@ -464,8 +464,13 @@ def _sync_workforce_cert(db: Session, cert: Certification) -> None:
     if not cert.user_email:
         return
     try:
+        # Scoped to the certificate's own tenant. Matching on email alone would
+        # mirror one company's certificate onto a same-named crew member at
+        # another company — two contractors can easily both employ a
+        # dave@gmail.com, and the recert alert would fire for the wrong firm.
         member = (
-            db.query(WorkforceMember)
+            scope(db.query(WorkforceMember), WorkforceMember,
+                  getattr(cert, "tenant_id", None) or DEFAULT_TENANT)
             .filter(WorkforceMember.email == cert.user_email)
             .first()
         )

@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services.tenancy import is_owner, tenant_of
 from ..models import Tenant, User
 
 logger = logging.getLogger(__name__)
@@ -42,9 +43,43 @@ class CheckoutRequest(BaseModel):
     tenant_id: str = "default"
     plan: str = "pro"
 
+def _resolve_billing_tenant(auth: dict, requested: str) -> str:
+    """
+    Whose billing account this call may touch.
+
+    The comment above the router names the risk exactly — "for an arbitrary
+    tenant_id" — and the guard added for it was router-level AUTHENTICATION.
+    That proves the caller is *a* known caller. It does nothing about the
+    caller passing somebody else's tenant_id in the body, which is the risk in
+    the sentence.
+
+    It matters most on /portal: that mints a Stripe Customer Portal session,
+    which shows invoices, payment methods and a cancel button. Handing one
+    tenant a portal link for another tenant's subscription is not a data leak,
+    it is control of their billing.
+
+    The operator may still act on behalf of a tenant — that is a real support
+    need. Everybody else is pinned to their own.
+    """
+    caller = tenant_of(auth)
+    if is_owner(caller):
+        return (requested or caller).strip() or caller
+    if requested and requested.strip() != caller:
+        raise HTTPException(
+            status_code=403,
+            detail="You may only manage billing for your own account.",
+        )
+    return caller
+
+
 @router.post("/checkout", summary="Create Stripe Checkout Session")
-def create_checkout_session(request: CheckoutRequest, db: Session = Depends(get_db)):
-    tenant = db.query(Tenant).filter(Tenant.tenant_id == request.tenant_id).first() if db else None
+def create_checkout_session(
+    request: CheckoutRequest,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    tenant_id = _resolve_billing_tenant(auth, request.tenant_id)
+    tenant = db.query(Tenant).filter(Tenant.tenant_id == tenant_id).first() if db else None
     contact_email = tenant.contact_email if tenant and hasattr(tenant, "contact_email") else "owner@thewordenstandard.com"
         
     price_id = PRICE_MAP.get(request.plan.lower(), "price_pro_mock")
@@ -70,8 +105,12 @@ def create_checkout_session(request: CheckoutRequest, db: Session = Depends(get_
             success_url=f"{base_url}/?session_id={{CHECKOUT_SESSION_ID}}",
             cancel_url=f"{base_url}/",
             metadata={
-                "tenant_id": request.tenant_id,
-                "plan": request.plan
+                # The resolved tenant, not the requested one. The Stripe webhook
+                # reads this back to decide whose subscription was paid for, so
+                # leaving the caller-supplied value here would put the
+                # authorization check in front of a door that was already open.
+                "tenant_id": tenant_id,
+                "plan": request.plan,
             }
         )
         return {"url": session.url, "simulated": False}
@@ -88,8 +127,13 @@ class PortalRequest(BaseModel):
     tenant_id: str
     
 @router.post("/portal", summary="Create Stripe Customer Portal Session")
-def create_portal_session(request: PortalRequest, db: Session = Depends(get_db)):
-    tenant = db.query(Tenant).filter(Tenant.tenant_id == request.tenant_id).first()
+def create_portal_session(
+    request: PortalRequest,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    tenant_id = _resolve_billing_tenant(auth, request.tenant_id)
+    tenant = db.query(Tenant).filter(Tenant.tenant_id == tenant_id).first()
     
     if not tenant or not tenant.stripe_customer_id:
         raise HTTPException(status_code=400, detail="No active billing account found")
