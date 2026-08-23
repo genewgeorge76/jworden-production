@@ -122,15 +122,20 @@ const commercialPhotos = [
  * where a franchise buyer should be sent, not at a caption we cannot stand
  * behind.
  */
+// Neutral directory names. They used to read store_04_atlanta_peachtree and
+// store_07_orlando_idrive — and a path is visible in page source, so the
+// fabricated grouping was still being published even after the captions were
+// removed. There is nothing truthful to name these after: the photographs are
+// an unsorted set.
 const kfcPhotos = [
-  '/images/kfc_stores/store_01_richmond_broad/kfc_store_01_photo_1.jpg',
-  '/images/kfc_stores/store_02_chester_route1/kfc_store_02_photo_1.jpg',
-  '/images/kfc_stores/store_03_petersburg_crater/kfc_store_03_photo_1.jpg',
-  '/images/kfc_stores/store_04_atlanta_peachtree/kfc_store_04_photo_1.JPG',
-  '/images/kfc_stores/store_05_marietta_cobb/kfc_store_05_photo_1.JPG',
-  '/images/kfc_stores/store_06_savannah_abercorn/kfc_store_06_photo_1.JPG',
-  '/images/kfc_stores/store_07_orlando_idrive/kfc_store_07_photo_1.JPG',
-  '/images/kfc_stores/store_08_houston_westheimer/kfc_store_08_photo_1.JPG'
+  '/images/kfc_stores/set_01/kfc_store_01_photo_1.jpg',
+  '/images/kfc_stores/set_02/kfc_store_02_photo_1.jpg',
+  '/images/kfc_stores/set_03/kfc_store_03_photo_1.jpg',
+  '/images/kfc_stores/set_04/kfc_store_04_photo_1.JPG',
+  '/images/kfc_stores/set_05/kfc_store_05_photo_1.JPG',
+  '/images/kfc_stores/set_06/kfc_store_06_photo_1.JPG',
+  '/images/kfc_stores/set_07/kfc_store_07_photo_1.JPG',
+  '/images/kfc_stores/set_08/kfc_store_08_photo_1.JPG'
 ].map((url) => ({
   url,
   title: 'QSR restaurant programme',
