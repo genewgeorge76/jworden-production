@@ -87,14 +87,47 @@ def create_checkout_session(
     price_id = PRICE_MAP.get(request.plan.lower(), "price_pro_mock")
     base_url = os.getenv("VITE_APP_URL", "https://thewordenstandard.com")
     
+    # Refuse rather than fake it.
+    #
+    # This used to return a URL of the form
+    #     {base_url}/?checkout_session=simulated_pro&status=success
+    # whenever STRIPE_SECRET_KEY was unset — a redirect that says "success" in
+    # the query string, on a deployment where no money can move. The signup
+    # flow follows that URL, so a customer went through checkout, landed on a
+    # page marked success, and had bought nothing.
+    #
+    # It is worse now than it was, because the tier is granted by the Stripe
+    # webhook rather than by the signup form. A fake success means the webhook
+    # never fires, so the customer stays on lite forever with no error anywhere
+    # to explain why.
+    stripe_key = os.getenv("STRIPE_SECRET_KEY", "").strip()
+    if not stripe_key or "sk_test_mock" in stripe_key:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Billing is not configured on this deployment, so checkout "
+                "cannot be started. Your account has been created and you are "
+                "signed in. Set STRIPE_SECRET_KEY to enable subscriptions."
+            ),
+        )
+
+    unmapped = [
+        name for name, value in PRICE_MAP.items()
+        if not value or value.endswith("_mock")
+    ]
+    if request.plan.lower() in unmapped:
+        # A real Stripe key with a placeholder price id would create a session
+        # against a price that does not exist, and the webhook would then be
+        # unable to map the payment back to a plan.
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"No Stripe price is configured for the {request.plan.upper()} "
+                f"plan. Set STRIPE_PRICE_{request.plan.upper()}."
+            ),
+        )
+
     try:
-        if not os.getenv("STRIPE_SECRET_KEY") or "sk_test_mock" in os.getenv("STRIPE_SECRET_KEY", ""):
-            # Simulation mode fallback when Stripe Secret Key is not configured
-            return {
-                "url": f"{base_url}/?checkout_session=simulated_{request.plan}&status=success",
-                "simulated": True,
-                "plan": request.plan
-            }
 
         session = stripe.checkout.Session.create(
             customer_email=contact_email,
@@ -116,13 +149,17 @@ def create_checkout_session(
             }
         )
         return {"url": session.url, "simulated": False}
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.warning(f"Stripe checkout exception (falling back to mock session): {str(e)}")
-        return {
-            "url": f"{base_url}/?checkout_session=simulated_{request.plan}&status=success",
-            "simulated": True,
-            "plan": request.plan
-        }
+        # Was: swallow the error and return the same fake success URL. That
+        # turned "Stripe rejected this" into "you have subscribed", which is
+        # the most expensive possible way to be wrong.
+        logger.error("Stripe checkout failed for tenant %s: %s", tenant_id, e)
+        raise HTTPException(
+            status_code=502,
+            detail="Could not start checkout with Stripe. Nothing was charged.",
+        )
 
 
 class PortalRequest(BaseModel):

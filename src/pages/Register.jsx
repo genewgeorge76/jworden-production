@@ -31,6 +31,11 @@ const INDUSTRIES = [
 export default function Register() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  // Registration succeeded and checkout did not. Distinct from `error`,
+  // because the account exists and the person is signed in — the only thing
+  // that failed is the part that takes money.
+  const [billingNotice, setBillingNotice] = useState(null);
   const [formData, setFormData] = useState({
     companyName: '',
     industry: '',
@@ -64,15 +69,34 @@ export default function Register() {
       // fail with "Failed to create checkout session" and nobody could
       // subscribe. /auth/register now returns an access_token; store it so
       // request() attaches it here and on every call after.
-      const billingData = await request('POST', '/api/v1/billing/checkout', {
-        tenant_id: authData.tenant_id,
-        plan: formData.plan
-      });
+      let billingData;
+      try {
+        billingData = await request('POST', '/api/v1/billing/checkout', {
+          tenant_id: authData.tenant_id,
+          plan: formData.plan,
+        });
+      } catch (billingErr) {
+        // The account exists and this person is signed in — registration
+        // committed before checkout was ever attempted. Sending them back to a
+        // signup form, or to a login page, would ask them to create an account
+        // they already have.
+        //
+        // Checkout used to return a fabricated success URL whenever Stripe was
+        // unconfigured, so this branch could not be reached: signup "worked",
+        // the redirect said status=success, and the customer had bought
+        // nothing. It refuses honestly now, and so does this.
+        setBillingNotice(
+          billingErr?.message ||
+            'Your account is created and you are signed in, but checkout could not be started.',
+        );
+        setLoading(false);
+        return;
+      }
 
       // 3. Redirect to Stripe
       window.location.href = billingData.url;
     } catch (err) {
-      alert("Error: " + err.message);
+      setError(err?.message || 'Sign up failed. Please try again.');
       setLoading(false);
     }
   };
@@ -90,6 +114,29 @@ export default function Register() {
           <Shield className="w-6 h-6 text-amber-500" />
           <span className="font-display font-bold text-lg tracking-wide text-white">THE J. WORDEN STANDARD OS</span>
         </div>
+
+        {/* Account created, payment not taken. Said plainly, with the way
+            forward, instead of an alert() the browser throws away. */}
+        {billingNotice && (
+          <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="text-sm font-semibold text-amber-300 mb-1">
+              Your account is ready — but nothing has been charged.
+            </p>
+            <p className="text-xs text-amber-200/80 mb-3">{billingNotice}</p>
+            <a
+              href="/dashboard"
+              className="inline-block rounded bg-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#050810] hover:bg-amber-400"
+            >
+              Go to my dashboard
+            </a>
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <p className="text-sm text-red-300">{error}</p>
+          </div>
+        )}
 
         {/* Step Indicator */}
         <div className="flex items-center justify-between mb-8 px-8 relative">

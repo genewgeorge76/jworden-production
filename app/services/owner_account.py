@@ -154,3 +154,81 @@ def ensure_owner_account_with_session() -> str | None:
         return ensure_owner_account(db)
     finally:
         db.close()
+
+
+# Reason codes for status(). Deliberately coarse in the public surface and
+# specific in the authenticated one — "the password is too short" is a real
+# hint to anyone who can read it.
+READY = "ready"
+NOT_CONFIGURED = "not_configured"
+EMAIL_MISSING = "email_missing"
+PASSWORD_MISSING = "password_missing"
+PASSWORD_TOO_SHORT = "password_too_short"
+NOT_SEEDED = "not_seeded"
+BELONGS_TO_CUSTOMER = "belongs_to_customer_tenant"
+PASSWORD_MISMATCH = "password_mismatch"
+
+_EXPLANATIONS = {
+    READY: "The operator account exists and matches OWNER_PASSWORD.",
+    NOT_CONFIGURED: f"Neither {OWNER_EMAIL_VAR} nor {OWNER_PASSWORD_VAR} is set.",
+    EMAIL_MISSING: f"{OWNER_PASSWORD_VAR} is set but {OWNER_EMAIL_VAR} is not.",
+    PASSWORD_MISSING: f"{OWNER_EMAIL_VAR} is set but {OWNER_PASSWORD_VAR} is not.",
+    PASSWORD_TOO_SHORT: (
+        f"{OWNER_PASSWORD_VAR} is shorter than {MIN_OWNER_PASSWORD_LENGTH} "
+        "characters, so seeding refused rather than create a weak owner login."
+    ),
+    NOT_SEEDED: (
+        "Both variables are set, but no user row exists for that address. "
+        "Seeding runs at startup — restart the app, and check the boot log."
+    ),
+    BELONGS_TO_CUSTOMER: (
+        f"{OWNER_EMAIL_VAR} is already registered to a customer tenant. "
+        "Seeding refuses to promote a customer account into the operator's. "
+        "Use an address that has never been signed up."
+    ),
+    PASSWORD_MISMATCH: (
+        "The operator row exists but its password does not match "
+        f"{OWNER_PASSWORD_VAR}. The app has not restarted since the secret "
+        "changed; restart it to re-hash."
+    ),
+}
+
+
+def status(db: Session) -> dict:
+    """
+    Why the operator cannot sign in, without revealing anything useful to
+    someone who should not be asking.
+
+    Written because the alternative was guesswork: a failed owner login and a
+    non-existent owner account produce the same 401 by design, so "it didn't
+    work" was undiagnosable from outside. Neither the address nor the password
+    appears in the result.
+    """
+    email = os.getenv(OWNER_EMAIL_VAR, "").strip().lower()
+    password = os.getenv(OWNER_PASSWORD_VAR, "")
+
+    if not email and not password:
+        code = NOT_CONFIGURED
+    elif not email:
+        code = EMAIL_MISSING
+    elif not password:
+        code = PASSWORD_MISSING
+    elif len(password) < MIN_OWNER_PASSWORD_LENGTH:
+        code = PASSWORD_TOO_SHORT
+    else:
+        row = db.query(User).filter(User.email == email).first()
+        if row is None:
+            code = NOT_SEEDED
+        elif row.tenant_id != OWNER_TENANT:
+            code = BELONGS_TO_CUSTOMER
+        elif not _password_matches(row.hashed_password, password):
+            code = PASSWORD_MISMATCH
+        else:
+            code = READY
+
+    return {
+        "ready": code == READY,
+        "reason": code,
+        "detail": _EXPLANATIONS[code],
+        "password_minimum_length": MIN_OWNER_PASSWORD_LENGTH,
+    }

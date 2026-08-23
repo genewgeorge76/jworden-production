@@ -267,6 +267,53 @@ class FollowUpTask(Base):
         return f"<FollowUpTask id={self.id} lead_id={self.lead_id} type={self.task_type!r} status={self.status!r}>"
 
 
+class OperatorNote(Base):
+    """
+    Something Jarvis was told to remember: a problem, or a thing to raise later.
+
+    One table for both, because they are the same record with a different
+    reason for existing — a title, some detail, a tenant, an open/closed
+    lifecycle. Only `due_at` distinguishes them, and only reminders set it.
+
+    It exists because Jarvis had nowhere to put either. Asked to note a problem
+    or remind the operator of something, the model could only answer as though
+    it had, and the intent was gone the moment the conversation ended: short
+    memory holds the last few turns of one session and nothing survives a
+    restart. An assistant that says "I'll remind you" and does not is worse
+    than one that says it cannot.
+
+    kind     : issue | reminder
+    severity : low | normal | high | critical   (issues; advisory on reminders)
+    status   : open | done | dismissed
+    """
+
+    __tablename__ = "operator_notes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=False, index=True)
+    kind = Column(String(20), nullable=False, index=True)
+    title = Column(String(300), nullable=False)
+    detail = Column(Text, nullable=True)
+    severity = Column(String(20), nullable=False, default="normal")
+    status = Column(String(20), nullable=False, default="open", index=True)
+    # Reminders only. Nullable because an issue has no due date, and a column
+    # that must be filled with something meaningless is a column that gets
+    # filled with something wrong.
+    due_at = Column(DateTime(timezone=True), nullable=True, index=True)
+    # Where it came from: "jarvis" when the assistant recorded it, or a user
+    # identifier when a person did. Worth keeping — an issue list nobody can
+    # attribute is an issue list nobody trusts.
+    source = Column(String(60), nullable=False, default="jarvis")
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+    resolved_at = Column(DateTime(timezone=True), nullable=True)
+
+    def __repr__(self) -> str:
+        return f"<OperatorNote id={self.id} kind={self.kind!r} status={self.status!r} title={self.title!r}>"
+
+
 class TruckPosition(Base):
     """
     Real-time truck telemetry ping stored for zero-delay routing dashboard.
