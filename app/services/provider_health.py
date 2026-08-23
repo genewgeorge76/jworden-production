@@ -94,6 +94,10 @@ class _Spec:
         method: str = "GET",
         auth: str = "bearer",
         extra_headers: Optional[dict[str, str]] = None,
+        query_param: Optional[str] = None,
+        companion_env: tuple[str, ...] = (),
+        payload: Optional[dict[str, Any]] = None,
+        category: str = "ai",
     ) -> None:
         self.id = pid
         self.label = label
@@ -102,6 +106,51 @@ class _Spec:
         self.method = method
         self.auth = auth
         self.extra_headers = extra_headers or {}
+        # auth="query": the credential travels as a query parameter with this
+        # name. Several providers (SerpAPI, SAM.gov, EIA, Google Maps) accept
+        # nothing else. redact() scrubs the value out of any error text before
+        # it reaches a response body, which matters more here than for a header.
+        self.query_param = query_param
+        # A second value the probe needs and that is not the secret: Twilio's
+        # account SID, Kickserv's account slug. Used as the basic-auth username
+        # and substituted into {companion} in the URL.
+        self.companion_env = companion_env
+        # Body for providers with no cheap GET that authenticates.
+        self.payload = payload
+        # Grouping for the report only. An operator reading "what is dead"
+        # wants email and payments separated from the model providers.
+        self.category = category
+
+    def companion(self) -> str:
+        for name in self.companion_env:
+            if (value := self._lookup(name)):
+                return value
+        return ""
+
+    def configured(self) -> bool:
+        """
+        Both halves present, where a provider needs two.
+
+        Twilio with an auth token and no account SID cannot be probed and
+        cannot be used; reporting it as configured because one of the two is
+        set would be reporting a working integration that is not one.
+        """
+        if not self.key():
+            return False
+        return bool(self.companion()) if self.companion_env else True
+
+    def request_url(self, key: str) -> str:
+        url = self.url.replace("{companion}", self.companion())
+        if self.auth == "query" and self.query_param:
+            joiner = "&" if "?" in url else "?"
+            url = f"{url}{joiner}{self.query_param}={key}"
+        return url
+
+    def auth_tuple(self, key: str) -> Optional[tuple[str, str]]:
+        """Basic-auth pair, when that is how the provider authenticates."""
+        if self.auth == "basic":
+            return (self.companion(), key)
+        return None
 
     def key(self) -> str:
         for name in self.env:
@@ -132,6 +181,10 @@ class _Spec:
 
     def headers(self, key: str) -> dict[str, str]:
         headers = dict(self.extra_headers)
+        if self.auth in {"query", "basic", "none"}:
+            # The credential is not a header for these. httpx carries basic
+            # auth itself, and a query credential is already on the URL.
+            return headers
         if self.auth == "bearer":
             headers["Authorization"] = f"Bearer {key}"
         elif self.auth == "x-api-key":
@@ -188,6 +241,123 @@ _SPECS: dict[str, _Spec] = {
         ("ELEVENLABS_API_KEY",),
         "https://api.elevenlabs.io/v1/user",
         auth="x-api-key",
+        category="voice",
+    ),
+    # ── Everything below was never probed ────────────────────────────────────
+    #
+    # The table stopped at the model providers, so "are all my credentials
+    # working" could only be answered for six of them. The rest were assumed,
+    # and assumption has already cost twice: a Grok key set under a name
+    # nothing read, and a Gemini key set and rejected. Both looked fine from
+    # the outside.
+    #
+    # Every endpoint below is chosen to be the cheapest call that still proves
+    # the credential — an account or list read, never anything that sends,
+    # charges, or writes.
+    "tavily": _Spec(
+        "tavily",
+        "Tavily (Jarvis web search)",
+        ("TAVILY_API_KEY",),
+        "https://api.tavily.com/search",
+        method="POST",
+        auth="none",
+        # Tavily has no GET that authenticates, and the key goes in the body
+        # rather than a header. One-word query, one result: the smallest search
+        # that still exercises the credential.
+        payload={"query": "test", "max_results": 1},
+        category="search",
+    ),
+    "serpapi": _Spec(
+        "serpapi",
+        "SerpAPI",
+        ("SERPAPI_KEY",),
+        "https://serpapi.com/account",
+        auth="query",
+        query_param="api_key",
+        category="search",
+    ),
+    "sendgrid": _Spec(
+        "sendgrid",
+        "SendGrid (email)",
+        ("SENDGRID_API_KEY",),
+        # /scopes rather than anything under /mail: it reports what the key is
+        # permitted to do without sending a message.
+        "https://api.sendgrid.com/v3/scopes",
+        category="messaging",
+    ),
+    "twilio": _Spec(
+        "twilio",
+        "Twilio (SMS verify)",
+        ("TWILIO_AUTH_TOKEN",),
+        "https://api.twilio.com/2010-04-01/Accounts/{companion}.json",
+        auth="basic",
+        companion_env=("TWILIO_ACCOUNT_SID",),
+        category="messaging",
+    ),
+    "vapi": _Spec(
+        "vapi",
+        "Vapi (outbound calls)",
+        ("VAPI_API_KEY",),
+        "https://api.vapi.ai/assistant",
+        category="voice",
+    ),
+    "stripe": _Spec(
+        "stripe",
+        "Stripe (billing)",
+        ("STRIPE_SECRET_KEY",),
+        # Balance is a read. It proves the key is live without creating a
+        # customer, a session, or a charge.
+        "https://api.stripe.com/v1/balance",
+        category="payments",
+    ),
+    "google_maps": _Spec(
+        "google_maps",
+        "Google Maps",
+        ("GOOGLE_MAPS_API_KEY",),
+        # Geocoding returns 200 with a status field even for a bad key, so this
+        # is one of the cases where HTTP status alone is not the whole answer.
+        # _classify still catches a 403 from a restricted key, which is the
+        # common failure.
+        "https://maps.googleapis.com/maps/api/geocode/json?address=Richmond,VA",
+        auth="query",
+        query_param="key",
+        category="google",
+    ),
+    "eia": _Spec(
+        "eia",
+        "EIA (fuel and energy prices)",
+        ("EIA_API_KEY",),
+        "https://api.eia.gov/v2/",
+        auth="query",
+        query_param="api_key",
+        category="data",
+    ),
+    "sam_gov": _Spec(
+        "sam_gov",
+        "SAM.gov (federal solicitations)",
+        ("SAM_GOV_API_KEY", "SAM_API_KEY"),
+        "https://api.sam.gov/opportunities/v2/search?limit=1&postedFrom=01/01/2026&postedTo=01/02/2026",
+        auth="query",
+        query_param="api_key",
+        category="data",
+    ),
+    "regrid": _Spec(
+        "regrid",
+        "Regrid (parcel data)",
+        ("REGRID_API_KEY",),
+        "https://app.regrid.com/api/v2/parcels/point?lat=37.54&lon=-77.43&radius=1&limit=1",
+        auth="query",
+        query_param="token",
+        category="data",
+    ),
+    "pagespeed": _Spec(
+        "pagespeed",
+        "Google PageSpeed Insights",
+        ("GOOGLE_PAGESPEED_API_KEY",),
+        "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https://example.com",
+        auth="query",
+        query_param="key",
+        category="google",
     ),
 }
 
@@ -251,6 +421,22 @@ def _classify(status_code: int) -> tuple[str, str]:
     return DEGRADED, f"HTTP {status_code}"
 
 
+def _payload_for(spec: _Spec, key: str) -> Optional[dict[str, Any]]:
+    """
+    The request body, with the credential inserted where a provider wants it
+    there rather than in a header.
+
+    Tavily is the case: it has no GET that authenticates and reads the key from
+    the body. Built here rather than stored on the spec so a live key is never
+    held in a module-level structure.
+    """
+    if spec.payload is None:
+        return None
+    if spec.id == "tavily":
+        return {**spec.payload, "api_key": key}
+    return dict(spec.payload)
+
+
 async def probe(
     client: httpx.AsyncClient,
     *,
@@ -259,6 +445,7 @@ async def probe(
     configured: bool,
     headers: Optional[dict[str, str]] = None,
     json_payload: Optional[dict[str, Any]] = None,
+    auth: Optional[tuple[str, str]] = None,
 ) -> dict[str, Any]:
     """
     One request, classified. Shared so every status surface agrees on what a
@@ -275,7 +462,9 @@ async def probe(
 
     t0 = time.monotonic()
     try:
-        response = await client.request(method, url, headers=headers, json=json_payload)
+        response = await client.request(
+            method, url, headers=headers, json=json_payload, auth=auth
+        )
         latency_ms = round((time.monotonic() - t0) * 1000, 2)
         status, detail = _classify(response.status_code)
         return {
@@ -307,7 +496,7 @@ def _shape(pid: str, result: dict[str, Any], *, checked_at: Optional[str], age: 
     return {
         "id": spec.id,
         "label": spec.label,
-        "configured": bool(spec.key()),
+        "configured": spec.configured(),
         # Which variable actually supplied it. Worth reporting: a credential
         # picked up from an alias looks identical to one from the canonical
         # name until something needs renaming.
@@ -404,18 +593,22 @@ async def check(
         result = await probe(
             client,
             method=spec.method,
-            url=spec.url,
+            url=spec.request_url(key),
             configured=True,
             headers=spec.headers(key),
+            json_payload=_payload_for(spec, key),
+            auth=spec.auth_tuple(key),
         )
     else:
         async with httpx.AsyncClient(timeout=_TIMEOUT) as owned:
             result = await probe(
                 owned,
                 method=spec.method,
-                url=spec.url,
+                url=spec.request_url(key),
                 configured=True,
                 headers=spec.headers(key),
+                json_payload=_payload_for(spec, key),
+                auth=spec.auth_tuple(key),
             )
 
     result["_checked_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
