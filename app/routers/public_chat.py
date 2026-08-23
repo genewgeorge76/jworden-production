@@ -227,18 +227,91 @@ def _build_openai_messages(
 
 from app.services import llm_client
 
-def _call_openai(messages: list[dict]) -> str:
-    """Generate concierge reply using unified llm_client (Gemini/OpenAI/Claude) with direct OpenAI fallback."""
-    try:
-        reply, err = llm_client.chat(messages=messages, task="fast", max_tokens=300, temperature=0.72)
-        if reply and not err:
-            return reply.strip()
-    except Exception as exc:
-        logger.warning("llm_client fast call failed: %s", exc)
+def _concierge_task() -> str:
+    """
+    Which model lane answers the public concierge.
 
-    # No provider answered. The caller falls back to _stub_response, which is
-    # the honest end of the chain for a public-facing concierge.
-    return ""
+    It was "fast" — gpt-4o-mini. This is the founder persona on the front page,
+    the first thing a customer meets and the thing that turns a visit into a
+    lead, so it defaults to "persona" instead: claude-opus-5, the same top of
+    the chain Jarvis runs on.
+
+    That costs real money on an endpoint any visitor can reach. The limiter
+    above caps it at 15 requests a minute per address, which bounds the damage
+    but does not make it free. CONCIERGE_TASK exists so the lane can be dialled
+    back to "fast" without a deploy if the bill argues otherwise.
+    """
+    lane = (os.getenv("CONCIERGE_TASK") or "persona").strip().lower()
+    # An unknown lane resolves to no provider chain and the concierge silently
+    # returns to the rule table — which is the failure this whole change is
+    # about, so it is not repeated for a typo in an env var.
+    return lane if lane in llm_client._ROUTES else "persona"
+
+
+def _call_openai(messages: list[dict]) -> str:
+    """
+    Generate the concierge reply through the unified llm_client.
+
+    THIS NEVER CALLED THE MODEL. It passed `messages=` and unpacked a
+    two-tuple:
+
+        reply, err = llm_client.chat(messages=messages, task="fast", ...)
+
+    llm_client.chat() takes `system=` and `user=` and returns an LLMResponse.
+    So every single call raised TypeError, the except below swallowed it as a
+    provider failure, this returned "", and public_chat fell through to
+    _stub_response. The concierge on the front page has been answering from a
+    rule table since it was written — which is exactly what it looked like to
+    anyone who used it.
+
+    The `messages` shape is kept because _build_openai_messages builds it and
+    the history cap lives there; it is split into the arguments llm_client
+    actually takes.
+    """
+    system = ""
+    history: list[dict] = []
+    user = ""
+
+    for entry in messages:
+        role = entry.get("role")
+        content = (entry.get("content") or "").strip()
+        if not content:
+            continue
+        if role == "system":
+            # Concatenated rather than overwritten: a second system message is
+            # additional instruction, not a replacement for the first.
+            system = f"{system}\n\n{content}".strip() if system else content
+        else:
+            history.append({"role": role, "content": content})
+
+    # The final user turn is the prompt; everything before it is context.
+    if history and history[-1]["role"] == "user":
+        user = history.pop()["content"]
+
+    if not user:
+        return ""
+
+    try:
+        response = llm_client.chat(
+            task=_concierge_task(),
+            system=system,
+            user=user,
+            history=history or None,
+            max_tokens=300,
+            temperature=0.72,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Concierge llm_client call failed: %s", exc)
+        return ""
+
+    if response.error or not (response.text or "").strip():
+        logger.warning(
+            "Concierge got no answer from any provider: %s",
+            response.error_detail or "empty response",
+        )
+        return ""
+
+    return response.text.strip()
 
 
 def _pick_quick_replies(
