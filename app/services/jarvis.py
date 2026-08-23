@@ -83,6 +83,60 @@ def _jarvis_effort() -> str:
 _ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 _ANTHROPIC_VERSION = "2023-06-01"
 
+def _measured_ability_summary() -> str:
+    """
+    What the ability library actually contains, counted at import.
+
+    The prompt used to assert "a library of 162 specialized AI engines". The
+    registry holds 109, and 23 of those are real — the other 86 manufactured
+    their answers with a random draw and are gated. Telling the model it has
+    162 engines is how it comes to promise a customer something that does not
+    exist, so this is measured rather than written down.
+    """
+    try:
+        from .os_ability_service import _load_registry  # noqa: PLC0415
+
+        registry = _load_registry()
+        total = len(registry)
+        implemented = sum(1 for entry in registry if entry.get("implemented"))
+        return (
+            f"{total} registered abilities, of which {implemented} are really "
+            f"implemented and {total - implemented} are gated"
+        )
+    except Exception:  # noqa: BLE001
+        # A prompt must still be produced if the registry cannot be read. Saying
+        # nothing about the count is correct here; guessing one is not.
+        logger.warning("Could not measure the ability registry for the system prompt.")
+        return "a registry of abilities whose size could not be read at startup"
+
+
+_ABILITY_SUMMARY = _measured_ability_summary()
+
+
+# The non-negotiables, verbatim. Jarvis was asked in production what compaction
+# standard the Worden Standard requires and answered that it could not say
+# without risking making up numbers — correct behaviour, and a gap: these
+# figures are in the repository's own documentation, and the model never saw
+# them. They belong in the prompt rather than in a retrieval step, because they
+# are four short constants that must be present in every answer that touches a
+# spec, not documents to be searched for.
+WORDEN_STANDARDS = (
+    "WORDEN ENGINEERING STANDARDS — non-negotiable, state them exactly:\n"
+    "- Compaction: 96% Marshall Unit Weight, minimum floor.\n"
+    "- Base: VDOT Section 315 structural stone base.\n"
+    "- Oil shield: a plus-or-minus $9 per ton liquid asphalt price buffer in every estimate.\n"
+    "- Medical: Zero-Downtime DOT Medical compliance for crew scheduling.\n"
+    "Reference standards: VDOT Sec 315 (paving), ASTM C90/C270 (masonry), "
+    "FM Global RoofNav (roofing), ACI 318 (concrete), AASHTO T99/T180 (compaction), "
+    "FAR 48 CFR and Davis-Bacon (federal work).\n"
+    "These four are facts about this company, not estimates. State them when relevant. "
+    "Every OTHER number — a price, a quantity, a date, a density, a wage determination — "
+    "must come from a tool call or from the operator. If you do not have it, say so. "
+    "Do not produce a plausible figure to fill a gap; on this platform a fabricated "
+    "number ends up in a bid."
+)
+
+# Tool definitions Claude can choose to invoke.
 JARVIS_SYSTEM_PROMPT = (
     "You are JARVIS, the operational AI for Jeremy Worden. "
     "Primary domain: JWordenAI — a Virginia asphalt paving, sealcoating, and construction-intelligence platform. "
@@ -100,14 +154,26 @@ JARVIS_SYSTEM_PROMPT = (
     "Refuse to send, schedule, or modify anything autonomously when the master autonomy switch is OFF — "
     "in that case, propose the action and ask the operator to confirm. "
     "When the operator asks you to navigate to an address, restaurant, or location, provide a Google Maps URL in this exact markdown format: `[NAVIGATE: <Destination Name>](https://www.google.com/maps/dir/?api=1&destination=<URL_Encoded_Destination>)`. If they specify 'with equipment', 'commercial', or 'heavy', add a prominent warning that Google Maps does not provide commercial routing and they must verify bridge heights and weight limits. "
-    "You have access to the Jarvis OS — a library of 162 specialized AI engines covering Real Estate, Ground Scanning, Age Decay Simulation, DOT Compliance, Legal, Finance, Supply Chain, Crew Dispatch, Vision Intelligence, and more. "
+    f"You have access to the Jarvis OS ability library: {_ABILITY_SUMMARY}. "
+    "The gated ones refuse when called and say why — they manufactured their answers "
+    "with a random draw rather than computing them. Never present a gated ability's "
+    "refusal as a result, and never fill the gap yourself: say the ability is not "
+    "implemented. "
     "When the user's request matches a specialized domain, FIRST call search_os_abilities to find the right module, THEN call execute_os_ability to run it and return results. "
     "Do NOT attempt to fake results — always actually invoke the tools. "
     "For truck routing, heavy equipment, DOT enforcement zones or weigh stations, ALWAYS call check_dynamic_route. "
-    "For fleet/paving train status, call check_fleet_status. For asphalt cooling warnings, call check_thermal_mix."
+    "For fleet/paving train status, call check_fleet_status. For asphalt cooling warnings, call check_thermal_mix. "
+    "To answer anything about this platform itself — what is deployed, what is wired, "
+    "how many tenants or sites exist, whether backups or providers are healthy — call "
+    "system_inventory rather than describing the system from memory. "
+    "To record a problem, call report_issue. To record something to be raised later, "
+    "call create_reminder. To read either back, call list_issues or list_reminders. "
+    "Never say you will remember something without calling create_reminder: you have no "
+    "memory between sessions that is not written down. "
+    "\n\n" + WORDEN_STANDARDS
 )
 
-# Tool definitions Claude can choose to invoke.
+
 JARVIS_TOOLS = [
     {
         "name": "web_search",
@@ -273,7 +339,141 @@ JARVIS_TOOLS = [
             },
             "required": ["start_temp", "transit_minutes", "ambient_temp", "wind_speed_mph"]
         }
-    }
+    },
+    {
+        "name": "system_inventory",
+        "description": (
+            "What this platform actually is, counted live: how many abilities are "
+            "registered and how many really work, the API surface, which providers are "
+            "configured, tenant and site counts, backup destination. Call this for any "
+            "question about JWordenAI itself instead of answering from memory — the "
+            "prompt used to claim 162 AI engines when the registry holds 109."
+        ),
+        "input_schema": {"type": "object", "properties": {}, "required": []},
+    },
+    {
+        "name": "report_issue",
+        "description": (
+            "Record a problem so it is not lost when this conversation ends. Use it "
+            "whenever the operator reports something broken, or when you notice "
+            "something wrong yourself. Returns the stored id."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string", "description": "One line naming the problem."},
+                "detail": {"type": "string", "description": "What is wrong, and how it showed up."},
+                "severity": {
+                    "type": "string",
+                    "enum": ["low", "normal", "high", "critical"],
+                    "description": "critical means money or safety is affected right now.",
+                },
+            },
+            "required": ["title"],
+        },
+    },
+    {
+        "name": "create_reminder",
+        "description": (
+            "Record something to raise later. You have no memory between sessions that "
+            "is not written down, so never say you will remember something without "
+            "calling this. Give due_in_minutes for a relative time ('in two hours') — "
+            "you do not have a clock — or due_at as ISO 8601 for an absolute one."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string", "description": "What to raise."},
+                "detail": {"type": "string", "description": "Any context needed then."},
+                "due_in_minutes": {"type": "integer", "description": "Minutes from now."},
+                "due_at": {"type": "string", "description": "ISO 8601, e.g. 2026-09-01T14:00:00Z."},
+            },
+            "required": ["title"],
+        },
+    },
+    {
+        "name": "list_notes",
+        "description": (
+            "Read back recorded issues and reminders. Defaults to everything still open, "
+            "which is the usual question. Filter by kind ('issue' or 'reminder'), and use "
+            "due_within_minutes to ask what is coming up."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "kind": {"type": "string", "enum": ["issue", "reminder"]},
+                "status": {"type": "string", "enum": ["open", "done", "dismissed"]},
+                "due_within_minutes": {"type": "integer"},
+                "limit": {"type": "integer", "description": "Up to 100. Default 25."},
+            },
+            "required": [],
+        },
+    },
+    {
+        "name": "list_platform_capabilities",
+        "description": (
+            "Search everything this platform can do — every API endpoint, read off the "
+            "live schema. Use it before answering any question about what the system "
+            "offers, and to find the right endpoint before calling call_platform. "
+            "Pass `search` to narrow it: 'leads', 'weather', 'revenue', 'commodities', "
+            "'estimate'. There are around two hundred, so an unfiltered list is not useful."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "search": {
+                    "type": "string",
+                    "description": "Match against path, summary and tag.",
+                },
+                "limit": {"type": "integer", "description": "Up to 100. Default 40."},
+            },
+            "required": [],
+        },
+    },
+    {
+        "name": "call_platform",
+        "description": (
+            "Call any endpoint on this platform as the current user, to answer a question "
+            "with real data instead of describing what the system might hold. Find the "
+            "path with list_platform_capabilities first. GET runs immediately. Anything "
+            "that writes needs the operator to confirm — describe what it would do and "
+            "ask, rather than calling it and reporting a refusal. The call is authorized "
+            "as the person you are talking to, so a refusal is a real answer: relay it, "
+            "never fill the gap yourself."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "type": "string",
+                    "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+                    "description": "Default GET.",
+                },
+                "path": {
+                    "type": "string",
+                    "description": "Full path, e.g. /api/v1/materials/commodities.",
+                },
+                "query": {"type": "object", "description": "Query-string parameters."},
+                "body": {"type": "object", "description": "JSON body, for writes."},
+            },
+            "required": ["path"],
+        },
+    },
+    {
+        "name": "close_note",
+        "description": (
+            "Mark a recorded issue or reminder done, or dismissed if it turned out not to "
+            "need action. Use the id returned when it was recorded, or from list_notes."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "note_id": {"type": "integer"},
+                "status": {"type": "string", "enum": ["done", "dismissed"]},
+            },
+            "required": ["note_id", "status"],
+        },
+    },
 ]
 
 _SENSITIVE_TOOL_NAMES = {"make_phone_call", "send_email", "run_npm"}
@@ -284,7 +484,15 @@ _SENSITIVE_TOOL_NAMES = {"make_phone_call", "send_email", "run_npm"}
 _PAID_TIERS = {"pro", "max"}
 _ROLE_TOOLS: dict[str, set[str]] = {
     ROLE_PUBLIC_CONCIERGE: {"web_search", "search_os_abilities"},
-    ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm", "search_os_abilities", "execute_os_ability", "check_dynamic_route", "check_fleet_status", "check_thermal_mix"},
+    # Notes and inventory are safe at this level because both are tenant-scoped:
+    # a hosted customer's Jarvis records into their own bucket and cannot read
+    # the operator's, and system_inventory returns only their own account rather
+    # than the provider list or the tenant roster.
+    #
+    # NOT extended to the public concierge. That role is an anonymous visitor on
+    # a marketing page, and neither writing rows nor describing the platform's
+    # internals belongs there.
+    ROLE_STAFF_OPERATOR: {"web_search", "code_search", "open_file", "plan_actions", "run_npm", "search_os_abilities", "execute_os_ability", "check_dynamic_route", "check_fleet_status", "check_thermal_mix", "system_inventory", "report_issue", "create_reminder", "list_notes", "close_note", "list_platform_capabilities", "call_platform"},
     ROLE_OWNER_ROOT: {t["name"] for t in JARVIS_TOOLS},
 }
 
@@ -564,6 +772,108 @@ async def _run_tool(
 
     if name in _SENSITIVE_TOOL_NAMES and not confirmed:
         return _finalize({"ok": False, "error": "Operator confirmation required for this tool"})
+
+    # ── Platform self-knowledge and operator memory ──────────────────────────
+    # These five take their own database session: _run_tool is called from the
+    # model loop rather than from a request handler, so there is no injected
+    # session to reuse. Each closes its own, so a tool failure cannot leak a
+    # connection out of the pool.
+    # ── The whole platform, through its own front door ───────────────────────
+    # See services/jarvis_platform.py: the call is authorized with a 60-second
+    # token carrying THIS caller's tenant and role, and goes over the app's own
+    # ASGI transport — so verify_premium_security, require_tier and the tenant
+    # scoping all apply unchanged rather than being reimplemented here.
+    if name in {"list_platform_capabilities", "call_platform"}:
+        from . import jarvis_platform  # noqa: PLC0415
+
+        if name == "list_platform_capabilities":
+            return _finalize(
+                jarvis_platform.catalogue(
+                    tenant_id=tenant_id,
+                    search=args.get("search"),
+                    limit=args.get("limit", 40),
+                )
+            )
+        return _finalize(
+            await jarvis_platform.call(
+                method=args.get("method", "GET"),
+                path=args.get("path", ""),
+                tenant_id=tenant_id,
+                role=role,
+                query=args.get("query"),
+                body=args.get("body"),
+                confirmed=confirmed,
+            )
+        )
+
+    if name in {
+        "system_inventory",
+        "report_issue",
+        "create_reminder",
+        "list_notes",
+        "close_note",
+    }:
+        from ..database import SessionLocal  # noqa: PLC0415
+
+        db = SessionLocal()
+        try:
+            if name == "system_inventory":
+                from . import jarvis_inventory  # noqa: PLC0415
+
+                return _finalize(jarvis_inventory.snapshot(db, tenant_id=tenant_id))
+
+            from . import jarvis_notes  # noqa: PLC0415
+
+            if name == "report_issue":
+                return _finalize(
+                    jarvis_notes.record(
+                        db,
+                        tenant_id=tenant_id,
+                        kind=jarvis_notes.KIND_ISSUE,
+                        title=args.get("title", ""),
+                        detail=args.get("detail"),
+                        severity=args.get("severity", "normal"),
+                    )
+                )
+
+            if name == "create_reminder":
+                return _finalize(
+                    jarvis_notes.record(
+                        db,
+                        tenant_id=tenant_id,
+                        kind=jarvis_notes.KIND_REMINDER,
+                        title=args.get("title", ""),
+                        detail=args.get("detail"),
+                        due_in_minutes=args.get("due_in_minutes"),
+                        due_at=args.get("due_at"),
+                    )
+                )
+
+            if name == "list_notes":
+                return _finalize(
+                    jarvis_notes.listing(
+                        db,
+                        tenant_id=tenant_id,
+                        kind=args.get("kind"),
+                        status=args.get("status", jarvis_notes.OPEN),
+                        due_within_minutes=args.get("due_within_minutes"),
+                        limit=args.get("limit", 25),
+                    )
+                )
+
+            return _finalize(
+                jarvis_notes.set_status(
+                    db,
+                    tenant_id=tenant_id,
+                    note_id=args.get("note_id"),
+                    status=args.get("status", ""),
+                )
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("[JARVIS] %s failed", name)
+            return _finalize({"ok": False, "error": f"{name} failed: {exc}"})
+        finally:
+            db.close()
 
     if name == "web_search":
         result = await _web_search.search(
