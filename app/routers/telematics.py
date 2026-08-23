@@ -48,6 +48,7 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services.entitlements import require_tier
 from ..services.tenancy import scope, tenant_of
 from ..models import GroundScanReport, PaymentTransaction, TruckPosition
 
@@ -176,6 +177,12 @@ def live_snapshot(
     db: Session = Depends(get_db),
     auth: dict = Depends(verify_premium_security),
 ) -> dict[str, Any]:
+    # "Advanced Telemetry" is a PRO line on the published price list. This
+    # endpoint was authenticated but not tier-gated, so a LITE tenant at $199
+    # had the whole live operational snapshot. Authentication proves you are a
+    # customer; it does not prove you bought this.
+    require_tier(db, tenant_of(auth), "pro", "Advanced Telemetry")
+
     fleet = _fleet(db)
     price = _asphalt_price()
     scans = _scans(db, tenant_of(auth))

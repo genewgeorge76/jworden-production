@@ -13,9 +13,13 @@ import PhotoGallery from '../components/portal/PhotoGallery';
 import ReferralCard from '../components/portal/ReferralCard';
 
 export default function CustomerPortal() {
-  const { user, logout } = useAuth();
+  const { user, isOwner, logout } = useAuth();
   const [selectedJobId, setSelectedJobId] = useState(null);
-  const isAdminPreview = user?.role === 'admin';
+  // Was `user?.role === 'admin'`, which /auth/register stamps on every
+  // self-serve signup — so every paying customer got the operator's
+  // see-all-projects view of this portal. is_owner is the tenant-level
+  // distinction and is the one that means what this check wanted.
+  const isAdminPreview = isOwner;
 
   // Customer sessions are email-filtered; admin sessions can preview all projects.
   const { data: jobs = [], isLoading: jobsLoading } = useQuery({

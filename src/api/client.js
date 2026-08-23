@@ -60,6 +60,24 @@ function handleAuthRejection(status, detail) {
   }
 }
 
+export function getAuthToken() {
+  // The bearer token, for callers that cannot go through request() — a
+  // WebSocket handshake takes no custom headers from the browser API, so
+  // /ws/dashboard receives it as a query parameter instead.
+  if (typeof window === 'undefined') return ''
+  try {
+    return (
+      authState.token ||
+      window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ||
+      window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ||
+      ''
+    )
+  } catch {
+    return ''
+  }
+}
+
+
 function restoreStoredAuthToken() {
   if (typeof window === 'undefined') return false
   const token = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || window.sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
@@ -130,6 +148,30 @@ export async function authenticateWithPin(pin) {
   return authState.token
 }
 
+export async function registerTenant(payload) {
+  // Sign-up, and the session that has to follow it.
+  //
+  // /api/v1/auth/register used to return {status, tenant_id} and no
+  // credential, while the very next step in the flow — POST
+  // /api/v1/billing/checkout — sits behind router-level auth. A brand-new
+  // registrant had no way to obtain a token, so the checkout call was rejected
+  // and the customer saw "Failed to create checkout session". Nobody could
+  // subscribe.
+  //
+  // The endpoint now returns an access_token. Storing it here, next to the
+  // other sign-in paths, keeps credential handling in one place rather than
+  // spread across page components.
+  const response = await request('POST', '/api/v1/auth/register', payload)
+  if (response?.access_token) {
+    storeAuthToken(
+      response.access_token,
+      Math.floor(Date.now() / 1000) + (response.expires_in || 86_400)
+    )
+  }
+  return response
+}
+
+
 export async function authenticateWithPassword(email, password) {
   // Tenant sign-in, as opposed to authenticateWithPin above which is the
   // single-admin gate. POST /api/v1/auth/login has existed on the backend the
@@ -142,6 +184,21 @@ export async function authenticateWithPassword(email, password) {
     Math.floor(Date.now() / 1000) + (response.expires_in || 86_400),
   )
   return authState.token
+}
+
+export async function fetchIdentity() {
+  // Who the server says you are. The SPA used to answer this itself with a
+  // hardcoded `role: 'admin'`, which meant the operator and a paying
+  // subscriber were the same identity to every guard in the app.
+  //
+  // Returns null rather than throwing when unauthenticated: callers treat "no
+  // identity" as "signed out", and a 403 here is the normal state for a
+  // visitor on a public page.
+  try {
+    return await request('GET', '/api/v1/auth/me')
+  } catch {
+    return null
+  }
 }
 
 export function clearAuthToken() {
@@ -711,6 +768,21 @@ const integrationsClient = {
 
 export const api = {
   getAuthStatus: () => request('GET', '/api/v1/auth/status'),
+  // ── Market Site factory (PRO) ──────────────────────────────────────────────
+  // Backs /market-sites. POST /factory/sites and POST /factory/blog/generate
+  // existed with no GET beside either, so a customer could create a site and
+  // generate a post and then had no way to see or review what they had made.
+  listMarketSites: () => protectedRequest('GET', '/api/v1/factory/sites'),
+  createMarketSite: (data) => protectedRequest('POST', '/api/v1/factory/sites', data),
+  listBlogPosts: (hostname) =>
+    protectedRequest('GET', `/api/v1/factory/blog${hostname ? `?hostname=${encodeURIComponent(hostname)}` : ''}`),
+  readBlogPost: (id) => protectedRequest('GET', `/api/v1/factory/blog/${id}`),
+  generateBlogPost: (data) => protectedRequest('POST', '/api/v1/factory/blog/generate', data),
+  publishBlogPost: (id) => protectedRequest('POST', `/api/v1/factory/blog/${id}/publish`),
+  // ── Advanced Telemetry (PRO) ───────────────────────────────────────────────
+  getLiveTelemetry: () => protectedRequest('GET', '/api/v1/telematics/live'),
+  // ── Supply Chain Pricing (MAX) ─────────────────────────────────────────────
+  getCommodityPrices: () => protectedRequest('GET', '/api/v1/materials/commodities'),
   authenticateWithPin,
   getDiamondJobs: () => protectedRequest('GET', '/api/v1/operations/diamond-jobs'),
   syncDiamondJobs: () => protectedRequest('POST', '/api/v1/operations/sync-diamond'),

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Shield, MapPin, Building2, User, CreditCard, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { registerTenant, request } from '@/api/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const US_STATES = [
@@ -51,27 +52,22 @@ export default function Register() {
     
     try {
       // 1. Create Tenant & User
-      const authResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      
-      const authData = await authResponse.json();
-      if (!authResponse.ok) throw new Error(authData.detail || 'Registration failed');
+      // registerTenant stores the access_token the endpoint now returns, so the
+      // checkout call below is authenticated. See client.js for why that was
+      // the difference between a working signup and no signup at all.
+      const authData = await registerTenant(formData);
       
       // 2. Generate Stripe Checkout Session
-      const billingResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/v1/billing/checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenant_id: authData.tenant_id,
-          plan: formData.plan
-        })
+      //
+      // The billing router requires authentication, and a brand-new registrant
+      // has no other way to obtain a token — which is why this step used to
+      // fail with "Failed to create checkout session" and nobody could
+      // subscribe. /auth/register now returns an access_token; store it so
+      // request() attaches it here and on every call after.
+      const billingData = await request('POST', '/api/v1/billing/checkout', {
+        tenant_id: authData.tenant_id,
+        plan: formData.plan
       });
-
-      const billingData = await billingResponse.json();
-      if (!billingResponse.ok) throw new Error(billingData.detail || 'Failed to create checkout session');
 
       // 3. Redirect to Stripe
       window.location.href = billingData.url;

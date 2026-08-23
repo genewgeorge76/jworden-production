@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { authenticateWithPassword } from '@/api/client';
+import { useAuth } from '@/lib/AuthContext';
 
 /**
  * Tenant sign-in for the Standard OS.
@@ -17,8 +17,9 @@ import { authenticateWithPassword } from '@/api/client';
  * Distinct from AdminPinGate, which is the single-admin PIN gate for the
  * command centre. This is the per-tenant email + password path.
  */
-export default function Login() {
+export default function Login({ redirectOnSuccess = true }) {
   const navigate = useNavigate();
+  const { loginWithPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,8 +31,18 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      await authenticateWithPassword(email.trim(), password);
-      navigate('/dashboard', { replace: true });
+      // Through the context, not straight to the client: signing in has to
+      // update the identity the rest of the app reads, or every guard still
+      // believes you are signed out until the next full page load.
+      const me = await loginWithPassword(email.trim(), password);
+
+      // When this form is standing in for a page you asked for — RequireAuth
+      // renders it in place — there is nowhere to navigate to. The identity
+      // change re-renders the guard and the page you wanted appears.
+      if (!redirectOnSuccess) return;
+
+      // The operator's console and a customer's dashboard are different places.
+      navigate(me?.is_owner ? '/command-center' : '/dashboard', { replace: true });
     } catch (err) {
       // The backend answers a bad email and a bad password with the same 401
       // and the same wording, which is deliberate: distinguishing them tells an

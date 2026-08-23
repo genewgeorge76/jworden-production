@@ -78,6 +78,13 @@ DELIBERATELY_GLOBAL = {
     # enumerates.
     ("auth.py", "login_user"),
     ("auth.py", "register_tenant"),
+    # /auth/me answers "who am I?" and both of its reads are already pinned to
+    # the caller: the User row is looked up by the email in the caller's own
+    # token, and the Tenant row by tenant_of(auth) — the tenant that token
+    # carries. scope() would filter the caller's own row by the caller's own
+    # tenant, which is the same row. Nothing here can return another tenant's
+    # data, because there is no caller-supplied identifier to point elsewhere.
+    ("auth.py", "read_identity"),
     # Billing resolves the tenant from the authenticated identity first
     # (_resolve_billing_tenant), then looks that tenant up by primary key. The
     # lookup is unscoped because the authorization already happened above it.

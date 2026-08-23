@@ -385,6 +385,33 @@ async def lifespan(app: FastAPI):
             "AUTO_CREATE_TABLES disabled; expecting Alembic migrations to manage schema"
         )
 
+    # ── Operator sign-in account ──────────────────────────────────────────────
+    # The operator signs in with email and password like every subscriber does;
+    # what separates them is the tenant on the user row. Nothing else can create
+    # that row — registration always mints a fresh customer tenant, and an
+    # endpoint that could promote an account into the owner bucket would be a
+    # privilege-escalation endpoint — so it is seeded here from OWNER_EMAIL and
+    # OWNER_PASSWORD. Idempotent; neither value is ever logged.
+    from .services import owner_account  # noqa: PLC0415
+
+    try:
+        seeded = owner_account.ensure_owner_account_with_session()
+        if seeded:
+            logger.info("Operator sign-in available for %s.", seeded)
+        else:
+            logger.warning(
+                "No operator account is configured. Set %s and %s to sign in to "
+                "the operations console with email and password.",
+                owner_account.OWNER_EMAIL_VAR,
+                owner_account.OWNER_PASSWORD_VAR,
+            )
+    except owner_account.OwnerAccountNotConfigured as exc:
+        # Refusing to seed is not a reason to refuse to serve: the public site
+        # and every customer tenant work without an operator account.
+        logger.error("Operator account not seeded: %s", exc)
+    except Exception:
+        logger.exception("Operator account seeding failed; continuing startup.")
+
     # ── Tenant isolation guard ────────────────────────────────────────────────
     # Log-only by default: reports queries that read tenant-scoped tables without
     # a tenant_id filter, and changes nothing.
