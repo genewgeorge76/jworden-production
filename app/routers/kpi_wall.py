@@ -17,10 +17,11 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
-from ..core.cache import KPI_WALL_TTL, KEY_KPI_WALL, cache_get, cache_set
+from ..core.cache import kpi_wall_key, KPI_WALL_TTL, KEY_KPI_WALL, cache_get, cache_set
 from ..core.limiter import ANALYTICS_LIMIT, limiter
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services.tenancy import DEFAULT_TENANT, scope, tenant_of
 from ..models import (
     CashFlowEntry,
     Lead,
@@ -35,18 +36,29 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/kpi-wall", tags=["kpi-wall"])
 
 
-def _compute_kpi_wall(db: Session) -> dict:
+def _compute_kpi_wall(db: Session, tenant: str = DEFAULT_TENANT) -> dict:
     """
     Compute all KPI wall metrics from the database.
 
     Extracted from the route handler so the cache warmer can call it
     directly without going through the HTTP layer.
+
+    `tenant` is required in substance even though it defaults: every aggregate
+    below counted every tenant's rows, so a hosted client's dashboard showed
+    the platform's numbers rather than its own. The default is the operator's
+    bucket, which is what the cache warmer wants — it runs with no request and
+    therefore no caller to take a tenant from.
+
+    The cache key must include the tenant. Scoping these queries while leaving
+    one global key would be worse than leaving them unscoped: the first tenant
+    to load the wall would populate the cache and every other tenant would be
+    served that copy for the next five minutes.
     """
     now = datetime.now(timezone.utc)
     twelve_months_ago = now - timedelta(days=365)
 
     # ── 1. Bid-to-Win Ratio (from proposal outcomes) ──────────────────────────
-    outcomes = db.query(ProposalOutcome).filter(
+    outcomes = scope(db.query(ProposalOutcome), ProposalOutcome, tenant).filter(
         ProposalOutcome.outcome_recorded_at >= twelve_months_ago
     ).all()
     total_bids = len(outcomes)
@@ -54,7 +66,7 @@ def _compute_kpi_wall(db: Session) -> dict:
     win_rate = round((won_bids / total_bids) * 100, 1) if total_bids > 0 else None
 
     # ── 2. On-time Delivery Rate (from project metrics) ──────────────────────
-    metrics = db.query(ProjectMetric).filter(
+    metrics = scope(db.query(ProjectMetric), ProjectMetric, tenant).filter(
         ProjectMetric.completion_date >= twelve_months_ago
     ).all()
     on_time_projects = [
@@ -66,7 +78,7 @@ def _compute_kpi_wall(db: Session) -> dict:
     )
 
     # ── 3. Safety TRIR (from incidents) ───────────────────────────────────────
-    recordables = db.query(SafetyIncident).filter(
+    recordables = scope(db.query(SafetyIncident), SafetyIncident, tenant).filter(
         SafetyIncident.osha_recordable == 1,
         SafetyIncident.incident_date >= twelve_months_ago,
     ).count()
@@ -75,7 +87,7 @@ def _compute_kpi_wall(db: Session) -> dict:
     trir = round((recordables * 200_000) / estimated_hours, 2)
 
     # ── 4. Cash Position (net of all future entries) ──────────────────────────
-    future_entries = db.query(CashFlowEntry).filter(
+    future_entries = scope(db.query(CashFlowEntry), CashFlowEntry, tenant).filter(
         CashFlowEntry.expected_date >= now
     ).all()
     cash_in = sum(e.amount for e in future_entries if e.entry_type == "income")
@@ -84,7 +96,7 @@ def _compute_kpi_wall(db: Session) -> dict:
 
     # ── 5. Workforce Cert Currency (workforce module) ─────────────────────────
     import json  # noqa: PLC0415
-    all_members = db.query(WorkforceMember).all()
+    all_members = scope(db.query(WorkforceMember), WorkforceMember, tenant).all()
     cert_current_pct = None
     if all_members:
         total_certs = 0
@@ -109,7 +121,7 @@ def _compute_kpi_wall(db: Session) -> dict:
     avg_nps = round(sum(nps_vals) / len(nps_vals), 1) if nps_vals else None
 
     # ── Monthly trend data (last 12 months) ──────────────────────────────────
-    leads_12m = db.query(Lead).filter(Lead.created_at >= twelve_months_ago).all()
+    leads_12m = scope(db.query(Lead), Lead, tenant).filter(Lead.created_at >= twelve_months_ago).all()
     monthly_leads: dict[str, int] = {}
     for lead in leads_12m:
         key = lead.created_at.strftime("%Y-%m")
@@ -180,18 +192,20 @@ def _compute_kpi_wall(db: Session) -> dict:
 async def kpi_wall(
     request: Request,
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Pull live KPIs from all modules and return a single dashboard payload.
     Each KPI includes current value, trend direction, and rolling 12-month data.
     Results are cached for 5 minutes to avoid repeated expensive aggregations.
     """
-    cached = cache_get(KEY_KPI_WALL)
+    tenant = tenant_of(auth)
+    key = kpi_wall_key(tenant)
+    cached = cache_get(key)
     if cached is not None:
         return cached
-    result = _compute_kpi_wall(db)
-    cache_set(KEY_KPI_WALL, result, KPI_WALL_TTL)
+    result = _compute_kpi_wall(db, tenant)
+    cache_set(key, result, KPI_WALL_TTL)
     return result
 
 

@@ -422,7 +422,7 @@ import hashlib
 import logging
 from datetime import datetime, timedelta, timezone
 
-from fastapi import Query, Request
+from fastapi import Header, Query, Request
 
 from app.core.security import verify_premium_security
 from ..services.tenancy import scope, tenant_of
@@ -645,8 +645,49 @@ def record_progress(payload: ProgressPing, db: Session = Depends(get_db)):
 
 
 @router.get("/record", summary="One crew member's training record")
-def my_record(email: str = Query(...), db: Session = Depends(get_db)):
+def my_record(
+    email: str = Query(...),
+    db: Session = Depends(get_db),
+    x_org_key: Optional[str] = Header(default=None, alias="X-Org-Key"),
+):
+    """
+    A crew member's certifications and recent exam attempts.
+
+    THIS TOOK AN EMAIL ADDRESS AND NO CREDENTIAL.
+
+    Anyone could pass any address and receive that person's full training
+    record — every certification plus their last 25 exam attempts, pass marks
+    and all. Employee training results are personal data, and an endpoint that
+    returns them for an arbitrary address is an enumeration tool: guess or
+    harvest company emails, learn who holds which tickets and who has been
+    failing exams.
+
+    The fix reuses the credential the neighbouring roster endpoint already
+    uses rather than inventing a new one. An org key identifies a company, and
+    the address must belong to that company's active roster. So a foreman can
+    pull up his own crew and nobody else's, which is what this endpoint was
+    for.
+    """
     e = (email or "").strip().lower()
+
+    org = _org_from_key(db, x_org_key)
+    member = (
+        db.query(OrgMember)
+        .filter(
+            OrgMember.org_id == org.id,
+            OrgMember.email == e,
+            OrgMember.active == True,  # noqa: E712
+        )
+        .first()
+    )
+    if member is None:
+        # 404, not 403. A 403 would confirm the address exists on some other
+        # roster, which is the enumeration this is closing.
+        raise HTTPException(
+            status_code=404,
+            detail="No training record for that address on this organization's roster.",
+        )
+
     certs = (
         db.query(Certification)
         .filter(Certification.user_email == e, Certification.revoked == False)  # noqa: E712
@@ -780,7 +821,6 @@ def verify_certificate(cert_number: str, db: Session = Depends(get_db)):
 
 import secrets
 
-from fastapi import Header
 
 from app.models import Organization, OrgMember
 

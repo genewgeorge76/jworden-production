@@ -48,6 +48,7 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services.tenancy import scope, tenant_of
 from ..models import GroundScanReport, PaymentTransaction, TruckPosition
 
 logger = logging.getLogger(__name__)
@@ -117,13 +118,19 @@ def _asphalt_price() -> dict[str, Any]:
                 "reason": "price_feed_unreachable"}
 
 
-def _scans(db: Session) -> dict[str, Any]:
-    """Ground scan reports filed in the trailing 24h, and lifetime total."""
+def _scans(db: Session, tenant: str) -> dict[str, Any]:
+    """
+    Ground scan reports filed in the trailing 24h, and lifetime total.
+
+    Takes the tenant explicitly. As a helper it had no request to derive one
+    from, so both counts spanned every tenant — a hosted client's snapshot
+    reported the platform's scan volume as its own.
+    """
     try:
         since = _utcnow() - timedelta(hours=24)
-        total = db.query(GroundScanReport).count()
+        total = scope(db.query(GroundScanReport), GroundScanReport, tenant).count()
         recent = (
-            db.query(GroundScanReport)
+            scope(db.query(GroundScanReport), GroundScanReport, tenant)
             .filter(GroundScanReport.created_at >= since)
             .count()
             if hasattr(GroundScanReport, "created_at")
@@ -167,11 +174,11 @@ def _escrow(db: Session) -> dict[str, Any]:
 @router.get("/live", summary="Live operational snapshot from recorded sources")
 def live_snapshot(
     db: Session = Depends(get_db),
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
 ) -> dict[str, Any]:
     fleet = _fleet(db)
     price = _asphalt_price()
-    scans = _scans(db)
+    scans = _scans(db, tenant_of(auth))
     crew = _crew()
     escrow = _escrow(db)
 

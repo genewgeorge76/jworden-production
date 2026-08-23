@@ -79,7 +79,7 @@ test:api:
     # db.query() call. 41 of those sit behind tenant auth and are the more
     # dangerous shape. Use tenancy.get_scoped(); this check will not catch a
     # missed one.
-    - python3 scripts/audit_tenant_isolation.py --max 36
+    - python3 scripts/audit_tenant_isolation.py --max 27
     # exactly one alembic head: a fork in the migration chain breaks every
     # future deploy, and it is invisible until someone runs upgrade.
     #
