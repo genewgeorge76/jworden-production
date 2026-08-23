@@ -135,3 +135,44 @@ def test_token_without_a_tenant_claim_is_not_the_owner(app_modules):
     with pytest.raises(HTTPException) as raised:
         verify_premium_security(scopeless)
     assert raised.value.status_code == 403
+
+
+@pytest.mark.anyio
+async def test_the_identity_carries_a_name(client, app_modules, monkeypatch):
+    """
+    CustomerPortal renders `user?.full_name?.split(' ')[0] || 'Client'`.
+
+    /auth/me did not send full_name, so that fell through to the literal word
+    "Client" — and the operator, correctly signed in with is_owner true, was
+    greeted as a customer on his own platform. He reported it as a broken
+    login. It was a missing field.
+    """
+    _, dbmod = app_modules
+    from app.services import owner_account
+
+    monkeypatch.setenv(owner_account.OWNER_EMAIL_VAR, "named@thewordenstandard.example")
+    monkeypatch.setenv(owner_account.OWNER_PASSWORD_VAR, "a-long-operator-password")
+
+    session = dbmod.SessionLocal()
+    try:
+        owner_account.ensure_owner_account(session)
+    finally:
+        session.close()
+
+    login = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": "named@thewordenstandard.example",
+            "password": "a-long-operator-password",
+        },
+    )
+    token = login.json()["access_token"]
+
+    me = await client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    identity = me.json()
+
+    assert identity["is_owner"] is True
+    assert identity["full_name"] == "Operator"
+    # The specific failure: a name field that is present but empty still lands
+    # on the "Client" fallback.
+    assert identity["full_name"]

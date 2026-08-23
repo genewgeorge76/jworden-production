@@ -477,6 +477,14 @@ class IdentityResponse(BaseModel):
     subscription_status: Optional[str] = None
     branding_tier: Optional[str] = None
     company_name: Optional[str] = None
+    # The person's name, which this did not carry.
+    #
+    # CustomerPortal renders `user?.full_name?.split(' ')[0] || 'Client'`, so an
+    # identity with no name falls through to the literal word "Client" — and
+    # the operator, signed in correctly with is_owner true, was greeted as a
+    # customer. The seeder sets full_name on his row; nothing ever sent it to
+    # the browser.
+    full_name: Optional[str] = None
     auth_mode: str
 
 
@@ -538,5 +546,6 @@ def read_identity(
         subscription_status=tenant_row.subscription_status if tenant_row else None,
         branding_tier=tenant_row.branding_tier if tenant_row else None,
         company_name=tenant_row.company_name if tenant_row else None,
+        full_name=getattr(user_row, "full_name", None),
         auth_mode=auth.get("auth_mode") or "token",
     )
