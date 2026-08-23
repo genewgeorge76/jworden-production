@@ -158,6 +158,40 @@ def grade(
     return LISTED
 
 
+# ── Columns that look like money and are not our money ──────────────────────
+#
+# KBP's construction pipeline carries "20% CONFIDENCE AUV" and "80% CONFIDENCE
+# AUV" per store. AUV is Average Unit Volume: the restaurant's projected ANNUAL
+# SALES. Across 20 stores those two columns total $26,194,220 and $22,862,940.
+#
+# Nothing in that is money paid to a paving contractor. It is the client's
+# revenue forecast for the restaurant that will stand on the lot. A reader that
+# maps "a numeric column near an address" to an invoice amount turns a real
+# document into a claim of twenty-six million dollars of work, and the figure
+# is large enough and specific enough that nobody would question it.
+#
+# So these are matched and dropped by name before any column mapping happens.
+# Refusing a column that might be money costs an import; accepting one that is
+# not costs the credibility of every number on the site.
+_NEVER_AN_AMOUNT = (
+    "auv",              # average unit volume — the restaurant's sales
+    "confidence",       # "20% CONFIDENCE AUV"
+    "sales",
+    "revenue",
+    "rent",
+    "square feet",
+    "sq ft",
+    "phone",            # a phone number parses as a number perfectly well
+    "zip",              # so does a postal code
+)
+
+
+def is_never_an_amount(header: str) -> bool:
+    """True when a column must never be read as money owed for work."""
+    label = str(header or "").strip().lower()
+    return any(token in label for token in _NEVER_AN_AMOUNT)
+
+
 # ── Reading a programme spreadsheet ─────────────────────────────────────────
 
 # The header row names vary between tabs ("Date Received" on the roof tab where
@@ -178,13 +212,22 @@ _COLUMNS = {
 }
 
 
+_AMOUNT_FIELDS = ("invoice_amount", "job_total", "amount_paid")
+
+
 def _header_map(row: tuple) -> dict[str, int]:
     found: dict[str, int] = {}
     for index, cell in enumerate(row):
         label = str(cell or "").strip().lower()
         if not label:
             continue
+        # Checked before the mapping, not after: a header that is forbidden as
+        # money is skipped entirely rather than mapped and then filtered, so
+        # there is no path by which it reaches an amount field.
+        forbidden = is_never_an_amount(label)
         for field, names in _COLUMNS.items():
+            if forbidden and field in _AMOUNT_FIELDS:
+                continue
             if field not in found and label in names:
                 found[field] = index
     return found

@@ -482,3 +482,75 @@ async def test_the_summary_says_what_each_grade_means(client, auth_headers):
     assert summary["by_evidence"]["listed"]["publishable"] is False
     assert "not a job" in summary["evidence_meanings"]["listed"]
     assert summary["publishable_states"] == {"TX": 3}
+
+
+# ── The column that is not our money ────────────────────────────────────────
+
+KBP_PIPELINE_ROWS = [
+    (None, None, "ROW", "DMA", "PROJECT STATUS", "STORE #", "Store Address", "CITY",
+     "STATE", "ZIP", "PHONE #", "20% CONFIDENCE\nAUV", "80% CONFIDENCE\nAUV"),
+    (None, None, 1, 642, "COMPLETE", "G135603", "1830 W Laurel Ave", "Eunice",
+     "LA", "70535", "337-466-7219", 1170000, 1080000),
+    (None, None, 2, 518, "UC", "G135595", "3105 Sands Boulevard", "Greensboro",
+     "NC", "27405", "336-285-5839", 1300000, 1192500),
+]
+
+
+@pytest.mark.parametrize(
+    "header",
+    ["20% CONFIDENCE\nAUV", "80% CONFIDENCE AUV", "Projected Sales", "Annual Revenue",
+     "Monthly Rent", "PHONE #", "Zip"],
+)
+def test_a_column_that_is_not_money_owed_can_never_become_an_amount(header):
+    """
+    AUV is Average Unit Volume — the restaurant's projected ANNUAL SALES. On
+    KBP's pipeline those two columns total $26,194,220 and $22,862,940 across
+    twenty stores, and not a cent of it is money paid to a paving contractor.
+
+    A reader that treats "a number near an address" as an invoice amount turns
+    a genuine document into a claim of twenty-six million dollars of work — and
+    the figure is specific enough that nobody would think to question it.
+    """
+    assert job_ledger.is_never_an_amount(header) is True
+
+
+@pytest.mark.parametrize("header", ["$ amount of Invoice", "Total amount of job", "$ amount paid"])
+def test_the_real_money_columns_are_still_money(header):
+    assert job_ledger.is_never_an_amount(header) is False
+
+
+def test_the_pipeline_sheet_yields_sites_with_no_money_attached():
+    """
+    KBP's pipeline is the client's own construction schedule. It establishes
+    that a site was on the programme. It does not establish that we invoiced
+    it, and its only large numbers are the restaurant's sales forecast.
+    """
+    records = job_ledger.read_program_sheet(
+        KBP_PIPELINE_ROWS, client="KBP Foods", source_document="KBP_Pipeline__Calendar.xlsx"
+    )
+
+    assert len(records) == 2
+    assert {r["evidence"] for r in records} == {job_ledger.LISTED}
+    assert all(r["invoice_amount_cents"] is None for r in records), (
+        "the AUV column must not have been read as an invoice"
+    )
+    assert all(r["job_total_cents"] is None for r in records)
+
+
+def test_the_pipeline_summary_reports_no_money_at_all():
+    summary = job_ledger.summarise(job_ledger.read_program_sheet(KBP_PIPELINE_ROWS))
+
+    assert summary["publishable"] == 0
+    assert summary["by_evidence"]["listed"]["invoiced_cents"] == 0
+
+
+def test_a_status_of_complete_on_the_clients_schedule_is_not_our_invoice():
+    """
+    "COMPLETE" there means the restaurant was built and opened. It is KBP's
+    milestone, not our receipt, and the two are one careless mapping apart.
+    """
+    records = job_ledger.read_program_sheet(KBP_PIPELINE_ROWS)
+    eunice = [r for r in records if r["store_number"] == "G135603"][0]
+
+    assert eunice["evidence"] == job_ledger.LISTED
+    assert job_ledger.is_publishable(eunice["evidence"]) is False
