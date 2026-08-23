@@ -31,6 +31,7 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services.tenancy import scope, tenant_of
 from ..models import CompactionLog, TruckPosition
 
 logger = logging.getLogger(__name__)
@@ -43,12 +44,18 @@ _COMPACTION_LOOKBACK_MINUTES = 30
 
 # ── Snapshot builder ──────────────────────────────────────────────────────────
 
-def _build_snapshot(db: Session) -> dict:
-    """Collect current truck positions + recent compaction pings."""
+def _build_snapshot(db: Session, tenant: str) -> dict:
+    """
+    Collect current truck positions + recent compaction pings.
+
+    Tenant passed in rather than derived: this is called from an SSE generator
+    as well as a request handler, and the generator has no dependency
+    injection to take an identity from.
+    """
     trucks = db.query(TruckPosition).all()
     cutoff = datetime.now(tz=timezone.utc) - timedelta(minutes=_COMPACTION_LOOKBACK_MINUTES)
     compaction = (
-        db.query(CompactionLog)
+        scope(db.query(CompactionLog), CompactionLog, tenant)
         .filter(CompactionLog.logged_at >= cutoff)
         .order_by(CompactionLog.logged_at.desc())
         .limit(500)
@@ -97,8 +104,17 @@ def _build_snapshot(db: Session) -> dict:
 
 # ── SSE generator ─────────────────────────────────────────────────────────────
 
-async def _event_generator(request: Request, db: Session) -> AsyncGenerator[str, None]:
-    """Yield SSE-formatted events until the client disconnects."""
+async def _event_generator(
+    request: Request, db: Session, tenant: str
+) -> AsyncGenerator[str, None]:
+    """
+    Yield SSE-formatted events until the client disconnects.
+
+    The tenant is captured once when the stream opens and reused for every
+    frame. A long-lived stream cannot re-resolve an identity per push — there
+    is no request cycle to hang it on — so an unscoped generator would have
+    streamed every tenant's trucks for as long as the connection stayed open.
+    """
     logger.info("SSE client connected: %s", request.client)
     try:
         while True:
@@ -106,7 +122,7 @@ async def _event_generator(request: Request, db: Session) -> AsyncGenerator[str,
                 logger.info("SSE client disconnected: %s", request.client)
                 break
 
-            snapshot = _build_snapshot(db)
+            snapshot = _build_snapshot(db, tenant)
             payload = json.dumps(snapshot, default=str)
             yield f"data: {payload}\n\n"
 
@@ -122,7 +138,7 @@ async def _event_generator(request: Request, db: Session) -> AsyncGenerator[str,
 @router.get("/site-stream")
 async def live_site_stream(
     request: Request,
-    _: dict = Depends(verify_premium_security),
+    auth: dict = Depends(verify_premium_security),
     db: Session = Depends(get_db),
 ):
     """
@@ -132,7 +148,7 @@ async def live_site_stream(
       const es = new EventSource('/api/v1/live/site-stream?api_key=YOUR_KEY');
     """
     return StreamingResponse(
-        _event_generator(request, db),
+        _event_generator(request, db, tenant_of(auth)),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -142,12 +158,15 @@ async def live_site_stream(
     )
 
 
-@router.get("/site-snapshot", dependencies=[Depends(verify_premium_security)])
-def live_site_snapshot(db: Session = Depends(get_db)):
+@router.get("/site-snapshot")
+def live_site_snapshot(
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
     """
     One-shot JSON snapshot of current trucks + recent compaction pings.
 
     Useful for initial page load before the SSE connection is established,
     or for polling clients that cannot use EventSource.
     """
-    return _build_snapshot(db)
+    return _build_snapshot(db, tenant_of(auth))

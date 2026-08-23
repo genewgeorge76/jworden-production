@@ -28,6 +28,7 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services.tenancy import scope, tenant_of
 from ..models import LicenseVerificationLog
 from ..services.license_service import verifier
 from ..services.vision_inspector import detect_deviations
@@ -196,9 +197,17 @@ def get_verification_history(
     license_number: Optional[str] = None,
     limit: int = 100,
     db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ):
-    """Return recent verification audit log entries, newest first."""
-    q = db.query(LicenseVerificationLog)
+    """
+    Return recent verification audit log entries, newest first.
+
+    The route declares its auth dependency in the decorator, which authenticates
+    the caller but never hands the function their identity — so this read
+    spanned every tenant's licence checks. Binding it here costs nothing:
+    FastAPI resolves a dependency once per request.
+    """
+    q = scope(db.query(LicenseVerificationLog), LicenseVerificationLog, tenant_of(auth))
     if state_code:
         q = q.filter(LicenseVerificationLog.state_code == state_code.upper())
     if license_number:

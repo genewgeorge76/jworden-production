@@ -58,6 +58,26 @@ KEY_ANALYTICS_FUNNEL = "analytics:funnel"
 KEY_ANALYTICS_REVENUE = "analytics:revenue"
 KEY_ANALYTICS_MONTHLY = "analytics:monthly"
 KEY_KPI_WALL = "kpi:wall"
+
+
+def kpi_wall_key(tenant: str) -> str:
+    """
+    Per-tenant cache key for the KPI wall.
+
+    The wall was computed across every tenant's rows and stored under one key.
+    Scoping the queries without splitting the key would have been worse than
+    leaving them global: the first tenant to load the dashboard would populate
+    the cache, and every other tenant would be served that copy until it
+    expired — a cross-tenant leak with a five-minute memory.
+
+    KEY_KPI_WALL is kept as the operator's key so existing invalidation lists
+    still clear something real.
+    """
+    from ..services.tenancy import DEFAULT_TENANT, is_owner  # noqa: PLC0415
+
+    if not tenant or is_owner(tenant):
+        tenant = DEFAULT_TENANT
+    return f"{KEY_KPI_WALL}:{tenant}"
 KEY_CUSTOMERS_LIST = "customers:list"
 KEY_CUSTOMERS_STATS = "customers:stats"
 KEY_CUSTOMER_DETAIL = "customers:detail:{id}"
@@ -368,8 +388,13 @@ def warm_cache(db: Any) -> dict[str, bool]:
     try:
         from ..routers.kpi_wall import _compute_kpi_wall  # noqa: PLC0415
 
-        kpi_data = _compute_kpi_wall(db)
-        results[KEY_KPI_WALL] = cache_set(KEY_KPI_WALL, kpi_data, KPI_WALL_TTL)
+        # The warmer has no request and therefore no caller, so it warms the
+        # operator's wall. A hosted client's first load computes its own.
+        from ..services.tenancy import DEFAULT_TENANT  # noqa: PLC0415
+
+        kpi_data = _compute_kpi_wall(db, DEFAULT_TENANT)
+        warm_key = kpi_wall_key(DEFAULT_TENANT)
+        results[warm_key] = cache_set(warm_key, kpi_data, KPI_WALL_TTL)
     except Exception as exc:  # noqa: BLE001
         logger.warning("Cache warm: KPI wall failed: %s", exc)
         results[KEY_KPI_WALL] = False
