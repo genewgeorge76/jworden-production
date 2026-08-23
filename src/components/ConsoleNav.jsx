@@ -44,9 +44,14 @@ const TABS = [
   // fiction rather than a gate.
   { to: '/jarvis', label: 'Jarvis', group: 'Work', tier: 'lite', source: 'staff_operator, granted to any signed-in account' },
 
+  // ── Pro-tier tools ───────────────────────────────────────────────────────
+  { to: '/market-sites', label: 'Site Factory', group: 'Growth', tier: 'pro', source: 'Local SEO Website Factory + AI Blog Generator' },
+  { to: '/telemetry', label: 'Telemetry', group: 'Field', tier: 'pro', source: 'Advanced Telemetry' },
+
   // ── Max-tier tools ───────────────────────────────────────────────────────
   { to: '/scanner', label: 'Drone Scanner', group: 'Field', tier: 'max', source: 'Drone AI Scanner' },
   { to: '/storm-tracker', label: 'Weather Risk', group: 'Field', tier: 'max', source: 'Predictive Weather Risk' },
+  { to: '/commodities', label: 'Material Prices', group: 'Growth', tier: 'max', source: 'Supply Chain Pricing API' },
 
   // ── Operations ───────────────────────────────────────────────────────────
   // Everything below is the operator's side of the platform. None of it is
@@ -75,7 +80,7 @@ const TABS = [
   { to: '/admin/slack', label: 'Slack', group: 'Admin', owner: true },
 ];
 
-const GROUP_ORDER = ['Work', 'Field', 'Operations', 'Crew', 'Admin'];
+const GROUP_ORDER = ['Work', 'Growth', 'Field', 'Operations', 'Crew', 'Admin'];
 
 export default function ConsoleNav() {
   const { isOwner, hasTier, tier, identity, logout } = useAuth();

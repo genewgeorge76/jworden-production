@@ -52,14 +52,24 @@ test('tier names match the ones the tenants table accepts', () => {
   }
 });
 
-test('the price list still advertises the two tools gated to max', () => {
-  // These are the only two nav entries assigned a tier above lite, and the
-  // assignment is quoted from the published price list. If the pricing page
-  // stops naming them, the gate here is no longer sourced from anything and
-  // must be revisited rather than left to drift.
-  assert.match(PRICING, /Drone AI Scanner/);
-  assert.match(PRICING, /Predictive Weather Risk/);
+test('every tier-gated tab names a feature the price list advertises', () => {
+  // The durable version of "is this assignment sourced from anything". A tab
+  // gated above lite must quote a `source:` phrase that appears verbatim on
+  // the pricing page, so a tier can never be invented here — and if marketing
+  // drops a feature from the page, the gate that referenced it fails loudly
+  // instead of drifting.
+  const gated = tabs.filter((t) => /tier:\s*'(pro|max)'/.test(t.raw));
+  assert.ok(gated.length > 0, 'expected some tier-gated tabs');
 
-  const maxTabs = tabs.filter((t) => /tier:\s*'max'/.test(t.raw)).map((t) => t.to);
-  assert.deepEqual(maxTabs.sort(), ['/scanner', '/storm-tracker']);
+  const unsourced = [];
+  for (const tab of gated) {
+    const source = /source:\s*'([^']+)'/.exec(tab.raw)?.[1] || '';
+    // A source may name more than one price-list line, joined with " + ".
+    const claims = source.split('+').map((c) => c.trim()).filter(Boolean);
+    const missing = claims.filter((claim) => !PRICING.includes(claim));
+    if (!claims.length || missing.length) {
+      unsourced.push(`${tab.label} -> ${missing.join(', ') || '(no source)'}`);
+    }
+  }
+  assert.deepEqual(unsourced, []);
 });

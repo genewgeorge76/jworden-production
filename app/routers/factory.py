@@ -5,7 +5,9 @@ Routes:
   GET  /api/v1/factory/resolve?hostname=...  - Fast client-side resolution of tenant config
   POST /api/v1/factory/sites                 - Create a new MarketSite
 """
+import json
 import logging
+import re
 from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -17,8 +19,9 @@ from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Tenant, MarketSite
+from ..services import llm_client
 from ..services.entitlements import require_tier
-from ..services.tenancy import tenant_of
+from ..services.tenancy import get_scoped, scope, tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -398,6 +401,56 @@ async def create_market_site(
     
     return {"status": "success", "site_id": site.id, "hostname": site.hostname}
 
+def _slugify(value: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", (value or "").lower()).strip("-")
+    return slug[:150]
+
+
+def _parse_article(raw: str) -> Optional[dict]:
+    """
+    Read the model's JSON answer, or return None.
+
+    None means "refuse", never "use what we can salvage". A partially parsed
+    article is exactly the kind of half-real content this endpoint exists to
+    stop shipping.
+    """
+    text = (raw or "").strip()
+
+    # Models commonly wrap JSON in a ```json fence despite being told not to.
+    fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+    if fence:
+        text = fence.group(1)
+    elif not text.startswith("{"):
+        brace = text.find("{")
+        if brace == -1:
+            return None
+        text = text[brace:text.rfind("}") + 1]
+
+    try:
+        data = json.loads(text)
+    except (ValueError, TypeError):
+        return None
+
+    if not isinstance(data, dict):
+        return None
+
+    title = str(data.get("title") or "").strip()
+    body = str(data.get("body") or "").strip()
+    excerpt = str(data.get("excerpt") or "").strip()
+
+    # A title and a body are the article. Without either, there is nothing to
+    # save that a reader would recognise as a post.
+    if not title or not body:
+        return None
+
+    return {
+        "title": title,
+        "body": body,
+        "excerpt": excerpt or title,
+        "meta_description": str(data.get("meta_description") or "").strip(),
+    }
+
+
 class GenerateBlogRequest(BaseModel):
     hostname: str
     topic: str
@@ -425,40 +478,301 @@ async def generate_seo_blog(
     if not site or site.tenant_id != tenant_id:
         raise HTTPException(status_code=404, detail="Market Site not found or unauthorized.")
         
-    # 3. Generate the content.
+    # 3. Generate the content, for real.
     #
-    # DISARMED, DELIBERATELY. What stood here did not call any AI. It built a
-    # title and one sentence with f-strings —
+    # What stood here did not call any AI. It built a title and one sentence
+    # with f-strings — "This is a highly optimized post about {topic}..." —
+    # and saved them with status="published", live on the customer's domain,
+    # under a comment reading "Placeholder for Gemini Integration". Every post
+    # it produced was near-identical to every other one, so using the feature
+    # as sold built a duplicate-content penalty across the customer's site.
     #
-    #     generated_body = f"<p>This is a highly optimized post about {topic}
-    #     targeting {city}. It includes semantic HTML and covers keywords like
-    #     {keywords}.</p>"
-    #
-    # — and then saved it with status="published", live on the customer's own
-    # domain, under a comment reading "Placeholder for Gemini Integration".
-    #
-    # Three things were wrong with shipping that, in order of severity:
-    #   * It is sold. "AI Blog Generator" is a headline feature of the PRO plan
-    #     on the published price list.
-    #   * Every post it wrote was near-identical to every other post it wrote,
-    #     so using it as intended built a duplicate-content penalty across the
-    #     customer's site.
-    #   * It published without review, so nobody would see the filler before
-    #     Google did.
-    #
-    # A feature that is missing is a roadmap item. A feature that silently
-    # publishes filler to a paying customer's live domain is a refund and a
-    # ranking penalty, so this refuses until it is wired to a real generator.
-    # The entitlement check above stays in front of it on purpose: a PRO
-    # customer should get "not built yet", and a LITE customer should still get
-    # "not on your plan", because both of those are true.
-    raise HTTPException(
-        status_code=501,
-        detail=(
-            "The AI Content Engine is not available yet. It is not writing "
-            "posts, and will not publish placeholder content to your site."
-        ),
+    # Three rules hold this honest now:
+    #   * It goes through services/llm_client.chat(), the single LLM entry
+    #     point for the backend. No provider SDK is touched directly here.
+    #   * If the model fails, this refuses. There is no filler fallback,
+    #     because a fallback that writes something is how the old version
+    #     looked like it worked.
+    #   * It saves a DRAFT. A generated post reaches a live domain only when a
+    #     person publishes it, which is the step that was missing when the
+    #     duplicate content was going out unreviewed.
+    site_context = ", ".join(
+        part for part in [
+            site.site_title,
+            f"serving {site.city_target}" if site.city_target else None,
+            site.state_target,
+        ] if part
+    ) or site.hostname
+
+    system_prompt = (
+        "You write for a working paving and general contracting company. "
+        "You are writing one article for one specific local market, and it "
+        "must read as if written by someone who has been on that kind of "
+        "jobsite.\n\n"
+        "Hard rules:\n"
+        "- Write about this market specifically. Do not produce copy that "
+        "would read identically for another city.\n"
+        "- Never invent a price, a statistic, a certification, a date, a "
+        "customer, or a project. If a number would help and you do not have "
+        "one, write the sentence without it.\n"
+        "- No marketing filler. No 'in today's fast-paced world'. No claims "
+        "about awards, years in business, or crew size.\n"
+        "- Plain trade language a property manager would actually read.\n\n"
+        "Return ONLY a JSON object with these keys and no prose around it:\n"
+        '{"title": str, "excerpt": str (<=300 chars), "body": str (semantic '
+        'HTML, <h2>/<h3>/<p>/<ul>, no <html> or <body> wrapper), '
+        '"meta_description": str (<=155 chars)}'
     )
+
+    user_prompt = (
+        f"Market: {site_context}\n"
+        f"Topic: {req.topic}\n"
+        f"Keywords to cover naturally: {', '.join(req.keywords) or 'none supplied'}\n\n"
+        "Write the article. 600-900 words."
+    )
+
+    result = llm_client.chat(
+        task="content",
+        system=system_prompt,
+        user=user_prompt,
+        max_tokens=2600,
+        temperature=0.7,
+    )
+
+    if result.error or not result.text.strip():
+        # Refuse. Saving anything here — a stub, a retry marker, an empty
+        # draft — is how the previous version came to publish filler.
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "The content engine could not generate this post: "
+                f"{result.error_detail or 'no response from any provider'}. "
+                "Nothing was saved."
+            ),
+        )
+
+    article = _parse_article(result.text)
+    if article is None:
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "The content engine returned a response that could not be read "
+                "as an article. Nothing was saved."
+            ),
+        )
+
+    # 4. Save as a draft, scoped to the site that asked for it.
+    from ..models import BlogPost
+    import uuid
+    from datetime import datetime, timezone
+
+    base_slug = _slugify(article["title"]) or _slugify(req.topic) or "post"
+    slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
+
+    post = BlogPost(
+        tenant_id=tenant_id,
+        market_site_id=site.id,
+        slug=slug,
+        title=article["title"][:300],
+        excerpt=article["excerpt"][:500],
+        body=article["body"],
+        meta_description=(article.get("meta_description") or article["excerpt"])[:320],
+        focus_keyword=(req.keywords[0] if req.keywords else req.topic)[:120],
+        # DRAFT. The old version published immediately, so nobody saw what went
+        # out until it was already indexed.
+        status="draft",
+        published_at=None,
+    )
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+
+    logger.info(
+        "Generated draft post %s for %s via %s/%s.",
+        post.slug, site.hostname, result.provider, result.model,
+    )
+
+    return {
+        "status": "draft",
+        "post_id": post.id,
+        "slug": post.slug,
+        "title": post.title,
+        # Named honestly. The customer is paying for AI-written content and is
+        # entitled to know which model wrote it and whether it was the primary
+        # choice or a fallback.
+        "generated_by": {
+            "provider": result.provider,
+            "model": result.model,
+            "fallback_used": result.fallback_used,
+        },
+        "next_step": f"Review it, then POST /api/v1/factory/blog/{post.id}/publish.",
+    }
+
+
+@router.get("/sites", summary="List this tenant's Market Sites")
+@limiter.limit("60/minute")
+async def list_market_sites(
+    request: Request,
+    db: Session = Depends(get_db),
+    auth_data: dict = Depends(verify_premium_security),
+):
+    """
+    The tenant's own sites.
+
+    POST /sites existed with no GET beside it, so a customer could create a
+    Market Site and then had no way to see what they had created. Scoped
+    through services/tenancy so the operator sees his bucket and a customer
+    sees exactly their own.
+    """
+    tenant_id = tenant_of(auth_data)
+    require_tier(db, tenant_id, "pro", "the Market Site factory")
+
+    rows = (
+        scope(db.query(MarketSite), MarketSite, tenant_id)
+        .order_by(MarketSite.created_at.desc())
+        .all()
+    )
+    return {
+        "status": "ok",
+        "count": len(rows),
+        "sites": [
+            {
+                "id": row.id,
+                "hostname": row.hostname,
+                "site_title": row.site_title,
+                "city_target": row.city_target,
+                "state_target": row.state_target,
+                "route_mode": row.route_mode,
+                "is_active": bool(row.is_active),
+                "created_at": row.created_at.isoformat() if row.created_at else None,
+            }
+            for row in rows
+        ],
+    }
+
+
+@router.get("/blog", summary="List this tenant's generated posts")
+@limiter.limit("60/minute")
+async def list_blog_posts(
+    request: Request,
+    hostname: Optional[str] = None,
+    db: Session = Depends(get_db),
+    auth_data: dict = Depends(verify_premium_security),
+):
+    """
+    Drafts and published posts, newest first.
+
+    Without this there was no way to review a draft before publishing it,
+    which made the review step unusable even once it existed.
+    """
+    from ..models import BlogPost
+
+    tenant_id = tenant_of(auth_data)
+    require_tier(db, tenant_id, "pro", "the AI Content Engine")
+
+    query = scope(db.query(BlogPost), BlogPost, tenant_id)
+
+    if hostname:
+        site = (
+            scope(db.query(MarketSite), MarketSite, tenant_id)
+            .filter(MarketSite.hostname == hostname.lower().strip())
+            .first()
+        )
+        if site is None:
+            raise HTTPException(status_code=404, detail="Market Site not found")
+        query = query.filter(BlogPost.market_site_id == site.id)
+
+    rows = query.order_by(BlogPost.created_at.desc()).limit(200).all()
+    return {
+        "status": "ok",
+        "count": len(rows),
+        "posts": [
+            {
+                "id": row.id,
+                "slug": row.slug,
+                "title": row.title,
+                "excerpt": row.excerpt,
+                "status": row.status,
+                "focus_keyword": row.focus_keyword,
+                "market_site_id": row.market_site_id,
+                "created_at": row.created_at.isoformat() if row.created_at else None,
+                "published_at": row.published_at.isoformat() if row.published_at else None,
+            }
+            for row in rows
+        ],
+    }
+
+
+@router.get("/blog/{post_id}", summary="Read one generated post in full")
+@limiter.limit("60/minute")
+async def read_blog_post(
+    request: Request,
+    post_id: int,
+    db: Session = Depends(get_db),
+    auth_data: dict = Depends(verify_premium_security),
+):
+    """The full body, so a draft can actually be read before it goes live."""
+    from ..models import BlogPost
+
+    tenant_id = tenant_of(auth_data)
+    require_tier(db, tenant_id, "pro", "the AI Content Engine")
+
+    post = get_scoped(db, BlogPost, post_id, tenant_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    return {
+        "status": "ok",
+        "post": {
+            "id": post.id,
+            "slug": post.slug,
+            "title": post.title,
+            "excerpt": post.excerpt,
+            "body": post.body,
+            "meta_description": post.meta_description,
+            "focus_keyword": post.focus_keyword,
+            "status": post.status,
+            "created_at": post.created_at.isoformat() if post.created_at else None,
+            "published_at": post.published_at.isoformat() if post.published_at else None,
+        },
+    }
+
+
+@router.post("/blog/{post_id}/publish", summary="Publish a generated draft")
+@limiter.limit("20/minute")
+async def publish_blog_post(
+    request: Request,
+    post_id: int,
+    db: Session = Depends(get_db),
+    auth_data: dict = Depends(verify_premium_security),
+):
+    """
+    Put a reviewed draft live.
+
+    This step did not exist: generation published straight to the customer's
+    domain, so the first reader of a generated post was a search engine. The
+    entitlement check is the same as generation's — publishing is part of the
+    same paid feature.
+    """
+    from ..models import BlogPost
+    from datetime import datetime, timezone
+
+    tenant_id = tenant_of(auth_data)
+    require_tier(db, tenant_id, "pro", "the AI Content Engine")
+
+    post = get_scoped(db, BlogPost, post_id, tenant_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    if post.status == "published":
+        return {"status": "published", "post_id": post.id, "slug": post.slug}
+
+    post.status = "published"
+    post.published_at = datetime.now(timezone.utc)
+    db.commit()
+
+    logger.info("Published post %s for tenant %s.", post.slug, tenant_id)
+    return {"status": "published", "post_id": post.id, "slug": post.slug}
 
 
 class IndexNowSubmitRequest(BaseModel):

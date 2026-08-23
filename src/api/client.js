@@ -768,6 +768,21 @@ const integrationsClient = {
 
 export const api = {
   getAuthStatus: () => request('GET', '/api/v1/auth/status'),
+  // ── Market Site factory (PRO) ──────────────────────────────────────────────
+  // Backs /market-sites. POST /factory/sites and POST /factory/blog/generate
+  // existed with no GET beside either, so a customer could create a site and
+  // generate a post and then had no way to see or review what they had made.
+  listMarketSites: () => protectedRequest('GET', '/api/v1/factory/sites'),
+  createMarketSite: (data) => protectedRequest('POST', '/api/v1/factory/sites', data),
+  listBlogPosts: (hostname) =>
+    protectedRequest('GET', `/api/v1/factory/blog${hostname ? `?hostname=${encodeURIComponent(hostname)}` : ''}`),
+  readBlogPost: (id) => protectedRequest('GET', `/api/v1/factory/blog/${id}`),
+  generateBlogPost: (data) => protectedRequest('POST', '/api/v1/factory/blog/generate', data),
+  publishBlogPost: (id) => protectedRequest('POST', `/api/v1/factory/blog/${id}/publish`),
+  // ── Advanced Telemetry (PRO) ───────────────────────────────────────────────
+  getLiveTelemetry: () => protectedRequest('GET', '/api/v1/telematics/live'),
+  // ── Supply Chain Pricing (MAX) ─────────────────────────────────────────────
+  getCommodityPrices: () => protectedRequest('GET', '/api/v1/materials/commodities'),
   authenticateWithPin,
   getDiamondJobs: () => protectedRequest('GET', '/api/v1/operations/diamond-jobs'),
   syncDiamondJobs: () => protectedRequest('POST', '/api/v1/operations/sync-diamond'),

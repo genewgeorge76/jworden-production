@@ -151,15 +151,18 @@ def test_an_unknown_tier_string_falls_back_to_lite():
 
 
 @pytest.mark.anyio
-async def test_the_blog_generator_refuses_rather_than_publishing_filler(
+async def test_the_content_engine_refuses_when_no_provider_is_configured(
     client, auth_headers, app_modules
 ):
     """
-    It did not call any AI. It f-strung one sentence — "This is a highly
-    optimized post about {topic}..." — and saved it with status="published",
-    live on the customer's domain, under a comment reading "Placeholder for
-    Gemini Integration". Every post it wrote was near-identical to every other
-    one, so using the feature as sold built a duplicate-content penalty.
+    No API keys are set here, which is the same state a fresh deployment is in.
+
+    The old generator did not care: it never called a model at all. It f-strung
+    one sentence — "This is a highly optimized post about {topic}..." — and
+    saved it with status="published", live on the customer's domain. So an
+    unconfigured deployment published filler and looked healthy doing it.
+
+    Unconfigured now means refused, and nothing is written.
     """
     _, dbmod = app_modules
 
@@ -173,7 +176,7 @@ async def test_the_blog_generator_refuses_rather_than_publishing_filler(
                 # compares site.tenant_id to the caller's tenant literally,
                 # without the owner-bucket equivalence in services/tenancy.py.
                 tenant_id="JWORDEN_HQ",
-                hostname="pinned.example",
+                hostname="unconfigured.example",
                 city_target="Roanoke",
             )
         )
@@ -185,10 +188,14 @@ async def test_the_blog_generator_refuses_rather_than_publishing_filler(
     response = await client.post(
         "/api/v1/factory/blog/generate",
         headers=auth_headers,
-        json={"hostname": "pinned.example", "topic": "sealcoating", "keywords": ["seal"]},
+        json={
+            "hostname": "unconfigured.example",
+            "topic": "sealcoating",
+            "keywords": ["seal"],
+        },
     )
-    assert response.status_code == 501, response.text
-    assert "placeholder" in response.json()["detail"].lower()
+    assert response.status_code == 502, response.text
+    assert "nothing was saved" in response.json()["detail"].lower()
 
     session = dbmod.SessionLocal()
     try:
@@ -265,3 +272,75 @@ def test_a_downgrade_through_the_billing_portal_takes_effect():
         "items": {"data": [{"price": {"id": entitlements.PRICE_MAP["lite"]}}]},
     }
     assert stripe_webhook._tier_from_subscription(subscription) == "lite"
+
+
+# ── Features that existed, were live, and were not gated ────────────────────
+#
+# Both of these are named on the published price list and both were reachable
+# by any signed-in tenant. Authentication proves you are a customer; it does
+# not prove you bought the thing.
+
+@pytest.mark.anyio
+async def test_supply_chain_pricing_needs_the_max_plan(client):
+    """MAX line: "Supply Chain Pricing API"."""
+    registration = await client.post(
+        "/api/v1/auth/register", json=_signup("max", "commodities@example.test.example")
+    )
+    token = registration.json()["access_token"]
+
+    for path in ("/api/v1/materials/commodities", "/api/v1/materials/price-index"):
+        response = await client.get(path, headers={"Authorization": f"Bearer {token}"})
+        assert response.status_code in (402, 403), f"{path} -> {response.status_code}"
+
+
+@pytest.mark.anyio
+async def test_advanced_telemetry_needs_the_pro_plan(client):
+    """PRO line: "Advanced Telemetry"."""
+    registration = await client.post(
+        "/api/v1/auth/register", json=_signup("pro", "telemetry@example.test.example")
+    )
+    token = registration.json()["access_token"]
+
+    response = await client.get(
+        "/api/v1/telematics/live", headers={"Authorization": f"Bearer {token}"}
+    )
+    assert response.status_code in (402, 403), response.text
+
+
+@pytest.mark.anyio
+async def test_the_operator_still_reaches_both(client, auth_headers):
+    """
+    require_tier() passes the operator unconditionally. He has no tenants row,
+    so a naive check refuses him — which is what the old inline gate did.
+    """
+    commodities = await client.get("/api/v1/materials/commodities", headers=auth_headers)
+    assert commodities.status_code == 200, commodities.text
+
+    telemetry = await client.get("/api/v1/telematics/live", headers=auth_headers)
+    assert telemetry.status_code == 200, telemetry.text
+
+
+@pytest.mark.anyio
+async def test_a_paid_max_tenant_reaches_the_commodity_feed(client, app_modules):
+    _, dbmod = app_modules
+    from app.models import Tenant
+
+    registration = await client.post(
+        "/api/v1/auth/register", json=_signup("max", "paidmax@example.test.example")
+    )
+    token = registration.json()["access_token"]
+    tenant_id = registration.json()["tenant_id"]
+
+    # What the Stripe webhook does on checkout.session.completed.
+    session = dbmod.SessionLocal()
+    try:
+        tenant = session.query(Tenant).filter(Tenant.tenant_id == tenant_id).one()
+        entitlements.apply_paid_tier(tenant, "max")
+        session.commit()
+    finally:
+        session.close()
+
+    response = await client.get(
+        "/api/v1/materials/commodities", headers={"Authorization": f"Bearer {token}"}
+    )
+    assert response.status_code == 200, response.text

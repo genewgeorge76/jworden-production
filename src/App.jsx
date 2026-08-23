@@ -86,6 +86,13 @@ const LienCalendar = lazy(() => import('./pages/LienCalendar'));
 const BidHunter = lazy(() => import('./pages/BidHunter'));
 const ClientLitePortal = lazy(() => import('./components/ClientLitePortal'));
 const CockpitHome = lazy(() => import('./pages/CockpitHome'));
+// The three paid-plan surfaces. Each backs onto an endpoint that already
+// existed and had no interface: a PRO customer could launch a Market Site and
+// never see it, generate a post and never read it, and a MAX customer's
+// commodity feed was reachable only by curl.
+const MarketSites = lazy(() => import('./pages/MarketSites'));
+const Telemetry = lazy(() => import('./pages/Telemetry'));
+const Commodities = lazy(() => import('./pages/Commodities'));
 const EstimatePage = lazy(() => import('./pages/EstimatePage'));
 const JarvisPage = lazy(() => import('./pages/JarvisPage'));
 const ScannerPage = lazy(() => import('./pages/ScannerPage'));
@@ -608,6 +615,14 @@ const AuthenticatedApp = () => {
             endpoints, so they sit behind RequireAuth like /diamond. */}
         <Route path="/lien-calendar" element={<RequireAuth><LienCalendar /></RequireAuth>} />
         <Route path="/bid-hunter" element={<RequireAuth><BidHunter /></RequireAuth>} />
+
+        {/* Paid-plan surfaces. RequireTier mirrors the server-side gate in
+            entitlements.require_tier — the API refuses these to an unentitled
+            tenant regardless, so this exists to explain why rather than to
+            enforce. Minimums are quoted from the published price list. */}
+        <Route path="/market-sites" element={<RequireTier minimum="pro"><MarketSites /></RequireTier>} />
+        <Route path="/telemetry" element={<RequireTier minimum="pro"><Telemetry /></RequireTier>} />
+        <Route path="/commodities" element={<RequireTier minimum="max"><Commodities /></RequireTier>} />
 
         {/* Public Local Market Routes */}
         {!isOperationsSite && !(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && <Route path="/" element={<Home />} />}
