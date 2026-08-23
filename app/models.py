@@ -314,6 +314,84 @@ class OperatorNote(Base):
         return f"<OperatorNote id={self.id} kind={self.kind!r} status={self.status!r} title={self.title!r}>"
 
 
+class PhotoCluster(Base):
+    """
+    A place the crews photographed, and whether it is publishable.
+
+    The operator has thousands of job photographs across Dropbox, OneDrive and
+    Google Photos. The value in them is the GPS: a coordinate plus a timestamp
+    is evidence of having been somewhere on a day, which no competitor can copy
+    without having done the work. Surfaced on a city page it is the difference
+    between "serving Richmond since 1984" and something a property manager can
+    check.
+
+    The reason this is a table rather than a build artefact is the confirmation.
+    Photographs already in this repository were grouped into folders named
+    store_07_orlando_idrive and store_10_neworleans_veterans that all held
+    images from a single coordinate — the names recorded intent, not place, and
+    publishing them would have claimed work in six cities the photographs
+    disprove. And the operator's personal photographs share these accounts. No
+    coordinate distinguishes a customer's parking lot from a family holiday, so
+    a person decides, once, per cluster, and the decision is kept.
+
+    status: pending | confirmed | rejected
+      pending    extracted, nobody has looked
+      confirmed  a real jobsite; may be published
+      rejected   not a jobsite, or personal. Kept rather than deleted so a
+                 rescan does not resurrect it for review a second time.
+    """
+
+    __tablename__ = "photo_clusters"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=False, index=True)
+    # Rounded to about eleven metres. Finer than that splits one car park into
+    # several clusters as a phone's fix drifts between shots.
+    lat = Column(Float, nullable=False)
+    lon = Column(Float, nullable=False)
+    photo_count = Column(Integer, nullable=False, default=0)
+    first_seen = Column(DateTime(timezone=True), nullable=True)
+    last_seen = Column(DateTime(timezone=True), nullable=True)
+    # dropbox | onedrive | local. Never google_photos: that API returns no
+    # coordinates at all — its MediaMetadata carries width, height,
+    # creationTime, camera make and model, and nothing else.
+    source = Column(String(30), nullable=False, default="dropbox")
+    # Where the files live, for the reviewer to go and look.
+    sample_paths = Column(Text, nullable=True)
+    status = Column(String(20), nullable=False, default="pending", index=True)
+    # Filled in by the reviewer, not guessed. commercial | residential.
+    kind = Column(String(20), nullable=True)
+    label = Column(String(200), nullable=True)
+    address = Column(String(300), nullable=True)
+    # What actually backs the claim, because it is not always the photograph.
+    #
+    # The KFC work is a case in point: it is national, and it is evidenced by
+    # invoices to KBP Foods rather than by the coordinates in the images —
+    # which is the stronger record. A photograph proves someone stood
+    # somewhere; an invoice proves a client paid for work at a named site.
+    #
+    # Kept as a field so a page can say what it is relying on, and so a claim
+    # is never stronger than the thing behind it. photo_gps | invoice | both.
+    evidence = Column(String(30), nullable=False, default="photo_gps")
+    # Free text for the reviewer: the client, the invoice reference, whatever
+    # makes the entry checkable a year from now.
+    evidence_note = Column(Text, nullable=True)
+    city = Column(String(120), nullable=True)
+    state = Column(String(60), nullable=True)
+    reviewed_at = Column(DateTime(timezone=True), nullable=True)
+    reviewed_by = Column(String(254), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<PhotoCluster id={self.id} ({self.lat},{self.lon}) "
+            f"photos={self.photo_count} status={self.status!r}>"
+        )
+
+
 class TruckPosition(Base):
     """
     Real-time truck telemetry ping stored for zero-delay routing dashboard.
