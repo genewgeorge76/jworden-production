@@ -82,6 +82,26 @@ def _load_tenant_scoped() -> tuple[set[str], dict[str, str]]:
     return scoped, cls_to_table
 
 
+# A query that reads across tenants ON PURPOSE, marked at the call site:
+#
+#     # audit: global — email uniqueness is enforced across all tenants
+#     existing_user = db.query(User).filter(User.email == payload.email).first()
+#
+# Some reads genuinely cannot be scoped. A login cannot filter by tenant,
+# because the tenant is a property of the user you have not found yet; a
+# uniqueness check cannot filter by tenant, because the constraint it is
+# checking is global. Without a way to say so, those sites sat in the same
+# bucket as real leaks and the ratchet number could never reach zero — so the
+# number stopped meaning "work remaining" and started meaning "noise floor".
+#
+# tests/backend/test_tenant_scoping_is_universal.py has carried this idea as
+# DELIBERATELY_GLOBAL since it was written; this is the same idea at the call
+# site, where the reason stays next to the code it excuses.
+#
+# A reason is mandatory. `# audit: global` with nothing after it does not count.
+GLOBAL_PRAGMA = re.compile(r"#\s*audit:\s*global\s*[—-]\s*\S")
+
+
 def audit() -> tuple[int, int, int, list[str]]:
     scoped, cls_to_table = _load_tenant_scoped()
     filtered = unfiltered = not_applicable = 0
@@ -106,7 +126,18 @@ def audit() -> tuple[int, int, int, list[str]]:
                 # literal "tenant_id" counted every correctly-scoped query as
                 # unfiltered, so fixing a site left the number unchanged and the
                 # ratchet could never come down.
-                if "tenant_id" in chain or "scope(" in chain:
+                # The pragma is looked for on the line itself and the line
+                # above it, so it can sit either inline or on its own.
+                declared_global = any(
+                    GLOBAL_PRAGMA.search(candidate)
+                    for candidate in lines[max(0, i - 1) : i + 1]
+                )
+                if declared_global:
+                    # Counted as neither filtered nor unfiltered. It is not a
+                    # violation, and calling it "filtered" would overstate the
+                    # coverage figure.
+                    not_applicable += 1
+                elif "tenant_id" in chain or "scope(" in chain:
                     filtered += 1
                 else:
                     unfiltered += 1

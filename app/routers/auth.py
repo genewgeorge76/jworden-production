@@ -28,7 +28,7 @@ from ..database import get_db
 from ..models import Tenant, User
 from ..services.audit import write_audit_event
 from ..services import entitlements
-from ..services.tenancy import is_owner, tenant_of
+from ..services.tenancy import is_owner, scope, tenant_of
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
@@ -290,6 +290,9 @@ def register_tenant(
     # on every call, so an unlimited endpoint is a way to fill the database and
     # to farm which email addresses are already taken via the 400 below.
     # 1. Check if user already exists
+    # users.email carries a UniqueConstraint spanning every tenant, so the
+    # duplicate check below cannot be scoped to one and must read across all.
+    # audit: global — email uniqueness is enforced across all tenants
     existing_user = db.query(User).filter(User.email == payload.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -467,8 +470,15 @@ def read_identity(
     )
     # Case-insensitive for the same reason /login is: the token's `sub` is
     # whatever case the account was created with.
+    #
+    # Scoped, though the email alone would find the row: a token carries both a
+    # `sub` and a `tenant_id`, and nothing forces them to agree. Requiring the
+    # user row to belong to the tenant the token claims means a token cannot
+    # name one tenant and report another's account.
     user_row = (
-        db.query(User).filter(func.lower(User.email) == email.strip().lower()).first()
+        scope(db.query(User), User, tenant_id)
+        .filter(func.lower(User.email) == email.strip().lower())
+        .first()
     )
 
     # Prefer the stored role over the token's: the token is up to 24h stale and
