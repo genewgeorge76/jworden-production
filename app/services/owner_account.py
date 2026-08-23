@@ -66,6 +66,39 @@ def _password_matches(hashed: str, password: str) -> bool:
         return False
 
 
+def _ensure_owner_tenant(db: Session) -> None:
+    """
+    The operator's own tenants row, which exists to satisfy the foreign key on
+    users.tenant_id and to give the superadmin roster something coherent to
+    show for JWORDEN_HQ.
+
+    Its tier and status are set to the top and to active deliberately. Nothing
+    reads them for the operator — tenancy.is_owner() short-circuits
+    entitlements.require_tier() before a tier is ever consulted — but if that
+    short-circuit is ever removed, this row must not be the thing that locks
+    the operator out of his own platform.
+    """
+    from ..models import Tenant  # noqa: PLC0415
+
+    existing = db.query(Tenant).filter(Tenant.tenant_id == OWNER_TENANT).first()
+    if existing is not None:
+        return
+
+    db.add(
+        Tenant(
+            tenant_id=OWNER_TENANT,
+            company_name="J. Worden & Sons (platform operator)",
+            industry="Asphalt Paving",
+            subscription_tier="max",
+            subscription_status="active",
+            contact_email=os.getenv(OWNER_EMAIL_VAR, "").strip().lower() or None,
+            is_active=1,
+        )
+    )
+    db.commit()
+    logger.info("Created the operator tenant row (%s).", OWNER_TENANT)
+
+
 def ensure_owner_account(db: Session) -> str | None:
     """
     Create or refresh the operator's login from the environment.
@@ -87,6 +120,17 @@ def ensure_owner_account(db: Session) -> str | None:
             f"{OWNER_PASSWORD_VAR} must be at least "
             f"{MIN_OWNER_PASSWORD_LENGTH} characters."
         )
+
+    # users.tenant_id carries a FOREIGN KEY to tenants.tenant_id, and there was
+    # no tenants row for JWORDEN_HQ — so on Postgres this insert raised
+    # ForeignKeyViolation, the lifespan's broad handler logged it, and the
+    # operator account silently never existed. /auth/status reported
+    # "not_seeded" with both variables set correctly, which is what led here.
+    #
+    # It passed every test because SQLite does not enforce foreign keys unless
+    # PRAGMA foreign_keys is ON. test_the_operator_tenant_row_is_created_first
+    # turns it on for exactly this reason.
+    _ensure_owner_tenant(db)
 
     user = db.query(User).filter(User.email == email).first()
 

@@ -180,3 +180,70 @@ async def test_a_deactivated_user_cannot_sign_in(client, app_modules):
         json={"email": "gone@deactivated.example", "password": "still-a-real-password"},
     )
     assert login.status_code == 401
+
+
+def test_the_operator_tenant_row_is_created_first(db_session, monkeypatch):
+    """
+    users.tenant_id carries a FOREIGN KEY to tenants.tenant_id, and there was no
+    tenants row for JWORDEN_HQ. On Postgres the operator insert raised
+    ForeignKeyViolation, the lifespan's broad handler logged it, and the account
+    silently never existed — /auth/status reported "not_seeded" in production
+    with both variables set correctly.
+
+    Every test above passed throughout, because SQLite does not enforce foreign
+    keys unless PRAGMA foreign_keys is ON. So this one turns it on.
+    """
+    from sqlalchemy import event, text
+
+    from app.models import Tenant, User
+
+    bind = db_session.get_bind()
+
+    @event.listens_for(bind, "connect")
+    def _enforce_fks(dbapi_connection, _record):  # pragma: no cover - hook
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
+    db_session.execute(text("PRAGMA foreign_keys=ON"))
+
+    monkeypatch.setenv(owner_account.OWNER_EMAIL_VAR, "fk@thewordenstandard.example")
+    monkeypatch.setenv(owner_account.OWNER_PASSWORD_VAR, OWNER_PASSWORD)
+
+    # Would raise IntegrityError before the tenant row was created first.
+    assert owner_account.ensure_owner_account(db_session) == "fk@thewordenstandard.example"
+
+    tenant = db_session.query(Tenant).filter(Tenant.tenant_id == OWNER_TENANT).one()
+    assert tenant.is_active
+
+    user = db_session.query(User).filter(User.email == "fk@thewordenstandard.example").one()
+    assert user.tenant_id == tenant.tenant_id
+
+
+def test_creating_the_operator_tenant_is_idempotent(db_session, monkeypatch):
+    from app.models import Tenant
+
+    monkeypatch.setenv(owner_account.OWNER_EMAIL_VAR, OWNER_EMAIL)
+    monkeypatch.setenv(owner_account.OWNER_PASSWORD_VAR, OWNER_PASSWORD)
+
+    owner_account.ensure_owner_account(db_session)
+    owner_account.ensure_owner_account(db_session)
+
+    assert db_session.query(Tenant).filter(Tenant.tenant_id == OWNER_TENANT).count() == 1
+
+
+def test_the_operator_tenant_never_blocks_the_operator(db_session, monkeypatch):
+    """
+    Nothing reads this row's tier for the operator — is_owner() short-circuits
+    require_tier() first. If that short-circuit is ever removed, this row must
+    not become the thing that locks him out of his own platform.
+    """
+    from app.models import Tenant
+    from app.services import entitlements
+
+    monkeypatch.setenv(owner_account.OWNER_EMAIL_VAR, OWNER_EMAIL)
+    monkeypatch.setenv(owner_account.OWNER_PASSWORD_VAR, OWNER_PASSWORD)
+    owner_account.ensure_owner_account(db_session)
+
+    tenant = db_session.query(Tenant).filter(Tenant.tenant_id == OWNER_TENANT).one()
+    assert entitlements.is_entitled(tenant, "max") is True
