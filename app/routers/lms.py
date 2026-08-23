@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
+
+from app.core.limiter import ANALYTICS_LIMIT, limiter
+from app.core.security import verify_premium_security
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from pydantic import BaseModel
@@ -345,14 +348,32 @@ async def _generate_course_bg(
 
 
 @router.post("/ai-generate")
+@limiter.limit(ANALYTICS_LIMIT)
 async def generate_course(
+    request: Request,
     req: GenerateCourseRequest,
     background_tasks: BackgroundTasks,
-    tenant_id: str = "default",
     db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
 ):
     """
     Trigger an AI generation of a new course.
+
+    THIS WAS OPEN, UNRATED, AND SPENT MONEY.
+
+    It took no credential and no rate limit, and each call runs a full course
+    generation through the LLM provider chain in a background task. Anyone who
+    found the URL could POST it in a loop and bill the account for as many
+    generations as they cared to trigger — the response returns immediately with
+    a job id, so nothing about the request rate looked unusual.
+
+    `tenant_id` was also a query parameter defaulting to "default", so the
+    caller chose which tenant's catalogue the generated course landed in. It now
+    comes from the authenticated identity, like everywhere else.
+
+    Rate limited at ANALYTICS_LIMIT rather than something looser: this is the
+    most expensive single call in the API, and a legitimate operator does not
+    need to start thirty course generations a minute.
 
     Returns a `job_id`. Poll `GET /lms/ai-generate/{job_id}` for the outcome —
     generation happens after this response is sent, so this endpoint cannot
@@ -361,7 +382,7 @@ async def generate_course(
     from app.models import CourseGenerationJob  # noqa: PLC0415
 
     job = CourseGenerationJob(
-        tenant_id=tenant_id,
+        tenant_id=stamp_for(tenant_of(auth)),
         topic=req.topic,
         category=req.category,
         difficulty=req.difficulty,
@@ -372,7 +393,11 @@ async def generate_course(
     db.refresh(job)
 
     background_tasks.add_task(
-        _generate_course_bg, job.id, req.topic, req.category, req.difficulty, tenant_id
+        # Same resolved tenant the job row was stamped with, so the course
+        # the background task creates lands in the caller's catalogue and not
+        # wherever a query parameter pointed.
+        _generate_course_bg, job.id, req.topic, req.category, req.difficulty,
+        stamp_for(tenant_of(auth)),
     )
     return {
         "status": "queued",
@@ -422,9 +447,8 @@ import hashlib
 import logging
 from datetime import datetime, timedelta, timezone
 
-from fastapi import Header, Query, Request
+from fastapi import Header, Query
 
-from app.core.security import verify_premium_security
 from ..services.tenancy import scope, tenant_of
 from app.services.tenancy import scope, stamp_for, tenant_of
 from app.data.worden_university import COURSES as WU_COURSES, PASS_MARK, CERT_VALID_DAYS

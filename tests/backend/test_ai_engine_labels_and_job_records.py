@@ -202,7 +202,7 @@ def test_review_responder_reports_template_when_no_key_is_set(monkeypatch):
 
 
 async def test_failed_course_generation_is_recorded_not_swallowed(
-    client, app_modules, monkeypatch
+    client, auth_headers, app_modules, monkeypatch
 ):
     """
     The whole point of the job row. Ask for a course with no engine available;
@@ -217,8 +217,12 @@ async def test_failed_course_generation_is_recorded_not_swallowed(
                 "XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"):
         monkeypatch.delenv(var, raising=False)
 
+    # Authenticated now: the endpoint runs an LLM generation and used to take
+    # no credential and no rate limit, so anyone could bill the account for as
+    # many course generations as they cared to trigger.
     res = await client.post(
         "/lms/ai-generate",
+        headers=auth_headers,
         json={"topic": "Compaction QA", "category": "Engineering", "difficulty": "advanced"},
     )
     assert res.status_code == 200, res.text
@@ -243,7 +247,7 @@ async def test_course_generation_status_404s_for_an_unknown_job(client):
 
 
 async def test_generation_job_survives_as_a_record_of_the_attempt(
-    client, app_modules, monkeypatch
+    client, auth_headers, app_modules, monkeypatch
 ):
     """
     Even the queued state is written before anything runs, so an attempt that
@@ -258,6 +262,7 @@ async def test_generation_job_survives_as_a_record_of_the_attempt(
 
     await client.post(
         "/lms/ai-generate",
+        headers=auth_headers,
         json={"topic": "Sealcoating Basics", "category": "Field", "difficulty": "beginner"},
     )
 
@@ -266,5 +271,51 @@ async def test_generation_job_survives_as_a_record_of_the_attempt(
         jobs = session.query(CourseGenerationJob).all()
         assert len(jobs) == 1
         assert jobs[0].topic == "Sealcoating Basics"
+    finally:
+        session.close()
+
+
+# ── The generator itself was free to the internet ─────────────────────────────
+
+
+async def test_course_generation_requires_authentication(client):
+    """
+    POST /lms/ai-generate ran a full course generation through the LLM provider
+    chain in a background task, took no credential, and had no rate limit. The
+    response returns immediately with a job id, so nothing about a flood of
+    requests looked unusual from the outside — it just cost money.
+    """
+    res = await client.post(
+        "/lms/ai-generate",
+        json={"topic": "Free tokens please", "category": "X", "difficulty": "beginner"},
+    )
+    assert res.status_code in (401, 403), (
+        f"got {res.status_code} — an anonymous caller must not be able to spend "
+        "the account's LLM credits"
+    )
+
+
+async def test_the_caller_cannot_choose_the_tenant(client, auth_headers, app_modules):
+    """
+    tenant_id was a query parameter defaulting to "default", so the caller chose
+    whose catalogue the generated course landed in.
+    """
+    res = await client.post(
+        "/lms/ai-generate?tenant_id=rival-paving-co",
+        headers=auth_headers,
+        json={"topic": "Compaction QA", "category": "Engineering", "difficulty": "advanced"},
+    )
+    assert res.status_code == 200, res.text
+
+    _, dbmod = app_modules
+    from app.models import CourseGenerationJob
+
+    session = dbmod.SessionLocal()
+    try:
+        job = session.query(CourseGenerationJob).order_by(
+            CourseGenerationJob.id.desc()
+        ).first()
+        assert job is not None
+        assert getattr(job, "tenant_id", "default") != "rival-paving-co"
     finally:
         session.close()
