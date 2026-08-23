@@ -16,15 +16,18 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from jose import jwt, JWTError
 from pydantic import BaseModel, EmailStr
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 import bcrypt
 
 from ..core import bruteforce, jwt_secrets
 from ..core.bruteforce import identity_from_request
 from ..core.limiter import AUTH_LIMIT, limiter
+from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Tenant, User
 from ..services.audit import write_audit_event
+from ..services.tenancy import is_owner, tenant_of
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
@@ -362,10 +365,25 @@ def login_user(
     bruteforce.check("login", identity)
     bruteforce.check("login-user", payload.email.lower())
 
-    user = db.query(User).filter(User.email == payload.email).first()
+    # Case-insensitive, because every mail provider treats it that way and a
+    # person typing their own address on a phone gets a capital first letter
+    # from the keyboard. An exact match meant "Gene@..." and "gene@..." were
+    # different accounts, one of which did not exist.
+    user = (
+        db.query(User)
+        .filter(func.lower(User.email) == payload.email.strip().lower())
+        .first()
+    )
     if not user or not verify_password(payload.password, user.hashed_password):
         bruteforce.record_failure("login", identity)
         bruteforce.record_failure("login-user", payload.email.lower())
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+
+    # is_active was never consulted, so deactivating a user did nothing: they
+    # kept signing in and kept getting 24-hour tokens. Same 401 wording as a bad
+    # password, so the response does not confirm that the address exists.
+    if not user.is_active:
+        bruteforce.record_failure("login", identity)
         raise HTTPException(status_code=401, detail="Incorrect email or password")
 
     bruteforce.record_success("login", identity)
@@ -385,3 +403,72 @@ def login_user(
 
     token = jwt.encode(claims, jwt_secret, algorithm=_ALGORITHM)
     return TokenResponse(access_token=token)
+
+
+class IdentityResponse(BaseModel):
+    """Who the caller actually is, as opposed to what the UI assumed."""
+
+    email: str
+    tenant_id: str
+    role: str
+    is_owner: bool
+    subscription_tier: Optional[str] = None
+    subscription_status: Optional[str] = None
+    branding_tier: Optional[str] = None
+    company_name: Optional[str] = None
+    auth_mode: str
+
+
+@router.get("/me", summary="Identity of the authenticated caller", response_model=IdentityResponse)
+def read_identity(
+    auth: dict = Depends(verify_premium_security),
+    db: Session = Depends(get_db),
+) -> IdentityResponse:
+    """
+    The single source of truth for "am I the operator or a paying customer?".
+
+    The frontend previously answered this itself, with a literal:
+    AuthContext.jsx set `{id: 'admin', role: 'admin'}` on every successful
+    sign-in. That is not a claim from the token, and /auth/register stamps
+    role="admin" on every self-serve signup too, so the operator and a
+    subscriber were indistinguishable to every guard in the SPA.
+
+    The axis that separates them is the tenant, not the role:
+    tenancy.is_owner() is true only for the operator's own bucket, and
+    /register mints `secrets.token_urlsafe(12)` for each new tenant, so a
+    customer can never land in it. `role` is the *within-tenant* distinction
+    (admin | dispatcher | foreman | pilot).
+
+    Tier fields come from the tenants row, not from the token — a customer
+    could otherwise present a stale token from before a downgrade.
+    """
+    email = auth.get("user") or "unknown"
+    tenant_id = tenant_of(auth)
+    owner = is_owner(tenant_id)
+
+    tenant_row = (
+        db.query(Tenant).filter(Tenant.tenant_id == tenant_id).first()
+        if not owner
+        else None
+    )
+    # Case-insensitive for the same reason /login is: the token's `sub` is
+    # whatever case the account was created with.
+    user_row = (
+        db.query(User).filter(func.lower(User.email) == email.strip().lower()).first()
+    )
+
+    # Prefer the stored role over the token's: the token is up to 24h stale and
+    # a role change should take effect before it expires.
+    role = (user_row.role if user_row else None) or auth.get("role") or "viewer"
+
+    return IdentityResponse(
+        email=email,
+        tenant_id=tenant_id,
+        role=role,
+        is_owner=owner,
+        subscription_tier=tenant_row.subscription_tier if tenant_row else None,
+        subscription_status=tenant_row.subscription_status if tenant_row else None,
+        branding_tier=tenant_row.branding_tier if tenant_row else None,
+        company_name=tenant_row.company_name if tenant_row else None,
+        auth_mode=auth.get("auth_mode") or "token",
+    )

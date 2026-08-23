@@ -186,6 +186,21 @@ export async function authenticateWithPassword(email, password) {
   return authState.token
 }
 
+export async function fetchIdentity() {
+  // Who the server says you are. The SPA used to answer this itself with a
+  // hardcoded `role: 'admin'`, which meant the operator and a paying
+  // subscriber were the same identity to every guard in the app.
+  //
+  // Returns null rather than throwing when unauthenticated: callers treat "no
+  // identity" as "signed out", and a 403 here is the normal state for a
+  // visitor on a public page.
+  try {
+    return await request('GET', '/api/v1/auth/me')
+  } catch {
+    return null
+  }
+}
+
 export function clearAuthToken() {
   clearStoredAuthToken()
 }

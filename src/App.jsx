@@ -167,6 +167,7 @@ import MarketingHome from './pages/MarketingHome';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import SuperAdmin from './pages/SuperAdmin';
+import ConsoleNav from './components/ConsoleNav';
 
 const LoadingSpinner = () => (
   <div className="min-h-screen bg-background flex flex-col items-center justify-center">
@@ -224,6 +225,64 @@ const AdminPinGate = () => {
   );
 };
 
+/**
+ * The signed-out door.
+ *
+ * Everyone signs in with email and password — the operator included. The
+ * credential is the same shape for both; what separates them is the tenant on
+ * their user row:
+ *
+ *   Operator    — a user row in the JWORDEN_HQ tenant, which only the
+ *                 environment can create (OWNER_EMAIL / OWNER_PASSWORD, seeded
+ *                 at startup by services/owner_account.py). Registration always
+ *                 mints a fresh customer tenant, so nobody can sign up into it.
+ *   Subscriber  — the account created at signup, scoped to its own tenant and
+ *                 to whatever subscription tier that tenant is paying for.
+ *
+ * Both used to arrive at the same identity, because AuthContext set
+ * `role: 'admin'` for whoever got through, whichever door they used.
+ *
+ * The admin PIN is kept reachable underneath as a break-glass path. It is the
+ * credential that worked before there was an operator account, and removing it
+ * in the same change that introduces one would mean a single failed seed locks
+ * the operator out of his own platform.
+ */
+const SignInGate = () => {
+  const [showPinFallback, setShowPinFallback] = useState(false);
+
+  if (showPinFallback) {
+    return (
+      <div>
+        <AdminPinGate />
+        <div className="pb-10 text-center">
+          <button
+            type="button"
+            onClick={() => setShowPinFallback(false)}
+            className="text-xs uppercase tracking-widest text-foreground/50 hover:text-foreground underline underline-offset-4"
+          >
+            Back to sign in
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Login redirectOnSuccess={false} />
+      <div className="pb-10 text-center">
+        <button
+          type="button"
+          onClick={() => setShowPinFallback(true)}
+          className="text-xs uppercase tracking-widest text-slate-500 hover:text-amber-500 underline underline-offset-4"
+        >
+          Use admin PIN instead
+        </button>
+      </div>
+    </div>
+  );
+};
+
 // Gate only back-office pages behind auth. Public pages render without any auth check.
 const RequireAuth = ({ children }) => {
   const { authRequired, isAuthenticated, isLoadingAuth, authError, authChecked, checkUserAuth } = useAuth();
@@ -243,10 +302,105 @@ const RequireAuth = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <AdminPinGate />;
+    return <SignInGate />;
   }
 
-  return children;
+  // The tab bar is mounted here rather than on each of the ~30 guarded routes,
+  // so a page can never be reachable without it and a new guarded route gets it
+  // for free. ConsoleNav filters itself by identity and renders nothing when
+  // there is none.
+  return (
+    <>
+      <ConsoleNav />
+      {children}
+    </>
+  );
+};
+
+/**
+ * Operator-only. Signed in is not the same as being the operator.
+ *
+ * /auth/register stamps role="admin" on every self-serve signup, so role can
+ * never carry this distinction. tenancy.is_owner() — reported to the client as
+ * identity.is_owner — is the axis that does: registration mints each customer
+ * a random tenant_id, so a subscriber can never land in the operator's bucket.
+ *
+ * This is defence in depth, not the boundary itself. The API refuses the data
+ * to a non-owner regardless; this stops the SPA from presenting an operations
+ * console to a customer and letting them wonder why every panel is empty.
+ */
+const RequireOwner = ({ children }) => (
+  <RequireAuth>
+    <OwnerOnly>{children}</OwnerOnly>
+  </RequireAuth>
+);
+
+const OwnerOnly = ({ children }) => {
+  const { isOwner, identity } = useAuth();
+  if (isOwner) return children;
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <div className="w-full max-w-md border border-border bg-card p-8 text-center">
+        <p className="font-display text-primary text-xs tracking-widest uppercase mb-2">
+          Operations Console
+        </p>
+        <h1 className="font-display text-2xl font-black text-foreground mb-3">
+          Not available on this account
+        </h1>
+        <p className="text-sm text-foreground/70 mb-6">
+          You are signed in
+          {identity?.company_name ? ` as ${identity.company_name}` : ''}. This console
+          belongs to the operator of the platform. Your own dashboard has everything
+          on your plan.
+        </p>
+        <a
+          href="/dashboard"
+          className="inline-block border border-primary px-5 py-2 text-sm uppercase tracking-widest text-primary hover:bg-primary hover:text-background"
+        >
+          Go to my dashboard
+        </a>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Paid-tier gate. `minimum` is one of lite | pro | max, matching the values the
+ * tenants.subscription_tier column accepts. The operator passes every tier —
+ * he runs the platform rather than subscribing to it, and has no tenants row
+ * to read a tier from.
+ */
+const RequireTier = ({ minimum, children }) => (
+  <RequireAuth>
+    <TierOnly minimum={minimum}>{children}</TierOnly>
+  </RequireAuth>
+);
+
+const TierOnly = ({ minimum, children }) => {
+  const { hasTier, tier } = useAuth();
+  if (hasTier(minimum)) return children;
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <div className="w-full max-w-md border border-border bg-card p-8 text-center">
+        <p className="font-display text-primary text-xs tracking-widest uppercase mb-2">
+          {String(minimum).toUpperCase()} plan
+        </p>
+        <h1 className="font-display text-2xl font-black text-foreground mb-3">
+          Not on your plan yet
+        </h1>
+        <p className="text-sm text-foreground/70 mb-6">
+          This tool is part of the {String(minimum).toUpperCase()} plan.
+          {tier ? ` Your account is on ${String(tier).toUpperCase()}.` : ''}
+        </p>
+        <a
+          href="/billing"
+          className="inline-block border border-primary px-5 py-2 text-sm uppercase tracking-widest text-primary hover:bg-primary hover:text-background"
+        >
+          See plans
+        </a>
+      </div>
+    </div>
+  );
 };
 
 const RequireInternalAdvisory = ({ children }) => (
@@ -388,9 +542,11 @@ const AuthenticatedApp = () => {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/login" element={<AdminPinGate />} />
-          {/* White-label tenants sign in with their own email + password, not
-              the HQ admin PIN, so this route has to exist here too. */}
+          {/* /login and /signin are the same door now. Email and password is
+              the sign-in for everyone — white-label tenants and the operator
+              alike — with the admin PIN kept underneath as break-glass. /login
+              is in bookmarks and muscle memory, so it keeps working. */}
+          <Route path="/login" element={<SignInGate />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/satellite-map" element={<RequireAuth><SatelliteMap /></RequireAuth>} />
           <Route path="/dashboard" element={<RequireAuth><ClientCockpit /></RequireAuth>} />
@@ -407,8 +563,14 @@ const AuthenticatedApp = () => {
       <HelmetProvider>
       <Routes>
         {/* Public Operations / SaaS Routes */}
-        {isOperationsSite && <Route path="/super-admin" element={<SuperAdmin />} />}
-        {isOperationsSite && <Route path="/super-admin/apis" element={<ApiDashboard />} />}
+        {/* /super-admin had no guard at all: it rendered on the isOperationsSite
+            hostname check alone, which is not a security boundary — anyone
+            reaching that host got the tenant roster UI. The API refuses the
+            data to a non-owner, so it rendered empty rather than leaking, but
+            an empty operations console shown to a customer is still wrong.
+            RequireOwner is the guard the hostname check was standing in for. */}
+        {isOperationsSite && <Route path="/super-admin" element={<RequireOwner><SuperAdmin /></RequireOwner>} />}
+        {isOperationsSite && <Route path="/super-admin/apis" element={<RequireOwner><ApiDashboard /></RequireOwner>} />}
         {/* thewordenstandard.com "/" is now the public, indexable SaaS
             storefront (MarketingHome). Google can crawl it, and it is the
             "built for the blue-collar man" front door for the product.
@@ -422,20 +584,22 @@ const AuthenticatedApp = () => {
             The admin. subdomain (if/when attached in Vercel) keeps "/" = the
             Command Center for muscle memory; that host is never indexed. */}
         {(subdomainMode === SUBDOMAIN_MODES.ADMIN || isWordenStandardDomain) && (
-          <Route path="/command-center" element={<RequireAuth><CommandCenter /></RequireAuth>} />
+          <Route path="/command-center" element={<RequireOwner><CommandCenter /></RequireOwner>} />
         )}
         {subdomainMode === SUBDOMAIN_MODES.ADMIN && (
-          <Route path="/" element={<RequireAuth><CommandCenter /></RequireAuth>} />
+          <Route path="/" element={<RequireOwner><CommandCenter /></RequireOwner>} />
         )}
         {isOperationsSite && subdomainMode !== SUBDOMAIN_MODES.ADMIN && <Route path="/" element={<MarketingHome />} />}
         {/* /os keeps serving the storefront too, so existing links and the
             "/" flip above resolve to the same page from either address. */}
         {isOperationsSite && <Route path="/os" element={<MarketingHome />} />}
         {isOperationsSite && <Route path="/register" element={<Register />} />}
-        {/* /login stays the admin PIN gate. It is the one sign-in path that
-            currently works and is in muscle memory and bookmarks, so the tenant
-            email+password page gets /signin rather than displacing it. */}
-        {isOperationsSite && <Route path="/login" element={<AdminPinGate />} />}
+        {/* /login was the admin PIN gate, back when the PIN was the only
+            operator credential. The operator now signs in with email and
+            password like everyone else (services/owner_account.py seeds his
+            account from OWNER_EMAIL / OWNER_PASSWORD), so this address serves
+            the same door — with the PIN still reachable underneath. */}
+        {isOperationsSite && <Route path="/login" element={<SignInGate />} />}
         {isOperationsSite && <Route path="/signin" element={<Login />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
