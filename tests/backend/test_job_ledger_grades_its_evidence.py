@@ -554,3 +554,93 @@ def test_a_status_of_complete_on_the_clients_schedule_is_not_our_invoice():
 
     assert eunice["evidence"] == job_ledger.LISTED
     assert job_ledger.is_publishable(eunice["evidence"]) is False
+
+
+# ── Two store-numbering systems, both real ──────────────────────────────────
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        # The new-build programme sheets.
+        ("Riverdale G135101- 15 parking blocks", ["G135101"]),
+        # Estimate #2228 names its service address as "KFC (142), 9300
+        # Midlothian Turnpike, Richmond VA". Recognising only the G form would
+        # silently lose every maintenance estimate in the archive.
+        ("KFC (142)\n9300 Midlothian Turnpike", ["KFC 142"]),
+        ("Taco Bell (3311) Colonial Heights", ["TACO BELL 3311"]),
+        ("kfc(142) lowercase and tight", ["KFC 142"]),
+        # A bare number in a sentence is a number.
+        ("we ran (142) tons that week", []),
+        ("no store here", []),
+    ],
+)
+def test_both_store_numbering_systems_are_recognised(text, expected):
+    assert job_ledger.store_numbers_in(text) == expected
+
+
+def test_a_parenthesised_number_keeps_its_brand():
+    """
+    "142" alone is not an identifier. KBP operate more than one brand, so a
+    Taco Bell 142 and a KFC 142 would collapse into one record and one of the
+    two invoices would vanish.
+    """
+    both = job_ledger.store_numbers_in("KFC (142) and Taco Bell (142)")
+
+    assert both == ["KFC 142", "TACO BELL 142"]
+
+
+# ── An estimate is not an acceptance ────────────────────────────────────────
+
+def test_our_own_estimate_grades_quoted_and_is_not_publishable():
+    """
+    Estimate #2228 — KBP Foods, KFC (142), 9300 Midlothian Turnpike, Richmond
+    VA, 16 May 2017, $25,589.39. It is a complete and genuine document, and it
+    proves what we offered, not that they accepted. The gap between those two
+    is where a portfolio quietly inflates.
+    """
+    assert job_ledger.grade(quoted=True) == job_ledger.QUOTED
+    assert job_ledger.is_publishable(job_ledger.QUOTED) is False
+
+
+def test_a_written_approval_grades_authorized():
+    """
+    Meckley Services, 27 September 2013: "I am approving the work you verbally
+    quoted for me $1500.00", with the address of the patch. Stronger than our
+    own estimate — the client has committed — and still not evidence the work
+    was finished.
+    """
+    assert job_ledger.grade(authorized=True) == job_ledger.AUTHORIZED
+    assert job_ledger.is_publishable(job_ledger.AUTHORIZED) is False
+
+
+def test_the_five_grades_rank_in_the_order_the_paperwork_gets_stronger():
+    order = [
+        job_ledger.REQUESTED,
+        job_ledger.LISTED,
+        job_ledger.QUOTED,
+        job_ledger.AUTHORIZED,
+        job_ledger.INVOICED,
+    ]
+    ranks = [job_ledger.rank(g) for g in order]
+
+    assert ranks == sorted(ranks), "a re-import must never be able to demote a record"
+    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}, (
+        "adding grades must not widen what may be published"
+    )
+
+
+def test_an_invoice_still_beats_a_quote_when_both_are_present():
+    """A row carrying both is billed work, not a proposal."""
+    assert job_ledger.grade(quoted=True, invoice_amount_cents=2558939) == job_ledger.INVOICED
+
+
+def test_a_punch_list_line_still_grades_requested_even_with_a_price_on_it():
+    assert job_ledger.grade(
+        from_punch_list=True, quoted=True, authorized=True, invoice_amount_cents=150000
+    ) == job_ledger.REQUESTED
+
+
+def test_the_estimate_total_survives_as_exact_cents():
+    """$25,589.39 — a float round-trip is where a figure stops matching the PDF."""
+    assert job_ledger.to_cents("$25,589.39") == 2558939
+    assert job_ledger.to_dollars(2558939) == "25589.39"

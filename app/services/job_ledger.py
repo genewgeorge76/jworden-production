@@ -43,10 +43,11 @@ logger = logging.getLogger(__name__)
 
 # Ordered weakest to strongest. Comparisons use the index, so a re-import can
 # upgrade a listed site to an invoiced one and can never silently downgrade it.
-EVIDENCE_ORDER = ("requested", "listed", "authorized", "invoiced")
+EVIDENCE_ORDER = ("requested", "listed", "quoted", "authorized", "invoiced")
 
 REQUESTED = "requested"
 LISTED = "listed"
+QUOTED = "quoted"
 AUTHORIZED = "authorized"
 INVOICED = "invoiced"
 
@@ -56,13 +57,23 @@ PUBLISHABLE = frozenset({INVOICED})
 EVIDENCE_MEANING = {
     REQUESTED: "On a punch list. Work the client asked for — explicitly not work performed.",
     LISTED: "An address on a programme list. A site, not a job.",
-    AUTHORIZED: "A signed authorization to proceed, up to an amount. Agreed, not yet finished.",
+    QUOTED: "An estimate we issued. Our price for work at a named site — not proof they accepted it.",
+    AUTHORIZED: "The client approved the work in writing. Agreed, not yet proof it was finished.",
     INVOICED: "An invoice number, submitted date or amount. Work that was billed.",
 }
 
-# KBP's store identifiers: a G and six digits. Matched with a boundary so a
-# longer code is not silently truncated into a valid-looking one.
+# KBP uses at least two store-numbering systems and both appear in the
+# paperwork, so recognising only one silently loses half the archive:
+#
+#   G135211            the new-build / Project Red programme sheets
+#   KFC (142)          the maintenance estimates — estimate #2228 names its
+#                      service address as "KFC (142), 9300 Midlothian Turnpike"
+#
+# The G form is matched on a word boundary so a longer code is not truncated
+# into a valid-looking one. The parenthesised form requires the brand word in
+# front of it, because a bare "(142)" in a sentence is a number, not a store.
 _STORE_NUMBER = re.compile(r"\b(G\d{6})\b", re.IGNORECASE)
+_BRAND_STORE_NUMBER = re.compile(r"\b(KFC|Taco\s*Bell|Rite\s*Aid)\s*\(\s*(\d{1,5})\s*\)", re.IGNORECASE)
 
 
 def rank(evidence: str) -> int:
@@ -77,10 +88,20 @@ def is_publishable(evidence: str) -> bool:
 
 
 def store_numbers_in(text: str) -> list[str]:
-    """Every store number in a block of free text, uppercased and deduplicated."""
+    """
+    Every store identifier in a block of free text, normalised and deduplicated.
+
+    Two forms, both real. The parenthesised one is normalised with its brand —
+    "KFC 142" rather than "142" — because a bare number is not an identifier:
+    KBP operate more than one brand and a Taco Bell 142 would collide with it.
+    """
     seen: dict[str, None] = {}
-    for match in _STORE_NUMBER.finditer(text or ""):
+    body = text or ""
+    for match in _STORE_NUMBER.finditer(body):
         seen.setdefault(match.group(1).upper(), None)
+    for match in _BRAND_STORE_NUMBER.finditer(body):
+        brand = re.sub(r"\s+", " ", match.group(1)).strip().upper()
+        seen.setdefault(f"{brand} {match.group(2)}", None)
     return list(seen)
 
 
@@ -137,6 +158,7 @@ def grade(
     date_submitted: Any = None,
     invoice_amount_cents: Optional[int] = None,
     authorized: bool = False,
+    quoted: bool = False,
     from_punch_list: bool = False,
 ) -> str:
     """
@@ -155,6 +177,11 @@ def grade(
         return INVOICED
     if authorized:
         return AUTHORIZED
+    if quoted:
+        # Our own estimate. It proves what we offered and at what price; it
+        # does not prove the client said yes, and the gap between the two is
+        # where a portfolio quietly inflates.
+        return QUOTED
     return LISTED
 
 
