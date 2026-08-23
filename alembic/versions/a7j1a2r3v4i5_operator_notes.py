@@ -9,7 +9,7 @@ One table for both kinds. They are the same record with a different reason for
 existing; only `due_at` distinguishes them, and only reminders set it.
 
 Revision ID: a7j1a2r3v4i5
-Revises: z6c7h8a9i0n1
+Revises: b3d7c1e40002
 """
 
 from typing import Sequence, Union
@@ -18,7 +18,12 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = "a7j1a2r3v4i5"
-down_revision: Union[str, Sequence[str], None] = "z6c7h8a9i0n1"
+# The head as ScriptDirectory.get_heads() reports it — the same resolver
+# `alembic upgrade head` uses. Chosen by asking alembic rather than by reading
+# filenames: z6c7h8a9i0n1 looks like the tip in a directory listing and sits
+# mid-chain, and building on it forks the migration graph. CI caught exactly
+# that, which is what the one-head guard is for.
+down_revision: Union[str, Sequence[str], None] = "b3d7c1e40002"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
