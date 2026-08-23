@@ -37,6 +37,10 @@ export const AuthProvider = ({ children }) => {
     setUser(me ? {
       id: me.email,
       email: me.email,
+      // Carried through so a page that greets someone by name has one. Without
+      // it CustomerPortal falls back to the literal word "Client", which it
+      // showed to the operator.
+      full_name: me.full_name || null,
       role: me.role,
       tenantId: me.tenant_id,
       isOwner: Boolean(me.is_owner),

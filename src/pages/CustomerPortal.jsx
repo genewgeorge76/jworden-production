@@ -76,7 +76,11 @@ export default function CustomerPortal() {
                 // Customer Portal
               </p>
               <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
-                Welcome, {user?.full_name?.split(' ')[0] || 'Client'}
+                {/* "Client" was the fallback for a missing name, so the
+                    operator — correctly signed in, is_owner true — was greeted
+                    as a customer on his own platform. Name first, then who the
+                    viewer actually is, and only then the generic word. */}
+                Welcome, {user?.full_name?.split(' ')[0] || (isOwner ? 'Operator' : 'Client')}
               </h1>
               <p className="font-body text-muted-foreground text-base mt-3 flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary" />
