@@ -45,6 +45,24 @@ logger = logging.getLogger(__name__)
 
 # ── States ────────────────────────────────────────────────────────────────────
 
+def _xai_env_names() -> tuple[str, ...]:
+    """
+    The names the router accepts for the xAI credential, taken from
+    runtime_config rather than restated here.
+
+    Two lists of the same aliases is one list that will eventually be wrong,
+    and the failure is silent in both directions: a probe that reports "not
+    configured" for a working key, or one that reports configured for a name
+    nothing reads.
+    """
+    try:
+        from .runtime_config import KEY_ALIASES  # noqa: PLC0415
+
+        return KEY_ALIASES.get("XAI_API_KEY", ("XAI_API_KEY",))
+    except Exception:  # noqa: BLE001
+        return ("XAI_API_KEY",)
+
+
 NOT_CONFIGURED = "not_configured"
 LIVE = "live"
 INVALID_CREDENTIALS = "invalid_credentials"
@@ -157,10 +175,11 @@ _SPECS: dict[str, _Spec] = {
     "xai": _Spec(
         "xai",
         "xAI (Grok)",
-        # Aliases mirror runtime_config.KEY_ALIASES — a probe that reports
-        # "not configured" for a key the router happily uses would send an
+        # Mirrors runtime_config.KEY_ALIASES["XAI_API_KEY"] rather than
+        # repeating it — the two drifting apart is how a probe comes to report
+        # "not configured" for a key the router happily uses, sending an
         # operator hunting for a problem that is not there.
-        ("XAI_API_KEY", "SPACEX_API_KEY", "SPACEX"),
+        _xai_env_names(),
         "https://api.x.ai/v1/models",
     ),
     "elevenlabs": _Spec(
@@ -293,6 +312,17 @@ def _shape(pid: str, result: dict[str, Any], *, checked_at: Optional[str], age: 
         # picked up from an alias looks identical to one from the canonical
         # name until something needs renaming.
         "key_name": spec.key_name(),
+        # And, when nothing supplied it, which names were tried.
+        #
+        # "not_configured" with key_name: null is a dead end for whoever has to
+        # fix it. The operator's Grok key IS set on Fly — under a name none of
+        # the aliases match — and the report gave no way to see that without
+        # reading this file. Listing the names turns "it says not configured"
+        # into "rename the secret to one of these", which is a two-minute job
+        # rather than an investigation.
+        #
+        # Names only. No value, and no prefix of one.
+        "searched_env_names": list(spec.env) if not spec.key() else None,
         "checked_at": checked_at,
         "age_seconds": None if age is None else round(age, 1),
         **result,
