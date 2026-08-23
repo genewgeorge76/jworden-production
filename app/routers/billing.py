@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
 from ..database import get_db
+from ..services import entitlements
 from ..services.tenancy import is_owner, tenant_of
 from ..models import Tenant, User
 
@@ -32,12 +33,13 @@ router = APIRouter(
 
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "sk_test_mock")
 
-# Mapping our SaaS tiers to Stripe Price IDs
-PRICE_MAP = {
-    "lite": os.getenv("STRIPE_PRICE_LITE", "price_lite_mock"),
-    "pro": os.getenv("STRIPE_PRICE_PRO", "price_pro_mock"),
-    "max": os.getenv("STRIPE_PRICE_MAX", "price_max_mock"),
-}
+# Mapping our SaaS tiers to Stripe Price IDs.
+#
+# Re-exported from services/entitlements rather than defined here, so the id a
+# customer is charged against and the id the Stripe webhook maps back to a tier
+# are the same string. Two copies of this dict would eventually disagree, and
+# the failure would be a customer paying for Max and being granted Pro.
+PRICE_MAP = entitlements.PRICE_MAP
 
 class CheckoutRequest(BaseModel):
     tenant_id: str = "default"

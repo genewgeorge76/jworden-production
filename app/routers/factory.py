@@ -17,6 +17,8 @@ from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Tenant, MarketSite
+from ..services.entitlements import require_tier
+from ..services.tenancy import tenant_of
 
 logger = logging.getLogger(__name__)
 
@@ -368,11 +370,14 @@ async def create_market_site(
     Launch a new SEO Market Site.
     Enforces subscription tier (Pro/Max required).
     """
-    tenant_id = auth_data.get("tenant_id", "default")
-    
-    tenant = db.query(Tenant).filter(Tenant.tenant_id == tenant_id).first()
-    if not tenant or getattr(tenant, "subscription_tier", "lite") == "lite":
-        raise HTTPException(status_code=403, detail="Upgrade to PRO to launch unlimited Market Sites.")
+    tenant_id = tenant_of(auth_data)
+
+    # Was: `if not tenant or tier == "lite"`. Two problems with that. It read
+    # only subscription_tier, which registration set from the signup form and
+    # no payment ever verified — so ticking "pro" and abandoning checkout
+    # bought this feature. And `not tenant` refused the operator, whose
+    # tenant_id is JWORDEN_HQ and who has no tenants row at all.
+    require_tier(db, tenant_id, "pro", "the Market Site factory")
         
     safe_host = req.hostname.lower().strip()
     exists = db.query(MarketSite).filter(MarketSite.hostname == safe_host).first()
@@ -409,12 +414,10 @@ async def generate_seo_blog(
     """
     Generate an SEO optimized blog post for a specific Market Site.
     """
-    tenant_id = auth_data.get("tenant_id", "default")
-    
+    tenant_id = tenant_of(auth_data)
+
     # 1. Verify Entitlement
-    tenant = db.query(Tenant).filter(Tenant.tenant_id == tenant_id).first()
-    if not tenant or getattr(tenant, "subscription_tier", "lite") == "lite":
-        raise HTTPException(status_code=403, detail="Upgrade to PRO to access the AI Content Engine.")
+    require_tier(db, tenant_id, "pro", "the AI Content Engine")
         
     # 2. Get Site Context
     safe_host = req.hostname.lower().strip()
@@ -422,31 +425,40 @@ async def generate_seo_blog(
     if not site or site.tenant_id != tenant_id:
         raise HTTPException(status_code=404, detail="Market Site not found or unauthorized.")
         
-    # 3. Call AI to Generate Content (Placeholder for Gemini Integration)
-    generated_title = f"{req.topic.title()} in {site.city_target or 'Your Area'}"
-    generated_body = f"<p>This is a highly optimized post about {req.topic} targeting {site.city_target or 'your area'}. It includes semantic HTML and covers keywords like {', '.join(req.keywords)}.</p>"
-    
-    # 4. Save to DB
-    from ..models import BlogPost
-    import uuid
-    from datetime import datetime, timezone
-    
-    slug = generated_title.lower().replace(" ", "-") + "-" + str(uuid.uuid4())[:8]
-    
-    post = BlogPost(
-        tenant_id=tenant_id,
-        market_site_id=site.id,
-        slug=slug,
-        title=generated_title,
-        body=generated_body,
-        status="published",
-        published_at=datetime.now(timezone.utc)
+    # 3. Generate the content.
+    #
+    # DISARMED, DELIBERATELY. What stood here did not call any AI. It built a
+    # title and one sentence with f-strings —
+    #
+    #     generated_body = f"<p>This is a highly optimized post about {topic}
+    #     targeting {city}. It includes semantic HTML and covers keywords like
+    #     {keywords}.</p>"
+    #
+    # — and then saved it with status="published", live on the customer's own
+    # domain, under a comment reading "Placeholder for Gemini Integration".
+    #
+    # Three things were wrong with shipping that, in order of severity:
+    #   * It is sold. "AI Blog Generator" is a headline feature of the PRO plan
+    #     on the published price list.
+    #   * Every post it wrote was near-identical to every other post it wrote,
+    #     so using it as intended built a duplicate-content penalty across the
+    #     customer's site.
+    #   * It published without review, so nobody would see the filler before
+    #     Google did.
+    #
+    # A feature that is missing is a roadmap item. A feature that silently
+    # publishes filler to a paying customer's live domain is a refund and a
+    # ranking penalty, so this refuses until it is wired to a real generator.
+    # The entitlement check above stays in front of it on purpose: a PRO
+    # customer should get "not built yet", and a LITE customer should still get
+    # "not on your plan", because both of those are true.
+    raise HTTPException(
+        status_code=501,
+        detail=(
+            "The AI Content Engine is not available yet. It is not writing "
+            "posts, and will not publish placeholder content to your site."
+        ),
     )
-    db.add(post)
-    db.commit()
-    db.refresh(post)
-    
-    return {"status": "success", "post_id": post.id, "slug": post.slug}
 
 
 class IndexNowSubmitRequest(BaseModel):

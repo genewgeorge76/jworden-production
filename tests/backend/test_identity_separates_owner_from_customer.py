@@ -54,7 +54,10 @@ async def test_subscriber_is_not_the_owner(client):
     assert identity["is_owner"] is False
     assert identity["tenant_id"] != "JWORDEN_HQ"
     assert identity["tenant_id"] != "default"
-    assert identity["subscription_tier"] == "pro"
+    # LITE, though the signup asked for "pro": registration no longer grants a
+    # tier from the form. The Stripe webhook grants it when checkout completes.
+    assert identity["subscription_tier"] == "lite"
+    assert identity["subscription_status"] == "pending"
     assert identity["email"] == REGISTRATION["email"]
 
 
@@ -74,7 +77,10 @@ async def test_tier_comes_from_the_database_not_the_token(client, app_modules):
     session = dbmod.SessionLocal()
     try:
         row = session.query(Tenant).filter(Tenant.tenant_id == tenant_id).one()
-        row.subscription_tier = "lite"
+        # Upward, so the assertion cannot pass by accident: registration now
+        # creates every tenant at lite, so setting it to lite here would prove
+        # nothing about where the value was read from.
+        row.subscription_tier = "max"
         session.commit()
     finally:
         session.close()
@@ -82,8 +88,8 @@ async def test_tier_comes_from_the_database_not_the_token(client, app_modules):
     response = await client.get(
         "/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"}
     )
-    # Same token as before, which still says "pro" in its claims.
-    assert response.json()["subscription_tier"] == "lite"
+    # Same token as before, issued when the tenant was on lite.
+    assert response.json()["subscription_tier"] == "max"
 
 
 @pytest.mark.anyio

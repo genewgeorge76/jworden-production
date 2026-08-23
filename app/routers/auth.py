@@ -27,6 +27,7 @@ from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Tenant, User
 from ..services.audit import write_audit_event
+from ..services import entitlements
 from ..services.tenancy import is_owner, tenant_of
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -294,12 +295,25 @@ def register_tenant(
         raise HTTPException(status_code=400, detail="Email already registered")
         
     # 2. Create Tenant
+    #
+    # At LITE, always — never at payload.plan. The plan on this request is a
+    # box the visitor ticked on a pricing page, not a payment. Writing it
+    # straight to subscription_tier is what made every paid feature free:
+    # pick "max", abandon checkout, and factory.py's `tier == "lite"` gate
+    # waved you through forever, because tier said max and nothing consulted
+    # subscription_status.
+    #
+    # The tier is granted by the Stripe webhook when checkout completes, from
+    # the price that was actually charged. The requested plan still reaches
+    # Stripe: the client passes it to POST /api/v1/billing/checkout, which
+    # stamps it into the session metadata.
     tenant_id = secrets.token_urlsafe(12)
     new_tenant = Tenant(
         tenant_id=tenant_id,
         company_name=payload.companyName,
         industry=payload.industry,
-        subscription_tier=payload.plan.lower(),
+        subscription_tier=entitlements.DEFAULT_TIER,
+        subscription_status=entitlements.PENDING_STATUS,
         contact_email=payload.email,
         is_active=1
     )
