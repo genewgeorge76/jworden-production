@@ -27,7 +27,7 @@ from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import Tenant, User
 from ..services.audit import write_audit_event
-from ..services import entitlements
+from ..services import entitlements, owner_account
 from ..services.tenancy import is_owner, scope, tenant_of
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -66,10 +66,26 @@ class AuthStatusResponse(BaseModel):
     auth_mode: str
     token_endpoint: str | None = None
     admin_configured: bool = False
+    # Whether the operator can sign in with email and password at all. A failed
+    # owner login and a non-existent owner account return the same 401 by
+    # design — that stops address enumeration, and it also made "my login
+    # doesn't work" impossible to diagnose from outside. This is the boolean
+    # that closes that gap. The reason is sanitised here; the specific one is
+    # behind auth at GET /api/v1/auth/owner-account.
+    owner_account_ready: bool = False
+    owner_account_reason: str = "unknown"
+
+
+# Reasons safe to hand an unauthenticated caller. "the password is too short"
+# is a real hint to anyone who can read it, so anything not on this list is
+# reported as "misconfigured" until the caller proves they are the operator.
+_PUBLIC_OWNER_REASONS = frozenset(
+    {owner_account.READY, owner_account.NOT_CONFIGURED, owner_account.NOT_SEEDED}
+)
 
 
 @router.get("/status", summary="Check authentication requirements")
-def auth_status() -> AuthStatusResponse:
+def auth_status(db: Session = Depends(get_db)) -> AuthStatusResponse:
     master_key = os.getenv("JWORDEN_MASTER_KEY", "").strip()
     admin_pin = os.getenv("ADMIN_PIN", "").strip()
     auth_required = bool(master_key or admin_pin)
@@ -77,12 +93,40 @@ def auth_status() -> AuthStatusResponse:
         admin_pin
         or (os.getenv("ADMIN_USERNAME") and os.getenv("ADMIN_PASSWORD"))
     )
+    try:
+        owner_state = owner_account.status(db)
+    except Exception:
+        # A diagnostic must never be the reason the app cannot report its own
+        # auth status.
+        logger.exception("Could not read operator account status.")
+        owner_state = {"ready": False, "reason": "unknown"}
+
+    reason = owner_state["reason"]
     return AuthStatusResponse(
         auth_required=auth_required,
         auth_mode="required" if auth_required else "open",
         token_endpoint="/api/v1/auth/pin-token" if auth_required else None,
         admin_configured=admin_configured,
+        owner_account_ready=owner_state["ready"],
+        owner_account_reason=reason if reason in _PUBLIC_OWNER_REASONS else "misconfigured",
     )
+
+
+@router.get("/owner-account", summary="Why the operator account is or is not usable")
+def owner_account_status(
+    auth: dict = Depends(verify_premium_security),
+    db: Session = Depends(get_db),
+):
+    """
+    The specific reason, for a caller who has already proved they are the
+    operator — via the admin PIN or the master key, both of which stamp
+    JWORDEN_HQ.
+
+    Neither OWNER_EMAIL nor OWNER_PASSWORD is returned; only what is wrong.
+    """
+    if not is_owner(tenant_of(auth)):
+        raise HTTPException(status_code=403, detail="Operator only.")
+    return owner_account.status(db)
 
 
 def _signing_secret() -> str:
