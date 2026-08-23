@@ -20,6 +20,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
     JSON,
     String,
@@ -312,6 +313,100 @@ class OperatorNote(Base):
 
     def __repr__(self) -> str:
         return f"<OperatorNote id={self.id} kind={self.kind!r} status={self.status!r} title={self.title!r}>"
+
+
+class ClientJobRecord(Base):
+    """
+    One site on a client's programme, and how strongly it is evidenced.
+
+    The photo archive answers "where was a camera". This answers "what was
+    agreed, billed and paid" — which is the stronger record, and the only one
+    that can support a public claim of completed work. A KFC parking lot in
+    Harlingen is proved by an invoice to KBP Foods carrying the store number,
+    the address and the amount; a GPS fix only proves somebody stood there.
+
+    STORE NUMBER IS THE SPINE. KBP's own G-numbers (G135209, G135101) appear on
+    the programme spreadsheets, on the punch lists, on the invoices and in the
+    Gmail thread. They are the one identifier that joins those four sources,
+    and they are the client's identifier rather than ours, so they do not drift.
+
+    EVIDENCE IS NOT A DETAIL, IT IS THE POINT
+    ─────────────────────────────────────────
+    A row on a programme spreadsheet is a site somebody put on a list. It is
+    not proof the work happened, and the difference is large: the Project Red
+    workbook holds 58 KFC sites — 28 parking lots and 30 roofs — and 11 of them
+    carry an invoice date or amount. Publishing all 58 as completed jobs would
+    be a claim the paperwork does not support for 47 of them.
+
+    Worse, a punch list is the opposite of completed work — "Riverdale G135101,
+    15 parking blocks need replacing" is a record of work REQUESTED. Read
+    carelessly it becomes a job performed, which would be a fabricated claim
+    built out of a genuine document.
+
+    So each record carries the grade of its own evidence and only INVOICED may
+    be published:
+
+      invoiced   an invoice number, a submitted date or an amount. Billed work.
+      authorized a signed authorization to proceed up to an amount. Agreed, and
+                 not yet evidence it was finished.
+      listed     an address on a programme list. A site, not a job.
+      requested  from a punch list. Work someone asked for, explicitly not done.
+
+    `paid` is tracked separately from `invoiced` because an unpaid invoice is
+    still proof the work was performed — it is a receivable, not a doubt about
+    the job.
+    """
+
+    __tablename__ = "client_job_records"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=False, index=True)
+
+    # The client's own identifier, and the join key to every other source.
+    store_number = Column(String(40), nullable=True, index=True)
+    client = Column(String(160), nullable=True)          # KBP Foods
+    program = Column(String(160), nullable=True)         # Project Red
+    category = Column(String(40), nullable=True)         # parking | roof | interior
+
+    address = Column(String(300), nullable=True)
+    city = Column(String(120), nullable=True)
+    state = Column(String(60), nullable=True)
+    postal_code = Column(String(20), nullable=True)
+
+    invoice_number = Column(String(80), nullable=True)
+    date_submitted = Column(DateTime(timezone=True), nullable=True)
+    # Money in whole cents. Floats do not add up to what an invoice says, and
+    # a total that disagrees with the paperwork by a cent is worse than useless
+    # on a page that exists to be trusted.
+    invoice_amount_cents = Column(Integer, nullable=True)
+    job_total_cents = Column(Integer, nullable=True)
+    amount_paid_cents = Column(Integer, nullable=True)
+
+    evidence = Column(String(20), nullable=False, default="listed", index=True)
+    # Verbatim from the source document. Kept unparsed: "need dumpster gate
+    # replaced or re-built" is the client's sentence and summarising it loses
+    # the thing that makes it checkable.
+    outstanding_issues = Column(Text, nullable=True)
+    source_document = Column(String(300), nullable=True)
+    notes = Column(Text, nullable=True)
+
+    # Set when a person has confirmed this record may back a public claim.
+    # Same gate as the photo archive, for the same reason.
+    published = Column(Integer, nullable=False, default=0)
+    reviewed_at = Column(DateTime(timezone=True), nullable=True)
+    reviewed_by = Column(String(254), nullable=True)
+
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    __table_args__ = (
+        # One record per store per category per programme: the Texas parking
+        # sheet and the Michigan roof sheet both hold G-numbers and a store can
+        # legitimately appear on each.
+        Index("ix_client_job_records_store", "tenant_id", "store_number", "category"),
+    )
 
 
 class PhotoCluster(Base):

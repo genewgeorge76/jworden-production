@@ -30,7 +30,7 @@ from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import PhotoCluster
-from ..services import photo_archive
+from ..services import photo_archive, saved_places
 from ..services.tenancy import is_owner, scope, stamp_for, tenant_of
 
 logger = logging.getLogger(__name__)
@@ -57,6 +57,21 @@ class ScanRequest(BaseModel):
     folder: str = ""
     cursor: Optional[str] = None
     max_pages: int = Field(default=20, ge=1, le=100)
+
+
+class PinImportRequest(BaseModel):
+    """
+    A Google Maps pin export, pasted or uploaded.
+
+    Not a maps.google.com link. That URL carries a camera position and a layer
+    flag and nothing else — the pins on top of it are rendered from the
+    viewer's own Google account after they sign in. Anyone else opening the
+    same link sees an empty satellite view. So the pins have to be exported:
+    Takeout gives GeoJSON, My Maps gives KML.
+    """
+
+    content: str = Field(min_length=2)
+    default_label: Optional[str] = None
 
 
 class ReviewRequest(BaseModel):
@@ -172,6 +187,80 @@ def _nearest_stored(db: Session, tenant: str, lat: float, lon: float):
         ):
             return candidate
     return None
+
+
+@router.post("/import-pins", summary="Record the places pinned on a Google map")
+@limiter.limit("10/minute")
+def import_pins(
+    request: Request,
+    payload: PinImportRequest,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    Read a Takeout or My Maps export into the same review queue as the photos.
+
+    A pin is worth exactly what a photograph's coordinate is worth: it says a
+    person marked a spot, not what happened there. Saved places are jobs mixed
+    with suppliers, plants, and somewhere to eat on the way home. The pin's own
+    title is the best clue available and it is still a clue, so these wait for
+    the same confirmation as everything else here.
+    """
+    tenant = _require_operator(auth)
+
+    pins = saved_places.read(payload.content)
+    if not pins:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "No pins were found. This reads Takeout GeoJSON or a My Maps KML "
+                "export — a maps.google.com link carries only a camera position, "
+                "not the pins drawn on it."
+            ),
+        )
+
+    created = updated = 0
+    for pin in pins:
+        existing = _nearest_stored(db, tenant, pin["lat"], pin["lon"])
+        if existing is None:
+            db.add(
+                PhotoCluster(
+                    tenant_id=stamp_for(tenant),
+                    lat=round(pin["lat"], 5),
+                    lon=round(pin["lon"], 5),
+                    photo_count=0,
+                    source=pin.get("source") or "google_saved_places",
+                    sample_paths=json.dumps([]),
+                    status=STATUS_PENDING,
+                    label=pin.get("title") or payload.default_label,
+                    address=pin.get("address"),
+                    evidence_note=pin.get("note"),
+                )
+            )
+            created += 1
+            continue
+
+        # A pin over a place the photographs already found is the best thing
+        # that can happen here: the title names what the coordinate could not.
+        # It fills gaps and overwrites nothing a person has already decided.
+        if not existing.label and pin.get("title"):
+            existing.label = pin["title"]
+        if not existing.address and pin.get("address"):
+            existing.address = pin["address"]
+        updated += 1
+
+    db.commit()
+
+    return {
+        "ok": True,
+        "pins_read": len(pins),
+        "clusters_created": created,
+        "matched_existing_places": updated,
+        "note": (
+            "A pin is a mark on a map, not a job. These wait for review like "
+            "everything else."
+        ),
+    }
 
 
 @router.get("/clusters", summary="Places found, and what has been decided about them")
