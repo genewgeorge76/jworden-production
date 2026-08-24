@@ -43,8 +43,8 @@ export const PUBLISHABLE = new Set([WORK])
 export const STATE_EVIDENCE = {
   VA: {
     grade: WORK,
-    detail: 'Home market. Three KBP restaurant sites with after-photographs — Hull Street Road Richmond (G135149), Mercury Boulevard (G135135) and Independence Boulevard (G135162), both Norfolk.',
-    sources: ['photo-email', 'kbp-2015-survey', 'kickserv'],
+    detail: 'Home market, and where the restaurant work began. The KFC on Azalea Avenue, Richmond, reported complete by the company itself on 15 June 2013 under subcontract to Bear Claw Construction Management of Kansas City — two years before the KBP programme and sixteen months before the first invoice in the job book. Then three KBP restaurant sites with after-photographs: Hull Street Road Richmond (G135149), Mercury Boulevard (G135135) and Independence Boulevard (G135162), both Norfolk.',
+    sources: ['bear-claw-correspondence', 'photo-email', 'kbp-2015-survey', 'kickserv'],
   },
   NC: {
     grade: WORK,
