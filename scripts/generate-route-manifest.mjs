@@ -76,11 +76,36 @@ for (const p of [
   '/voice-calls', '/revenue', '/candidate', '/dns-migration', '/admin',
 ]) exact.add(p)
 
-const manifest = {
-  generatedAt: new Date().toISOString(),
+const routes = {
   exact: [...exact].sort(),
   prefixes: [...prefixes].sort(),
 }
+
+// KEEP generatedAt STABLE WHEN THE ROUTES HAVE NOT CHANGED.
+//
+// This file is committed, and tests/unit/soft-404.test.mjs regenerates it before
+// asserting — deliberately, so it checks the current router rather than a stale
+// artifact. With a fresh timestamp every run, simply running the test suite left
+// the working tree dirty with a diff that changed nothing, three times in one
+// session. A stamp that moves when nothing moved is not provenance, it is noise,
+// and noise in a committed file trains people to ignore its diffs.
+//
+// The stamp still updates the moment a route is genuinely added or removed,
+// which is the only time it means anything.
+let generatedAt = new Date().toISOString()
+try {
+  const previous = fs.readFileSync(OUT, 'utf-8')
+  const json = previous.slice(previous.indexOf('{'))
+  const old = JSON.parse(json.replace(/\n$/, ''))
+  const unchanged =
+    JSON.stringify(old.exact) === JSON.stringify(routes.exact) &&
+    JSON.stringify(old.prefixes) === JSON.stringify(routes.prefixes)
+  if (unchanged && old.generatedAt) generatedAt = old.generatedAt
+} catch {
+  // No previous file, or it is unparseable. Either way a fresh stamp is right.
+}
+
+const manifest = { generatedAt, ...routes }
 
 // Emitted as a JS module rather than JSON: middleware runs on Vercel's edge
 // runtime, where JSON import attributes are not dependable. A plain ESM export
