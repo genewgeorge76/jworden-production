@@ -29,6 +29,7 @@
 
 import { next, rewrite } from '@vercel/functions';
 import ROUTES from './route-manifest.generated.js';
+import BRAND_ROUTES from './brand-routes.generated.js';
 
 // The main site's sitemap/robots files are named with the `www.` prefix;
 // the regional ones are not. This map is derived from the real filenames in
@@ -59,9 +60,7 @@ const HOMEPAGE_BY_HOST = new Set([
 // other path on that domain was already correct, which is what made it easy to
 // miss: /commercial and /texas/waco resolved through the vercel.json host
 // rewrite, and only the root was wrong.
-const BRAND_DIR_HOSTS = new Set([
-  'texaspavementgroup.com',
-]);
+const BRAND_DIR_HOSTS = new Set(Object.keys(BRAND_ROUTES));
 
 // Hosts that have their own robots-<host>.txt / sitemap-<host>.{xml,txt} in
 // public/sitemaps/. Must stay in sync with DOMAINS in
@@ -209,11 +208,35 @@ export default function middleware(request) {
       return rewrite(new URL(`/sitemaps/sitemap-${host}.txt`, request.url));
     }
 
-    // Brand-directory hosts are served entirely out of /brands/<host>/ by the
-    // host rewrite in vercel.json. Their paths are NOT React routes, so running
-    // them through the SPA manifest below would 404 every one of the 19 Texas
-    // city pages the sitemap advertises. Hand them to the rewrite untouched.
-    if (BRAND_DIR_HOSTS.has(host)) return next();
+    // Brand-directory hosts are served out of /brands/<host>/. Their paths are
+    // NOT React routes, so the SPA manifest below has no business judging them.
+    //
+    // The rewrite is EXPLICIT rather than left to the host rule in vercel.json,
+    // because Vercel checks the filesystem first: the SPA prerenders
+    // /residential, /services, /service-areas and /contact into the deploy
+    // root, and those four were being served as VIRGINIA pages on the Texas
+    // domain. /commercial only worked because no file of that name exists at
+    // the root.
+    //
+    // Anything not in the brand's own path list gets a real 404. Left to fall
+    // through it would hit the SPA catch-all and return 200 with the software
+    // storefront, which is the soft-404 this whole file exists to prevent.
+    if (BRAND_DIR_HOSTS.has(host)) {
+      const clean = pathname.length > 1 && pathname.endsWith('/')
+        ? pathname.slice(0, -1)
+        : pathname;
+      if (BRAND_ROUTES[host].includes(clean)) {
+        return rewrite(new URL(`/brands/${host}${clean === '/' ? '' : clean}/index.html`, request.url));
+      }
+      return new Response(NOT_FOUND_HTML, {
+        status: 404,
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          'x-robots-tag': 'noindex, follow',
+          'cache-control': 'public, max-age=0, must-revalidate',
+        },
+      });
+    }
 
     // Everything below here is an ordinary page request. Unknown paths get a
     // real 404 instead of the homepage with a 200.
