@@ -13,6 +13,8 @@ from .email_intake import extract_lead_from_email
 from .email_service import send_admin_notification
 from .geocoding import geocode_address
 
+from . import lead_alerts
+
 logger = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -232,11 +234,18 @@ def sync_gmail_accounts() -> Dict[str, Any]:
                             results["leads_created"] += 1
                             results["emails_read"] += 1
                             
-                            # Notify Admin
-                            try:
-                                send_admin_notification(lead)
-                            except Exception as e:
-                                logger.error(f"Failed to send admin notification for lead {lead.id}: {e}")
+                            # Notify, and record that we did.
+                            #
+                            # This called send_admin_notification, which is
+                            # email-only and reads ADMIN_NOTIFY_EMAIL — a
+                            # different variable from the one the web form's
+                            # notifier uses. A lead arriving by email therefore
+                            # never produced a text message, and if only
+                            # NOTIFY_TO_EMAIL was set it produced nothing at
+                            # all. notify_and_record covers every configured
+                            # recipient on both stacks and writes the outcome
+                            # to the row.
+                            lead_alerts.notify_and_record(db, lead)
                                 
                             # Mark as seen
                             mail.store(e_id, '+FLAGS', '\\Seen')
