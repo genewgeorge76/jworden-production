@@ -76,6 +76,17 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Commercial and residential asphalt paving, sealcoating, and repair across the Charlotte metro, the Piedmont Triad, and the Upstate of South Carolina.',
     ctaLabel: 'Call For A Carolinas Estimate',
+    // Both Carolinas. geo.region is US-NC because the written content is
+    // Piedmont-facing, but the number is 843 — Charleston/Myrtle Beach/Hilton
+    // Head — and the owner reports years of South Carolina work, heavily in the
+    // last three. Declared here so the area-code check knows this brand
+    // legitimately spans a state line.
+    //
+    // The CONTENT still only speaks to North Carolina. That is a real gap, not
+    // a rendering detail: a South Carolina customer reading this page is told
+    // about the Piedmont. It should be filled the way Texas was — from invoiced
+    // jobs in the Kickserv export — rather than by asserting a presence.
+    statesServed: ['NC', 'SC'],
     phoneDisplay: '843-610-8935',
     proofHeadline: 'Recent Carolina Blacktop Projects',
     localSpecs: [
@@ -273,7 +284,10 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Parking lot construction, driveway paving, and sealcoating across Metro Atlanta — built with documented compaction and closeout standards for high-traffic Georgia conditions.',
     ctaLabel: 'Call For An Atlanta Estimate',
-    phoneDisplay: '804-446-1296',
+    // 470 is the metro Atlanta overlay. This was the Virginia number, which
+    // is a NAP inconsistency on a Georgia market page: the area code is the
+    // first thing a local customer reads.
+    phoneDisplay: '470-485-7715',
     proofHeadline: 'Recent Atlanta-Area Projects',
     localSpecs: [
       'Structural stone base rated for heavy retail and franchise traffic',
@@ -345,7 +359,10 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Commercial and residential asphalt paving across Savannah and the Georgia coast — built with drainage-first design for low-lying, high-humidity coastal conditions.',
     ctaLabel: 'Call For A Savannah Estimate',
-    phoneDisplay: '843-610-8935',
+    // Was 843-610-8935 — a Charleston-area SOUTH CAROLINA number on a Georgia
+    // market page. 470 is at least in-state. Savannah's own code is 912;
+    // replace this the day a 912 number exists.
+    phoneDisplay: '470-485-7715',
     proofHeadline: 'Recent Savannah-Area Projects',
     localSpecs: [
       'Drainage-first slope design for coastal Georgia water tables',
