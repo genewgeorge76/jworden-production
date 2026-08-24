@@ -65,6 +65,13 @@ pandas==3.0.2; python_version >= "3.14"
 # ── Testing ──────────────────────────────────────────────────────────────────
 pytest==8.3.5
 pytest-asyncio==0.26.0
+# The suite crossed the CI job's 15-minute limit and started failing as
+# job_execution_timeout — a red pipeline with no failing test in it, which is
+# the worst kind, because the obvious reading is "the tests broke".
+# -n auto --dist loadfile takes it from ~458s to ~168s on four cores.
+# loadfile, not the default: conftest's app_modules fixture reloads app.main
+# and app.models per test, so a whole file belongs to one worker.
+pytest-xdist==3.8.0
 
 # ── SaaS Billing & Auth ──────────────────────────────────────────────────────
 stripe==15.3.0
