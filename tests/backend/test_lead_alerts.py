@@ -31,7 +31,7 @@ class _Row:
         self.id = 1
         self.name = "Gene George"
         self.email = "someone@example.test"
-        self.phone = "804-822-7715"
+        self.phone = "804-446-1296"
         self.service_type = "paving"
         self.property_type = "commercial"
         self.urgency = "asap"
@@ -143,7 +143,7 @@ def test_a_payload_is_built_from_a_row_that_has_no_dict_of_its_own():
     payload = lead_alerts.payload_from(_Row())
 
     assert payload["name"] == "Gene George"
-    assert payload["phone"] == "804-822-7715"
+    assert payload["phone"] == "804-446-1296"
     assert payload["score"]["label"] == "HOT"
     assert payload["state_code"] == "VA"
 

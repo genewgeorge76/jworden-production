@@ -229,7 +229,10 @@ export const REGIONAL_MARKET_PROFILES = {
     heroBody:
       'Commercial and estate asphalt paving, resurfacing and ground-up site work across Texas. We have already run the statewide programme: 23 invoiced KFC restaurant sites for KBP Foods across 19 cities, from Brownsville and McAllen to Waco, Tyler and Greenville.',
     ctaLabel: 'Call For A Texas Portfolio Estimate',
-    phoneDisplay: '804-822-7715',
+    // 804-822-7715 was disconnected years ago and was published here on every
+    // Texas page and in the JSON-LD. Omitted rather than replaced so this brand
+    // inherits the canonical number from businessInfo.canonical.js; a Texas
+    // local number goes here when one is bought.
     proofHeadline: 'Documented Texas Programme',
     localSpecs: [
       'TxDOT Item 341 dense-graded hot mix over a base built to drain',

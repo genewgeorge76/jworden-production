@@ -83,6 +83,14 @@ const stateFromPlacename = (placename = '') => {
 };
 
 const HUB = 'https://www.jwordenasphaltpaving.com';
+
+// The fallback number, from the ONE place that defines it. It used to be the
+// string '804-822-7715' typed into three separate template literals — a number
+// that had been disconnected for years. Any brand without an explicit
+// phoneDisplay inherited a dead line, on every page and in the JSON-LD.
+const { PHONE_DISPLAY: FALLBACK_PHONE } = await import(
+  pathToFileURL(resolve(ROOT, 'src/lib/businessInfo.canonical.js')).href
+);
 const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -231,7 +239,7 @@ function schema(p, route, canonical) {
     '@type': 'GeneralContractor',
     name: p.marketName,
     url: canonical,
-    telephone: `+1${String(p.phoneDisplay || '804-446-1296').replace(/\D/g, '')}`,
+    telephone: `+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`,
     areaServed: (p.serviceAreas || []).slice(0, 12).map((c) => ({ '@type': 'City', name: c })),
     address: {
       '@type': 'PostalAddress',
@@ -309,7 +317,7 @@ ul.sites li span{color:var(--amber);font-weight:800;font-variant-numeric:tabular
 function page(p, route) {
   const c = copyFor(route.key, p);
   const canonical = canonicalUrl(p.domain, route.path);
-  const tel = `tel:+1${String(p.phoneDisplay || '804-446-1296').replace(/\D/g, '')}`;
+  const tel = `tel:+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`;
   const nav = ROUTES.filter((r) => r.path !== route.path)
     .map((r) => `<a href="${r.path}">${esc(({ home: 'Home', commercial: 'Commercial', residential: 'Residential', services: 'Services', areas: 'Service Areas', contact: 'Contact' })[r.key])}</a>`)
     .join('');
@@ -360,7 +368,7 @@ ${BRAND_CSS}
 <header><div class="wrap bar">
   <div class="brand">${esc(p.marketName)}</div>
   <nav>${nav}</nav>
-  <a class="tel" href="${tel}">${esc(p.phoneDisplay || '804-446-1296')}</a>
+  <a class="tel" href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a>
 </div></header>
 
 <section class="hero"><div class="wrap">
@@ -382,7 +390,7 @@ ${form}
 
 <footer><div class="wrap">
   <div><strong>${esc(p.marketName)}</strong> — ${esc(p.basedIn || '')}</div>
-  <div>Call <a href="${tel}">${esc(p.phoneDisplay || '804-446-1296')}</a></div>
+  <div>Call <a href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></div>
   <div class="hublink">Part of the <a href="${HUB}">J. Worden &amp; Sons</a> network — 4th generation, since 1984.</div>
   <div style="margin-top:10px">&copy; ${new Date().getFullYear()} ${esc(p.marketName)} &mdash; a brand of J. Worden &amp; Sons Paving LLC. All rights reserved. Serving ${esc(p.primaryMetro || p.primaryRegion || '')} and surrounding areas.</div>
   <div style="margin-top:6px">Licensed &middot; Bonded &middot; Insured &middot; Virginia Contractor</div>
@@ -403,7 +411,7 @@ ${form}
       m.className='ok'; m.textContent='Thank you, '+d.firstName+' — we have your request and will call you shortly.'; f.reset();
     }catch(err){
       try{ localStorage.setItem('worden_lead_backup_'+Date.now(), JSON.stringify(d)); }catch(_){}
-      m.className='err'; m.innerHTML='We could not send that just now. Please call <a href="${tel}">${esc(p.phoneDisplay || '804-446-1296')}</a> — your details were saved on this device.';
+      m.className='err'; m.innerHTML='We could not send that just now. Please call <a href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a> — your details were saved on this device.';
     }finally{ b.disabled=false; b.textContent=t; }
   });
 })();
@@ -565,7 +573,7 @@ function texasGallery(city, photos) {
 
 function texasCityPageHtml(p, cityPage, photos) {
   const canonical = canonicalUrl(p.domain, cityPage.path);
-  const tel = `tel:+1${String(p.phoneDisplay || '804-822-7715').replace(/\D/g, '')}`;
+  const tel = `tel:+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`;
 
   // The stores, by number and value. This is the page's whole reason to exist:
   // a reader can take a store number to the client and check it.
@@ -614,7 +622,7 @@ function texasCityPageHtml(p, cityPage, photos) {
 <header><div class="wrap bar">
   <a class="brand" href="/">Texas <span>Pavement Group</span></a>
   <nav><a href="/">Home</a><a href="/commercial">Commercial</a><a href="/residential">Residential</a><a href="/services">Services</a><a href="/service-areas">Service Areas</a><a href="/contact">Contact</a></nav>
-  <a class="tel" href="${tel}">${esc(p.phoneDisplay || '804-822-7715')}</a>
+  <a class="tel" href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a>
 </div></header>
 
 <section class="hero"><div class="wrap">
@@ -652,7 +660,7 @@ ${texasGallery(cityPage.city, photos)}
 
 <footer><div class="wrap">
   <div><strong>${esc(p.marketName)}</strong> — ${esc(p.basedIn || '')}</div>
-  <div>Call <a href="${tel}">${esc(p.phoneDisplay || '804-822-7715')}</a></div>
+  <div>Call <a href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></div>
   <div class="hublink">Part of the <a href="${HUB}">J. Worden &amp; Sons</a> network — 4th generation, since 1984.</div>
   <div style="margin-top:10px">&copy; ${new Date().getFullYear()} ${esc(p.marketName)} &mdash; a brand of J. Worden &amp; Sons Paving LLC.</div>
 </div></footer>

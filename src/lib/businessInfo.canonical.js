@@ -112,7 +112,11 @@ export const GOOGLE_MAPS_URL = `https://www.google.com/maps/place/?q=place_id:${
 // NOTE: This file is currently unused (not imported anywhere). The live
 // review aggregate is in reviews.js. Kept consistent so it can't become a
 // stale fabricated-number trap if this file is ever wired back in.
-import { AGGREGATE_RATING } from './reviews';
+// Explicit extension: Vite resolves either form, but plain Node ESM does not,
+// and scripts/build-brand-sites.mjs imports this file directly to get the one
+// canonical phone number. Without it the whole brand build dies with
+// ERR_MODULE_NOT_FOUND.
+import { AGGREGATE_RATING } from './reviews.js';
 export { AGGREGATE_RATING };
 
 // ──────────────────────────────────────────────────────────────────────────────
