@@ -294,6 +294,73 @@ async def scan_window(
     }
 
 
+async def messages_with_attachments(
+    refresh_token: str,
+    *,
+    before: Optional[datetime] = None,
+    days: int = BACKFILL_WINDOW_DAYS,
+    max_messages: int = 200,
+    timeout_seconds: float = 60.0,
+) -> dict[str, Any]:
+    """
+    One window's messages that carry files, with their full MIME payload.
+
+    Deliberately does NOT apply `_looks_like_work`. That filter exists to keep
+    a mailbox's ordinary life out of the evidence ledger, and it is right there.
+    It is wrong here: the photographs of finished work are frequently in a
+    message whose entire body is "see attached", which the filter would drop,
+    and losing an after-photograph because the covering note was terse is the
+    one outcome this whole exercise exists to prevent. Files are cheap to keep
+    and impossible to recover once the mailbox is gone.
+
+    Returns the payloads rather than records, because the caller's job is to
+    fetch bytes, not to grade evidence.
+    """
+    token = await mailbox_auth.access_token(refresh_token, timeout_seconds=timeout_seconds)
+    query = f"{window_query(before, days=days)} has:attachment"
+
+    seen = 0
+    messages: list[dict] = []
+
+    async with httpx.AsyncClient(timeout=timeout_seconds) as client:
+        page_token: Optional[str] = None
+        while seen < max_messages:
+            params = {"q": query, "maxResults": min(PAGE_SIZE, max_messages - seen)}
+            if page_token:
+                params["pageToken"] = page_token
+            listing = await _get(client, token, "/messages", **params)
+
+            ids = [m.get("id") for m in (listing.get("messages") or []) if m.get("id")]
+            if not ids:
+                break
+
+            for message_id in ids:
+                seen += 1
+                message = await _get(client, token, f"/messages/{message_id}", format="full")
+                messages.append(
+                    {
+                        "id": message_id,
+                        "thread_id": message.get("threadId"),
+                        "subject": _header(message, "Subject"),
+                        "from": _address_only(_header(message, "From")),
+                        "internal_date": message.get("internalDate"),
+                        "payload": message.get("payload") or {},
+                    }
+                )
+
+            page_token = listing.get("nextPageToken")
+            if not page_token:
+                break
+
+    end = before or datetime.now(timezone.utc)
+    return {
+        "query": query,
+        "messages_seen": seen,
+        "messages": messages,
+        "next_before": end - timedelta(days=days),
+    }
+
+
 def _with_internal_date(message: dict) -> dict:
     """
     Prefer Gmail's internalDate over the Date header.
