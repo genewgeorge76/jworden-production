@@ -327,6 +327,21 @@ try {
   console.warn('[sitemap] county pages skipped:', e.message);
 }
 
+// ── Texas city pages ─────────────────────────────────────────────────────────
+// Every one is backed by an invoiced job, so unlike the county pages there is
+// no indexability filter — a city with no invoiced work simply gets no page.
+// Read from the same module the brand builder uses, for the same reason given
+// above: this script runs in `prebuild`, before the manifest exists.
+const TEXAS_DOMAIN = 'texaspavementgroup.com';
+let TEXAS_CITY_PATHS = [];
+try {
+  const mod = await import(pathToFileURL(resolve(ROOT, 'src/data/texasCityPages.js')).href);
+  TEXAS_CITY_PATHS = mod.texasCityPages().map((c) => c.path);
+  console.log(`[sitemap] ${TEXAS_CITY_PATHS.length} Texas city pages for ${TEXAS_DOMAIN}`);
+} catch (e) {
+  console.warn('[sitemap] Texas city pages skipped:', e.message);
+}
+
 // ── 3. Build URL list ─────────────────────────────────────────────────────────
 const today = new Date().toISOString().slice(0, 10);
 // ONLY domains this project actually serves. Generating sitemaps here for
@@ -356,8 +371,27 @@ const DOMAINS = [
   // The training site. Its own domain, its own content, its own sitemap —
   // previously it had none, so /robots.txt and /sitemap.xml both 404'd and the
   // shell it served named the parked flagship as its canonical.
-  'jwordenuniversity.com'
+  'jwordenuniversity.com',
 ];
+
+// texaspavementgroup.com is BUILT here (6 brand pages + 19 city pages) but is
+// not yet SERVED here — the domain is attached to a different Vercel project,
+// which currently answers it with a competitive-intelligence dossier. Emitting
+// a sitemap now would advertise 19 URLs that 404 and push them to IndexNow on
+// every deploy, which is precisely the harm the list above exists to prevent.
+//
+// The pages are ready. Set TEXAS_DOMAIN_LIVE=1 in the build environment the
+// moment the domain is moved onto this project, and the sitemap and robots.txt
+// appear with it. Nothing else needs changing.
+if (process.env.TEXAS_DOMAIN_LIVE === '1') {
+  DOMAINS.push(TEXAS_DOMAIN);
+  console.log(`[sitemap] ${TEXAS_DOMAIN} is live — advertising its pages`);
+} else {
+  console.log(
+    `[sitemap] ${TEXAS_DOMAIN} built but not advertised ` +
+    `(set TEXAS_DOMAIN_LIVE=1 once the domain points at this project)`,
+  );
+}
 
 try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch (e) {}
 
@@ -453,6 +487,13 @@ for (const domain of DOMAINS) {
     if (COUNTY_INDEXABLE_PATHS.length && domain === COUNTY_DOMAIN) {
       for (const path of COUNTY_INDEXABLE_PATHS) {
         urls.push({ loc: SITE + path, lastmod: today, changefreq: 'monthly', priority: '0.8' });
+      }
+    }
+
+    // Texas city pages, for the Texas brand only.
+    if (TEXAS_CITY_PATHS.length && domain === TEXAS_DOMAIN) {
+      for (const path of TEXAS_CITY_PATHS) {
+        urls.push({ loc: SITE + path, lastmod: today, changefreq: 'monthly', priority: '0.85' });
       }
     }
   } else {

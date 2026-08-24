@@ -98,7 +98,9 @@ const ROUTES = [
 ];
 
 // ── Per-route copy. Written per market so no two pages are near-duplicates.
-function copyFor(key, p) {
+// Hoisted to module scope: this was declared INSIDE copyFor, so the Texas
+// city pages could not call it and every one of their meta descriptions
+// threw at build time. It is a pure string utility and belongs out here.
 /**
  * A meta description cut to length WITHOUT slicing through a word.
  *
@@ -120,6 +122,8 @@ function clampDescription(text, limit = 155) {
   const body = lastSpace > limit * 0.6 ? cut.slice(0, lastSpace) : cut;
   return `${body.replace(/[\s,;:.\u2014-]+$/, '')}\u2026`;
 }
+
+function copyFor(key, p) {
 
   const { marketName, primaryMetro, primaryRegion, stateAbbr } = p;
   const where = primaryMetro || primaryRegion || marketName;
@@ -230,6 +234,61 @@ function schema(p, route, canonical) {
   return JSON.stringify(data);
 }
 
+// The brand stylesheet. Inlined into the six main pages (they are landing
+// pages and one round-trip matters), and ALSO written to dist/brand.css —
+// which the county and city pages link. That file was referenced by every
+// county page and never actually written, so all 95 of them have been
+// shipping unstyled.
+const BRAND_CSS = `:root{--bg:#0f1114;--surface:#191c21;--surface2:#22262d;--line:#333941;--ink:#f4f6f8;--soft:#aeb5bf;--faint:#7e8691;--amber:#f2a71b;--amber2:#cf8a0c;--ink-on-amber:#17110250}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;background:rgba(15,17,20,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:-.01em}
+.brand span{color:var(--amber)}
+nav{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--soft)}
+nav a:hover{color:var(--amber)}
+.tel{font-weight:800;color:var(--amber);white-space:nowrap}
+.hero{padding:72px 0 60px;border-bottom:5px solid var(--amber);background:linear-gradient(180deg,#14171b,#0f1114)}
+.kicker{font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.08;letter-spacing:-.02em;margin:12px 0 14px;max-width:18ch}
+.lede{color:var(--soft);font-size:1.1rem;max-width:56ch}
+.cta{display:inline-block;margin-top:24px;background:var(--amber);color:#17110a;font-weight:800;padding:14px 26px;border-radius:6px;border:0;cursor:pointer;font-size:1rem}
+.cta:hover{background:var(--amber2)}
+.pad{padding:56px 0;border-bottom:1px solid var(--line)}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+.sub{color:var(--soft);margin-bottom:22px;max-width:60ch}
+p.body{color:var(--soft);max-width:66ch}
+ul.grid{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:18px}
+ul.grid li{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:8px;padding:14px 16px;color:var(--soft)}
+.spec{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:20px}
+.spec h3{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.spec p{color:var(--soft);font-size:.96rem}
+.note{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-top:20px;color:var(--soft);font-size:.95rem}
+.quote{background:linear-gradient(180deg,#14171b,#0f1114)}
+form{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;max-width:620px}
+label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+input,textarea{width:100%;margin-top:6px;background:#12151a;border:1px solid var(--line);border-radius:7px;color:var(--ink);padding:11px 13px;font:inherit;font-size:1rem}
+input:focus,textarea:focus{outline:2px solid var(--amber);outline-offset:1px;border-color:var(--amber)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+form button{width:100%;margin-top:10px;background:var(--amber);color:#17110a;font-weight:800;padding:15px;border:0;border-radius:7px;font-size:1.02rem;cursor:pointer}
+#msg{margin-top:14px;font-weight:600}
+#msg.ok{color:#7ed4a4}#msg.err{color:#f0a48f}
+footer{padding:40px 0 30px;color:var(--faint);font-size:.9rem}
+footer a{color:var(--amber)}
+.hublink{margin-top:14px;color:var(--soft)}
+ul.sites{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+ul.sites li{display:flex;align-items:baseline;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:8px;padding:14px 16px}
+ul.sites li strong{font-variant-numeric:tabular-nums;letter-spacing:.02em}
+ul.sites li span{color:var(--amber);font-weight:800;font-variant-numeric:tabular-nums}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:18px}
+.shots figure{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.shots img{display:block;width:100%;height:auto}
+.shots figcaption{padding:10px 14px;color:var(--faint);font-size:.85rem}`;
+
 function page(p, route) {
   const c = copyFor(route.key, p);
   const canonical = canonicalUrl(p.domain, route.path);
@@ -274,47 +333,7 @@ function page(p, route) {
 <meta name="geo.placename" content="${esc(p.geo?.placename || '')}">
 <script type="application/ld+json">${schema(p, route, canonical)}</script>
 <style>
-:root{--bg:#0f1114;--surface:#191c21;--surface2:#22262d;--line:#333941;--ink:#f4f6f8;--soft:#aeb5bf;--faint:#7e8691;--amber:#f2a71b;--amber2:#cf8a0c;--ink-on-amber:#17110250}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.65 'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-header{position:sticky;top:0;z-index:20;background:rgba(15,17,20,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px;flex-wrap:wrap}
-.brand{font-weight:800;letter-spacing:-.01em}
-.brand span{color:var(--amber)}
-nav{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--soft)}
-nav a:hover{color:var(--amber)}
-.tel{font-weight:800;color:var(--amber);white-space:nowrap}
-.hero{padding:72px 0 60px;border-bottom:5px solid var(--amber);background:linear-gradient(180deg,#14171b,#0f1114)}
-.kicker{font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
-h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.08;letter-spacing:-.02em;margin:12px 0 14px;max-width:18ch}
-.lede{color:var(--soft);font-size:1.1rem;max-width:56ch}
-.cta{display:inline-block;margin-top:24px;background:var(--amber);color:#17110a;font-weight:800;padding:14px 26px;border-radius:6px;border:0;cursor:pointer;font-size:1rem}
-.cta:hover{background:var(--amber2)}
-.pad{padding:56px 0;border-bottom:1px solid var(--line)}
-h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
-.sub{color:var(--soft);margin-bottom:22px;max-width:60ch}
-p.body{color:var(--soft);max-width:66ch}
-ul.grid{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:18px}
-ul.grid li{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:8px;padding:14px 16px;color:var(--soft)}
-.spec{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:20px}
-.spec h3{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
-.spec p{color:var(--soft);font-size:.96rem}
-.note{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-top:20px;color:var(--soft);font-size:.95rem}
-.quote{background:linear-gradient(180deg,#14171b,#0f1114)}
-form{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;max-width:620px}
-label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
-input,textarea{width:100%;margin-top:6px;background:#12151a;border:1px solid var(--line);border-radius:7px;color:var(--ink);padding:11px 13px;font:inherit;font-size:1rem}
-input:focus,textarea:focus{outline:2px solid var(--amber);outline-offset:1px;border-color:var(--amber)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:560px){.row{grid-template-columns:1fr}}
-form button{width:100%;margin-top:10px;background:var(--amber);color:#17110a;font-weight:800;padding:15px;border:0;border-radius:7px;font-size:1.02rem;cursor:pointer}
-#msg{margin-top:14px;font-weight:600}
-#msg.ok{color:#7ed4a4}#msg.err{color:#f0a48f}
-footer{padding:40px 0 30px;color:var(--faint);font-size:.9rem}
-footer a{color:var(--amber)}
-.hublink{margin-top:14px;color:var(--soft)}
+${BRAND_CSS}
 </style>
 </head>
 <body>
@@ -375,6 +394,14 @@ ${form}
 }
 
 // ── Load the brand profiles ───────────────────────────────────────────────────
+// Texas city pages, and the photo slot that stays empty until real Texas
+// photographs exist. Imported by URL like the profiles above, because this
+// script runs outside the Vite graph.
+const texasCityMod = await import(pathToFileURL(resolve(ROOT, 'src/data/texasCityPages.js')).href);
+const texasPhotoMod = await import(pathToFileURL(resolve(ROOT, 'src/data/texasPhotos.js')).href);
+const TEXAS_CITY_PAGES = texasCityMod.texasCityPages();
+const texasPhotosFor = texasPhotoMod.photosForCity;
+
 const profilesPath = resolve(ROOT, 'src/data/regionalMarketProfiles.js');
 if (!existsSync(profilesPath)) {
   console.error('[brand-sites] regionalMarketProfiles.js not found — nothing to build.');
@@ -473,6 +500,131 @@ ${refBlock}
 </html>`;
 }
 
+
+// ── Texas city pages ─────────────────────────────────────────────────────────
+// One page per Texas city with invoiced work. See src/data/texasCityPages.js
+// for why each one is differentiated by real facts rather than spun from a
+// template with the place name swapped — nineteen near-identical pages are
+// doorway pages, and they do not rank.
+
+/**
+ * The photo strip, or nothing at all.
+ *
+ * There are no Texas photographs in this repository yet — see
+ * src/data/texasPhotos.js. When the array is empty this returns an empty
+ * string and the section does not exist. It does NOT render a placeholder,
+ * a stock image, or a Virginia photograph with a Texas caption.
+ */
+function texasGallery(city, photos) {
+  if (!photos.length) return '';
+  return `<section class="pad"><div class="wrap"><h2>On site in ${esc(city)}</h2>
+<p class="sub">Finished work, photographed on the job.</p>
+<div class="shots">${photos.map((ph) =>
+  `<figure><img src="/texas/${esc(ph.file)}" alt="${esc(ph.alt)}" width="${ph.width}" height="${ph.height}" loading="lazy">`
+  + `<figcaption>${esc(ph.city)}, store ${esc(ph.store)} &mdash; ${esc(ph.taken)}</figcaption></figure>`
+).join('')}</div></div></section>`;
+}
+
+function texasCityPageHtml(p, cityPage, photos) {
+  const canonical = canonicalUrl(p.domain, cityPage.path);
+  const tel = `tel:+1${String(p.phoneDisplay || '804-822-7715').replace(/\D/g, '')}`;
+
+  // The stores, by number and value. This is the page's whole reason to exist:
+  // a reader can take a store number to the client and check it.
+  const siteRows = cityPage.sites.map((s) =>
+    `<li><strong>${esc(s.store)}</strong><span>${esc(usdShort(s.value))}</span></li>`).join('');
+
+  const ground = [
+    cityPage.subgrade ? `<div class="spec"><h3>The ground in ${esc(cityPage.region)}</h3><p>${esc(cityPage.subgrade)}</p></div>` : '',
+    cityPage.climate ? `<div class="spec"><h3>What fails here</h3><p>${esc(cityPage.climate)}</p></div>` : '',
+  ].join('');
+
+  const jsonld = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `Commercial asphalt paving in ${cityPage.city}, Texas`,
+    url: canonical,
+    provider: {
+      '@type': 'GeneralContractor',
+      name: p.marketName,
+      telephone: p.phoneDisplay,
+      parentOrganization: { '@type': 'Organization', name: 'J. Worden & Sons Paving LLC' },
+    },
+    areaServed: { '@type': 'City', name: `${cityPage.city}, Texas` },
+    serviceType: [
+      'Commercial asphalt paving', 'Parking lot resurfacing', 'Sealcoating',
+      'Line striping', 'Tar-and-chip surfacing',
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(cityPage.title)}</title>
+<meta name="description" content="${esc(clampDescription(cityPage.description))}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:title" content="${esc(cityPage.title)}">
+<meta property="og:description" content="${esc(clampDescription(cityPage.description))}">
+<meta property="og:url" content="${canonical}">
+<meta name="geo.region" content="US-TX">
+<meta name="geo.placename" content="${esc(cityPage.city)}, Texas">
+<script type="application/ld+json">${jsonld}</script>
+<link rel="stylesheet" href="/brand.css">
+</head>
+<body>
+<header><div class="wrap bar">
+  <a class="brand" href="/">Texas <span>Pavement Group</span></a>
+  <nav><a href="/">Home</a><a href="/commercial">Commercial</a><a href="/residential">Residential</a><a href="/services">Services</a><a href="/service-areas">Service Areas</a><a href="/contact">Contact</a></nav>
+  <a class="tel" href="${tel}">${esc(p.phoneDisplay || '804-822-7715')}</a>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <p class="kicker">${esc(cityPage.region || 'Texas')}</p>
+  <h1>Asphalt Paving in ${esc(cityPage.city)}, Texas</h1>
+  <p class="lede">${esc(cityPage.summary)}</p>
+  <a class="cta" href="/contact">Request a ${esc(cityPage.city)} Estimate</a>
+</div></section>
+
+<section class="pad"><div class="wrap">
+  <h2>What we invoiced in ${esc(cityPage.city)}</h2>
+  <p class="sub">Store numbers and job values as invoiced. Nothing here is an estimate or a projection.</p>
+  <ul class="sites">${siteRows}</ul>
+  <p class="body">${esc(
+    cityPage.siteCount > 1
+      ? `${cityPage.siteCount} sites, ${cityPage.valueLabel} invoiced in ${cityPage.city} alone. The programme ran to 23 sites across 19 Texas cities on one contract, with one point of contact and one invoice per location.`
+      : `${cityPage.valueLabel} invoiced in ${cityPage.city}, as part of a 23-site Texas programme across 19 cities — one contract, one point of contact, one invoice per location.`
+  )}</p>
+</div></section>
+
+${ground ? `<section class="pad"><div class="wrap"><h2>Building for ${esc(cityPage.city)} conditions</h2>${ground}</div></section>` : ''}
+
+${texasGallery(cityPage.city, photos)}
+
+<section class="pad"><div class="wrap">
+  <h2>Specification</h2>
+  <ul class="grid">${(p.localSpecs || []).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
+</div></section>
+
+<section class="pad"><div class="wrap">
+  <h2>What we do in ${esc(cityPage.city)}</h2>
+  <ul class="grid">${(p.services || []).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
+  <p style="margin-top:22px"><a class="cta" href="/contact">Call for a ${esc(cityPage.city)} estimate</a></p>
+</div></section>
+
+<footer><div class="wrap">
+  <div><strong>${esc(p.marketName)}</strong> — ${esc(p.basedIn || '')}</div>
+  <div>Call <a href="${tel}">${esc(p.phoneDisplay || '804-822-7715')}</a></div>
+  <div class="hublink">Part of the <a href="${HUB}">J. Worden &amp; Sons</a> network — 4th generation, since 1984.</div>
+  <div style="margin-top:10px">&copy; ${new Date().getFullYear()} ${esc(p.marketName)} &mdash; a brand of J. Worden &amp; Sons Paving LLC.</div>
+</div></footer>
+</body>
+</html>`;
+}
+
+const usdShort = (v) => `$${Number(v).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+
+
 let pagesWritten = 0;
 const manifest = [];
 
@@ -494,6 +646,23 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     writeFileSync(resolve(dir, 'index.html'), page(p, route), 'utf8');
     pagesWritten += 1;
   }
+  // The stylesheet the county and city pages link. Written per brand so each
+  // domain serves its own copy at /brand.css.
+  writeFileSync(resolve(DIST, 'brands', domain, 'brand.css'), BRAND_CSS, 'utf8');
+
+  // Texas city pages belong only on the Texas brand.
+  let cityCount = 0;
+  if (domain === 'texaspavementgroup.com') {
+    for (const cityPage of TEXAS_CITY_PAGES) {
+      const dir = resolve(DIST, 'brands', domain, cityPage.path.slice(1));
+      mkdirSync(dir, { recursive: true });
+      const photos = texasPhotosFor(cityPage.city);
+      writeFileSync(resolve(dir, 'index.html'), texasCityPageHtml(p, cityPage, photos), 'utf8');
+      cityCount += 1;
+      pagesWritten += 1;
+    }
+  }
+
   // Virginia counties belong only on the Virginia brand.
   let countyCount = 0;
   if (stateAbbr === 'VA') {
@@ -512,6 +681,11 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     routes: ROUTES.map((r) => r.path),
     stateAbbr,
     countyPages: countyCount,
+    cityPages: cityCount,
+    // The Texas city URLs the sitemap may advertise. Every one is backed by an
+    // invoiced job, so all of them are indexable — unlike the county pages,
+    // where only those with real facts attached are.
+    texasCityPaths: cityCount ? TEXAS_CITY_PAGES.map((c) => c.path) : [],
     // Exactly the county URLs the sitemap may advertise. Written here rather
     // than recomputed there so the two can never disagree — a page advertised
     // while noindexed is a contradiction Google reports as an error.
@@ -522,7 +696,8 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
   });
   console.log(
     `[brand-sites] ${domain} (${stateAbbr}) — ${ROUTES.length} pages` +
-    (countyCount ? ` + ${countyCount} county pages` : ''),
+    (countyCount ? ` + ${countyCount} county pages` : '') +
+    (cityCount ? ` + ${cityCount} Texas city pages` : ''),
   );
 }
 
