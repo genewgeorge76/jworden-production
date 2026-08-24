@@ -40,7 +40,9 @@ export const REVIEW_PLATFORMS = [
     // Folded into the blended star average as its 5-point equivalent (0.86 × 5 ≈ 4.3).
     rating: 4.3,
     recommendPercent: 86,
-    count: 40,
+    // 44, not 40. Public search on 2026-08-24 read "86% recommend with 44
+    // reviews" off the live Facebook page. The old figure was four short.
+    count: 44,
     url: 'https://www.facebook.com/jwordenpaving/',
     accent: '86% recommend',
   },

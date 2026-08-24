@@ -137,6 +137,18 @@ export const REVIEW_PROFILES = {
   houzz: 'https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484',
   bbb: 'https://www.bbb.org/us/va/chester/profile/paving-contractors/j-worden-sons-asphalt-paving-0603-9003773',
   angi: 'https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-paving-reviews-7601083.htm',
+  // Found by public search on 2026-08-24. All three were live and linked from
+  // NOTHING in this system — not the sites, not the review aggregate, not
+  // sameAs. An unlinked profile is a citation Google cannot connect back to the
+  // business, which is the entire job sameAs exists to do.
+  //
+  // The Yelp profile carries 19 photographs of real work, updated June 2025.
+  yelp: 'https://www.yelp.com/biz/j-worden-and-sons-paving-chester',
+  homeAdvisor: 'https://www.homeadvisor.com/rated.JWordenSonsPaving.99993720.html',
+  // experience.com has the business filed under LANDSCAPING, which is wrong and
+  // worth correcting at source. Linked anyway: a miscategorised citation still
+  // beats an unconnected one, and the category is fixable from the profile.
+  experience: 'https://www.experience.com/reviews/j-worden-and-sons-paving-22451772',
 };
 
 /** Schema.org `sameAs` array — the entity-disambiguation glue. */
@@ -146,6 +158,9 @@ export const SAME_AS = [
   REVIEW_PROFILES.houzz,
   REVIEW_PROFILES.bbb,
   REVIEW_PROFILES.angi,
+  REVIEW_PROFILES.yelp,
+  REVIEW_PROFILES.homeAdvisor,
+  REVIEW_PROFILES.experience,
   SOCIAL_PROFILES.facebook,
   SOCIAL_PROFILES.instagram,
   SOCIAL_PROFILES.linkedin,
