@@ -800,6 +800,20 @@ export const api = {
   getJobBookPins: (evidence = 'publishable') =>
     protectedRequest('GET', `/api/v1/jobbook/map?evidence=${encodeURIComponent(evidence)}`),
 
+  // ── The photo archive ─────────────────────────────────────────────────────
+  // /photo-proof had a scan endpoint, a pin importer, a cluster list and a
+  // review endpoint, and no interface over any of it. Nothing could be
+  // confirmed, so no photograph could ever become publishable proof. These
+  // back /photo-review.
+  getPhotoClusters: (params = {}) =>
+    protectedRequest('GET', `/api/v1/photo-proof/clusters${buildQS(params)}`),
+  reviewPhotoCluster: (id, body) =>
+    protectedRequest('POST', `/api/v1/photo-proof/clusters/${id}/review`, body),
+  scanPhotoArchive: (body = {}) =>
+    protectedRequest('POST', '/api/v1/photo-proof/scan', body),
+  importPhotoPins: (body) =>
+    protectedRequest('POST', '/api/v1/photo-proof/import-pins', body),
+
   getDiamondJobs: () => protectedRequest('GET', '/api/v1/operations/diamond-jobs'),
   syncDiamondJobs: () => protectedRequest('POST', '/api/v1/operations/sync-diamond'),
   searchGoogle: (q, num = 8) => protectedRequest('GET', `/api/v1/google-search?q=${encodeURIComponent(q)}&num=${num}`),
