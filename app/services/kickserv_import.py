@@ -188,6 +188,13 @@ def read_export(path: str, *, tenant_hint: Optional[str] = None) -> dict[str, An
 
     for job in jobs:
         job_id = job.get("id") or ""
+        # The import key. It has to be None, not "kickserv:job:", when the job
+        # carries no number: an f-string over a blank job_number yields a
+        # truthy key that EVERY unnumbered job shares, so the first one gets
+        # written and each one after it silently merges onto that same row.
+        # Callers key their upserts on this, so an empty key loses jobs.
+        job_number = (job.get("job_number") or "").strip()
+        job_key = f"kickserv:job:{job_number}" if job_number else None
         total_cents = to_cents(job.get("total")) or charge_cents.get(job_id, 0)
         all_cents += total_cents
         grade = grade_for(job, charge_cents.get(job_id, 0))
@@ -231,7 +238,7 @@ def read_export(path: str, *, tenant_hint: Optional[str] = None) -> dict[str, An
                 # is the address by another name.
                 "latitude": None if residential else latitude,
                 "longitude": None if residential else longitude,
-                "invoice_number": (job.get("job_number") or "").strip() or None,
+                "invoice_number": job_number or None,
                 "date_submitted": None,
                 "invoice_amount_cents": total_cents or None,
                 "job_total_cents": total_cents or None,
@@ -241,10 +248,10 @@ def read_export(path: str, *, tenant_hint: Optional[str] = None) -> dict[str, An
                 "job_status": (job.get("estimate_type") or "").strip() or None,
                 "completed_on": _date(job.get("completed_on")),
                 "scope": "; ".join(dict.fromkeys(scope_lines.get(job_id, [])))[:2000] or None,
-                "scope_source": f"kickserv:job:{job.get('job_number')}",
+                "scope_source": job_key,
                 "role": None,
                 "role_source": None,
-                "source_document": f"kickserv:job:{job.get('job_number')}",
+                "source_document": job_key,
                 "outstanding_issues": None,
                 "notes": (job.get("name") or "").strip() or None,
                 "evidence": grade,

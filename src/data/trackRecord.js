@@ -24,7 +24,21 @@
  * 2,263 customers' names, addresses, phone numbers and email addresses.
  */
 
-/** Jobs carrying a completion date in jobs.csv. */
+/**
+ * Jobs carrying a completion date in jobs.csv.
+ *
+ * CONTESTED — DO NOT TRUST THIS NUMBER UNTIL IT IS RE-DERIVED.
+ * app/services/kickserv_import.py's module docstring says 1,135 for the same
+ * query against the same export, while this says 1,132. Both cite the same
+ * $12,967,927.18. They cannot both be right, and this is the one that renders
+ * on the public homepage.
+ *
+ * Only the export can settle it, and the export is deliberately not committed.
+ * To resolve: run
+ *   python scripts/import_kickserv_export.py <export>.zip --dry-run
+ * and read the completed count it prints, then correct whichever of the two is
+ * wrong. Leaving the disagreement recorded here beats quietly picking one.
+ */
 export const COMPLETED_JOBS = 1132
 
 /**

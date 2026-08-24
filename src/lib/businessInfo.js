@@ -86,6 +86,40 @@ export const HOURS_DISPLAY_ALT = '24/7 Emergency Response Available'
 export { AGGREGATE_RATING, REVIEW_RATING, REVIEW_COUNT } from './reviews'
 
 export const CREDENTIALS = {
+  // ───────────────────────────────────────────────────────────────────────────
+  // UNRESOLVED — READ THIS BEFORE RELYING ON vaLicense.
+  //
+  // Verified against the Virginia DPOR License Lookup on 2026-08-24
+  // (http://dporweb.dpor.virginia.gov/LicenseLookup/AdvancedSearch), whose own
+  // data stamp read "last updated Sun Aug 23":
+  //
+  //   Name        J WORDEN & SONS PAVING LLC
+  //   Number      2705105644
+  //   Rank        Class A                      <- the claim is real
+  //   Specialty   Asphalt Paving and Seal Coating (PAV)
+  //   Class A effective  2016-06-08
+  //   Initial certification  2006-04-07
+  //   EXPIRATION  2024-06-30                   <- more than two years ago
+  //
+  // So the rank is genuine and the record is the right company, but the licence
+  // behind it shows lapsed. The string below is published in the present tense
+  // in visible copy and in the LocalBusiness JSON-LD on every domain.
+  //
+  // It has NOT been removed, deliberately. DPOR's own disclaimer allows for
+  // processing lag, a renewal may exist that the lookup has not posted, and
+  // stripping the core credential off twenty-odd public sites on one reading of
+  // one database is a bigger, less reversible act than leaving a flagged note
+  // here. No second or current licence exists for the company: the only other
+  // Worden contractor record (JOHN WORDEN, 2705010961, Class B, Highway/Heavy)
+  // expired 2006-05-31.
+  //
+  // Resolve one of two ways, then delete this block:
+  //   - renewed  -> confirm the current expiration date and record it here
+  //   - lapsed   -> the claim comes out of CREDENTIALS *and* out of
+  //                 BUSINESS_DESCRIPTION above, which is what feeds the schema
+  //
+  // Note also that the licence number itself is published nowhere on the sites.
+  // ───────────────────────────────────────────────────────────────────────────
   vaLicense:    'Virginia Class A Contractor',
   // BBB: profile is live but currently "Not Rated" and not accredited — no rating
   // claim is published. Restore only with documentation from BBB itself.
