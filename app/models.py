@@ -315,6 +315,75 @@ class OperatorNote(Base):
         return f"<OperatorNote id={self.id} kind={self.kind!r} status={self.status!r} title={self.title!r}>"
 
 
+class MailboxConnection(Base):
+    """
+    One mailbox this system may read, and how far it has read.
+
+    WHY A ROW PER MAILBOX
+    ─────────────────────
+    The work is spread across five addresses — jhworden1@, wordenpaving@,
+    j.wordenandsonspaving@, genewgeorge@ and the staff accounts — and a
+    connector authorises exactly one of them. Everything in the other four is
+    invisible until each is consented to separately, so each needs its own
+    credential, its own cursor and its own record of what it has produced.
+
+    WHAT IS STORED, AND WHAT IS NOT
+    ───────────────────────────────
+    A refresh token, which is a long-lived key to a person's entire mail. It is
+    encrypted at rest with MAILBOX_TOKEN_KEY and never returned by any endpoint
+    — the API reports that a mailbox is connected, never the means to connect
+    to it. Access tokens are not stored at all; they last an hour and are
+    cheaper to mint than to guard.
+
+    THE CURSOR
+    ──────────
+    A decade of mail cannot be read in one request, and a re-read that starts
+    from the beginning every time will never finish. `backfill_before` walks
+    backwards through history and `history_id` picks up new mail from the last
+    sync, so a scan is resumable and an interruption costs one page.
+    """
+
+    __tablename__ = "mailbox_connections"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(String(60), nullable=False, index=True)
+    email_address = Column(String(254), nullable=False, index=True)
+
+    # Encrypted. Never serialised out of this process.
+    refresh_token_encrypted = Column(Text, nullable=True)
+    scopes = Column(Text, nullable=True)
+    connected_at = Column(DateTime(timezone=True), nullable=True)
+    # Set when Google rejects the token — revoked consent, changed password, a
+    # policy change. A mailbox that has stopped working must say so rather than
+    # quietly returning nothing, which reads as "no work found here".
+    last_error = Column(Text, nullable=True)
+    last_error_at = Column(DateTime(timezone=True), nullable=True)
+
+    # Where the backfill has reached, walking backwards. Null means it has not
+    # started; a date means everything after it has been read.
+    backfill_before = Column(DateTime(timezone=True), nullable=True)
+    backfill_complete = Column(Integer, nullable=False, default=0)
+    # Gmail's own change marker, for picking up new mail cheaply.
+    history_id = Column(String(40), nullable=True)
+
+    last_scan_at = Column(DateTime(timezone=True), nullable=True)
+    messages_seen = Column(Integer, nullable=False, default=0)
+    records_created = Column(Integer, nullable=False, default=0)
+
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
+    )
+
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "email_address", name="uq_mailbox_per_tenant"),
+    )
+
+    def __repr__(self) -> str:
+        return f"<MailboxConnection {self.email_address} active={self.is_active}>"
+
+
 class ClientJobRecord(Base):
     """
     One site on a client's programme, and how strongly it is evidenced.
@@ -372,6 +441,35 @@ class ClientJobRecord(Base):
     city = Column(String(120), nullable=True)
     state = Column(String(60), nullable=True)
     postal_code = Column(String(20), nullable=True)
+
+    # WHAT WAS ACTUALLY DONE HERE, and in what capacity.
+    #
+    # "Some of these stores we built and paved, some we only did certain items."
+    # Those are different claims and the difference cuts both ways. A page
+    # saying the company built a restaurant where it only sealed the car park
+    # is false. A page listing a ground-up build under "paving" throws away the
+    # strongest thing in the portfolio.
+    #
+    # Both are null until a document says otherwise, like every other field
+    # here. The AIA contract for 2601 W Broad states its scope in five lines
+    # and names J Worden & Sons as the Contractor; a row on a programme
+    # spreadsheet states neither, and stays empty rather than inheriting the
+    # scope of the site next to it.
+    scope = Column(Text, nullable=True)
+    scope_source = Column(String(120), nullable=True)
+    # general_contractor | subcontractor | trade — never guessed from the
+    # client's identity, because the same client used this company both ways.
+    #
+    # On the KBP new builds the correspondence shows this company distributing
+    # the architect's plans to trades, running weekend schedules across several
+    # sites at once, and resolving hood wall details and clearance-bar bolt
+    # patterns with the engineer. That is a general contractor's work and the
+    # thread is the record of it — which is why role carries its own source
+    # rather than borrowing scope's. The two are established by different
+    # documents: a contract states the scope, a year of correspondence
+    # establishes the role.
+    role = Column(String(40), nullable=True)
+    role_source = Column(String(200), nullable=True)
 
     # Paved area, ONLY where a document states it. The contract for 2601 W
     # Broad St says "Mill down entire parking lot approx. 14,218 sq. ft." — a

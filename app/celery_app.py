@@ -42,6 +42,10 @@ celery_app = Celery(
         "app.tasks.site_health_beat",
         "app.tasks.backup_beat",
         "app.tasks.follow_up_beat",
+        # Without this the beat entry below schedules a task the worker has
+        # never imported, and every firing dies as "Received unregistered
+        # task" in the worker log while the schedule looks perfectly healthy.
+        "app.tasks.mailbox_beat",
     ],
 )
 
@@ -73,6 +77,14 @@ celery_app.conf.update(
         # Pre-load hot data into Redis every 5 minutes.
         # Keeps analytics, KPI wall, and CRM lead caches warm so the first
         # request after a TTL expiry is served from Redis, not the database.
+        # One window of each connected mailbox per hour. Hourly rather than
+        # continuous on purpose: a decade of mail is not urgent, and a gentle
+        # cadence keeps well inside Gmail's per-user quota with four or five
+        # mailboxes connected at once.
+        "scan-mailboxes-hourly": {
+            "task": "app.tasks.mailbox_beat.scan_connected_mailboxes",
+            "schedule": crontab(minute=17),
+        },
         "warm-cache-every-5m": {
             "task": "app.tasks.cache_warmer.warm_cache_task",
             "schedule": crontab(minute="*/5"),
