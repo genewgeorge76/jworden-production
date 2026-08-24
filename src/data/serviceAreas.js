@@ -1,9 +1,18 @@
 /**
  * Service area data for J. Worden & Sons Paving LLC.
  * All string values use double-quotes to avoid apostrophe escaping issues.
+ *
+ * The Route 29 / Blue Ridge corridor entries live in corridorServiceAreas.js
+ * and are concatenated below. They are kept in their own file because they
+ * carry their own provenance note — four of them are where the 2026 work
+ * actually went, four are the corridor around the address the business is
+ * moving to — and that reasoning belongs beside the data rather than in a
+ * commit message nobody re-reads.
  */
 
-export const SERVICE_AREAS = [
+import { CORRIDOR_SERVICE_AREAS } from './corridorServiceAreas.js'
+
+const RICHMOND_AREAS = [
   {
     slug: 'chester-va',
     city: 'Chester',
@@ -827,6 +836,8 @@ export const SERVICE_AREAS = [
     ],
   },
 ]
+
+export const SERVICE_AREAS = [...RICHMOND_AREAS, ...CORRIDOR_SERVICE_AREAS]
 
 export default SERVICE_AREAS
 
