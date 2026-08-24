@@ -362,6 +362,7 @@ export const REGIONAL_MARKET_PROFILES = {
       'Hospitality and retail lots phased around peak season',
       'Drainage-first design — slope, inlets and outfall before mat depth',
       'Sealcoating scheduled around coastal humidity and cure windows',
+      'Sealcoating and restoration on historic and older properties, where the existing asphalt and the access both constrain the work',
     ],
     marketName: 'Savannah Asphalt Paving',
     primaryRegion: 'Coastal Georgia',
@@ -387,7 +388,7 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '32.0809;-81.0912',
       icbm: '32.0809, -81.0912',
     },
-    serviceAreas: ['Savannah', 'Pooler', 'Richmond Hill', 'Tybee Island', 'Garden City', 'Port Wentworth', 'Hinesville', 'Wilmington Island', 'Statesboro', 'Vidalia', 'Bluffton', 'Hilton Head', 'Beaufort', 'Rincon', 'Springfield'],
+    serviceAreas: ['Savannah', 'Pooler', 'Richmond Hill', 'Tybee Island', 'Garden City', 'Port Wentworth', 'Hinesville', 'Wilmington Island', 'Statesboro', 'Vidalia', 'Bluffton', 'Hilton Head', 'Beaufort', 'Hardeeville', 'Rincon', 'Springfield'],
   },
 };
 
