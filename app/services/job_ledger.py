@@ -109,7 +109,14 @@ EVIDENCE_MEANING = {
 # into a valid-looking one. The parenthesised form requires the brand word in
 # front of it, because a bare "(142)" in a sentence is a number, not a store.
 _STORE_NUMBER = re.compile(r"\b(G\d{6})\b", re.IGNORECASE)
-_BRAND_STORE_NUMBER = re.compile(r"\b(KFC|Taco\s*Bell|Rite\s*Aid)\s*\(\s*(\d{1,5})\s*\)", re.IGNORECASE)
+# "KFC(369)" and "KFC (142)" — the parenthesised form, and "KFC #189",
+# which is the same identifier written the way the crew wrote it in a
+# subject line. Both appear in the KBP photo mail; only the first was
+# recognised, so every #-form store number was silently dropped.
+_BRAND_STORE_NUMBER = re.compile(
+    r"\b(KFC|Taco\s*Bell|Rite\s*Aid)\s*(?:\(\s*(\d{1,5})\s*\)|#\s*(\d{1,5})\b)",
+    re.IGNORECASE,
+)
 # A third form, from the facilities-management side. KleenCo's quote requests
 # head their store block "RIT11262 / Rite Aid / 4245 Holland Road, Virginia
 # Beach VA" — the prefix is the brand, so this one is already unambiguous and
@@ -142,7 +149,10 @@ def store_numbers_in(text: str) -> list[str]:
         seen.setdefault(match.group(1).upper(), None)
     for match in _BRAND_STORE_NUMBER.finditer(body):
         brand = re.sub(r"\s+", " ", match.group(1)).strip().upper()
-        seen.setdefault(f"{brand} {match.group(2)}", None)
+        # group(2) is the "(369)" form, group(3) the "#189" form; exactly one
+        # of them matched.
+        number = match.group(2) or match.group(3)
+        seen.setdefault(f"{brand} {number}", None)
     for match in _PREFIXED_STORE_NUMBER.finditer(body):
         seen.setdefault(match.group(1).upper(), None)
     return list(seen)
