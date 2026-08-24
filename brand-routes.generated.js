@@ -37,5 +37,31 @@ export default {
     "/contact",
     "/north-carolina",
     "/south-carolina"
+  ],
+  "atlantaasphaltpavingpros.com": [
+    "/",
+    "/commercial",
+    "/residential",
+    "/services",
+    "/service-areas",
+    "/contact",
+    "/acworth",
+    "/adamsville",
+    "/cartersville",
+    "/chamblee",
+    "/clarkston",
+    "/covington",
+    "/east-point",
+    "/holcomb-bridge",
+    "/kennesaw",
+    "/lovejoy",
+    "/pleasant-hill",
+    "/riverdale",
+    "/stone-mountain",
+    "/sugarloaf",
+    "/tucker",
+    "/union-city",
+    "/villa-rica",
+    "/big-chicken"
   ]
 };
