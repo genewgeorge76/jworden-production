@@ -2,6 +2,77 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { CheckCheck, CreditCard, PenTool, Landmark, Wallet, AlertCircle } from 'lucide-react'
 import { useTenant } from '../lib/TenantContext'
+import { ADDRESS, BUSINESS_NAME, PHONE_DISPLAY } from '../lib/businessInfo'
+
+/**
+ * PaymentInstructions — where to actually send the money.
+ *
+ * WHY THIS IS A COMPONENT AND NOT THREE LINES OF JSX
+ * ─────────────────────────────────────────────────
+ * The three lines it replaces were hardcoded and two of the three were
+ * fictional:
+ *
+ *   check  "123 Paving Way, Richmond, VA"                — not an address
+ *   wire   "Bank of America, Acct: 123456789,
+ *           Rtn: 987654321"                              — placeholder digits
+ *
+ * That is not a cosmetic defect. This block renders to a customer who has just
+ * agreed to pay a deposit and is looking for where to send it. A customer who
+ * followed the wire line would have sent money to a routing number that is not
+ * this company's, and a cheque posted to Paving Way comes back or does not.
+ *
+ * THE RULE
+ * ────────
+ * Real details, or none. Payment destinations come from configuration, never
+ * from a literal typed into a page, because a literal cannot be corrected
+ * without a deploy and cannot be verified by anyone reading the page. Where a
+ * destination is not configured, the customer is told to ring the office —
+ * which is slower, and correct, and is what any contractor does anyway.
+ *
+ * The cheque address is the exception and comes from businessInfo.canonical.js
+ * rather than config: it is the same address the site already publishes in its
+ * schema.org markup, and having a second copy of it here is precisely how the
+ * NAP profile drifted into fiction in the first place.
+ */
+function PaymentInstructions({ method, reference }) {
+    const memo = reference ? ` Memo: Est ${reference}.` : '';
+    const zelle = import.meta.env.VITE_PAYMENT_ZELLE || '';
+    const wireBank = import.meta.env.VITE_PAYMENT_WIRE_BANK || '';
+    const wireAccount = import.meta.env.VITE_PAYMENT_WIRE_ACCOUNT || '';
+    const wireRouting = import.meta.env.VITE_PAYMENT_WIRE_ROUTING || '';
+
+    const callTheOffice = (
+        <>
+            <strong>Payment details:</strong> Call {PHONE_DISPLAY} and we will give you the
+            details directly. We do not publish account numbers on a web page.
+            {memo && ` Reference Est ${reference}.`}
+        </>
+    );
+
+    if (method === 'check') {
+        return (
+            <>
+                <strong>Check details:</strong> Mail to {BUSINESS_NAME}, {ADDRESS.streetAddress},{' '}
+                {ADDRESS.addressLocality}, {ADDRESS.addressRegion} {ADDRESS.postalCode}.{memo}
+            </>
+        );
+    }
+    if (method === 'zelle') {
+        return zelle ? (
+            <><strong>Zelle details:</strong> Send to {zelle}.{memo}</>
+        ) : callTheOffice;
+    }
+    if (method === 'wire') {
+        return wireBank && wireAccount && wireRouting ? (
+            <>
+                <strong>Wire details:</strong> {wireBank}, Acct: {wireAccount}, Rtn: {wireRouting}.{memo}
+            </>
+        ) : callTheOffice;
+    }
+    return callTheOffice;
+}
+
+
 
 export default function EstimatePortal() {
   const { public_token } = useParams()
@@ -209,15 +280,10 @@ export default function EstimatePortal() {
                             Your project will be scheduled as soon as the funds clear.
                         </p>
                         <div style={{ background: 'white', padding: 16, borderRadius: 8, border: '1px dashed #d97706' }}>
-                            {estimate?.payment_method === 'zelle' && (
-                                <><strong>Zelle Details:</strong> Send to payments@jworden.com. Mention Est {estimate?.estimate_number}.</>
-                            )}
-                            {estimate?.payment_method === 'check' && (
-                                <><strong>Check Details:</strong> Mail to J. Worden & Sons, 123 Paving Way, Richmond, VA. Memo: Est {estimate?.estimate_number}.</>
-                            )}
-                            {estimate?.payment_method === 'wire' && (
-                                <><strong>Wire Details:</strong> Bank of America, Acct: 123456789, Rtn: 987654321. Memo: Est {estimate?.estimate_number}.</>
-                            )}
+                            <PaymentInstructions
+                                method={estimate?.payment_method}
+                                reference={estimate?.estimate_number}
+                            />
                         </div>
                     </div>
                 )}
