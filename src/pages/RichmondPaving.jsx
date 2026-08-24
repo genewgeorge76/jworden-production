@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import SEO from '../components/SEO'
 import { trackPhoneClick } from '../lib/analytics'
 import { AGGREGATE_RATING } from '../lib/reviews'
+import { ADDRESS, BUSINESS_NAME, GEO, PHONE_E164, SITE_URL } from '../lib/businessInfo'
 
 const RICHMOND_ZONES = [
   { area: 'The Fan & Museum District', detail: "Residential driveways and alley paving in Richmond City's historic neighborhoods — tight access, precision work, no margin for error." },
@@ -44,30 +45,37 @@ export default function RichmondPaving() {
   return (
     <div className="min-h-screen bg-black overflow-x-hidden selection:bg-brand-amber selection:text-black">
       <SEO 
-        title="Leading Richmond Asphalt Paving Contractor | Mid-Atlantic Asphalt"
+        title="Richmond Asphalt Paving Contractor | J. Worden & Sons"
         description="40+ years paving Richmond. Residential driveways, commercial parking lots, & VDOT approved road building in Chesterfield, Henrico & Richmond City."
         type="LocalBusiness"
         schema={{
           "@context": "https://schema.org",
           "@type": "PavingContractor",
-          "name": "Mid-Atlantic Asphalt Support",
-          "image": "https://midatlanticasphalt.com/work/imported/KFC/IMG_9500.JPG",
-          "@id": "https://midatlanticasphalt.com/richmond",
-          "url": "https://midatlanticasphalt.com/richmond",
-          "telephone": "+18044461296",
+          // Identity, and it has to be ours. This block previously named
+          // "Mid-Atlantic Asphalt Support" and pointed @id, url and image at
+          // midatlanticasphalt.com — a domain we do not own, whose /richmond
+          // path 404s. In structured data @id and url ARE the entity, so this
+          // page was telling Google that Richmond paving is that domain's
+          // entity, not ours, while carrying our phone number. Richmond is the
+          // home market; this was handing it away on the strength of a
+          // copy-paste. Everything visible on the page was already ours.
+          "name": BUSINESS_NAME,
+          // The photographs are in this repository. There is no reason to
+          // hotlink them from anywhere, least of all somewhere they 404.
+          "image": `${SITE_URL}/work/imported/KFC/IMG_9500.JPG`,
+          "@id": `${SITE_URL}/richmond-paving`,
+          "url": `${SITE_URL}/richmond-paving`,
+          "telephone": PHONE_E164,
           "priceRange": "$$",
+          // The real registered address, from the one file that holds it.
+          // "Regional HQ" is not a street and is not valid in a PostalAddress.
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Regional HQ",
-            "addressLocality": "Richmond",
-            "addressRegion": "VA",
-            "postalCode": "23219",
-            "addressCountry": "US"
+            ...ADDRESS
           },
           "geo": {
             "@type": "GeoCoordinates",
-            "latitude": 37.5407,
-            "longitude": -77.4360
+            ...GEO
           },
           "openingHoursSpecification": {
             "@type": "OpeningHoursSpecification",
@@ -153,7 +161,7 @@ export default function RichmondPaving() {
               </div>
               <p className="text-white/60 text-lg leading-relaxed mb-6">
                 We're fully licensed and insured for both residential and heavy commercial scope throughout the Commonwealth of Virginia.
-                When you hire Mid-Atlantic Asphalt, you're getting heavy iron and full liability protection.
+                When you hire J. Worden &amp; Sons, you&rsquo;re getting heavy iron and full liability protection.
               </p>
               <ul className="space-y-4">
                 {[

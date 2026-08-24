@@ -52,10 +52,23 @@ export const SMS_E164      = '+18044461296'
 export const SMS_PREFILL   = 'Hi, I saw your website and want a free quote.'
 export const EMAIL         = 'j.wordenandsonspaving@gmail.com'
 
+// HomeSchema.jsx publishes Object.values() of this as the homepage `sameAs`,
+// so a dead URL here is an identity claim pointing at a 404. Every entry was
+// checked on 2026-08-24 and two were wrong. The other schema path builds its
+// sameAs from social.js, and the two files disagreed — which is how a site
+// ends up naming two different Instagram accounts as itself.
 export const SOCIAL_PROFILES = {
-  facebook:  'https://www.facebook.com/jwordenpaving',
-  linkedin:  'https://www.linkedin.com/company/j-worden-sons-asphalt-paving-inc/',
-  instagram: 'https://www.instagram.com/j.worden_paving/',
+  // Trailing slash: the bare /jwordenpaving returns 400 to a crawler.
+  facebook:  'https://www.facebook.com/jwordenpaving/',
+  // Was /company/j-worden-sons-asphalt-paving-inc/ — 404. This showcase page
+  // is the one that resolves, and the one social.js already used.
+  linkedin:  'https://www.linkedin.com/showcase/j.-worden-%26-sons-paving-l.l.c./',
+  // Was j.worden_paving, which social.js did not agree with. Instagram
+  // rate-limits this check (429, never 404), so neither handle could be proved
+  // dead — but jwordensons returns 200 and is what the more-maintained file
+  // uses, so the site now names one account instead of two. If j.worden_paving
+  // is the real one, change it here and in social.js together.
+  instagram: 'https://www.instagram.com/jwordensons',
   houzz:     'https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484',
 }
 
