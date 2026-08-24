@@ -784,6 +784,22 @@ export const api = {
   // ── Supply Chain Pricing (MAX) ─────────────────────────────────────────────
   getCommodityPrices: () => protectedRequest('GET', '/api/v1/materials/commodities'),
   authenticateWithPin,
+  // ── The job book ──────────────────────────────────────────────────────
+  // The same shape as the Diamond portal, over this company's own records
+  // instead of a vendor's. Kickserv held 2,610 jobs behind somebody else's
+  // subscription and the account was lost twice; this reads the copy that
+  // lives in our database.
+  getJobBookSummary: () => protectedRequest('GET', '/api/v1/jobbook/summary'),
+  getJobBookJobs: (params = {}) =>
+    protectedRequest('GET', `/api/v1/jobbook/jobs?${new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== '' && v != null)
+    ).toString()}`),
+  getJobBookJob: (id) => protectedRequest('GET', `/api/v1/jobbook/jobs/${id}`),
+  createJobBookJob: (body) => protectedRequest('POST', '/api/v1/jobbook/jobs', body),
+  updateJobBookJob: (id, body) => protectedRequest('PATCH', `/api/v1/jobbook/jobs/${id}`, body),
+  getJobBookPins: (evidence = 'publishable') =>
+    protectedRequest('GET', `/api/v1/jobbook/map?evidence=${encodeURIComponent(evidence)}`),
+
   getDiamondJobs: () => protectedRequest('GET', '/api/v1/operations/diamond-jobs'),
   syncDiamondJobs: () => protectedRequest('POST', '/api/v1/operations/sync-diamond'),
   searchGoogle: (q, num = 8) => protectedRequest('GET', `/api/v1/google-search?q=${encodeURIComponent(q)}&num=${num}`),
