@@ -3,11 +3,16 @@ import { Helmet } from 'react-helmet-async';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  Shield, Brain, Zap, Camera, CloudRain, CheckCircle, ArrowRight,
-  Menu, X, Globe, HardHat, Award, MapPin,
+  Shield, Brain, Camera, CloudRain, CheckCircle, ArrowRight,
+  Menu, X, Globe,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BUSINESS_FOUNDING_YEAR } from '@/lib/businessInfo';
+import {
+  COMPLETED_JOBS, COMPLETED_VALUE_USD, COMMERCIAL_JOBS, COMMERCIAL_STATES,
+  FIRST_COMPLETION, LAST_COMPLETION, LARGEST_CONTRACT, SHOWCASE_CONTRACT,
+  STANDARDS, money,
+} from '@/data/trackRecord';
 
 /**
  * MarketingHome — the storefront for The Worden Standard OS.
@@ -62,12 +67,6 @@ const TONE = {
 };
 
 // Straight from businessInfo.js. No rounding up, no "trusted by thousands".
-const CREDENTIALS = [
-  { icon: HardHat, stat: `${YEARS_IN_TRADE} years`, label: `Family-run since ${FOUNDED}, 4th generation` },
-  { icon: Shield,  stat: 'Class A',                 label: 'Virginia Contractor · A+ BBB since 1994' },
-  { icon: MapPin,  stat: '12+ states',              label: 'Residential, commercial, QSR, REIT, municipal' },
-  { icon: Award,   stat: 'Top 75',                  label: 'Pavement Magazine · Best of Houzz 4×' },
-];
 
 const TIERS = [
   {
@@ -284,84 +283,246 @@ export default function MarketingHome() {
       </nav>
 
       <main id="main">
-        {/* HERO */}
-        <section className="relative pt-40 pb-24 overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] max-w-[100vw] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] max-w-[100vw] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+        {/* HERO
+            Rebuilt away from the centred-headline-over-glowing-orbs layout,
+            which is what every SaaS page looks like and is why this one read as
+            "fine". The asymmetry is the argument: the claim on the left is
+            ordinary, and the panel on the right is the thing no competitor can
+            copy — a real job book with the evidence grade against each figure.
 
-          <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <motion.div
-              {...rise(0)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-amber-500/30 text-amber-500 text-sm font-medium mb-8"
-            >
-              <Zap className="w-4 h-4" aria-hidden="true" />
-              {/* Was "Version 2.0 is now live" — unverifiable, and it ages badly.
-                  This says something true and permanent instead. */}
-              <span>Built on a jobsite, not in a boardroom</span>
-            </motion.div>
+            The proof mechanism IS the product. Showing it working on this
+            company's own numbers demonstrates the pitch instead of asserting
+            it. */}
+        <section className="relative pt-32 pb-20 overflow-hidden">
+          {/* Striping. Two hairlines at the angle of a parking bay, which is a
+              material reference rather than a decorative blur. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(72deg, #F2C230 0 2px, transparent 2px 96px)',
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"
+          />
 
-            <motion.h1
-              {...rise(0.1)}
-              className="text-5xl sm:text-6xl md:text-8xl font-black text-white tracking-tight leading-[1.05] mb-8"
-            >
-              The Operating System for
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">
-                Blue-Collar Empires.
-              </span>
-            </motion.h1>
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
 
-            <motion.p {...rise(0.2)} className="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto mb-12">
-              Stop guessing on bids. Stop losing leads to voicemail. Drone-assisted takeoffs,
-              weather-aware scheduling and an AI dispatcher — built inside a working paving company
-              that has been running crews since {FOUNDED}.
-            </motion.p>
+              {/* ── The claim ─────────────────────────────────────────── */}
+              <div>
+                <motion.div
+                  {...rise(0)}
+                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-amber-400/90"
+                >
+                  <span className="h-px w-8 bg-amber-400/60" aria-hidden="true" />
+                  Built on a jobsite, not in a boardroom
+                </motion.div>
 
-            <motion.div {...rise(0.3)} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              {/* Every CTA on this page pointed at /operations/register, which is
-                  not a route — all four conversion paths fell through to the SPA
-                  catch-all. They go to /register now, which is real. */}
-              <Button
-                asChild
-                className="h-14 px-8 text-lg bg-amber-500 hover:bg-amber-400 text-[#020408] font-bold rounded-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] w-full sm:w-auto"
-              >
-                <Link to="/register">
-                  Start Your Empire
-                  <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="h-14 px-8 text-lg border-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl w-full sm:w-auto"
-              >
-                <Link to="/command-center">Access Cockpit</Link>
-              </Button>
-            </motion.div>
+                <motion.h1
+                  {...rise(0.08)}
+                  className="mt-6 font-display uppercase text-white leading-[0.86] tracking-[0.01em]
+                             text-[clamp(3rem,9vw,6.5rem)] text-balance"
+                >
+                  We ran the crews
+                  <span className="block text-amber-400">before we wrote the software.</span>
+                </motion.h1>
+
+                <motion.p {...rise(0.16)} className="mt-7 text-lg text-slate-400 max-w-xl leading-relaxed">
+                  {COMPLETED_JOBS.toLocaleString()} completed jobs and{' '}
+                  <span className="text-white font-semibold">{money(COMPLETED_VALUE_USD)}</span> of
+                  finished work, across {COMMERCIAL_STATES.length} states, between{' '}
+                  {FIRST_COMPLETION.slice(0, 4)} and {LAST_COMPLETION.slice(0, 4)}. Every figure on
+                  this page comes out of the job book we ran the business on — and the panel beside
+                  it shows what each one rests on.
+                </motion.p>
+
+                <motion.div {...rise(0.24)} className="mt-9 flex flex-col sm:flex-row gap-3">
+                  <Button
+                    asChild
+                    className="h-13 px-7 text-base bg-amber-400 hover:bg-amber-300 text-[#0B0D10] font-bold rounded-lg"
+                  >
+                    <Link to="/register">
+                      Start free
+                      <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-13 px-7 text-base border-white/15 hover:bg-white/5 text-white font-semibold rounded-lg"
+                  >
+                    <a href="#proof">See the evidence</a>
+                  </Button>
+                </motion.div>
+              </div>
+
+              {/* ── The evidence ──────────────────────────────────────── */}
+              <motion.div {...rise(0.2)}>
+                <div className="rounded-2xl border border-white/10 bg-[#0F1319] overflow-hidden shadow-2xl shadow-black/60">
+                  <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.07] bg-white/[0.02]">
+                    <span className="font-display uppercase tracking-[0.18em] text-xs text-slate-400">
+                      Job book — verified
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+                      Completed
+                    </span>
+                  </div>
+
+                  <dl className="divide-y divide-white/[0.06]">
+                    {[
+                      ['Contract', SHOWCASE_CONTRACT.instrument],
+                      ['Site', SHOWCASE_CONTRACT.site],
+                      ['Contract sum', money(SHOWCASE_CONTRACT.sumUSD)],
+                      ['Area', `${SHOWCASE_CONTRACT.areaSqFt.toLocaleString()} sq ft`],
+                      ['Dated', SHOWCASE_CONTRACT.date],
+                    ].map(([k, v]) => (
+                      <div key={k} className="flex gap-4 px-5 py-3">
+                        <dt className="w-28 shrink-0 text-xs uppercase tracking-wider text-slate-500 pt-0.5">
+                          {k}
+                        </dt>
+                        <dd className="text-sm text-slate-200 font-medium">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+
+                  <p className="px-5 py-3 text-xs text-slate-500 leading-relaxed border-t border-white/[0.06] bg-white/[0.015]">
+                    {SHOWCASE_CONTRACT.scope}.
+                  </p>
+                </div>
+
+                <p className="mt-3 text-xs text-slate-500 leading-relaxed">
+                  One real contract, stated in full. A dozen round numbers would be easier to write
+                  and worth less — this is the grading the platform applies to your work too.
+                </p>
+              </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* PROOF — what the page was missing entirely.
-            A contractor deciding whether to hand over $199-999 a month is asking
-            one question: who are you. Four decades, a Class A licence and a QSR
-            portfolio answer it better than any feature list. */}
-        <section id="proof" className="py-20 border-y border-white/5 bg-[#050810] scroll-mt-20">
+        {/* STANDARDS — a striping band. Four non-negotiables that appear on
+            every proposal this company issues, which is a more specific claim
+            than any adjective. */}
+        <section className="border-y border-white/[0.07] bg-[#080A0E]">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/[0.06]">
+            {STANDARDS.map(({ value, label, note }) => (
+              <div key={label} className="px-5 py-7 first:pl-0 last:pr-0">
+                <div className="font-display uppercase text-3xl text-amber-400 leading-none tracking-wide">
+                  {value}
+                </div>
+                <div className="mt-2 text-sm text-white font-semibold leading-tight">{label}</div>
+                {note && <div className="mt-1 text-xs text-slate-500">{note}</div>}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* PROOF
+            The credential tiles here used to be round numbers — "4 decades",
+            "12+ states". They were true and they were unfalsifiable, which is
+            the same shape as the fabricated store database this repository
+            served for months. These come out of the job book with the query
+            that produced them, and the one that would look best is deliberately
+            absent: all 2,610 rows sum to $41,295,234.93, and that figure
+            includes 66 jobs marked lost. */}
+        <section id="proof" className="py-24 bg-[#050810] scroll-mt-20">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {CREDENTIALS.map(({ icon: Icon, stat, label }) => (
-                <div key={stat} className="text-center">
-                  <Icon className="w-6 h-6 text-amber-500 mx-auto mb-3" aria-hidden="true" />
-                  <div className="text-2xl sm:text-3xl font-black text-white">{stat}</div>
-                  <div className="text-xs sm:text-sm text-slate-500 mt-1 leading-snug">{label}</div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-amber-400/90">
+              The job book, 2013&ndash;2022
+            </p>
+            <h2 className="mt-4 font-display uppercase text-white leading-[0.9] tracking-wide text-[clamp(2.25rem,5vw,3.75rem)] max-w-3xl text-balance">
+              Software written by the contractor, not about him.
+            </h2>
+
+            <div className="mt-12 grid gap-px sm:grid-cols-2 lg:grid-cols-4 bg-white/[0.07] border border-white/[0.07] rounded-xl overflow-hidden">
+              {[
+                {
+                  value: COMPLETED_JOBS.toLocaleString(),
+                  label: 'Completed jobs',
+                  note: 'carrying a completion date',
+                },
+                {
+                  value: money(COMPLETED_VALUE_USD),
+                  label: 'Of finished work',
+                  note: 'a floor, not a total',
+                },
+                {
+                  value: COMMERCIAL_JOBS.toLocaleString(),
+                  label: 'Commercial sites',
+                  note: `across ${COMMERCIAL_STATES.length} states`,
+                },
+                {
+                  value: money(LARGEST_CONTRACT.sumUSD),
+                  label: 'Largest contract',
+                  note: `${LARGEST_CONTRACT.divisions.length} CSI divisions`,
+                },
+              ].map(({ value, label, note }) => (
+                <div key={label} className="bg-[#050810] px-6 py-8">
+                  <div className="font-display uppercase text-4xl text-white leading-none tracking-wide tabular-nums">
+                    {value}
+                  </div>
+                  <div className="mt-3 text-sm font-semibold text-slate-200">{label}</div>
+                  <div className="mt-1 text-xs text-slate-500">{note}</div>
                 </div>
               ))}
             </div>
 
-            <p className="text-center text-slate-400 max-w-3xl mx-auto mt-16 text-lg leading-relaxed">
+            {/* The number that is missing, said out loud. A page that shows its
+                own restraint is more persuasive than one that shows its best
+                figure. */}
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-400/20 bg-amber-400/[0.04] px-5 py-4">
+              <Shield className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
+              <p className="text-sm text-slate-300 leading-relaxed">
+                <span className="text-white font-semibold">What is not on this page:</span> the job
+                book&rsquo;s 2,610 rows sum to $41,295,234.93. That figure includes 66 jobs marked
+                <em> lost</em> and 868 that were priced and never marked finished, so it is not
+                stated as a track record. {money(COMPLETED_VALUE_USD)} is the part with a
+                completion date behind it &mdash; and it undercounts, because plenty of finished
+                work never had the box ticked.
+              </p>
+            </div>
+
+            <div className="mt-14 grid lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
+              <div>
+                <h3 className="font-display uppercase text-2xl text-white tracking-wide">
+                  Not only paving
+                </h3>
+                <p className="mt-4 text-slate-400 leading-relaxed">
+                  The largest job in the book is a ground-up restaurant build, carried across eleven
+                  divisions on one contract. A paving subcontractor does not carry masonry, openings,
+                  plumbing and HVAC, electrical and roofing &mdash; which is what makes this the
+                  evidence for the general-contracting claim rather than an assertion of it.
+                </p>
+                <p className="mt-4 text-slate-500 text-sm">
+                  {LARGEST_CONTRACT.reference} &middot; {money(LARGEST_CONTRACT.sumUSD)}
+                </p>
+              </div>
+
+              <ol className="grid sm:grid-cols-2 gap-x-8 gap-y-0 text-sm">
+                {LARGEST_CONTRACT.divisions.map((d, i) => (
+                  <li
+                    key={d}
+                    className="flex gap-3 py-2.5 border-b border-white/[0.06] text-slate-300"
+                  >
+                    <span className="font-display text-amber-400/70 tabular-nums w-6 shrink-0">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    {d}
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <p className="text-slate-400 max-w-3xl mt-16 text-lg leading-relaxed">
               This was never a startup idea. It is the software a{' '}
               <span className="text-white font-semibold">4th-generation paving company</span> wrote
-              for itself — after {YEARS_IN_TRADE} years of losing bids to bad measurements, losing
-              days to weather it could have forecast, and losing leads to a phone nobody answered at
-              six o&apos;clock. Every workflow in here earned its place on a jobsite first.
+              for itself &mdash; after {YEARS_IN_TRADE} years of losing bids to bad measurements,
+              losing days to weather it could have forecast, and losing leads to a phone nobody
+              answered at six o&rsquo;clock. Every workflow in here earned its place on a jobsite
+              first.
             </p>
           </div>
         </section>
