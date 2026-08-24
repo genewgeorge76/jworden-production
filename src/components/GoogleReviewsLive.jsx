@@ -25,7 +25,7 @@ export default function GoogleReviewsLive() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Silent if not configured — we keep LocalReviews as the fallback.
+  // Silent if not configured — /reviews renders the verified fallback (src/lib/reviews.js).
   if (loading) return null;
   if (!data?.configured || !data?.reviews?.length) return null;
 

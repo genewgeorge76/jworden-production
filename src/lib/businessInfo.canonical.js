@@ -34,7 +34,7 @@ export const ALTERNATE_NAMES = [
 
 export const BUSINESS_DESCRIPTION =
   '4th-generation family asphalt paving contractor founded in Chester, Virginia in 1984. ' +
-  'Virginia Class A Contractor. BBB A+ rated since 1994. ' +
+  'Virginia Class A Contractor. ' +
   'Multi-year Best of Houzz Service Award winner. ' +
   'Pavement Magazine Top 75 Contractor. ' +
   'National preferred contractor for KFC, Taco Bell, and Arby\u2019s. ' +
@@ -85,8 +85,8 @@ export const HOURS_DISPLAY_ALT = '24/7 Emergency Response Available';
 // ──────────────────────────────────────────────────────────────────────────────
 export const CREDENTIALS = {
   vaLicense: 'Virginia Class A Contractor',
-  bbbRating: 'A+',
-  bbbSince: '1994',
+  // BBB: profile is live but currently "Not Rated" and not accredited — no rating
+  // claim is published. Restore only with documentation from BBB itself.
   pavementAward: 'Pavement Magazine Top 75 Contractor',
   houzzAwards: [
     'Best of Houzz Service 2014',
@@ -128,8 +128,8 @@ export const SOCIAL_PROFILES = {
 export const REVIEW_PROFILES = {
   google: GOOGLE_REVIEWS_URL,
   googleMaps: GOOGLE_MAPS_URL,
-  houzz: 'https://www.houzz.com/professionals/paving-contractors/j-worden-sons-paving-pfvwus-pf~174057',
-  bbb: 'https://www.bbb.org/us/va/chester/profile/paving-contractors/j-worden-and-sons-paving-llc',
+  houzz: 'https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484',
+  bbb: 'https://www.bbb.org/us/va/chester/profile/paving-contractors/j-worden-sons-asphalt-paving-0603-9003773',
   angi: 'https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-paving-reviews-7601083.htm',
 };
 

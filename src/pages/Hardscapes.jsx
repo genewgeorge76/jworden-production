@@ -133,7 +133,7 @@ export default function Hardscapes() {
           <p className="text-center text-xs font-bold uppercase tracking-widest text-white/40 mb-6">Houzz Awards &amp; Recognition</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <a
-              href="https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947"
+              href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 group"
@@ -149,7 +149,7 @@ export default function Hardscapes() {
               {['2023', '2016', '2015', '2014'].map(year => (
                 <a
                   key={year}
-                  href="https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947"
+                  href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex flex-col items-center border border-[#4dbc15]/40 hover:border-[#4dbc15] bg-black px-4 py-2 transition-colors"

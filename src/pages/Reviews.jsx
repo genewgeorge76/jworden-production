@@ -118,7 +118,7 @@ export default function Reviews() {
             <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground mb-5">Houzz Awards &amp; Recognition</p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <a
-                href="https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947"
+                href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-[#111] border border-[#4dbc15]/50 hover:border-[#4dbc15] px-4 py-3 transition-colors group"
@@ -132,7 +132,7 @@ export default function Reviews() {
               {['2023', '2016', '2015', '2014'].map(year => (
                 <a
                   key={year}
-                  href="https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947"
+                  href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex flex-col items-center bg-[#111] border border-[#4dbc15]/40 hover:border-[#4dbc15] px-3 py-2 transition-colors"
@@ -245,7 +245,7 @@ export default function Reviews() {
               Open in Google Maps
             </a>
             <a
-              href="https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947"
+              href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow hover:shadow-md transition text-sm font-semibold text-gray-800"
@@ -254,7 +254,7 @@ export default function Reviews() {
               View on Houzz
             </a>
             <a
-              href="https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-asphalt-paving-reviews-"
+              href="https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-paving-reviews-7601083.htm"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow hover:shadow-md transition text-sm font-semibold text-gray-800"
@@ -290,7 +290,7 @@ export default function Reviews() {
               Review on Google ⭐
             </a>
             <a
-              href="https://www.houzz.com/professionals/paving-contractors/j-worden-sons-asphalt-paving-pfvwus-pf~48430947"
+              href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#4dbc15] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#3da010] transition"
@@ -300,7 +300,7 @@ export default function Reviews() {
               Review on Houzz
             </a>
             <a
-              href="https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-asphalt-paving-reviews-"
+              href="https://www.angi.com/companylist/us/va/chester/j-worden-and-sons-paving-reviews-7601083.htm"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#FF6153] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#e54f43] transition"

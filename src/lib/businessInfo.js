@@ -41,7 +41,7 @@ export const BUSINESS_DESCRIPTION  =
   'Paved 100+ KFC locations across Georgia and the Southeast. ' +
   'Pavement Magazine Top Contractor (Paving 75). ' +
   'Best of Houzz Service Award 2014, 2015, 2016, 2023. ' +
-  'Virginia Class A Contractor. A+ BBB since 1994. ' +
+  'Virginia Class A Contractor. ' +
   'Serving Virginia, Minnesota, the Carolinas, Georgia, and Florida.'
 export const BUSINESS_FOUNDING_YEAR = '1984'
 
@@ -56,7 +56,7 @@ export const SOCIAL_PROFILES = {
   facebook:  'https://www.facebook.com/jwordenpaving',
   linkedin:  'https://www.linkedin.com/company/j-worden-sons-asphalt-paving-inc/',
   instagram: 'https://www.instagram.com/j.worden_paving/',
-  houzz:     'https://www.houzz.com/professionals/paving-contractors/j-worden-sons-paving-pfvwus-pf~174057',
+  houzz:     'https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484',
 }
 
 // VERIFIED: "Ware Bottom Spring Rd" — NO trailing S
@@ -87,8 +87,8 @@ export { AGGREGATE_RATING, REVIEW_RATING, REVIEW_COUNT } from './reviews'
 
 export const CREDENTIALS = {
   vaLicense:    'Virginia Class A Contractor',
-  bbbRating:    'A+',
-  bbbSince:     '1994',
+  // BBB: profile is live but currently "Not Rated" and not accredited — no rating
+  // claim is published. Restore only with documentation from BBB itself.
   pavementAward:'Pavement Magazine Top 75 Contractor (2018)',
   houzzAwards:  ['Best of Houzz Service 2014','Best of Houzz Service 2015','Best of Houzz Service 2016','Best of Houzz Service 2023'],
 }
