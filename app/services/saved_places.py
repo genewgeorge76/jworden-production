@@ -177,3 +177,87 @@ def read(data: bytes | str) -> list[dict]:
     if data[:2] == b"PK" or data.lstrip()[:1] == b"<":
         return from_kml(data)
     return from_geojson(data.decode("utf-8", errors="replace"))
+
+
+# ── Writing pins, not just reading them ─────────────────────────────────────
+
+def _xml_escape(text: str) -> str:
+    return (
+        str(text or "")
+        .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
+
+def to_kml(sites: list[dict], *, title: str = "J. Worden & Sons — verified jobsites") -> str:
+    """
+    Verified jobsites as a KML document, ready to import into Google My Maps.
+
+    WHY KML AND NOT A RENDERED MAP
+    ──────────────────────────────
+    A file the operator imports becomes a map he owns, on his own account, that
+    he can restyle, share and keep. A picture of a map is a picture.
+
+    WHAT GOES ON IT
+    ───────────────
+    Only sites whose evidence may be published, and each pin carries its own
+    grade and source in the description — so anyone looking at the map can see
+    what backs the pin without leaving it. A pin with no provenance is exactly
+    the shape of the fabricated store database this replaced.
+
+    A RESIDENTIAL SITE NEVER CARRIES ITS ADDRESS
+    ────────────────────────────────────────────
+    A homeowner who let a crew photograph their driveway did not agree to a pin
+    on a public map with their street on it. Residential entries are named for
+    their town and nothing else, and the coordinate is the one the caller
+    supplied — so a residential pin should be given a town centre, not a
+    doorstep. That is the caller's responsibility and this docstring is where
+    it is written down.
+    """
+    parts = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<kml xmlns="http://www.opengis.net/kml/2.2"><Document>',
+        f"<name>{_xml_escape(title)}</name>",
+    ]
+
+    for site in sites:
+        lat, lon = site.get("lat"), site.get("lon")
+        if lat is None or lon is None:
+            continue
+        point = _coordinate(lat, lon)
+        if point is None:
+            continue
+
+        residential = (site.get("kind") or "").strip().lower() == "residential"
+        if residential:
+            label = " ".join(x for x in [site.get("city"), site.get("state")] if x) or "Residential"
+            address = None
+        else:
+            label = site.get("label") or site.get("address") or "Jobsite"
+            address = ", ".join(
+                x for x in [site.get("address"), site.get("city"), site.get("state")] if x
+            )
+
+        detail = []
+        if site.get("evidence"):
+            detail.append(f"Evidence: {site['evidence']}")
+        if site.get("completed_on"):
+            detail.append(f"Completed: {site['completed_on']}")
+        if site.get("store_number") and not residential:
+            detail.append(f"Store: {site['store_number']}")
+        if site.get("client") and not residential:
+            detail.append(f"Client: {site['client']}")
+        if site.get("source_document"):
+            detail.append(f"Source: {site['source_document']}")
+
+        parts.append("<Placemark>")
+        parts.append(f"<name>{_xml_escape(label)}</name>")
+        if address:
+            parts.append(f"<address>{_xml_escape(address)}</address>")
+        if detail:
+            parts.append(f"<description>{_xml_escape(' | '.join(detail))}</description>")
+        parts.append(f"<Point><coordinates>{point[1]:.6f},{point[0]:.6f},0</coordinates></Point>")
+        parts.append("</Placemark>")
+
+    parts.append("</Document></kml>")
+    return "\n".join(parts)

@@ -412,6 +412,16 @@ class ClientJobRecord(Base):
     source_document = Column(String(300), nullable=True)
     notes = Column(Text, nullable=True)
 
+    # Where the site is, once someone has resolved the address. Null until
+    # then, and a null stays null: a record placed "about right" is a false
+    # claim with a map reference attached to it.
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+
+    # The date the client was told the work was finished — the date on the
+    # "Finished Pictures" email, not a date anyone typed later.
+    completed_on = Column(DateTime(timezone=True), nullable=True)
+
     # Set when a person has confirmed this record may back a public claim.
     # Same gate as the photo archive, for the same reason.
     published = Column(Integer, nullable=False, default=0)
@@ -422,6 +432,21 @@ class ClientJobRecord(Base):
     updated_at = Column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
     )
+
+    def label_for_map(self) -> str:
+        """
+        What a pin is called.
+
+        Residential sites are named for their town and never their street. A
+        homeowner who let a crew photograph their driveway did not agree to a
+        pin with their address on a public map.
+        """
+        if (self.category or "").strip().lower() == "residential":
+            return " ".join(x for x in (self.city, self.state) if x) or "Residential driveway"
+        parts = [p for p in (self.client, self.store_number) if p]
+        if parts:
+            return " ".join(parts)
+        return self.address or self.city or "Jobsite"
 
     __table_args__ = (
         # One record per store per category per programme: the Texas parking

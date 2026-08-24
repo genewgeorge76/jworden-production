@@ -226,8 +226,18 @@ def test_evidence_ranks_so_a_reimport_can_only_strengthen_a_record():
     assert job_ledger.rank(job_ledger.LISTED) > job_ledger.rank(job_ledger.REQUESTED)
 
 
-def test_only_invoiced_is_publishable():
-    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}
+def test_the_publishable_set_is_exactly_completed_and_invoiced():
+    """
+    This was {invoiced} alone, and this test is why widening it took an
+    argument rather than a keystroke. The argument is written out in
+    test_completion_email_is_evidence.py and in PUBLISHABLE's own comment: an
+    invoice is a claim for payment, a completion email is a claim of
+    performance, and for "was this work done" the second is at least as good.
+
+    Nothing else joins them. A contract, an approval, an estimate and a punch
+    list all describe work that may never have happened.
+    """
+    assert job_ledger.PUBLISHABLE == {job_ledger.COMPLETED, job_ledger.INVOICED}
 
 
 # ── Through the API ─────────────────────────────────────────────────────────
@@ -613,20 +623,20 @@ def test_a_written_approval_grades_authorized():
     assert job_ledger.is_publishable(job_ledger.AUTHORIZED) is False
 
 
-def test_the_five_grades_rank_in_the_order_the_paperwork_gets_stronger():
+def test_the_grades_rank_in_the_order_the_paperwork_gets_stronger():
     order = [
         job_ledger.REQUESTED,
         job_ledger.LISTED,
         job_ledger.QUOTED,
         job_ledger.AUTHORIZED,
+        job_ledger.CONTRACTED,
+        job_ledger.COMPLETED,
         job_ledger.INVOICED,
     ]
     ranks = [job_ledger.rank(g) for g in order]
 
     assert ranks == sorted(ranks), "a re-import must never be able to demote a record"
-    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}, (
-        "adding grades must not widen what may be published"
-    )
+    assert len(set(ranks)) == len(ranks), "every grade ranks distinctly"
 
 
 def test_an_invoice_still_beats_a_quote_when_both_are_present():
@@ -678,15 +688,20 @@ def test_an_invoice_still_outranks_a_contract():
     assert job_ledger.grade(contracted=True, invoice_amount_cents=3250000) == job_ledger.INVOICED
 
 
-def test_six_grades_and_still_only_one_of_them_publishes():
+def test_seven_grades_and_only_the_two_that_evidence_performance_publish():
     """
-    The count has gone from four to six across two changes. Each time, the
-    temptation is to let the second-strongest grade through as well. It does
-    not, and this test is here to make that a deliberate decision rather than
-    an oversight.
+    Four grades, then six, then seven. Each time the temptation is to let the
+    next-strongest through as well, and six of the seven times the answer has
+    been no.
+
+    The one exception is `completed`, and it earned it on a distinction rather
+    than on strength: every other grade describes work that was agreed, priced
+    or asked for, and only `completed` and `invoiced` are records made AFTER
+    the work, asserting to the client that it happened.
     """
-    assert len(job_ledger.EVIDENCE_ORDER) == 6
-    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}
+    assert len(job_ledger.EVIDENCE_ORDER) == 7
+    assert job_ledger.PUBLISHABLE == {job_ledger.COMPLETED, job_ledger.INVOICED}
+    assert job_ledger.rank(job_ledger.COMPLETED) > job_ledger.rank(job_ledger.CONTRACTED)
 
 
 def test_the_contract_sum_survives_as_exact_cents():

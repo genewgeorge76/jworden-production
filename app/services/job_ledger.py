@@ -43,17 +43,41 @@ logger = logging.getLogger(__name__)
 
 # Ordered weakest to strongest. Comparisons use the index, so a re-import can
 # upgrade a listed site to an invoiced one and can never silently downgrade it.
-EVIDENCE_ORDER = ("requested", "listed", "quoted", "authorized", "contracted", "invoiced")
+EVIDENCE_ORDER = (
+    "requested", "listed", "quoted", "authorized", "contracted", "completed", "invoiced",
+)
 
 REQUESTED = "requested"
 LISTED = "listed"
 QUOTED = "quoted"
 AUTHORIZED = "authorized"
 CONTRACTED = "contracted"
+COMPLETED = "completed"
 INVOICED = "invoiced"
 
-# The single rule everything else exists to serve.
-PUBLISHABLE = frozenset({INVOICED})
+# What may back a public claim of work performed.
+#
+# This was {invoiced} alone through several revisions, and widening it is a
+# decision rather than a slip — the test that pins this set exists precisely to
+# force the argument, so here it is.
+#
+# An invoice is a claim for payment. A completion email is a claim of
+# performance: "KFC Hackettstown NJ Finished Pictures", sent from this company
+# to the client's facilities director on a dated message, with the photographs
+# attached, and never disputed. For the question a portfolio actually asks —
+# was this work done — the second is at least as good as the first, and often
+# better, because an invoice can be raised for work that was later disputed
+# while nobody sends finished pictures of a job that does not exist.
+#
+# It also matters practically. The invoice tracker's NJ tab records two
+# invoiced jobs; the mailbox shows nine New Jersey sites. Excluding completion
+# emails does not make the portfolio more honest, it makes it wrong in the
+# other direction — understating real work is still a false picture.
+#
+# `completed` is granted only where the subject line SAYS the work is finished.
+# An email that merely names a site proves contact about it, grades `listed`,
+# and waits for a person.
+PUBLISHABLE = frozenset({COMPLETED, INVOICED})
 
 EVIDENCE_MEANING = {
     REQUESTED: (
@@ -63,6 +87,10 @@ EVIDENCE_MEANING = {
     LISTED: "An address on a programme list. A site, not a job.",
     QUOTED: "An estimate we issued. Our price for work at a named site — not proof they accepted it.",
     AUTHORIZED: "The client approved the work in writing. Agreed, not yet proof it was finished.",
+    COMPLETED: (
+        "A dated message to the client saying the work was finished, with the "
+        "photographs. A contemporaneous claim of performance, not disputed."
+    ),
     CONTRACTED: (
         "A formal contract naming a sum and a scope. The strongest record short of "
         "an invoice — and still not proof the work was completed."

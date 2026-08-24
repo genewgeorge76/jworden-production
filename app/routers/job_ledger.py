@@ -28,7 +28,9 @@ from ..core.limiter import limiter
 from ..core.security import verify_premium_security
 from ..database import get_db
 from ..models import ClientJobRecord
-from ..services import job_ledger
+from fastapi.responses import Response
+
+from ..services import job_ledger, saved_places
 from ..services.tenancy import is_owner, scope, stamp_for, tenant_of
 
 logger = logging.getLogger(__name__)
@@ -235,6 +237,59 @@ def summary(
     }
 
 
+@router.get("/map.kml", summary="Verified jobsites as pins for Google My Maps")
+@limiter.limit("20/minute")
+def jobsite_map(
+    request: Request,
+    db: Session = Depends(get_db),
+    auth: dict = Depends(verify_premium_security),
+):
+    """
+    The publishable records that have a coordinate, as a KML file.
+
+    Imported into Google My Maps this becomes a map the operator owns on his
+    own account — restylable, shareable, permanent — rather than a picture of
+    one. Each pin carries its evidence grade and the document behind it, so
+    anyone looking at the map can see what backs a pin without leaving it.
+
+    Only records whose grade may be published appear. A record with no
+    coordinate is skipped rather than placed approximately: a pin in the wrong
+    car park is a false claim with a map reference attached.
+    """
+    tenant = _require_operator(auth)
+
+    rows = (
+        scope(db.query(ClientJobRecord), ClientJobRecord, tenant)
+        .filter(ClientJobRecord.evidence.in_(tuple(job_ledger.PUBLISHABLE)))
+        .all()
+    )
+
+    sites = [
+        {
+            "lat": r.latitude,
+            "lon": r.longitude,
+            "label": r.label_for_map(),
+            "address": r.address,
+            "city": r.city,
+            "state": r.state,
+            "kind": r.category,
+            "evidence": r.evidence,
+            "completed_on": r.completed_on.date().isoformat() if r.completed_on else None,
+            "store_number": r.store_number,
+            "client": r.client,
+            "source_document": r.source_document,
+        }
+        for r in rows
+        if r.latitude is not None and r.longitude is not None
+    ]
+
+    return Response(
+        content=saved_places.to_kml(sites),
+        media_type="application/vnd.google-earth.kml+xml",
+        headers={"Content-Disposition": 'attachment; filename="worden-jobsites.kml"'},
+    )
+
+
 @router.post("/records/{record_id}/publish", summary="Allow one record to back a public claim")
 @limiter.limit("120/minute")
 def publish_record(
@@ -295,6 +350,7 @@ def _as_dict(record: ClientJobRecord) -> dict:
         "invoice_amount": job_ledger.to_dollars(record.invoice_amount_cents),
         "job_total": job_ledger.to_dollars(record.job_total_cents),
         "amount_paid": job_ledger.to_dollars(record.amount_paid_cents),
+        "completed_on": record.completed_on.isoformat() if record.completed_on else None,
         "paid_date": record.paid_date.isoformat() if record.paid_date else None,
         "check_number": record.check_number,
         "job_status": record.job_status,
