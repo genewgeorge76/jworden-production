@@ -161,9 +161,14 @@ def test_lead_notification_sms_includes_state_tag(monkeypatch):
 
     captured: dict = {}
 
-    def fake_sms(message: str, to_numbers: list[str]) -> None:
+    # Returns (delivered, reason), which is what the real sender returns now.
+    # It used to return None and write its failures to the log — the caller
+    # cannot record what it is not told, so a lead nobody was alerted about
+    # looked identical to one that went through.
+    def fake_sms(message: str, to_numbers: list[str]) -> tuple[bool, str]:
         captured["message"] = message
         captured["to"] = to_numbers
+        return True, ""
 
     monkeypatch.setattr(notifications, "_send_twilio_sms", fake_sms)
     monkeypatch.setenv("NOTIFY_TO_PHONE", "+15555550100")
@@ -197,8 +202,11 @@ def test_lead_notification_sms_without_state(monkeypatch):
     from app.services import notifications
 
     captured: dict = {}
-    monkeypatch.setattr(notifications, "_send_twilio_sms",
-                        lambda m, n: captured.update(message=m, to=n))
+    # (delivered, reason) — the real sender's contract.
+    monkeypatch.setattr(
+        notifications, "_send_twilio_sms",
+        lambda m, n: (captured.update(message=m, to=n), (True, ""))[1],
+    )
     monkeypatch.setenv("NOTIFY_TO_PHONE", "+15555550100")
     monkeypatch.setenv("NOTIFY_TO_EMAIL", "")
     monkeypatch.setenv("RESEND_API_KEY", "")

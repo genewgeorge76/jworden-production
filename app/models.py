@@ -69,6 +69,18 @@ class Lead(Base):
     closed_reason = Column(String(100), nullable=True)
 
     # Multi-tenant (Feature 15)
+    # ── Was anybody actually told ────────────────────────────────────────
+    # A notification that fails in a background task after the response has
+    # gone is invisible: the form said thank you, the row is here, and nobody
+    # is on the way. Without a receipt on the row, a pipeline with no
+    # configured channel is indistinguishable from a quiet week.
+    notified_at = Column(DateTime(timezone=True), nullable=True)
+    # Channel names only — "email", "sms". Never an address, because this is
+    # read back through the API.
+    notify_delivered = Column(String(60), nullable=True)
+    notify_failed = Column(String(60), nullable=True)
+    notify_error = Column(Text, nullable=True)
+
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
 
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
@@ -88,6 +100,14 @@ class ContactMessage(Base):
     phone = Column(String(30), nullable=True)
     message = Column(Text, nullable=False)
     # Multi-tenant (Feature 15)
+    # The same receipt the Lead table carries. A contact form is a lead source
+    # — arguably the main one — and it went through the same fire-and-forget
+    # notifier, so a failed alert on one of these was just as invisible.
+    notified_at = Column(DateTime(timezone=True), nullable=True)
+    notify_delivered = Column(String(60), nullable=True)
+    notify_failed = Column(String(60), nullable=True)
+    notify_error = Column(Text, nullable=True)
+
     tenant_id = Column(String(60), nullable=True, index=True, default="default")
 
     created_at = Column(DateTime(timezone=True), default=_utcnow, nullable=False)
