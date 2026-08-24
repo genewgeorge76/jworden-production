@@ -203,7 +203,24 @@ function copyFor(key, p) {
         lede: p.heroBody || '',
         body: p.climate,
         bullets: p.commercialFocus,
-        bulletsTitle: 'Commercial focus',
+        bulletsTitle: 'Commercial work we run',
+        // THE HOMEPAGE MUST SHOW THE WHOLE RANGE, NOT JUST THE COMMERCIAL END.
+        //
+        // Google's AI Overview read texaspavementgroup.com and told a Richmond
+        // homeowner we "may not accept small, standard suburban driveway
+        // overlays", then recommended two competitors by name. It was not
+        // hallucinating. The homepage rendered commercialFocus and nothing
+        // else, and the single residential line in that list is qualified —
+        // "estate and acreage driveways WHERE THE RUN IS LONG ENOUGH". With no
+        // other residential signal on the page, the only available inference is
+        // a minimum job size.
+        //
+        // The residential list already existed, in the owner's own words, one
+        // click away on /residential. An AI reading the homepage never saw it.
+        // Showing it here is not a new claim — it is the same true claim, put
+        // where it is actually read.
+        secondaryBullets: p.residentialServices,
+        secondaryBulletsTitle: 'Residential and driveway work',
       };
   }
 }
@@ -297,11 +314,14 @@ function page(p, route) {
     .map((r) => `<a href="${r.path}">${esc(({ home: 'Home', commercial: 'Commercial', residential: 'Residential', services: 'Services', areas: 'Service Areas', contact: 'Contact' })[r.key])}</a>`)
     .join('');
 
-  const bullets = c.bullets?.length
-    ? `<section class="pad"><div class="wrap"><h2>${esc(c.bulletsTitle)}</h2><ul class="grid">${
-        c.bullets.map((b) => `<li>${esc(b)}</li>`).join('')
+  const bulletBlock = (title, items) => (items?.length
+    ? `<section class="pad"><div class="wrap"><h2>${esc(title)}</h2><ul class="grid">${
+        items.map((b) => `<li>${esc(b)}</li>`).join('')
       }</ul></div></section>`
-    : '';
+    : '');
+
+  const bullets = bulletBlock(c.bulletsTitle, c.bullets)
+    + bulletBlock(c.secondaryBulletsTitle, c.secondaryBullets);
 
   const form = route.key === 'contact' || route.key === 'home'
     ? `<section class="pad quote" id="quote"><div class="wrap">
