@@ -1,0 +1,1574 @@
+{
+ "G135001": {
+  "address": "2943 18th Avenue",
+  "city": "Rock Island",
+  "dma": "MIDWEST",
+  "state": "IL"
+ },
+ "G135002": {
+  "address": "3843 Elmore Avenue",
+  "city": "Davenport",
+  "dma": "MIDWEST",
+  "state": "IA"
+ },
+ "G135003": {
+  "address": "208 West Locust Street",
+  "city": "Davenport",
+  "dma": "MIDWEST",
+  "state": "IA"
+ },
+ "G135005": {
+  "address": "1012 West Kimberly Road",
+  "city": "Davenport",
+  "dma": "MIDWEST",
+  "state": "IA"
+ },
+ "G135007": {
+  "address": "420 West 85th",
+  "city": "Kansas City",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135011": {
+  "address": "9924 Highway 350 East",
+  "city": "Raytown",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135012": {
+  "address": "4210 S Noland Rd",
+  "city": "Independence",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135016": {
+  "address": "3522 State Ave",
+  "city": "Kansas City",
+  "dma": "MIDWEST",
+  "state": "KS"
+ },
+ "G135020": {
+  "address": "7100 W. 119th Street",
+  "city": "Overland Park",
+  "dma": "MIDWEST",
+  "state": "KS"
+ },
+ "G135021": {
+  "address": "7517 State Ave.",
+  "city": "Kansas City",
+  "dma": "MIDWEST",
+  "state": "KS"
+ },
+ "G135025": {
+  "address": "8770 Maple Street",
+  "city": "Omaha",
+  "dma": "MIDWEST",
+  "state": "NE"
+ },
+ "G135029": {
+  "address": "7601 North 30th Street",
+  "city": "Omaha",
+  "dma": "MIDWEST",
+  "state": "NE"
+ },
+ "G135034": {
+  "address": "3949 North 132nd Street",
+  "city": "Omaha",
+  "dma": "MIDWEST",
+  "state": "NE"
+ },
+ "G135062": {
+  "address": "3025 S FLORIDA AVE.",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135066": {
+  "address": "4025 Holcomb Bridge Rd",
+  "city": "Norcross",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135067": {
+  "address": "4540 E Ponce De Leon Ave",
+  "city": "Clarkston",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135068": {
+  "address": "3283 Northcrest Rd",
+  "city": "Doraville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135069": {
+  "address": "4720 Alabama Rd. NE",
+  "city": "Roswell",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135070": {
+  "address": "1675 Highway 138 SE",
+  "city": "Conyers",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135071": {
+  "address": "2532 Wesley Chapel Rd",
+  "city": "Decatur",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135072": {
+  "address": "676 Holcomb Bridge Rd",
+  "city": "Roswell",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135073": {
+  "address": "5290 Highway 78",
+  "city": "Stone Mountain",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135074": {
+  "address": "3901 Buford Hwy NE",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135075": {
+  "address": "5681 Memorial Dr",
+  "city": "Stone Mountain",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135076": {
+  "address": "6103 Highway 278 NW",
+  "city": "Covington",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135077": {
+  "address": "4368 Highway 20",
+  "city": "Buford",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135078": {
+  "address": "695 Atlanta Rd",
+  "city": "Cumming",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135079": {
+  "address": "2430 Salem Road SE",
+  "city": "Conyers",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135080": {
+  "address": "1635 Indian Trail Rd",
+  "city": "Norcross",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135081": {
+  "address": "3277 Lawrenceville Suwanee Rd",
+  "city": "Suwanee",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135082": {
+  "address": "4295 Lawrenceville Highway",
+  "city": "Tucker",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135083": {
+  "address": "5150 Windward Parkway",
+  "city": "Alpharetta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135084": {
+  "address": "2848 Panola Road",
+  "city": "Lithonia",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135085": {
+  "address": "2637 Cobb Pkwy. SE",
+  "city": "Smyrna",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135086": {
+  "address": "4023 Powder Springs Rd SW",
+  "city": "Powder Springs",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135087": {
+  "address": "126 Highway 61",
+  "city": "Villa Rica",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135088": {
+  "address": "5040 Cherokee Street",
+  "city": "Acworth",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135089": {
+  "address": "575 Bankhead Hwy",
+  "city": "Carrollton",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135090": {
+  "address": "1297 Atlanta Hwy",
+  "city": "Dallas",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135091": {
+  "address": "2540 Delk Rd SE",
+  "city": "Marietta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135092": {
+  "address": "6760 Highway 92",
+  "city": "Acworth",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135093": {
+  "address": "1970 N Cobb Parkway",
+  "city": "Kennesaw",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135094": {
+  "address": "12 Cobb Pkwy. N",
+  "city": "Marietta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135095": {
+  "address": "820 Turner McCall Blvd",
+  "city": "Rome",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135096": {
+  "address": "Highway 5",
+  "city": "Douglasville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135097": {
+  "address": "723 Highway 53",
+  "city": "Calhoun",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135098": {
+  "address": "664 Thornton Road",
+  "city": "Lithia Springs",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135099": {
+  "address": "3480 Ernest W Barrett Pkwy SW",
+  "city": "Marietta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135100": {
+  "address": "255 Cherokee Place",
+  "city": "Cartersville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135101": {
+  "address": "6892 Highway 85",
+  "city": "Riverdale",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135102": {
+  "address": "1078 Highway 20-81",
+  "city": "McDonough",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135103": {
+  "address": "1493 Mount Zion Rd",
+  "city": "Morrow",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135104": {
+  "address": "102 Highway 138 W",
+  "city": "Stockbridge",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135105": {
+  "address": "4845 Jonesboro Rd",
+  "city": "Forest Park",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135106": {
+  "address": "23 Joseph E Lowery Blvd. SW",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135107": {
+  "address": "3604 Bakers Ferry Rd SW",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135108": {
+  "address": "1395 Virginia Ave",
+  "city": "East Point",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135109": {
+  "address": "5245 Old National Hwy",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135110": {
+  "address": "8687 Tara Blvd",
+  "city": "Jonesboro",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135111": {
+  "address": "3555 Flat Shoals Rd",
+  "city": "Decatur",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135112": {
+  "address": "2840 Greenbriar Pkwy. SW",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135113": {
+  "address": "955 Eagles Landing Parkway",
+  "city": "Stockbridge",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135114": {
+  "address": "11325 Tara Blvd",
+  "city": "Hampton",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135115": {
+  "address": "4725 Jonesboro Road",
+  "city": "Union City",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135116": {
+  "address": "561 E Third Street",
+  "city": "Jackson",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135117": {
+  "address": "3510 Cascade Rd. SW",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135118": {
+  "address": "2475 Bouldercrest Rd. SE",
+  "city": "Atlanta",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135122": {
+  "address": "N. Battlefield",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135126": {
+  "address": "W.  Pembroke",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135127": {
+  "address": "S. Military",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135128": {
+  "address": "4253 Holland Rd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135130": {
+  "address": "Warrick & Nettles",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135131": {
+  "address": "12104 Jefferson Ave",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135132": {
+  "address": "1716 Monticello Ave",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135134": {
+  "address": "1660 General Booth Blvd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135135": {
+  "address": "5010 Mercury Blvd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135137": {
+  "address": "3381 Virginia Beach Blvd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135138": {
+  "address": "1658 Tappahannock Blvd",
+  "city": "Richmond",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135139": {
+  "address": "8810 Patterson Ave",
+  "city": "Richmond",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135142": {
+  "address": "9300 Midlothian Turnpike",
+  "city": "Richmond",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135143": {
+  "address": "207 W Mercury Blvd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135144": {
+  "address": "556 Newtown Rd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135146": {
+  "address": "7091 Mechanicsville Turnpike",
+  "city": "Richmond",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135149": {
+  "address": "10151 Hull Street Road",
+  "city": "Richmond",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135151": {
+  "address": "806-A England St.",
+  "city": "Richmond",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135153": {
+  "address": "1263 N Military Highway",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135155": {
+  "address": "440 Chestnut Street",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135157": {
+  "address": "801 First Colonial Rd.",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135160": {
+  "address": "3148 Western Branch Blvd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135162": {
+  "address": "1010 Independence Blvd",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135163": {
+  "address": "216 E Little Creek Road",
+  "city": "Norfolk",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135176": {
+  "address": "4776 Sugarloaf Parkway",
+  "city": "Lawrenceville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135177": {
+  "address": "675 Georgia Highway 120",
+  "city": "Lawrenceville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135178": {
+  "address": "2080 Pleasant Hill Road",
+  "city": "Duluth",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135179": {
+  "address": "3196 Atlanta Highway",
+  "city": "Athens",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135180": {
+  "address": "2150 Barnett Shoals Road",
+  "city": "Athens",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135181": {
+  "address": "2663 W. Main Street",
+  "city": "Snellville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135182": {
+  "address": "2180 W. Broad Street",
+  "city": "Athens",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135183": {
+  "address": "4065 Highway 78",
+  "city": "Loganville",
+  "dma": "ATLANTA",
+  "state": "GA"
+ },
+ "G135184": {
+  "address": "2304 MAPLE AVENUE",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135186": {
+  "address": "1820 N. CHURCH STREET",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135187": {
+  "address": "2120 Rockford Street",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135188": {
+  "address": "4623 W. MARKET STREET",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135189": {
+  "address": "209 W. HARRISON ROAD",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135190": {
+  "address": "1600 E. BESSEMER AVE",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135191": {
+  "address": "2317 BATTLEGROUND AVE",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135193": {
+  "address": "1711 N. MAIN ST",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135194": {
+  "address": "943 RANDOLPH ST",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135195": {
+  "address": "2722 S. MAIN ST",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135199": {
+  "address": "1125 N. LIBERTY ST",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135201": {
+  "address": "5715 UNIVERSITY PKWY",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135205": {
+  "address": "2340 RANDLEMAN ROAD",
+  "city": "",
+  "dma": "NORTH CAROLINA",
+  "state": "NC"
+ },
+ "G135207": {
+  "address": "116 Hughes Blvd.",
+  "city": "NC",
+  "dma": "VIRGINIA",
+  "state": "VA"
+ },
+ "G135209": {
+  "address": "6010 WESLEY STREET",
+  "city": "Greensville",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135210": {
+  "address": "1711 W. PALESTINE AVE.",
+  "city": "Palestine",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135211": {
+  "address": "201 S 77 SUNSHINE STRIP",
+  "city": "Harlingen",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135212": {
+  "address": "2319 GUADALUPE",
+  "city": "Laredo",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135213": {
+  "address": "421 W HIGHWAY 83",
+  "city": "Weslaco",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135215": {
+  "address": "1912 E VET MEMORIAL BLV",
+  "city": "Killeen",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135216": {
+  "address": "1030 N VALLEY MILLS DR",
+  "city": "Waco 2",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135217": {
+  "address": "3201 PADRE BLVD",
+  "city": "Padre Island",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135220": {
+  "address": "901 E 9TH ST",
+  "city": "Mission",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135221": {
+  "address": "2303 E HWY 190",
+  "city": "Copperas Cove",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135222": {
+  "address": "411 S JACKSON ST",
+  "city": "Jacksonville",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135224": {
+  "address": "3630 TROUP HWY 110",
+  "city": "Tyler 2",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135225": {
+  "address": "1424 Loop 336 W.",
+  "city": "Conroe",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135226": {
+  "address": "700 E END BLVD S",
+  "city": "Marshall",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135227": {
+  "address": "10 S 31ST ST",
+  "city": "Temple",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135229": {
+  "address": "2411 S US HIGHWAY 281",
+  "city": "Edinburg",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135230": {
+  "address": "707 NOLANA AVE",
+  "city": "McAllen 1",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135231": {
+  "address": "1410 VETERAN'S BLVD",
+  "city": "Del Rio",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135232": {
+  "address": "2701 BOCA CHICA",
+  "city": "Brownsville 1",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135233": {
+  "address": "1993 GARRISON ST",
+  "city": "Eagle Pass",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135234": {
+  "address": "1133 N LOOP 340",
+  "city": "Lacey-Lakeview",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135235": {
+  "address": "1120 W HWY 77",
+  "city": "San Benito",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135236": {
+  "address": "6901 S BROADWAY AVE",
+  "city": "Tyler 3",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135237": {
+  "address": "7605 MCPHERSON RD",
+  "city": "Laredo 3",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135238": {
+  "address": "904 E HIGHWAY 83",
+  "city": "Pharr",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135239": {
+  "address": "3565 W ALTON GLOOR",
+  "city": "Brownsville",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135240": {
+  "address": "4580 E US HIGHWAY 83",
+  "city": "Rio Grand City",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135242": {
+  "address": "516 E FM 2410 Road",
+  "city": "Harker Heights",
+  "dma": "TEXAS",
+  "state": "TX"
+ },
+ "G135243": {
+  "address": "1606 Highway 291 North",
+  "city": "Harrisonville",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135244": {
+  "address": "4040 20th Street",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135245": {
+  "address": "1809 U.S. Highway 1",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135247": {
+  "address": "405 South Fourth Street",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135249": {
+  "address": "2801 Reynolds Drive",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135250": {
+  "address": "3315 N.W. Federal Highway",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135251": {
+  "address": "246 S.W. Port St. Lucie Blvd",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135252": {
+  "address": "2004 West Worley",
+  "city": "Columbia",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135253": {
+  "address": "3212 Clark Lane",
+  "city": "Columbia",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135254": {
+  "address": "8400 Clint Drive",
+  "city": "Belton",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135255": {
+  "address": "201 South Angela Street",
+  "city": "Paola",
+  "dma": "MIDWEST",
+  "state": "KS"
+ },
+ "G135256": {
+  "address": "619 East Santa Fe",
+  "city": "Olathe",
+  "dma": "MIDWEST",
+  "state": "KS"
+ },
+ "G135257": {
+  "address": "3700 Buttonwood Dr.",
+  "city": "Columbia",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135259": {
+  "address": "11920 Blue Ridge Extension",
+  "city": "Grandview",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135260": {
+  "address": "755 Northwest Barry Road",
+  "city": "Kansas City",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135261": {
+  "address": "201 SE 4th Street",
+  "city": "Oak Grove",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135262": {
+  "address": "1744 West Jesse James Road",
+  "city": "Excelsior Sprgs",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135263": {
+  "address": "708 Baldwin",
+  "city": "Cameron",
+  "dma": "MIDWEST",
+  "state": "MO"
+ },
+ "G135265": {
+  "address": "1641 N.W. Saint Lucie West Blvd",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135266": {
+  "address": "2419 SE Federal Highway",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": "FL"
+ },
+ "G135267": {
+  "address": "3141 N. Mannheim Road",
+  "city": "Franklin Park",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135268": {
+  "address": "872 N. York Road",
+  "city": "Elmhurst",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135269": {
+  "address": "9950 W. Roosevelt Road",
+  "city": "Westchester",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135270": {
+  "address": "5301 W. 159th Street",
+  "city": "Oak Forest",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135271": {
+  "address": "1043 E. Sibley Boulevard",
+  "city": "Dolton",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135272": {
+  "address": "3029 S. Chicago Road",
+  "city": "S. Chicago Heights",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135273": {
+  "address": "4349 E. 211th Street",
+  "city": "Matteson",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135274": {
+  "address": "17505 S. Halsted Avenue",
+  "city": "Homewood",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135275": {
+  "address": "3300 W. 183rd Street",
+  "city": "Hazelcrest",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135276": {
+  "address": "9441 W. 159th Street",
+  "city": "Orland Park",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135277": {
+  "address": "14559 S. Pulaski Road",
+  "city": "Midlothian",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135279": {
+  "address": "1015 Maple Avenue",
+  "city": "Lisle",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135281": {
+  "address": "15663 127th Street",
+  "city": "Lemont",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135283": {
+  "address": "130 Duvick Road",
+  "city": "Sandwich",
+  "dma": "CHICAGO",
+  "state": "IL"
+ },
+ "G135291": {
+  "address": "1978 West Street",
+  "city": "Annapolis",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135292": {
+  "address": "Rt. 301 & Rt. 6",
+  "city": "La Plata",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135293": {
+  "address": "8073 Veterans Highway, Cloverleaf Business Center",
+  "city": "Millersville",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135294": {
+  "address": "2180 Crain Highway",
+  "city": "Waldorf",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135295": {
+  "address": "4107 Mountain Road, Lakeshore Shopping Center",
+  "city": "Pasadena",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135296": {
+  "address": "10 Watkins Park Drive",
+  "city": "Upper Marlboro",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135297": {
+  "address": "16215 Northeast 15th Avenue",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135298": {
+  "address": "17701 NW 27th Avenue",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135299": {
+  "address": "13801 North East Biscayne Boulevard",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135301": {
+  "address": "Route 36, Airport Plaza",
+  "city": "Hazlet",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135302": {
+  "address": "190 Route 46",
+  "city": "Rockaway",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135303": {
+  "address": "1110 Route 46",
+  "city": "Ledgewood",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135304": {
+  "address": "230 East Mountain Avenue",
+  "city": "Hackettstown",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135305": {
+  "address": "185 Ridgedale Avenue",
+  "city": "Florham Park",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135306": {
+  "address": "373 Thompson Creek Mall",
+  "city": "Stevensville",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135307": {
+  "address": "5785 S.w. Crain Highway",
+  "city": "Upper Marlboro",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135308": {
+  "address": "232 S.E. 1st Avenue",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135309": {
+  "address": "6501 Overseas Highway",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135310": {
+  "address": "65 West Dares Beach Road",
+  "city": "Prince Frederick",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135311": {
+  "address": "5734 Ritchie Hwy",
+  "city": "Baltimore",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135312": {
+  "address": "1682 Annapolis Rd",
+  "city": "Odenton",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135314": {
+  "address": "708 Nursery Rd",
+  "city": "Linthicum Heights",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135315": {
+  "address": "9690 S Dixie Hwy",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135316": {
+  "address": "3515 N.W. Seventh Avenue",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135317": {
+  "address": "815 W Hallandale Beach Blvd",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135318": {
+  "address": "3100 W Broward Blvd.",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135319": {
+  "address": "10395 W. Sample Rd.",
+  "city": "",
+  "dma": "FLORIDA",
+  "state": ""
+ },
+ "G135321": {
+  "address": "302 Canberra Way",
+  "city": "Bryans Road",
+  "dma": "MARYLAND",
+  "state": "MD"
+ },
+ "G135323": {
+  "address": "587 Cedar Ln",
+  "city": "Teaneck",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135324": {
+  "address": "600 Paterson Plank Rd",
+  "city": "Union City",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135325": {
+  "address": "1453 Forest Ave",
+  "city": "Staten Island",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135326": {
+  "address": "1959 Bruckner Blvd",
+  "city": "Bronx",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135327": {
+  "address": "114-116 Rahway Avenue",
+  "city": "Elizabeth",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135328": {
+  "address": "249 Park Ave",
+  "city": "Newark",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135329": {
+  "address": "591 Communipaw Ave",
+  "city": "Jersey City",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135330": {
+  "address": "688-692 Lyons Avenue",
+  "city": "Irvington",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135331": {
+  "address": "434 Central Ave",
+  "city": "East Orange",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135332": {
+  "address": "516 Broadway",
+  "city": "Bayonne",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135333": {
+  "address": "841 Springfield Avenue",
+  "city": "Irvington",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135334": {
+  "address": "125 Bergen St",
+  "city": "Newark",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135335": {
+  "address": "419 U.S. Route 1",
+  "city": "Iselin",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135336": {
+  "address": "92 St Georges Avenue",
+  "city": "Rahway",
+  "dma": "NEW YORK",
+  "state": "NJ"
+ },
+ "G135337": {
+  "address": "2471 Hylan Blvd",
+  "city": "Staten Island",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135338": {
+  "address": "375 East 149th Street",
+  "city": "Bronx",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135340": {
+  "address": "1524 S Salina St",
+  "city": "Syracuse",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135341": {
+  "address": "7900 Brewerton Rd",
+  "city": "Cicero",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135342": {
+  "address": "276 Grant Avenue",
+  "city": "Auburn",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135343": {
+  "address": "3821 Route 31",
+  "city": "Liverpool",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135345": {
+  "address": "3520 W Genesee Street",
+  "city": "Camillus",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135347": {
+  "address": "127 Genesee Street",
+  "city": "Oneida",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135348": {
+  "address": "3406 Erie Blvd",
+  "city": "Syracuse",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135349": {
+  "address": "8512 Seneca Tpke",
+  "city": "New Hartford",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135350": {
+  "address": "200 S Caroline Street",
+  "city": "Herkimer",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135351": {
+  "address": "1004 Arsenal St",
+  "city": "Watertown",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135352": {
+  "address": "26720 Us Route 11",
+  "city": "Evans Mills",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135353": {
+  "address": "235 Erie Boulevard West",
+  "city": "Rome",
+  "dma": "NEW YORK",
+  "state": "NY"
+ },
+ "G135354": {
+  "address": "9848 Livernois Ave",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135355": {
+  "address": "383 S Broadway St",
+  "city": "Lake Orion",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135356": {
+  "address": "8939 W 7 Mile Rd",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135357": {
+  "address": "15700 E 8 Mile Rd",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135358": {
+  "address": "2600 E 8 Mile Rd",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135359": {
+  "address": "4790 Dixie Hwy",
+  "city": "Waterford",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135360": {
+  "address": "3510 Clio Rd",
+  "city": "Flint",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135361": {
+  "address": "2716 W. Grand Blvd.",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135362": {
+  "address": "17750 Fenkell St",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135363": {
+  "address": "3785 Gratiot St.",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135364": {
+  "address": "9041 Chalmers",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135365": {
+  "address": "606 S. Rochester Rd.",
+  "city": "Rochester Hills",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135366": {
+  "address": "13546 W McNichols Rd",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135367": {
+  "address": "20990 Harper Ave",
+  "city": "Harper Woods",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135368": {
+  "address": "13253 Woodward Ave",
+  "city": "Highland Park",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135369": {
+  "address": "12721 Michigan Ave",
+  "city": "Dearborn",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135370": {
+  "address": "6021 Dort Hwy",
+  "city": "Grand Blanc",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135371": {
+  "address": "2339 S Wayne Rd",
+  "city": "Westland",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135372": {
+  "address": "41670 Ford Rd",
+  "city": "Canton",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135373": {
+  "address": "4427 Corunna Road",
+  "city": "Flint",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135374": {
+  "address": "22345 Grand River",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135375": {
+  "address": "1361 N Opdyke Road",
+  "city": "Auburn Hills",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135376": {
+  "address": "2601 W Davison Avenue",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135377": {
+  "address": "1445 West Bristol Road",
+  "city": "Flint",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135379": {
+  "address": "14201 W 7 Mile Rd",
+  "city": "Detroit",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135380": {
+  "address": "1000 S. Opdyke Road",
+  "city": "Pontiac",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135381": {
+  "address": "1765 South Dort Highway",
+  "city": "Flint",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135382": {
+  "address": "10018 Lapeer Road",
+  "city": "Davison",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135383": {
+  "address": "10018 Lapeer Road",
+  "city": "Davison",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135384": {
+  "address": "4255 West Vienna Road",
+  "city": "Clio",
+  "dma": "DETROIT",
+  "state": "MI"
+ },
+ "G135385": {
+  "address": "9230 Birch Run Road",
+  "city": "Birch Run",
+  "dma": "DETROIT",
+  "state": "MI"
+ }
+}
