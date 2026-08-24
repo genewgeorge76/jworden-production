@@ -56,7 +56,10 @@ INVOICED = "invoiced"
 PUBLISHABLE = frozenset({INVOICED})
 
 EVIDENCE_MEANING = {
-    REQUESTED: "On a punch list. Work the client asked for — explicitly not work performed.",
+    REQUESTED: (
+        "The client asked — a punch list, or a request to quote. Work wanted, "
+        "explicitly not work performed and not yet even priced."
+    ),
     LISTED: "An address on a programme list. A site, not a job.",
     QUOTED: "An estimate we issued. Our price for work at a named site — not proof they accepted it.",
     AUTHORIZED: "The client approved the work in writing. Agreed, not yet proof it was finished.",
@@ -79,6 +82,11 @@ EVIDENCE_MEANING = {
 # front of it, because a bare "(142)" in a sentence is a number, not a store.
 _STORE_NUMBER = re.compile(r"\b(G\d{6})\b", re.IGNORECASE)
 _BRAND_STORE_NUMBER = re.compile(r"\b(KFC|Taco\s*Bell|Rite\s*Aid)\s*\(\s*(\d{1,5})\s*\)", re.IGNORECASE)
+# A third form, from the facilities-management side. KleenCo's quote requests
+# head their store block "RIT11262 / Rite Aid / 4245 Holland Road, Virginia
+# Beach VA" — the prefix is the brand, so this one is already unambiguous and
+# is kept verbatim.
+_PREFIXED_STORE_NUMBER = re.compile(r"\b(RIT\d{4,6})\b", re.IGNORECASE)
 
 
 def rank(evidence: str) -> int:
@@ -107,6 +115,8 @@ def store_numbers_in(text: str) -> list[str]:
     for match in _BRAND_STORE_NUMBER.finditer(body):
         brand = re.sub(r"\s+", " ", match.group(1)).strip().upper()
         seen.setdefault(f"{brand} {match.group(2)}", None)
+    for match in _PREFIXED_STORE_NUMBER.finditer(body):
+        seen.setdefault(match.group(1).upper(), None)
     return list(seen)
 
 
@@ -243,10 +253,22 @@ _COLUMNS = {
     "postal_code": ("zip", "zip code", "postal code"),
     "invoice_number": ("invoice #", "invoice number"),
     "date_submitted": ("date submitted", "date"),
-    "invoice_amount": ("$ amount of invoice", "amount of invoice", "invoice amount"),
+    # "$ Amount Invoiced" is the QUADS tab's spelling of the same column the
+    # other five tabs write as "$ Amount of Invoice". Missing it did not fail —
+    # it silently reported eleven invoiced jobs carrying no money at all.
+    "invoice_amount": (
+        "$ amount of invoice", "amount of invoice", "invoice amount",
+        "$ amount invoiced", "amount invoiced",
+    ),
     "job_total": ("total amount of job", "job total"),
     "amount_paid": ("$ amount paid", "amount paid"),
-    "outstanding_issues": ("outstanding issues", "issues", "notes"),
+    # Payment, tracked apart from invoicing. An unpaid invoice is still proof
+    # the work was performed — it is a receivable, not a doubt about the job.
+    "paid_date": ("date received", "date paid"),
+    "check_number": ("check #", "check number", "cheque #"),
+    "outstanding_balance": ("outstanding balance", "balance"),
+    "job_status": ("job status", "status"),
+    "outstanding_issues": ("outstanding issues", "oustanding issues", "issues", "notes"),
 }
 
 
@@ -286,12 +308,28 @@ def _find_header(rows: list[tuple]) -> tuple[int, dict[str, int]]:
     return -1, {}
 
 
+# Tabs in the KFC tracker are named GA, TX, NJ, MI, NY — states, not
+# categories. Naming a record's category "ga" is not wrong so much as useless,
+# and it loses the state, which is the field a regional page filters on.
+US_STATES = frozenset(
+    "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO "
+    "MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split()
+)
+
+
+def state_from_sheet_name(name: str) -> Optional[str]:
+    """The two-letter state a worksheet is named for, or None."""
+    candidate = (name or "").strip().upper()
+    return candidate if candidate in US_STATES else None
+
+
 def read_program_sheet(
     rows: list[tuple],
     *,
     client: Optional[str] = None,
     program: Optional[str] = None,
     category: Optional[str] = None,
+    state: Optional[str] = None,
     source_document: Optional[str] = None,
 ) -> list[dict]:
     """
@@ -330,7 +368,10 @@ def read_program_sheet(
                 "category": category,
                 "address": str(address) if address else None,
                 "city": str(cell(row, "city")).strip() if cell(row, "city") else None,
-                "state": str(cell(row, "state")).strip() if cell(row, "state") else None,
+                # The row's own state column wins; the sheet's name is the
+                # fallback, because the tracker's GA/TX/NJ tabs carry no state
+                # column at all.
+                "state": (str(cell(row, "state")).strip() if cell(row, "state") else None) or state,
                 "postal_code": str(cell(row, "postal_code")).strip()
                 if cell(row, "postal_code") else None,
                 "invoice_number": str(invoice_number) if invoice_number else None,
@@ -338,6 +379,11 @@ def read_program_sheet(
                 "invoice_amount_cents": invoice_cents,
                 "job_total_cents": to_cents(cell(row, "job_total")),
                 "amount_paid_cents": to_cents(cell(row, "amount_paid")),
+                "paid_date": _to_datetime(cell(row, "paid_date")),
+                "check_number": str(cell(row, "check_number")).strip()
+                if cell(row, "check_number") else None,
+                "job_status": str(cell(row, "job_status")).strip()
+                if cell(row, "job_status") else None,
                 "outstanding_issues": str(cell(row, "outstanding_issues"))
                 if cell(row, "outstanding_issues") else None,
                 "source_document": source_document,

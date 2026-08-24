@@ -393,6 +393,16 @@ class ClientJobRecord(Base):
     invoice_amount_cents = Column(Integer, nullable=True)
     job_total_cents = Column(Integer, nullable=True)
     amount_paid_cents = Column(Integer, nullable=True)
+    # Payment, kept apart from invoicing. An unpaid invoice still proves the
+    # work was performed — it is a receivable, not a doubt about the job — so
+    # these never affect the evidence grade.
+    paid_date = Column(DateTime(timezone=True), nullable=True)
+    # A cheque number is the strongest thing in the archive: the client's own
+    # reference for money that moved.
+    check_number = Column(String(60), nullable=True)
+    # The client's word for where the job stood: "permit", "next job",
+    # "at location currently". Kept verbatim.
+    job_status = Column(String(120), nullable=True)
 
     evidence = Column(String(20), nullable=False, default="listed", index=True)
     # Verbatim from the source document. Kept unparsed: "need dumpster gate

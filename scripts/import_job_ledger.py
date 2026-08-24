@@ -26,7 +26,18 @@ if str(REPO_ROOT) not in sys.path:
 from app.services import job_ledger  # noqa: E402
 
 
-def category_for(sheet_name: str) -> str:
+def category_for(sheet_name: str) -> str | None:
+    """
+    The kind of work a tab holds, or None when the tab is not about kind.
+
+    Two workbooks, two conventions: the Texas tracker names its tabs for the
+    work ("Parking Lots", "Roof"), the KFC tracker names them for the state
+    ("GA", "TX", "NJ", "MI", "NY"). Filing a record under category "ga" is not
+    wrong so much as useless, and it throws away the state, which is the field
+    a regional page filters on.
+    """
+    if job_ledger.state_from_sheet_name(sheet_name):
+        return None
     name = sheet_name.strip().lower()
     if "roof" in name:
         return "roof"
@@ -64,6 +75,7 @@ def main() -> int:
             client=args.client,
             program=args.program,
             category=category_for(sheet_name),
+            state=job_ledger.state_from_sheet_name(sheet_name),
             source_document=args.workbook.name,
         )
         if not records:
@@ -71,7 +83,12 @@ def main() -> int:
             continue
 
         summary = job_ledger.summarise(records)
-        print(f"\n  {sheet_name} → category '{category_for(sheet_name)}'")
+        label = (
+            f"state '{job_ledger.state_from_sheet_name(sheet_name)}'"
+            if job_ledger.state_from_sheet_name(sheet_name)
+            else f"category '{category_for(sheet_name)}'"
+        )
+        print(f"\n  {sheet_name} → {label}")
         for grade_name in reversed(job_ledger.EVIDENCE_ORDER):
             bucket = summary["by_evidence"].get(grade_name)
             if not bucket:
@@ -103,6 +120,7 @@ def main() -> int:
                     ClientJobRecord.tenant_id == args.tenant,
                     ClientJobRecord.store_number == record["store_number"],
                     ClientJobRecord.category == record["category"],
+                    ClientJobRecord.state == record["state"],
                 )
                 .first()
             )

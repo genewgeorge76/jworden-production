@@ -1,4 +1,4 @@
-"""client_job_records: paved area, only where a document states it
+"""client_job_records: paved area and payment, only where a document states them
 
 The contract for 2601 West Broad Street, Richmond reads "Mill down entire
 parking lot approx. 14,218 sq. ft. (2 inches)" — an area both parties put their
@@ -34,11 +34,26 @@ def upgrade() -> None:
         op.add_column(
             "client_job_records", sa.Column("area_source", sa.String(length=120), nullable=True)
         )
+    if "paid_date" not in existing:
+        op.add_column(
+            "client_job_records", sa.Column("paid_date", sa.DateTime(timezone=True), nullable=True)
+        )
+    if "check_number" not in existing:
+        op.add_column(
+            "client_job_records", sa.Column("check_number", sa.String(length=60), nullable=True)
+        )
+    if "job_status" not in existing:
+        op.add_column(
+            "client_job_records", sa.Column("job_status", sa.String(length=120), nullable=True)
+        )
 
 
 def downgrade() -> None:
     bind = op.get_bind()
     existing = {c["name"] for c in sa.inspect(bind).get_columns("client_job_records")}
+    for name in ("job_status", "check_number", "paid_date"):
+        if name in existing:
+            op.drop_column("client_job_records", name)
     if "area_source" in existing:
         op.drop_column("client_job_records", "area_source")
     if "area_sqft" in existing:
