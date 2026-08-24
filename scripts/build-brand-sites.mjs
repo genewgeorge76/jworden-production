@@ -432,6 +432,18 @@ const carolinaMod = await import(
   pathToFileURL(resolve(ROOT, 'src/data/carolinaRegions.js')).href
 );
 const CAROLINA_REGIONS = carolinaMod.CAROLINA_REGIONS;
+
+// Georgia. Two things, and they carry different weight on purpose: seventeen
+// city pages built from stores graded `completed`, and one landmark. See
+// src/data/georgiaCityPages.js for why there are no dollar figures on any of
+// them — the Georgia evidence is a punch list and area-coach correspondence,
+// which establishes that the work happened and not what it was worth.
+const georgiaCityMod = await import(pathToFileURL(resolve(ROOT, 'src/data/georgiaCityPages.js')).href);
+const georgiaProgramMod = await import(pathToFileURL(resolve(ROOT, 'src/data/georgiaProgram.js')).href);
+const GEORGIA_CITY_PAGES = georgiaCityMod.georgiaCityPages();
+const BIG_CHICKEN = georgiaProgramMod.BIG_CHICKEN;
+const bigChickenSchema = georgiaProgramMod.bigChickenSchema;
+const GA_EXPERIENCE_LINE = georgiaProgramMod.GA_EXPERIENCE_LINE;
 const carolinaProgram = await import(
   pathToFileURL(resolve(ROOT, 'src/data/carolinaProgram.js')).href
 );
@@ -679,6 +691,153 @@ const usdShort = (v) => `$${Number(v).toLocaleString('en-US', { maximumFractionD
 
 
 
+// ── Georgia city pages, and one landmark ─────────────────────────────────────
+// Seventeen cities with a store graded `completed`, and the Big Chicken.
+//
+// NO DOLLAR FIGURES. The Texas pages carry a value per store because the Texas
+// evidence is an invoice tracker that reconciles to the cent. The Georgia
+// evidence is a punch list and area-coach correspondence: it establishes that
+// the work was done, not what it was worth. A value invented beside a real
+// store number poisons the store number, which is the checkable thing and the
+// entire reason the page exists.
+
+function georgiaCityPageHtml(p, cityPage) {
+  const canonical = canonicalUrl(p.domain, cityPage.path);
+  const tel = `tel:+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`;
+
+  // Store numbers only. A reader can take one of these to the client.
+  const siteRows = cityPage.stores.map((st) =>
+    `<li><strong>${esc(st.store)}</strong><span>${esc(st.source === 'punch-list' ? 'punch list' : 'crew report')}</span></li>`).join('');
+
+  const ground = [
+    `<div class="spec"><h3>The ground in ${esc(cityPage.counties)}</h3><p>${esc(cityPage.subgrade)}</p></div>`,
+    `<div class="spec"><h3>What fails here</h3><p>${esc(cityPage.climate)}</p></div>`,
+  ].join('');
+
+  const jsonld = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `Commercial asphalt paving in ${cityPage.city}, Georgia`,
+    url: canonical,
+    provider: {
+      '@type': 'GeneralContractor',
+      name: p.marketName,
+      telephone: p.phoneDisplay,
+      parentOrganization: { '@type': 'Organization', name: 'J. Worden & Sons Paving LLC' },
+    },
+    areaServed: { '@type': 'City', name: `${cityPage.city}, Georgia` },
+    serviceType: [
+      'Commercial asphalt paving', 'Parking lot rehabilitation', 'Sealcoating',
+      'Line striping', 'Crack repair',
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(cityPage.title)}</title>
+<meta name="description" content="${esc(clampDescription(cityPage.description))}">
+<link rel="canonical" href="${esc(canonical)}">
+<meta property="og:title" content="${esc(cityPage.title)}">
+<meta property="og:description" content="${esc(clampDescription(cityPage.description))}">
+<meta property="og:url" content="${esc(canonical)}">
+<meta name="geo.region" content="US-GA">
+<meta name="geo.placename" content="${esc(cityPage.city)}, Georgia">
+<link rel="stylesheet" href="/brand.css">
+<script type="application/ld+json">${jsonld}</script>
+</head><body>
+<header class="bar"><div class="wrap"><a class="brand" href="/">${esc(p.marketName)}</a>
+<a class="tel" href="${esc(tel)}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></div></header>
+<section class="hero"><div class="wrap">
+  <p class="kicker">${esc(cityPage.sector)}</p>
+  <h1>Asphalt Paving in ${esc(cityPage.city)}, Georgia</h1>
+  <p class="lede">${esc(cityPage.angle)}</p>
+  <a class="cta" href="/contact">Request a ${esc(cityPage.city)} Estimate</a>
+</div></section>
+<section class="pad"><div class="wrap">
+  <h2>Restaurant work completed in ${esc(cityPage.city)}</h2>
+  <ul class="sites">${siteRows}</ul>
+  <p class="note">${esc(
+    `${cityPage.storeCount === 1 ? 'One ' + GA_BRAND_NAME + ' location' : cityPage.storeCount + ' ' + GA_BRAND_NAME + ' locations'} in ${cityPage.city}, completed for ${GA_CLIENT_NAME}. ` +
+    'Listed by store number so it can be checked. No figure is shown against these because the record behind them is a punch list and crew correspondence, which establishes the work and not its value.'
+  )}</p>
+</div></section>
+<section class="pad alt"><div class="wrap"><h2>Building for ${esc(cityPage.city)} conditions</h2>${ground}</div></section>
+<section class="pad"><div class="wrap">
+  <h2>Why us for a ${esc(cityPage.city)} lot</h2>
+  <p>${esc(GA_EXPERIENCE_LINE)}</p>
+  <p>Every job runs to the same floor: 96% Marshall unit weight compaction, and a structural stone base sized for the subgrade rather than for the quote.</p>
+  <a class="cta" href="/contact">Get a ${esc(cityPage.city)} Estimate</a>
+</div></section>
+<footer class="foot"><div class="wrap"><p>${esc(p.marketName)} &middot; <a href="${esc(tel)}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></p></div></footer>
+</body></html>`;
+}
+
+function bigChickenPageHtml(p) {
+  const path = '/big-chicken';
+  const canonical = canonicalUrl(p.domain, path);
+  const tel = `tel:+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`;
+  const title = 'The Big Chicken, Marietta GA | Paved by J. Worden & Sons';
+  const desc = clampDescription(
+    'The 56-foot steel rooster at Cobb Parkway and Roswell Road has stood since 1963 and been a KFC since 1974. It is among the Georgia KFC locations this company has paved.',
+  );
+
+  // Public record about the STRUCTURE, kept separate from the claim about the
+  // work. See src/data/georgiaProgram.js: structureFacts are independently
+  // checkable; ourWork is the owner's statement, and the page must not let the
+  // second borrow the authority of the first.
+  const facts = BIG_CHICKEN.structureFacts.map((f) => `<li>${esc(f)}</li>`).join('');
+  const sources = BIG_CHICKEN.sources
+    .map((u) => `<li><a href="${esc(u)}" rel="nofollow noopener" target="_blank">${esc(new URL(u).hostname.replace(/^www\./, ''))}</a></li>`)
+    .join('');
+
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${esc(canonical)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${esc(canonical)}">
+<meta name="geo.region" content="US-GA">
+<meta name="geo.placename" content="Marietta, Georgia">
+<link rel="stylesheet" href="/brand.css">
+<script type="application/ld+json">${JSON.stringify(bigChickenSchema())}</script>
+</head><body>
+<header class="bar"><div class="wrap"><a class="brand" href="/">${esc(p.marketName)}</a>
+<a class="tel" href="${esc(tel)}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></div></header>
+<section class="hero"><div class="wrap">
+  <p class="kicker">Marietta, Cobb County</p>
+  <h1>The Big Chicken</h1>
+  <p class="lede">${esc(BIG_CHICKEN.ourWork)}</p>
+  <a class="cta" href="/contact">Request an Estimate</a>
+</div></section>
+<section class="pad"><div class="wrap">
+  <h2>About the landmark</h2>
+  <ul class="sites">${facts}</ul>
+  <p class="note">${esc(
+    `${BIG_CHICKEN.address}, ${BIG_CHICKEN.city}, ${BIG_CHICKEN.state} ${BIG_CHICKEN.postalCode} — the corner of Cobb Parkway and Roswell Road.`
+  )}</p>
+</div></section>
+<section class="pad alt"><div class="wrap">
+  <h2>Paving a landmark restaurant lot</h2>
+  <p>A quick-service restaurant lot is a harder problem than its size suggests. The drive-through lane takes the same vehicles over the same line every day, at walking pace, frequently stationary — which is the loading condition asphalt handles worst. The entrance takes traffic decelerating off a main road and turning under load. Everything else on the lot is comparatively easy.</p>
+  <p>${esc(GA_EXPERIENCE_LINE)}</p>
+  <a class="cta" href="/contact">Get an Estimate</a>
+</div></section>
+<section class="pad"><div class="wrap">
+  <h2>Sources on the structure</h2>
+  <ul class="sites">${sources}</ul>
+</div></section>
+<footer class="foot"><div class="wrap"><p>${esc(p.marketName)} &middot; <a href="${esc(tel)}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></p></div></footer>
+</body></html>`;
+}
+
+const GA_BRAND_NAME = georgiaCityMod.GA_BRAND;
+const GA_CLIENT_NAME = georgiaCityMod.GA_CLIENT;
+
+
 // ── Carolina state pages ─────────────────────────────────────────────────────
 // carolinablacktop.com covers both Carolinas. The site was written entirely for
 // the Piedmont while the brand's phone number is 843 — Charleston, Myrtle
@@ -832,6 +991,31 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     }
   }
 
+  // Metro-Atlanta city pages and the Big Chicken belong to the ATLANTA brand
+  // only — not to every Georgia domain.
+  //
+  // Gating on stateAbbr === 'GA' put all eighteen on savannahasphaltpaving.com
+  // as well, which is two things wrong at once: Savannah is coastal Georgia and
+  // has nothing to do with Kennesaw or Riverdale, and two domains carrying
+  // identical pages is cross-domain duplicate content — the exact failure this
+  // build was written to stop. The county pages get away with stateAbbr because
+  // there is one Virginia brand; Georgia has two.
+  let georgiaCount = 0;
+  if (domain === 'atlantaasphaltpavingpros.com') {
+    for (const cityPage of GEORGIA_CITY_PAGES) {
+      const dir = resolve(DIST, 'brands', domain, cityPage.path.slice(1));
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(resolve(dir, 'index.html'), georgiaCityPageHtml(p, cityPage), 'utf8');
+      georgiaCount += 1;
+      pagesWritten += 1;
+    }
+    const bcDir = resolve(DIST, 'brands', domain, 'big-chicken');
+    mkdirSync(bcDir, { recursive: true });
+    writeFileSync(resolve(bcDir, 'index.html'), bigChickenPageHtml(p), 'utf8');
+    georgiaCount += 1;
+    pagesWritten += 1;
+  }
+
   // Virginia counties belong only on the Virginia brand.
   let countyCount = 0;
   if (stateAbbr === 'VA') {
@@ -856,6 +1040,11 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     // invoiced job, so all of them are indexable — unlike the county pages,
     // where only those with real facts attached are.
     texasCityPaths: cityCount ? TEXAS_CITY_PAGES.map((c) => c.path) : [],
+    georgiaPages: georgiaCount,
+    // Every Georgia city URL is backed by a store graded `completed`, so all of
+    // them are indexable. The 23 stores sitting at Design or Permitting in
+    // KBP's 2017 tracker are pipeline and get no page and no sitemap entry.
+    georgiaCityPaths: georgiaCount ? [...GEORGIA_CITY_PAGES.map((c) => c.path), '/big-chicken'] : [],
     // Exactly the county URLs the sitemap may advertise. Written here rather
     // than recomputed there so the two can never disagree — a page advertised
     // while noindexed is a contradiction Google reports as an error.
@@ -868,6 +1057,7 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     `[brand-sites] ${domain} (${stateAbbr}) — ${ROUTES.length} pages` +
     (countyCount ? ` + ${countyCount} county pages` : '') +
     (cityCount ? ` + ${cityCount} Texas city pages` : '') +
+    (georgiaCount ? ` + ${georgiaCount} Georgia pages` : '') +
     (carolinaCount ? ` + ${carolinaCount} Carolina state pages` : ''),
   );
 }
