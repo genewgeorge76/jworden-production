@@ -11,6 +11,7 @@ from ..database import get_db
 from ..models import Lead, ContactMessage
 from ..services.audit import write_audit_event
 from ..services.lead_scorer import score_lead
+from ..services import lead_alerts
 from ..services.notifications import send_lead_notification
 from ..services.pricing import estimate_price
 from ..services.state_data import normalize_state_code
@@ -187,7 +188,7 @@ async def submit_quote(
         },
     )
 
-    background_tasks.add_task(send_lead_notification, lead_data)
+    background_tasks.add_task(lead_alerts.notify_and_record, db, db_lead, lead_data)
     background_tasks.add_task(sync_lead_to_sheets, lead_data)
 
     # SendGrid: send confirmation to customer + admin notification
@@ -283,7 +284,7 @@ async def submit_contact(
     )
 
     lead_data = {**req.model_dump(), "type": "contact"}
-    background_tasks.add_task(send_lead_notification, lead_data)
+    background_tasks.add_task(lead_alerts.notify_and_record, db, db_msg, lead_data)
     background_tasks.add_task(sync_lead_to_sheets, lead_data)
 
     # SendGrid: send auto-reply to customer
@@ -378,7 +379,7 @@ async def submit_website_lead(
     )
 
     payload = {**req.model_dump(), "type": "website"}
-    background_tasks.add_task(send_lead_notification, payload)
+    background_tasks.add_task(lead_alerts.notify_and_record, db, db_msg, payload)
     background_tasks.add_task(sync_lead_to_sheets, payload)
     if req.email:
         background_tasks.add_task(send_contact_response, db_msg)
@@ -467,7 +468,7 @@ async def email_ingest(
         "score": scoring,
         "type": "email_ingest"
     }
-    background_tasks.add_task(send_lead_notification, lead_data)
+    background_tasks.add_task(lead_alerts.notify_and_record, db, db_lead, lead_data)
     background_tasks.add_task(sync_lead_to_sheets, lead_data)
     
     return {

@@ -284,10 +284,26 @@ _COLUMNS = {
     # "$ Amount Invoiced" is the QUADS tab's spelling of the same column the
     # other five tabs write as "$ Amount of Invoice". Missing it did not fail —
     # it silently reported eleven invoiced jobs carrying no money at all.
+    # THE ADVANCE. These sheets bill in two stages and head the first one a
+    # different way on every tab: "$ amount of Invoice" (TX), "$ Amount of
+    # deposit Invoice" (NJ), "$ Amount Invoiced" (QUADS).
     "invoice_amount": (
         "$ amount of invoice", "amount of invoice", "invoice amount",
         "$ amount invoiced", "amount invoiced",
+        "$ amount of deposit invoice", "amount of deposit invoice",
+        "deposit invoice", "$ deposit money", "deposit money",
     ),
+    # THE FINAL. Kept in its own field and NEVER added to the advance.
+    #
+    # Greenville TX G135209 reads advance 17,949, final 17,949, total 17,949 —
+    # one job billed in two stages, not two jobs and not $35,898. Adding the
+    # two columns would roughly double the value of every staged job on the
+    # sheet, and the result would look entirely plausible.
+    "final_invoice": (
+        "final invoice", "final invoice of job", "invoice amount",
+        "final invoice amount",
+    ),
+    # The authoritative number. Where a row states it, this is the job.
     "job_total": ("total amount of job", "job total"),
     "amount_paid": ("$ amount paid", "amount paid"),
     # Payment, tracked apart from invoicing. An unpaid invoice is still proof
@@ -384,7 +400,12 @@ def read_program_sheet(
         if not store and not address:
             continue
 
-        invoice_cents = to_cents(cell(row, "invoice_amount"))
+        advance_cents = to_cents(cell(row, "invoice_amount"))
+        final_cents = to_cents(cell(row, "final_invoice"))
+        total_cents = to_cents(cell(row, "job_total"))
+        # The final supersedes the advance; they are two views of one job, so
+        # the larger-looking arithmetic of adding them is simply wrong.
+        invoice_cents = final_cents or advance_cents
         submitted = _to_datetime(cell(row, "date_submitted"))
         invoice_number = cell(row, "invoice_number")
 
@@ -405,7 +426,7 @@ def read_program_sheet(
                 "invoice_number": str(invoice_number) if invoice_number else None,
                 "date_submitted": submitted,
                 "invoice_amount_cents": invoice_cents,
-                "job_total_cents": to_cents(cell(row, "job_total")),
+                "job_total_cents": total_cents or invoice_cents,
                 "amount_paid_cents": to_cents(cell(row, "amount_paid")),
                 "paid_date": _to_datetime(cell(row, "paid_date")),
                 "check_number": str(cell(row, "check_number")).strip()

@@ -292,6 +292,7 @@ from .routers import traffic as traffic_router
 from .routers import photo_proof as photo_proof_router
 from .routers import job_ledger as job_ledger_router
 from .routers import mailboxes as mailboxes_router
+from .routers import jobbook as jobbook_router
 from .routers import math_ai as math_ai_router
 from .routers import metrics as metrics_router
 from .routers import monitoring as monitoring_router
@@ -706,6 +707,7 @@ app.include_router(traffic_router.router)
 app.include_router(photo_proof_router.router)
 app.include_router(job_ledger_router.router)
 app.include_router(mailboxes_router.router)
+app.include_router(jobbook_router.router)
 app.include_router(tenants_router.router)
 app.include_router(global_router.router)
 app.include_router(scaling_router.router)

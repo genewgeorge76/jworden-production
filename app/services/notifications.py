@@ -153,14 +153,23 @@ def send_transactional_email(
     return _send_smtp(subject, html_body, to_addresses, attachment_bytes, attachment_name)
 
 
-def _send_twilio_sms(message: str, to_numbers: list[str]) -> None:
+def _send_twilio_sms(message: str, to_numbers: list[str]) -> tuple[bool, str]:
+    """
+    Send, and say what happened.
+
+    This used to return None and write its failures to the log. A lead
+    notification that fails in a background task after the response has gone is
+    invisible: the form said thank you, the row is in the database, and nobody
+    is on the way. The caller cannot record what it is not told, so this returns
+    (delivered, reason).
+    """
     sid = os.getenv('TWILIO_ACCOUNT_SID', '')
     auth = os.getenv('TWILIO_AUTH_TOKEN', '')
     from_number = os.getenv('TWILIO_FROM_NUMBER', '')
 
     if not (sid and auth and from_number):
         logger.info('Twilio not configured – skipping SMS. message=%s', message)
-        return
+        return False, 'twilio not configured'
 
     try:
         from twilio.rest import Client  # type: ignore  # noqa: PLC0415
@@ -169,29 +178,66 @@ def _send_twilio_sms(message: str, to_numbers: list[str]) -> None:
         for number in to_numbers:
             client.messages.create(body=message, from_=from_number, to=number)
         logger.info('Lead SMS sent to %s', to_numbers)
+        return True, ''
     except ImportError:
         logger.warning('twilio package not installed – SMS skipped')
+        return False, 'twilio package not installed'
     except Exception as exc:  # noqa: BLE001
         logger.error('Failed to send SMS: %s', exc)
+        return False, f'{type(exc).__name__}: {exc}'[:300]
 
 
 COMPANY_EMAIL = 'j.wordenandsonspaving@gmail.com'
 
 
-def send_lead_notification(data: dict) -> None:
-    """Fire-and-forget notification for a new lead or contact form submission."""
+def send_lead_notification(data: dict) -> dict:
+    """
+    Tell somebody a lead arrived, and return a receipt saying whether it worked.
+
+    This was fire-and-forget and returned None. That is the failure mode its own
+    health endpoint warns about: the form accepts the submission, the row is
+    saved, the endpoint returns 200, and the send fails in a background task
+    after the response has gone. Nothing anywhere records it, so a pipeline with
+    no configured channel looks exactly like a quiet week.
+
+    The receipt is {attempted, delivered, failed, error} — channel names only,
+    never an address or a key, because it is stored on the lead row and read
+    back through the API.
+    """
 
     logger.info('NEW LEAD: %s', json.dumps(data, default=str))
 
-    # Always include the company email; merge with any additional addresses from env.
+    # Every configured recipient, from either stack.
+    #
+    # There were two independent notifiers in this codebase reading different
+    # environment variables: this one on NOTIFY_TO_EMAIL, and
+    # email_service.send_admin_notification on ADMIN_NOTIFY_EMAIL. Leads from
+    # the web form went through the first and leads from the mail sync through
+    # the second, so setting only one variable meant half the pipeline was
+    # announced and half was silent — with nothing to indicate which half.
     env_emails = [e.strip() for e in os.getenv('NOTIFY_TO_EMAIL', '').split(',') if e.strip()]
-    to_emails = list(dict.fromkeys([COMPANY_EMAIL] + env_emails))  # deduplicated, company first
+    admin_email = os.getenv('ADMIN_NOTIFY_EMAIL', '').strip()
+    to_emails = list(dict.fromkeys(
+        [COMPANY_EMAIL] + env_emails + ([admin_email] if admin_email else [])
+    ))  # deduplicated, company first
     to_phones = [p.strip() for p in os.getenv('NOTIFY_TO_PHONE', '').split(',') if p.strip()]
 
     subject, html_body = _build_email_body(data)
 
+    attempted: list[str] = []
+    delivered: list[str] = []
+    failed: list[str] = []
+    errors: list[str] = []
+
     if to_emails:
-        send_transactional_email(subject=subject, html_body=html_body, to_addresses=to_emails)
+        attempted.append('email')
+        if send_transactional_email(
+            subject=subject, html_body=html_body, to_addresses=to_emails
+        ):
+            delivered.append('email')
+        else:
+            failed.append('email')
+            errors.append('no email provider accepted the message')
 
     if to_phones:
         score = data.get('score', {})
@@ -226,7 +272,29 @@ def send_lead_notification(data: dict) -> None:
             f"{data.get('service_type','contact')} | {data.get('urgency','')}"
             f"{state_tag}"
         )
-        _send_twilio_sms(sms_body, to_phones)
+        attempted.append('sms')
+        sent, reason = _send_twilio_sms(sms_body, to_phones)
+        if sent:
+            delivered.append('sms')
+        else:
+            failed.append('sms')
+            if reason:
+                errors.append(reason)
+
+    if not attempted:
+        # No recipient is configured anywhere. Worth recording as its own
+        # condition: it is not a delivery failure, it is nobody being asked.
+        errors.append('no NOTIFY_TO_EMAIL or NOTIFY_TO_PHONE configured')
+
+    receipt = {
+        'attempted': attempted,
+        'delivered': delivered,
+        'failed': failed,
+        'error': '; '.join(errors)[:500] or None,
+    }
+    if failed or not attempted:
+        logger.warning('Lead notification incomplete: %s', receipt)
+    return receipt
 
 
 def send_safety_alert(crew_name: str, site_name: str, vital_stat: str, vital_value: float, ambient_temp: float) -> None:

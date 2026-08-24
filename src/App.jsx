@@ -145,6 +145,7 @@ const JwordenAI = lazy(() => import('./pages/JwordenAI'));
 const SaaSMarketing = lazy(() => import('./pages/SaaSMarketing'));
 const WordenStandardHub = lazy(() => import('./pages/WordenStandardHub'));
 const DiamondPortal = lazy(() => import('./pages/DiamondPortal'));
+const JobBook = lazy(() => import('./pages/JobBook'));
 const ClientPortal = lazy(() => import('./components/ClientPortal'));
 const ClientCockpit = lazy(() => import('./components/ClientCockpit'));
 // Add page imports here
@@ -610,6 +611,7 @@ const AuthenticatedApp = () => {
         {isOperationsSite && <Route path="/signin" element={<Login />} />}
         {isOperationsSite && <Route path="/dashboard" element={<OperationsHome />} />}
         <Route path="/diamond" element={<RequireAuth><DiamondPortal /></RequireAuth>} />
+        <Route path="/job-book" element={<RequireOwner><JobBook /></RequireOwner>} />
 
         {/* Contractor operations tools. Both call authenticated backend
             endpoints, so they sit behind RequireAuth like /diamond. */}

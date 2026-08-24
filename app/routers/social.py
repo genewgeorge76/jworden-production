@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ..core.security import verify_premium_security
+from ..services import lead_alerts
 from ..database import get_db
 from ..models import (
     CompanyClaim,
@@ -615,6 +616,10 @@ def convert_signal(signal_id: int, payload: ConvertIn,
     row.reviewed_at = _utcnow()
     row.reviewed_by = str(auth.get("sub") or auth.get("user") or "") or None
     db.commit()
+    # This path created a Lead and told nobody. A social signal converted to a
+    # lead was written to the database in silence — no email, no text.
+    lead_alerts.notify_and_record(db, lead)
+
     return {"ok": True, "lead_id": lead.id, "signal": _signal_dict(row)}
 
 
