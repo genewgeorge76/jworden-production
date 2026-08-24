@@ -644,3 +644,75 @@ def test_the_estimate_total_survives_as_exact_cents():
     """$25,589.39 — a float round-trip is where a figure stops matching the PDF."""
     assert job_ledger.to_cents("$25,589.39") == 2558939
     assert job_ledger.to_dollars(2558939) == "25589.39"
+
+
+# ── A contract, and an area somebody actually signed up to ──────────────────
+
+def test_a_formal_contract_grades_contracted_and_still_does_not_publish():
+    """
+    AIA A105-2007, 31 March 2016: First States Investors 5200, LLC (Gramercy
+    Property Trust) and J Worden & Sons Paving — parking lot overlay at
+    Robinson & Broad, 2601 West Broad Street, Richmond VA. Contract sum
+    $32,500.00.
+
+    Stronger than an email saying go ahead: a contract names a sum and a scope
+    and binds both sides. Still not proof the work was completed — that is what
+    the invoice and the lien waiver are for, which is precisely what the owner's
+    covering letter demanded within 30 days of completion.
+    """
+    assert job_ledger.grade(contracted=True) == job_ledger.CONTRACTED
+    assert job_ledger.is_publishable(job_ledger.CONTRACTED) is False
+
+
+def test_a_contract_outranks_an_approval_and_an_estimate():
+    ranks = [
+        job_ledger.rank(job_ledger.QUOTED),
+        job_ledger.rank(job_ledger.AUTHORIZED),
+        job_ledger.rank(job_ledger.CONTRACTED),
+        job_ledger.rank(job_ledger.INVOICED),
+    ]
+    assert ranks == sorted(ranks)
+
+
+def test_an_invoice_still_outranks_a_contract():
+    assert job_ledger.grade(contracted=True, invoice_amount_cents=3250000) == job_ledger.INVOICED
+
+
+def test_six_grades_and_still_only_one_of_them_publishes():
+    """
+    The count has gone from four to six across two changes. Each time, the
+    temptation is to let the second-strongest grade through as well. It does
+    not, and this test is here to make that a deliberate decision rather than
+    an oversight.
+    """
+    assert len(job_ledger.EVIDENCE_ORDER) == 6
+    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}
+
+
+def test_the_contract_sum_survives_as_exact_cents():
+    assert job_ledger.to_cents("$32,500.00") == 3250000
+    assert job_ledger.to_dollars(3250000) == "32500.00"
+
+
+@pytest.mark.anyio
+async def test_a_sourced_area_is_carried_and_an_unsourced_one_stays_empty(client, auth_headers):
+    """
+    14,218 sq ft is in the contract. Every other row has no stated area, and it
+    must stay null rather than being filled from a map measurement — the
+    fabricated database's headline figures were invented square footages, so
+    this is the exact field that has already gone wrong once.
+    """
+    from app.models import ClientJobRecord
+
+    await client.post(
+        "/api/v1/job-ledger/import",
+        json=_rows_payload(category="parking"),
+        headers=auth_headers,
+    )
+    records = (await client.get("/api/v1/job-ledger/records", headers=auth_headers)).json()
+
+    assert all(r["area_sqft"] is None for r in records["records"]), (
+        "a programme sheet states no area, so none is invented"
+    )
+    assert all(r["area_source"] is None for r in records["records"])
+    assert hasattr(ClientJobRecord, "area_sqft")

@@ -286,6 +286,8 @@ def _as_dict(record: ClientJobRecord) -> dict:
         "city": record.city,
         "state": record.state,
         "postal_code": record.postal_code,
+        "area_sqft": record.area_sqft,
+        "area_source": record.area_source,
         "invoice_number": record.invoice_number,
         "date_submitted": record.date_submitted.isoformat() if record.date_submitted else None,
         # Strings, because these are money. A float here reaches a page and

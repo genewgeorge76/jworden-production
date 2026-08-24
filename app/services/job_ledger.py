@@ -43,12 +43,13 @@ logger = logging.getLogger(__name__)
 
 # Ordered weakest to strongest. Comparisons use the index, so a re-import can
 # upgrade a listed site to an invoiced one and can never silently downgrade it.
-EVIDENCE_ORDER = ("requested", "listed", "quoted", "authorized", "invoiced")
+EVIDENCE_ORDER = ("requested", "listed", "quoted", "authorized", "contracted", "invoiced")
 
 REQUESTED = "requested"
 LISTED = "listed"
 QUOTED = "quoted"
 AUTHORIZED = "authorized"
+CONTRACTED = "contracted"
 INVOICED = "invoiced"
 
 # The single rule everything else exists to serve.
@@ -59,6 +60,10 @@ EVIDENCE_MEANING = {
     LISTED: "An address on a programme list. A site, not a job.",
     QUOTED: "An estimate we issued. Our price for work at a named site — not proof they accepted it.",
     AUTHORIZED: "The client approved the work in writing. Agreed, not yet proof it was finished.",
+    CONTRACTED: (
+        "A formal contract naming a sum and a scope. The strongest record short of "
+        "an invoice — and still not proof the work was completed."
+    ),
     INVOICED: "An invoice number, submitted date or amount. Work that was billed.",
 }
 
@@ -158,6 +163,7 @@ def grade(
     date_submitted: Any = None,
     invoice_amount_cents: Optional[int] = None,
     authorized: bool = False,
+    contracted: bool = False,
     quoted: bool = False,
     from_punch_list: bool = False,
 ) -> str:
@@ -175,6 +181,11 @@ def grade(
         return REQUESTED
     if invoice_number or date_submitted is not None or invoice_amount_cents:
         return INVOICED
+    if contracted:
+        # An AIA A105 naming a contract sum and a scope. Stronger than an email
+        # saying go ahead, and still short of an invoice: a contract is what
+        # both sides agreed to do, not a record that it was done.
+        return CONTRACTED
     if authorized:
         return AUTHORIZED
     if quoted:
