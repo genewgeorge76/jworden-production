@@ -14,7 +14,10 @@ export const REVIEW_PLATFORMS = [
     name: 'Google',
     rating: 4.4,
     count: 7,
-    url: 'https://search.google.com/local/reviews?placeid=ChIJG3X8o_OStokRzRynNBuVfQ0',
+    // search.google.com/local/reviews?placeid=… returns 404 — Google retired
+    // that path. The Place ID itself is fine: both the write-a-review link
+    // and this maps URL resolve. Checked 2026-08-24.
+    url: 'https://www.google.com/maps/place/?q=place_id:ChIJG3X8o_OStokRzRynNBuVfQ0',
     accent: 'Google Business Profile',
   },
   {

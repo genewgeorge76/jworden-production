@@ -103,7 +103,9 @@ export const PRICE_RANGE = '$$$';
 // REVIEWS
 // ──────────────────────────────────────────────────────────────────────────────
 export const GOOGLE_PLACE_ID = 'ChIJG3X8o_OStokRzRynNBuVfQ0';
-export const GOOGLE_REVIEWS_URL = `https://search.google.com/local/reviews?placeid=${GOOGLE_PLACE_ID}`;
+// The /local/reviews path 404s — Google retired it. The Place ID is valid;
+// the maps place URL is the one that resolves. Checked 2026-08-24.
+export const GOOGLE_REVIEWS_URL = `https://www.google.com/maps/place/?q=place_id:${GOOGLE_PLACE_ID}`;
 export const GOOGLE_WRITE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`;
 export const GOOGLE_MAPS_URL = `https://www.google.com/maps/place/?q=place_id:${GOOGLE_PLACE_ID}`;
 

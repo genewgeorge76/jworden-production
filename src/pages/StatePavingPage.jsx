@@ -54,7 +54,11 @@ export default function StatePavingPage() {
 
       {/* PREMIUM HERO SECTION */}
       <section className="relative pt-32 pb-24 overflow-hidden bg-slate-900 border-b-8 border-amber-500">
-        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1584877132717-38cf9e6eb293?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center" />
+        {/* Was an Unsplash stock photograph, which now 404s — the hero rendered
+            as flat slate on every state page. Replaced with our own hero
+            image, which is in this repository. A company that sells verified
+            work should not be dressing its pages in somebody else's. */}
+        <div className="absolute inset-0 opacity-20 bg-[url('/hero-paving.webp')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-slate-900/40" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">

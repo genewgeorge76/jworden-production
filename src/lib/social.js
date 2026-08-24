@@ -24,6 +24,10 @@ export const SOCIAL_PROFILES = {
     label: 'YouTube',
     handle: '@JWordenSons',
     color: '#FF0000',
+    // Checked 2026-08-24: youtube.com/@JWordenSons returns 404. The channel
+    // does not exist. Kept here rather than deleted so that setting
+    // VITE_YOUTUBE_URL restores it everywhere at once — see `live` below.
+    live: false,
   },
   linkedin: {
     url:
@@ -34,6 +38,9 @@ export const SOCIAL_PROFILES = {
     color: '#0A66C2',
   },
   twitter: {
+    // Checked 2026-08-24 on both hosts: twitter.com/JWordenSons and
+    // x.com/JWordenSons both return 404. Set VITE_TWITTER_URL to restore.
+    live: false,
     url: import.meta.env.VITE_TWITTER_URL || 'https://twitter.com/JWordenSons',
     label: 'X / Twitter',
     handle: '@JWordenSons',
@@ -89,6 +96,31 @@ export const SOCIAL_PROFILES = {
   },
 }
 
+/**
+ * Whether a profile actually resolves.
+ *
+ * A `sameAs` entry is an identity claim — it tells a crawler "this business is
+ * also that page". Pointing one at a 404 does not fail quietly: it asks the
+ * crawler to reconcile the entity against a page that is not there, which is
+ * the opposite of what sameAs is for. The whole set was checked on 2026-08-24
+ * and two were dead, so those are marked `live: false` above and excluded here
+ * rather than published.
+ *
+ * An explicit env override always wins. If the account is created later,
+ * setting VITE_TWITTER_URL or VITE_YOUTUBE_URL puts it back into `sameAs`, the
+ * footer and the icon strip in one move, with no code change.
+ */
+const OVERRIDES = {
+  twitter: import.meta.env.VITE_TWITTER_URL,
+  youtube: import.meta.env.VITE_YOUTUBE_URL,
+}
+
+const isLive = (key) => {
+  const profile = SOCIAL_PROFILES[key]
+  if (!profile?.url) return false
+  return profile.live !== false || Boolean(OVERRIDES[key])
+}
+
 /** Ordered list for display in icon strips — only platforms with icon assets in SocialLinks.jsx. */
 export const SOCIAL_DISPLAY_ORDER = [
   'googlebusiness_va',
@@ -100,19 +132,19 @@ export const SOCIAL_DISPLAY_ORDER = [
   'linkedin',
   'twitter',
   'nextdoor',
-]
+].filter(isLive)
 
-/**
- * All keys in SOCIAL_PROFILES — used for Schema.org `sameAs` so Google
- * sees every profile, even ones we don't render an icon for.
- */
+/** Every key in SOCIAL_PROFILES, live or not. */
 export const SOCIAL_ALL_KEYS = Object.keys(SOCIAL_PROFILES)
 
+/** The keys whose profiles resolve. */
+export const SOCIAL_LIVE_KEYS = SOCIAL_ALL_KEYS.filter(isLive)
+
 /**
- * Flat array of all profile URLs — injected into Schema.org `sameAs`
- * to tell Google which social accounts belong to this business.
+ * Flat array of profile URLs — injected into Schema.org `sameAs` to tell a
+ * crawler which accounts belong to this business. Live profiles only.
  */
-export const SAME_AS_URLS = SOCIAL_ALL_KEYS.map((k) => SOCIAL_PROFILES[k].url)
+export const SAME_AS_URLS = SOCIAL_LIVE_KEYS.map((k) => SOCIAL_PROFILES[k].url)
 
 /**
  * Build a UTM-tagged canonical share URL for a given path.
