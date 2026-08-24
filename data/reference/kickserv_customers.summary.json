@@ -1,0 +1,35 @@
+{
+ "source": "d1e332e4-jwordenandsonspaving_20260823215614.zip",
+ "summary": {
+  "total": 2263,
+  "commercial": 478,
+  "residential": 1785,
+  "franchise": 338,
+  "with_email": 1852,
+  "with_phone": 2038,
+  "with_address": 2137,
+  "with_coordinates": 804,
+  "with_completed_job": 920,
+  "sms_unreachable": 177,
+  "states": {
+   "VA": 1722,
+   "GA": 72,
+   "MI": 50,
+   "FL": 39,
+   "NC": 34,
+   "TX": 30,
+   "MO": 26,
+   "IL": 25,
+   "KS": 25,
+   "NJ": 21,
+   "AL": 19,
+   "NY": 18,
+   "MD": 16,
+   "LA": 7,
+   "TN": 5,
+   "IA": 3,
+   "OH": 2,
+   "SC": 2
+  }
+ }
+}
