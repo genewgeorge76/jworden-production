@@ -66,7 +66,13 @@ export const CAROLINA_REGIONS = [
     ],
     headline: 'Asphalt Paving Across North Carolina',
     lede:
-      'Commercial lots, drive lanes and residential work through the Piedmont and the Triangle, built on a base sized for clay that moves.',
+      'Commercial lots, drive lanes and residential work through the Piedmont and the Triangle, built on a base sized for clay that moves. Restaurant sites in High Point and Burlington are documented below.',
+    // Proof lives in src/data/carolinaProgram.js — three KFC sites with
+    // after-photographs on file, each checkable by store number. Charlotte is
+    // the brand's heaviest market by the owner's account, but no Charlotte
+    // records are in this repository, so it appears as a service area and
+    // carries no count.
+    hasQsrProof: true,
   },
   {
     slug: 'south-carolina',
@@ -88,7 +94,7 @@ export const CAROLINA_REGIONS = [
     ],
     headline: 'Asphalt Paving Across South Carolina',
     lede:
-      'Commercial lots, driveways, chip-and-tar and sealcoating from the Lowcountry to the Upstate — built for sand, salt and a water table that never gets far from the surface.',
+      'Commercial lots, driveways, chip-and-tar and sealcoating from the Lowcountry through Columbia and Rock Hill to the Upstate — built for sand, salt and a water table that never gets far from the surface.',
     // Chip-and-tar is named because it is what this brand demonstrably sold:
     // a 2019 quote from Carolina Blacktop carries the subject "Chip and tar".
     services: [

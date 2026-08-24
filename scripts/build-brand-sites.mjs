@@ -432,6 +432,9 @@ const carolinaMod = await import(
   pathToFileURL(resolve(ROOT, 'src/data/carolinaRegions.js')).href
 );
 const CAROLINA_REGIONS = carolinaMod.CAROLINA_REGIONS;
+const carolinaProgram = await import(
+  pathToFileURL(resolve(ROOT, 'src/data/carolinaProgram.js')).href
+);
 const texasPhotosFor = texasPhotoMod.photosForCity;
 
 const profilesPath = resolve(ROOT, 'src/data/regionalMarketProfiles.js');
@@ -746,6 +749,17 @@ function carolinaRegionPage(p, region) {
   <div class="spec"><h3>What fails here</h3><p>${esc(region.climate)}</p></div>
   <div class="spec"><h3>Specification</h3><p>${esc(region.dot)} &mdash; over a base built to drain, with a 96% Marshall Unit Weight minimum compaction floor.</p></div>
 </div></section>
+
+${region.hasQsrProof ? `<section class="pad"><div class="wrap">
+  <h2>Restaurant sites we finished in ${esc(region.name)}</h2>
+  <p class="sub">Store numbers and addresses as they were photographed and sent to the client on completion. Checkable.</p>
+  <ul class="sites">${carolinaProgram.publishableNcSites().map((site) =>
+    `<li><strong>${esc(site.store)}</strong><span>${esc(site.address ? `${site.address}, ${site.city}` : site.city)}</span></li>`
+  ).join('')}</ul>
+  <p class="body">${esc(
+    `Run for ${carolinaProgram.NC_CLIENT}, one of the largest ${carolinaProgram.NC_BRAND} franchise operators in the United States.`
+  )}</p>
+</div></section>` : ''}
 
 <section class="pad"><div class="wrap">
   <h2>What we do in ${esc(region.name)}</h2>
