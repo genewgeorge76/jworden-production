@@ -99,6 +99,28 @@ const ROUTES = [
 
 // ── Per-route copy. Written per market so no two pages are near-duplicates.
 function copyFor(key, p) {
+/**
+ * A meta description cut to length WITHOUT slicing through a word.
+ *
+ * This was `.slice(0, 155)`, which ended one brand's description on
+ * "...23 invoiced restaurant sites acro". Google shows the description it is
+ * given; a sentence that stops mid-word reads as a broken page to the one
+ * person who was about to click.
+ *
+ * Cut at the last space before the limit, strip any trailing punctuation the
+ * cut left dangling, and close with an ellipsis so it reads as deliberate.
+ */
+function clampDescription(text, limit = 155) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (clean.length <= limit) return clean;
+  const cut = clean.slice(0, limit - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  // A single word longer than the limit has no space to cut at; take the hard
+  // slice rather than returning nothing.
+  const body = lastSpace > limit * 0.6 ? cut.slice(0, lastSpace) : cut;
+  return `${body.replace(/[\s,;:.\u2014-]+$/, '')}\u2026`;
+}
+
   const { marketName, primaryMetro, primaryRegion, stateAbbr } = p;
   const where = primaryMetro || primaryRegion || marketName;
   switch (key) {
@@ -119,17 +141,33 @@ function copyFor(key, p) {
         h1: `Driveway Paving in ${where}`,
         lede: `Driveways built on prep that lasts, not a thicker mat over a bad base.`,
         body: p.subgrade,
-        bullets: ['New driveway installation', 'Resurfacing and overlays', 'Remove and replace', 'Widening and aprons', 'Drainage correction', 'Sealcoating and crack repair'],
+        bullets: p.residentialServices || [
+          'New driveway installation', 'Resurfacing and overlays', 'Remove and replace',
+          'Widening and aprons', 'Drainage correction', 'Sealcoating and crack repair',
+        ],
         bulletsTitle: 'Residential services',
       };
     case 'services':
       return {
         title: `Asphalt Paving Services in ${where} | ${marketName}`,
-        desc: `Full asphalt services in ${where}: paving, resurfacing, sealcoating, crack repair, striping and drainage correction. Documented specs, honest scope.`,
+        desc: p.servicesDesc
+          || `Full asphalt services in ${where}: paving, resurfacing, sealcoating, crack repair, striping and drainage correction. Documented specs, honest scope.`,
         h1: `Our Services in ${where}`,
         lede: `One crew, one standard — commercial lots through residential drives.`,
         body: p.subgrade,
-        bullets: ['Asphalt paving and resurfacing', 'Parking lot construction', 'Sealcoating', 'Hot-pour crack repair', 'Line striping and ADA layout', 'Grading and drainage correction'],
+        // A profile may state its own service mix. The default below is the
+        // Virginia list, and it is wrong in markets that buy something else:
+        // Texas ranch work is tar-and-chip and long unpaved runs, which no
+        // amount of "parking lot construction" speaks to. A market that does
+        // not override it keeps the default.
+        bullets: p.services || [
+          'Asphalt paving and resurfacing',
+          'Parking lot construction',
+          'Sealcoating',
+          'Hot-pour crack repair',
+          'Line striping and ADA layout',
+          'Grading and drainage correction',
+        ],
         bulletsTitle: 'What we do',
       };
     case 'areas':
@@ -154,7 +192,9 @@ function copyFor(key, p) {
     default:
       return {
         title: `${marketName} | Asphalt Paving in ${where}`,
-        desc: `${p.heroBody || `Commercial and residential asphalt paving in ${where}.`}`.slice(0, 155),
+        desc: clampDescription(
+          p.heroBody || `Commercial and residential asphalt paving in ${where}.`,
+        ),
         h1: p.heroHeadline || `Asphalt Paving in ${where}`,
         lede: p.heroBody || '',
         body: p.climate,

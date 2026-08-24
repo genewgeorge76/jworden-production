@@ -162,6 +162,17 @@
       "has": [
         {
           "type": "host",
+          "value": "www.texaspavementgroup.com"
+        }
+      ],
+      "destination": "https://texaspavementgroup.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
           "value": "www.carolinablacktop.com"
         }
       ],
@@ -333,6 +344,16 @@
         }
       ],
       "destination": "/brands/richmondasphaltpaving.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?texaspavementgroup\\.com"
+        }
+      ],
+      "destination": "/brands/texaspavementgroup.com/$1"
     },
     {
       "source": "/(.*)",

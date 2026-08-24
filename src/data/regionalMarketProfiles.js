@@ -159,6 +159,94 @@ export const REGIONAL_MARKET_PROFILES = {
     serviceAreas: ['Kill Devil Hills', 'Nags Head', 'Kitty Hawk', 'Manteo', 'Duck', 'Corolla', 'Southern Shores', 'Wanchese', 'Manns Harbor', 'Rodanthe', 'Avon', 'Hatteras', 'Currituck', 'Elizabeth City', 'Columbia'],
   },
 
+  // Texas — the one regional market with a documented statewide record.
+  //
+  // Every other profile in this file sells on capability. This one sells on 23
+  // invoiced jobs worth $670,039 across 19 Texas cities, read out of the
+  // Project Red invoice tracker by app/services/job_ledger.py and carried in
+  // src/data/texasProgram.js with the query behind each figure.
+  //
+  // The travelNote here is not an apology, which is what it is on the other
+  // out-of-state profiles. Running one programme from the Rio Grande Valley to
+  // East Texas is the argument: a multi-site owner does not want nineteen local
+  // contractors and nineteen invoices.
+  //
+  // The client is not named. It was a national QSR franchise operator; the
+  // relationship is theirs to disclose and the work stands up without it.
+  'texaspavementgroup.com': {
+    basedIn: 'Chester, Virginia — a statewide Texas programme run from one contract',
+    travelNote:
+      'We are a Virginia contractor, and we have run a full Texas programme: 23 invoiced restaurant sites from Brownsville to Greenville, coordinated on one contract with one point of contact. We do not keep a Dallas yard, and we would rather say so than pretend.',
+    stateDot:
+      'TxDOT Standard Specifications — Item 341 dense-graded hot-mix asphalt over Item 247 flexible base, with lime or cement treatment where the subgrade calls for it',
+    subgrade:
+      'Central and North Texas sit on Blackland Prairie clay with a plasticity index high enough to lift and drop a slab through a single wet-dry cycle. Thickening the mat does not fix that; treating the subgrade and building a base that drains does. In the Valley the problem inverts — a high water table and saline soils attack from below.',
+    climate:
+      'The failure mode here is heat, not frost. Sustained summer surface temperatures push an under-specified binder into rutting and shoving under loaded traffic, so binder grade and compaction carry the pavement, not thickness alone.',
+    // Four lines, in the order the evidence supports them. QSR first because
+    // 23 invoiced sites is the strongest thing on the page; ground-up building
+    // last because it is the largest claim and rests on one contract rather
+    // than a programme — stated as what it is instead of implied as routine.
+    commercialFocus: [
+      'Multi-site restaurant and retail portfolios coordinated across the state — one contract, one schedule, one invoice for every location',
+      'Commercial lots, industrial yards and distribution aprons built for loaded traffic',
+      'Estate and acreage driveways where the run is long enough that base and drainage decide whether it lasts',
+      'Ground-up site and building work: our largest single contract ran to eleven divisions, from clearing and pavement through masonry, openings, plumbing and HVAC, electrical and roofing',
+    ],
+    // The six lines this market actually buys. The default list in the builder
+    // is the Virginia one and it says nothing to a ranch owner with two miles
+    // of caliche road — tar-and-chip is the product there, not a parking lot.
+    services: [
+      'Ground-up QSR and retail site work — pad, pavement and building',
+      'Commercial paving and resurfacing for multi-site portfolios',
+      'Sealcoating and crack repair on a maintenance cycle',
+      'Rural and ranch road paving, including long unpaved runs',
+      'Tar-and-chip surfacing where the run is too long to justify hot mix',
+      'Line striping, ADA layout and fire-lane marking',
+    ],
+    servicesDesc:
+      'Texas asphalt services: ground-up QSR site work, commercial paving and resurfacing, sealcoating, ranch and rural road paving, tar-and-chip surfacing, and line striping. Documented specs, honest scope.',
+    residentialServices: [
+      'Estate and acreage driveways, including runs measured in tenths of a mile',
+      'Tar-and-chip surfacing for long rural drives',
+      'New driveway installation and widening',
+      'Resurfacing, overlays and remove-and-replace',
+      'Crown and open-ditch drainage where there is no curb to carry water',
+      'Sealcoating and crack repair',
+    ],
+    marketName: 'Texas Pavement Group',
+    primaryRegion: 'Texas',
+    // A real metro, because the builder writes "Asphalt Paving in
+    // {primaryMetro}" into the title and a phrase reads as broken English
+    // there. The statewide reach is made in the headline and the proof, which
+    // is where it belongs.
+    primaryMetro: 'McAllen, TX',
+    heroKicker: '23 Invoiced Texas Sites',
+    heroHeadline: 'Texas Pavement Group — One Contractor, Every Texas Location',
+    heroBody:
+      'Commercial and estate asphalt paving, resurfacing and ground-up site work across Texas. We have already run the statewide programme: 23 invoiced restaurant sites in 19 cities, from Brownsville and McAllen to Waco, Tyler and Greenville.',
+    ctaLabel: 'Call For A Texas Portfolio Estimate',
+    phoneDisplay: '804-822-7715',
+    proofHeadline: 'Documented Texas Programme',
+    localSpecs: [
+      'TxDOT Item 341 dense-graded hot mix over a base built to drain',
+      '96% Marshall Unit Weight minimum compaction floor',
+      'Binder grade specified for sustained Texas surface temperatures',
+      'Lime or cement subgrade treatment where the plasticity index calls for it',
+    ],
+    geo: {
+      region: 'US-TX',
+      placename: 'McAllen, Texas',
+      position: '26.2034;-98.2300',
+      icbm: '26.2034, -98.2300',
+    },
+    serviceAreas: [
+      'McAllen', 'Harlingen', 'Brownsville', 'Pharr', 'Mission', 'Weslaco', 'Edinburg',
+      'San Benito', 'Rio Grande City', 'Laredo', 'Del Rio', 'Eagle Pass', 'Waco',
+      'Temple', 'Killeen', 'Tyler', 'Palestine', 'Greenville', 'South Padre Island',
+    ],
+  },
+
   'atlantaasphaltpavingpros.com': {
     basedIn: 'Chester, Virginia — crews travel to Georgia for commercial work',
     travelNote: 'We are a Virginia contractor that mobilises to metro Atlanta for commercial and multi-site work. No local branch — one accountable crew and one number, wherever the sites are.',
