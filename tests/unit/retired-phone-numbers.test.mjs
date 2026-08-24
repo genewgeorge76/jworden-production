@@ -38,10 +38,16 @@ test('no retired number appears in any source file', () => {
   // This file necessarily names the retired numbers — it is the list. Once it
   // was committed, git ls-files started returning it and the guard flagged
   // itself. Comment-stripping cannot help: RETIRED is code, not a comment.
-  const SELF = 'tests/unit/retired-phone-numbers.test.mjs'
+  // Files that name a retired number ON PURPOSE, as part of a guard asserting it
+  // does NOT appear somewhere. Comment-stripping cannot help — these are code.
+  const GUARDS = new Set([
+    'tests/unit/retired-phone-numbers.test.mjs',
+    'tests/unit/georgia-program.test.mjs',
+    'tests/unit/phone-area-codes.test.mjs',
+  ])
 
   for (const rel of sourceFiles()) {
-    if (rel === SELF) continue
+    if (GUARDS.has(rel)) continue
     const full = path.join(ROOT, rel)
     let text
     try { text = fs.readFileSync(full, 'utf-8') } catch { continue }
