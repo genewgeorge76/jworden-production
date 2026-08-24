@@ -72,7 +72,10 @@ export const REGIONAL_MARKET_PROFILES = {
     primaryRegion: 'North & South Carolina',
     primaryMetro: 'Charlotte, NC',
     heroKicker: 'Carolinas Field Documentation',
-    heroHeadline: 'Carolina Blacktop — Asphalt Paving Built For the Piedmont',
+    // Was 'Built For the Piedmont' — accurate for North Carolina and wrong for
+    // the half of this brand that carries an 843 Charleston number. Both
+    // states now have their own page; the headline names both.
+    heroHeadline: 'Carolina Blacktop — Asphalt Paving Across Both Carolinas',
     heroBody:
       'Commercial and residential asphalt paving, sealcoating, and repair across the Charlotte metro, the Piedmont Triad, and the Upstate of South Carolina.',
     ctaLabel: 'Call For A Carolinas Estimate',
@@ -100,7 +103,16 @@ export const REGIONAL_MARKET_PROFILES = {
       position: '35.2271;-80.8431',
       icbm: '35.2271, -80.8431',
     },
-    serviceAreas: ['Charlotte', 'Raleigh', 'Durham', 'Greensboro', 'Winston-Salem', 'Fayetteville', 'Greenville SC', 'Spartanburg', 'Rock Hill', 'Concord', 'Gastonia', 'Huntersville', 'Mooresville', 'Cary', 'Apex'],
+    // Both states. The coastal SC cities — Charleston through Beaufort — were
+    // entirely absent while the brand's phone number was an 843 Lowcountry
+    // line. See src/data/carolinaRegions.js.
+    serviceAreas: [
+      'Charlotte', 'Raleigh', 'Durham', 'Greensboro', 'Winston-Salem', 'Fayetteville',
+      'Concord', 'Gastonia', 'Huntersville', 'Mooresville', 'Cary', 'Apex',
+      'Charleston', 'North Charleston', 'Mount Pleasant', 'Summerville', 'Goose Creek',
+      'Myrtle Beach', 'Hilton Head Island', 'Bluffton', 'Beaufort',
+      'Columbia', 'Greenville', 'Spartanburg', 'Rock Hill',
+    ],
   },
 
   // Outer Banks — full-service coastal market.

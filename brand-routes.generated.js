@@ -27,5 +27,15 @@ export default {
     "/texas/palestine",
     "/texas/greenville",
     "/texas/killeen"
+  ],
+  "carolinablacktop.com": [
+    "/",
+    "/commercial",
+    "/residential",
+    "/services",
+    "/service-areas",
+    "/contact",
+    "/north-carolina",
+    "/south-carolina"
   ]
 };

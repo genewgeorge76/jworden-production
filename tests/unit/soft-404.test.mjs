@@ -55,14 +55,16 @@ function sitemapPaths() {
   return [...out]
 }
 
-// Paths served entirely out of /brands/<host>/ by the host rewrite in
-// vercel.json. They are NOT React routes and must not be checked against the
-// SPA manifest — middleware hands these hosts straight to the rewrite
-// (BRAND_DIR_HOSTS). They get a stronger check of their own below: that the
-// brand build actually produces the file.
-const BRAND_SERVED_PREFIXES = ['/texas/']
+// Paths served out of /brands/<host>/ by middleware's explicit rewrite. Read
+// from the generated manifest rather than a hardcoded prefix list, so adding a
+// brand page never silently needs a second edit here. These are NOT React
+// routes and must not be checked against the SPA manifest.
+const { default: BRAND_ROUTES } =
+  await import(path.join(ROOT, 'brand-routes.generated.js'))
 
-const isBrandServed = (p) => BRAND_SERVED_PREFIXES.some(prefix => p.startsWith(prefix))
+const BRAND_SERVED = new Set(Object.values(BRAND_ROUTES).flat())
+
+const isBrandServed = (p) => BRAND_SERVED.has(p)
 
 test('every sitemap path still resolves — no live page may 404', () => {
   const missing = sitemapPaths().filter(p => !isBrandServed(p) && !isKnownRoute(p))
@@ -73,7 +75,7 @@ test('every brand-served sitemap path is a file the brand build produces', () =>
   // Stronger than the manifest check the SPA routes get: this asserts the HTML
   // exists on disk. If build-brand-sites.mjs stops writing a city page while
   // the sitemap still advertises it, that is a real 404 and this fails.
-  const advertised = sitemapPaths().filter(isBrandServed)
+  const advertised = sitemapPaths().filter(p => p.startsWith('/texas/'))
   assert.ok(advertised.length > 0, 'expected the Texas city pages to be advertised')
 
   const brandDir = path.join(ROOT, 'dist/brands/texaspavementgroup.com')
