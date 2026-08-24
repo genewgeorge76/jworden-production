@@ -428,6 +428,10 @@ ${form}
 const texasCityMod = await import(pathToFileURL(resolve(ROOT, 'src/data/texasCityPages.js')).href);
 const texasPhotoMod = await import(pathToFileURL(resolve(ROOT, 'src/data/texasPhotos.js')).href);
 const TEXAS_CITY_PAGES = texasCityMod.texasCityPages();
+const carolinaMod = await import(
+  pathToFileURL(resolve(ROOT, 'src/data/carolinaRegions.js')).href
+);
+const CAROLINA_REGIONS = carolinaMod.CAROLINA_REGIONS;
 const texasPhotosFor = texasPhotoMod.photosForCity;
 
 const profilesPath = resolve(ROOT, 'src/data/regionalMarketProfiles.js');
@@ -671,6 +675,99 @@ ${texasGallery(cityPage.city, photos)}
 const usdShort = (v) => `$${Number(v).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 
 
+
+// ── Carolina state pages ─────────────────────────────────────────────────────
+// carolinablacktop.com covers both Carolinas. The site was written entirely for
+// the Piedmont while the brand's phone number is 843 — Charleston, Myrtle
+// Beach, Hilton Head. A South Carolina customer was being told about a
+// different state.
+//
+// These pages carry SERVICE-AREA and GROUND-CONDITION content only. No job
+// counts, no dollar figures, no project list — see src/data/carolinaRegions.js
+// for why that line is drawn where it is.
+
+function carolinaRegionPage(p, region) {
+  const path = `/${region.slug}`;
+  const canonical = canonicalUrl(p.domain, path);
+  const tel = `tel:+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`;
+  const title = `${region.headline} | ${p.marketName}`;
+  const desc = clampDescription(
+    `${region.lede} ${region.dot.split(' ')[0]} specifications, 96% Marshall compaction floor.`,
+  );
+
+  const services = region.services?.length ? region.services : (p.services || []);
+
+  const jsonld = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `Asphalt paving in ${region.name}`,
+    url: canonical,
+    provider: {
+      '@type': 'GeneralContractor',
+      name: p.marketName,
+      telephone: `+1${String(p.phoneDisplay || FALLBACK_PHONE).replace(/\D/g, '')}`,
+      parentOrganization: { '@type': 'Organization', name: 'J. Worden & Sons Paving LLC' },
+    },
+    areaServed: region.cities.map((c) => ({ '@type': 'City', name: `${c}, ${region.state}` })),
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${canonical}">
+<meta name="geo.region" content="US-${esc(region.state)}">
+<meta name="geo.placename" content="${esc(region.metro)}, ${esc(region.name)}">
+<script type="application/ld+json">${jsonld}</script>
+<link rel="stylesheet" href="/brand.css">
+</head>
+<body>
+<header><div class="wrap bar">
+  <a class="brand" href="/">Carolina <span>Blacktop</span></a>
+  <nav><a href="/">Home</a><a href="/north-carolina">North Carolina</a><a href="/south-carolina">South Carolina</a><a href="/commercial">Commercial</a><a href="/residential">Residential</a><a href="/contact">Contact</a></nav>
+  <a class="tel" href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <p class="kicker">${esc(region.name)}</p>
+  <h1>${esc(region.headline)}</h1>
+  <p class="lede">${esc(region.lede)}</p>
+  <a class="cta" href="/contact">Request a ${esc(region.name)} Estimate</a>
+</div></section>
+
+<section class="pad"><div class="wrap">
+  <h2>The ground in ${esc(region.name)}</h2>
+  <p class="body">${esc(region.subgrade)}</p>
+  <div class="spec"><h3>What fails here</h3><p>${esc(region.climate)}</p></div>
+  <div class="spec"><h3>Specification</h3><p>${esc(region.dot)} &mdash; over a base built to drain, with a 96% Marshall Unit Weight minimum compaction floor.</p></div>
+</div></section>
+
+<section class="pad"><div class="wrap">
+  <h2>What we do in ${esc(region.name)}</h2>
+  <ul class="grid">${services.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+</div></section>
+
+<section class="pad"><div class="wrap">
+  <h2>Where we work</h2>
+  <ul class="grid">${region.cities.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+  <p style="margin-top:22px"><a class="cta" href="/contact">Call for a ${esc(region.metro)} estimate</a></p>
+</div></section>
+
+<footer><div class="wrap">
+  <div><strong>${esc(p.marketName)}</strong> &mdash; serving ${esc(region.name)}</div>
+  <div>Call <a href="${tel}">${esc(p.phoneDisplay || FALLBACK_PHONE)}</a></div>
+  <div class="hublink">Part of the <a href="${HUB}">J. Worden &amp; Sons</a> network — 4th generation, since 1984.</div>
+  <div style="margin-top:10px">&copy; ${new Date().getFullYear()} ${esc(p.marketName)} &mdash; a brand of J. Worden &amp; Sons Paving LLC.</div>
+</div></footer>
+</body>
+</html>`;
+}
+
 let pagesWritten = 0;
 const manifest = [];
 
@@ -695,6 +792,18 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
   // The stylesheet the county and city pages link. Written per brand so each
   // domain serves its own copy at /brand.css.
   writeFileSync(resolve(DIST, 'brands', domain, 'brand.css'), BRAND_CSS, 'utf8');
+
+  // Carolina state pages belong only on the Carolina brand.
+  let carolinaCount = 0;
+  if (domain === 'carolinablacktop.com') {
+    for (const region of CAROLINA_REGIONS) {
+      const dir = resolve(DIST, 'brands', domain, region.slug);
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(resolve(dir, 'index.html'), carolinaRegionPage(p, region), 'utf8');
+      carolinaCount += 1;
+      pagesWritten += 1;
+    }
+  }
 
   // Texas city pages belong only on the Texas brand.
   let cityCount = 0;
@@ -728,6 +837,7 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
     stateAbbr,
     countyPages: countyCount,
     cityPages: cityCount,
+    carolinaPages: carolinaCount,
     // The Texas city URLs the sitemap may advertise. Every one is backed by an
     // invoiced job, so all of them are indexable — unlike the county pages,
     // where only those with real facts attached are.
@@ -743,7 +853,8 @@ for (const [domain, raw] of Object.entries(PROFILES)) {
   console.log(
     `[brand-sites] ${domain} (${stateAbbr}) — ${ROUTES.length} pages` +
     (countyCount ? ` + ${countyCount} county pages` : '') +
-    (cityCount ? ` + ${cityCount} Texas city pages` : ''),
+    (cityCount ? ` + ${cityCount} Texas city pages` : '') +
+    (carolinaCount ? ` + ${carolinaCount} Carolina state pages` : ''),
   );
 }
 

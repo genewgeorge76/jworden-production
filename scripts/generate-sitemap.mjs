@@ -332,6 +332,17 @@ try {
 // no indexability filter — a city with no invoiced work simply gets no page.
 // Read from the same module the brand builder uses, for the same reason given
 // above: this script runs in `prebuild`, before the manifest exists.
+// carolinablacktop.com covers both Carolinas — a page per state, because the
+// Piedmont and the Lowcountry are different engineering problems.
+let CAROLINA_PATHS = [];
+try {
+  const mod = await import(pathToFileURL(resolve(ROOT, 'src/data/carolinaRegions.js')).href);
+  CAROLINA_PATHS = mod.CAROLINA_REGIONS.map((r) => `/${r.slug}`);
+  console.log(`[sitemap] ${CAROLINA_PATHS.length} Carolina state pages`);
+} catch (e) {
+  console.warn('[sitemap] Carolina state pages skipped:', e.message);
+}
+
 const TEXAS_DOMAIN = 'texaspavementgroup.com';
 let TEXAS_CITY_PATHS = [];
 try {
@@ -479,6 +490,13 @@ for (const domain of DOMAINS) {
     if (COUNTY_INDEXABLE_PATHS.length && domain === COUNTY_DOMAIN) {
       for (const path of COUNTY_INDEXABLE_PATHS) {
         urls.push({ loc: SITE + path, lastmod: today, changefreq: 'monthly', priority: '0.8' });
+      }
+    }
+
+    // Carolina state pages, for the Carolina brand only.
+    if (CAROLINA_PATHS.length && domain === 'carolinablacktop.com') {
+      for (const path of CAROLINA_PATHS) {
+        urls.push({ loc: SITE + path, lastmod: today, changefreq: 'monthly', priority: '0.9' });
       }
     }
 
