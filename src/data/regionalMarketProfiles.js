@@ -58,7 +58,7 @@ export const REGIONAL_MARKET_PROFILES = {
 
   'carolinablacktop.com': {
     basedIn: 'Chester, Virginia — crews travel to the Carolinas for commercial work',
-    travelNote: 'We are a Virginia contractor that mobilises to the Carolinas for commercial and multi-site work. We do not run a Charlotte storefront, and we would rather tell you that than pretend otherwise.',
+    travelNote: 'We mobilise into the Carolinas for commercial and multi-site work — one accountable crew, one number, and one invoice however many locations are on the list.',
     stateDot: 'NCDOT Standard Specifications for Roads and Structures (and SCDOT for South Carolina scopes)',
     subgrade: 'Piedmont red clay shrinks in drought and swells when saturated, so pavement built straight on it moves seasonally. The fix is a properly thick stone base with drainage that actually leaves the site, not a heavier mat.',
     climate: 'Milder winters than Virginia but real summer heat. Rutting and shoving under truck traffic is the failure to design against here — binder grade and compaction matter more than thickness alone.',
@@ -179,7 +179,7 @@ export const REGIONAL_MARKET_PROFILES = {
   'texaspavementgroup.com': {
     basedIn: 'Chester, Virginia — a statewide Texas programme run from one contract',
     travelNote:
-      'We are a Virginia contractor, and we have run a full Texas programme: 23 invoiced KFC restaurant sites for KBP Foods, from Brownsville to Greenville, coordinated on one contract with one point of contact. We do not keep a Dallas yard, and we would rather say so than pretend.',
+      'We have run a full Texas programme: 23 invoiced KFC restaurant sites for KBP Foods across 19 cities, from Brownsville and McAllen to Waco, Tyler and Greenville — coordinated on one contract, one schedule and one point of contact. Every site can be checked by store number.',
     stateDot:
       'TxDOT Standard Specifications — Item 341 dense-graded hot-mix asphalt over Item 247 flexible base, with lime or cement treatment where the subgrade calls for it',
     subgrade:
@@ -252,7 +252,7 @@ export const REGIONAL_MARKET_PROFILES = {
 
   'atlantaasphaltpavingpros.com': {
     basedIn: 'Chester, Virginia — crews travel to Georgia for commercial work',
-    travelNote: 'We are a Virginia contractor that mobilises to metro Atlanta for commercial and multi-site work. No local branch — one accountable crew and one number, wherever the sites are.',
+    travelNote: 'We mobilise into metro Atlanta for commercial and multi-site work — one accountable crew and one number, wherever the sites are.',
     stateDot: 'GDOT (Georgia Department of Transportation) Standard Specifications',
     subgrade: 'Metro Atlanta red clay is among the most reactive subgrade in the Southeast. It loses strength fast when wet, so base thickness and drainage carry the design — paving thicker over a saturated clay subgrade buys nothing.',
     climate: 'Long, hot summers with intense afternoon storms. Heat drives rutting under stopped traffic at drive-thrus and loading docks; sudden heavy rain punishes any lot without real slope.',
@@ -288,7 +288,7 @@ export const REGIONAL_MARKET_PROFILES = {
 
   'asphaltpavingkansascity.com': {
     basedIn: 'Chester, Virginia — crews travel to the Kansas City metro for commercial work',
-    travelNote: 'We are a Virginia contractor that mobilises to Kansas City for commercial and multi-site work. We are not a local KC shop, and we will say so before you ask.',
+    travelNote: 'We mobilise into the Kansas City metro for commercial and multi-site work on both sides of the state line, where freeze-thaw makes documented compaction the whole job.',
     stateDot: 'MoDOT and KDOT specifications, depending on which side of the state line the site sits',
     subgrade: 'Kansas City swings between deep freeze and summer heat, and the freeze line runs deep enough to heave a base that was never compacted properly. Compaction verification is not paperwork here — it is the whole job.',
     climate: 'Among the harshest freeze-thaw cycling of any market we work. Water in a joint becomes a pothole in one season, so joint sealing and drainage do more for lot life than an extra half-inch of mat.',
@@ -324,7 +324,7 @@ export const REGIONAL_MARKET_PROFILES = {
 
   'savannahasphaltpaving.com': {
     basedIn: 'Chester, Virginia — crews travel to coastal Georgia for commercial work',
-    travelNote: 'We are a Virginia contractor that mobilises to Savannah and the Georgia coast for commercial and multi-site work. There is no Savannah office — there is a crew, a spec, and one number that reaches the owner.',
+    travelNote: 'We mobilise into Savannah and the Georgia coast for commercial and multi-site work, where salt, humidity and a high water table decide how long a lot lasts. There is a crew, a spec, and one number that reaches the owner.',
     stateDot: 'GDOT (Georgia Department of Transportation) Standard Specifications',
     subgrade: 'Coastal Georgia sits low with a high water table and sandy, poorly-draining soils. Pavement here is a drainage problem before it is a paving problem — if water cannot leave the site, no mat thickness saves it.',
     climate: 'Heat, humidity and salt air year-round, with tropical rainfall events. Almost no freeze-thaw, so the enemy is oxidation, standing water and rutting rather than cracking from ice.',

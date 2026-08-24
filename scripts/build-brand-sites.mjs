@@ -430,6 +430,24 @@ if (!existsSync(profilesPath)) {
 const mod = await import(pathToFileURL(profilesPath).href);
 const PROFILES = mod.REGIONAL_MARKET_PROFILES || {};
 
+// Rule 1-4 in scripts/lib/brand-identity-policy.mjs. Enforced at build time
+// rather than reviewed by eye, because the site factory will apply whatever
+// this repo does to every SaaS client's site, unattended.
+const { auditProfiles } = await import(
+  pathToFileURL(resolve(ROOT, 'scripts/lib/brand-identity-policy.mjs')).href
+);
+const identityProblems = auditProfiles(PROFILES);
+if (identityProblems.length) {
+  console.error('[brand-sites] brand identity policy violations:');
+  for (const p of identityProblems) {
+    console.error(`  ${p.domain} — rule ${p.rule}: ${p.detail}`);
+  }
+  throw new Error(
+    `${identityProblems.length} brand identity violation(s). See scripts/lib/brand-identity-policy.mjs.`,
+  );
+}
+console.log(`[brand-sites] identity policy: ${Object.keys(PROFILES).length} brands clean`);
+
 // ── Virginia county pages ────────────────────────────────────────────────────
 // These exist as a client route, which was not enough: richmondasphaltpaving.com
 // resolves to market-landing mode, so the raw HTML served for /virginia/* was
