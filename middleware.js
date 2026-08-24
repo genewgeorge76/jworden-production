@@ -48,6 +48,21 @@ const HOMEPAGE_BY_HOST = new Set([
   'thewordenstandard.com',
 ]);
 
+// Hosts whose homepage is a DIRECTORY under /brands/<host>/, not a flat
+// <host>.html file. The two mechanisms coexist: the older regional brands are
+// prerendered into <host>.html by normalize-meta-quality.mjs, while the newer
+// ones are written whole by build-brand-sites.mjs.
+//
+// Without this, `/` fell through to next(), the filesystem served the SPA's
+// dist/index.html, and texaspavementgroup.com answered its own homepage with
+// "The J. Worden Standard OS | AI Software for Blue-Collar Empires". Every
+// other path on that domain was already correct, which is what made it easy to
+// miss: /commercial and /texas/waco resolved through the vercel.json host
+// rewrite, and only the root was wrong.
+const BRAND_DIR_HOSTS = new Set([
+  'texaspavementgroup.com',
+]);
+
 // Hosts that have their own robots-<host>.txt / sitemap-<host>.{xml,txt} in
 // public/sitemaps/. Must stay in sync with DOMAINS in
 // scripts/generate-sitemap.mjs — rewriting to a file the build no longer
@@ -59,6 +74,11 @@ const HOMEPAGE_BY_HOST = new Set([
 // fall through to next(), which is the correct behaviour for them.
 const SITEMAP_HOSTS = new Set([
   MAIN_HOST,
+  // Added 2026-08-24 with the domain move onto this project. Its
+  // sitemap-/robots- files are generated unconditionally now that
+  // generate-sitemap.mjs carries the domain, so this no longer risks
+  // rewriting to a file the build does not produce.
+  'texaspavementgroup.com',
   'richmondasphaltpaving.com',
   'atlantaasphaltpavingpros.com',
   'asphaltpavingkansascity.com',
@@ -171,6 +191,9 @@ export default function middleware(request) {
       if (HOMEPAGE_BY_HOST.has(host)) {
         return rewrite(new URL(`/${host}.html`, request.url));
       }
+      if (BRAND_DIR_HOSTS.has(host)) {
+        return rewrite(new URL(`/brands/${host}/index.html`, request.url));
+      }
       return next();
     }
 
@@ -185,6 +208,12 @@ export default function middleware(request) {
     if (pathname === '/sitemap.txt') {
       return rewrite(new URL(`/sitemaps/sitemap-${host}.txt`, request.url));
     }
+
+    // Brand-directory hosts are served entirely out of /brands/<host>/ by the
+    // host rewrite in vercel.json. Their paths are NOT React routes, so running
+    // them through the SPA manifest below would 404 every one of the 19 Texas
+    // city pages the sitemap advertises. Hand them to the rewrite untouched.
+    if (BRAND_DIR_HOSTS.has(host)) return next();
 
     // Everything below here is an ordinary page request. Unknown paths get a
     // real 404 instead of the homepage with a 200.

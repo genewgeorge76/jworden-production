@@ -374,24 +374,16 @@ const DOMAINS = [
   'jwordenuniversity.com',
 ];
 
-// texaspavementgroup.com is BUILT here (6 brand pages + 19 city pages) but is
-// not yet SERVED here — the domain is attached to a different Vercel project,
-// which currently answers it with a competitive-intelligence dossier. Emitting
-// a sitemap now would advertise 19 URLs that 404 and push them to IndexNow on
-// every deploy, which is precisely the harm the list above exists to prevent.
+// texaspavementgroup.com is now served by THIS project — the domain was moved
+// off worden-pavement-group on 2026-08-24, which also took down the
+// competitive-intelligence dossier that was published at its root.
 //
-// The pages are ready. Set TEXAS_DOMAIN_LIVE=1 in the build environment the
-// moment the domain is moved onto this project, and the sitemap and robots.txt
-// appear with it. Nothing else needs changing.
-if (process.env.TEXAS_DOMAIN_LIVE === '1') {
-  DOMAINS.push(TEXAS_DOMAIN);
-  console.log(`[sitemap] ${TEXAS_DOMAIN} is live — advertising its pages`);
-} else {
-  console.log(
-    `[sitemap] ${TEXAS_DOMAIN} built but not advertised ` +
-    `(set TEXAS_DOMAIN_LIVE=1 once the domain points at this project)`,
-  );
-}
+// This was previously behind a TEXAS_DOMAIN_LIVE env flag, because advertising
+// URLs that 404 and pushing them to IndexNow is the harm the list above exists
+// to prevent. That condition no longer holds: the domain resolves to this
+// deployment, so the flag has been removed rather than left as a switch nobody
+// would remember to throw.
+DOMAINS.push(TEXAS_DOMAIN);
 
 try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch (e) {}
 

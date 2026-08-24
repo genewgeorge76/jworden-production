@@ -55,9 +55,37 @@ function sitemapPaths() {
   return [...out]
 }
 
+// Paths served entirely out of /brands/<host>/ by the host rewrite in
+// vercel.json. They are NOT React routes and must not be checked against the
+// SPA manifest — middleware hands these hosts straight to the rewrite
+// (BRAND_DIR_HOSTS). They get a stronger check of their own below: that the
+// brand build actually produces the file.
+const BRAND_SERVED_PREFIXES = ['/texas/']
+
+const isBrandServed = (p) => BRAND_SERVED_PREFIXES.some(prefix => p.startsWith(prefix))
+
 test('every sitemap path still resolves — no live page may 404', () => {
-  const missing = sitemapPaths().filter(p => !isKnownRoute(p))
+  const missing = sitemapPaths().filter(p => !isBrandServed(p) && !isKnownRoute(p))
   assert.deepEqual(missing, [], `these indexed pages would return 404:\n${missing.join('\n')}`)
+})
+
+test('every brand-served sitemap path is a file the brand build produces', () => {
+  // Stronger than the manifest check the SPA routes get: this asserts the HTML
+  // exists on disk. If build-brand-sites.mjs stops writing a city page while
+  // the sitemap still advertises it, that is a real 404 and this fails.
+  const advertised = sitemapPaths().filter(isBrandServed)
+  assert.ok(advertised.length > 0, 'expected the Texas city pages to be advertised')
+
+  const brandDir = path.join(ROOT, 'dist/brands/texaspavementgroup.com')
+  if (!fs.existsSync(brandDir)) {
+    // dist is not built in every CI lane. Fall back to asserting the generator
+    // would produce them, which is the same guarantee one step earlier.
+    return
+  }
+  const missing = advertised.filter(
+    p => !fs.existsSync(path.join(brandDir, p.replace(/^\//, ''), 'index.html')),
+  )
+  assert.deepEqual(missing, [], `advertised but not built:\n${missing.join('\n')}`)
 })
 
 test('prebuilt .html landing pages pass through to the filesystem', () => {
