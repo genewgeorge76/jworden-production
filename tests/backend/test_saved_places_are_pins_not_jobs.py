@@ -217,3 +217,73 @@ async def test_a_hosted_customer_cannot_import_or_read_the_operators_pins(client
     )
 
     assert response.status_code == 403
+
+
+# ── Writing pins the operator owns ──────────────────────────────────────────
+
+VERIFIED_SITES = [
+    {
+        "lat": 40.6284, "lon": -74.2776, "label": "KBP Foods KFC 142",
+        "address": "92 St George's Ave", "city": "Rahway", "state": "NJ",
+        "kind": "commercial", "evidence": "completed", "completed_on": "2017-04-21",
+        "store_number": "KFC 142", "client": "KBP Foods",
+        "source_document": "gmail:15b8e20d75ec3fb7",
+    },
+    {
+        "lat": 38.0293, "lon": -78.4767, "city": "Charlottesville", "state": "VA",
+        "address": "1 Private Drive", "kind": "residential", "evidence": "completed",
+    },
+]
+
+
+def test_a_commercial_pin_carries_its_address_and_what_backs_it():
+    kml = saved_places.to_kml(VERIFIED_SITES)
+
+    assert "92 St George&apos;s Ave, Rahway, NJ" in kml or "92 St George's Ave, Rahway, NJ" in kml
+    assert "Evidence: completed" in kml
+    assert "gmail:15b8e20d75ec3fb7" in kml, (
+        "a pin without provenance is the shape of the fabricated database this replaced"
+    )
+
+
+def test_a_residential_pin_never_carries_the_street():
+    """
+    A homeowner who let a crew photograph their driveway did not agree to a pin
+    with their address on a public map. The town is the most that goes on it.
+    """
+    kml = saved_places.to_kml(VERIFIED_SITES)
+
+    assert "Private Drive" not in kml
+    assert "<name>Charlottesville VA</name>" in kml
+
+
+def test_a_site_with_no_coordinate_is_left_off_rather_than_placed_approximately():
+    kml = saved_places.to_kml(
+        VERIFIED_SITES + [{"label": "Unlocated job", "city": "Waco", "state": "TX"}]
+    )
+
+    assert "Unlocated job" not in kml
+    assert kml.count("<Placemark>") == 2
+
+
+def test_an_impossible_coordinate_is_left_off_too():
+    kml = saved_places.to_kml([{"lat": 91.0, "lon": 0.0, "label": "Nowhere"}])
+
+    assert "<Placemark>" not in kml
+
+
+def test_the_ampersand_in_the_company_name_does_not_break_the_xml():
+    """"J. Worden & Sons" — a bare & makes the file unparseable, and My Maps
+    rejects it with a message that says nothing useful."""
+    kml = saved_places.to_kml(VERIFIED_SITES)
+
+    assert "&amp;" in kml
+    assert saved_places.read(kml), "and it still parses"
+
+
+def test_what_is_written_can_be_read_back():
+    """The exporter and the importer are the same map, in both directions."""
+    pins = saved_places.read(saved_places.to_kml(VERIFIED_SITES))
+
+    assert len(pins) == 2
+    assert (round(pins[0]["lat"], 4), round(pins[0]["lon"], 4)) == (40.6284, -74.2776)
