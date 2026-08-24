@@ -171,12 +171,15 @@ export const REGIONAL_MARKET_PROFILES = {
   // East Texas is the argument: a multi-site owner does not want nineteen local
   // contractors and nineteen invoices.
   //
-  // The client is not named. It was a national QSR franchise operator; the
-  // relationship is theirs to disclose and the work stands up without it.
+  // The client IS named — KBP Foods, a KFC franchise operator — on the owner's
+  // express instruction after being asked directly. This profile first withheld
+  // it. See src/data/texasProgram.js for the full note, including that the same
+  // programme carries a payments dispute in the archive: the decision was made
+  // with that in front of him.
   'texaspavementgroup.com': {
     basedIn: 'Chester, Virginia — a statewide Texas programme run from one contract',
     travelNote:
-      'We are a Virginia contractor, and we have run a full Texas programme: 23 invoiced restaurant sites from Brownsville to Greenville, coordinated on one contract with one point of contact. We do not keep a Dallas yard, and we would rather say so than pretend.',
+      'We are a Virginia contractor, and we have run a full Texas programme: 23 invoiced KFC restaurant sites for KBP Foods, from Brownsville to Greenville, coordinated on one contract with one point of contact. We do not keep a Dallas yard, and we would rather say so than pretend.',
     stateDot:
       'TxDOT Standard Specifications — Item 341 dense-graded hot-mix asphalt over Item 247 flexible base, with lime or cement treatment where the subgrade calls for it',
     subgrade:
@@ -188,7 +191,7 @@ export const REGIONAL_MARKET_PROFILES = {
     // last because it is the largest claim and rests on one contract rather
     // than a programme — stated as what it is instead of implied as routine.
     commercialFocus: [
-      'Multi-site restaurant and retail portfolios coordinated across the state — one contract, one schedule, one invoice for every location',
+      'Multi-site restaurant and retail portfolios coordinated across the state — one contract, one schedule, one invoice for every location, as run for KBP Foods across 19 Texas cities',
       'Commercial lots, industrial yards and distribution aprons built for loaded traffic',
       'Estate and acreage driveways where the run is long enough that base and drainage decide whether it lasts',
       'Ground-up site and building work: our largest single contract ran to eleven divisions, from clearing and pavement through masonry, openings, plumbing and HVAC, electrical and roofing',
@@ -221,10 +224,10 @@ export const REGIONAL_MARKET_PROFILES = {
     // there. The statewide reach is made in the headline and the proof, which
     // is where it belongs.
     primaryMetro: 'McAllen, TX',
-    heroKicker: '23 Invoiced Texas Sites',
+    heroKicker: '23 Invoiced KFC Sites for KBP Foods',
     heroHeadline: 'Texas Pavement Group — One Contractor, Every Texas Location',
     heroBody:
-      'Commercial and estate asphalt paving, resurfacing and ground-up site work across Texas. We have already run the statewide programme: 23 invoiced restaurant sites in 19 cities, from Brownsville and McAllen to Waco, Tyler and Greenville.',
+      'Commercial and estate asphalt paving, resurfacing and ground-up site work across Texas. We have already run the statewide programme: 23 invoiced KFC restaurant sites for KBP Foods across 19 cities, from Brownsville and McAllen to Waco, Tyler and Greenville.',
     ctaLabel: 'Call For A Texas Portfolio Estimate',
     phoneDisplay: '804-822-7715',
     proofHeadline: 'Documented Texas Programme',

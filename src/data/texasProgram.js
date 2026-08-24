@@ -22,12 +22,32 @@
  * job was worth. Seven of these were checked against the operator's independent
  * reading of the same file and matched to the cent.
  *
- * THE CLIENT IS NOT NAMED HERE
- * ────────────────────────────
- * The programme was run for a national QSR franchise operator. The brand is not
- * printed on a marketing page: the relationship is the client's to disclose,
- * and there is nothing about the work that needs their name to be impressive.
+ * THE CLIENT IS NAMED, ON THE OWNER'S EXPRESS INSTRUCTION
+ * ───────────────────────────────────────────────────────
+ * The programme was run for KBP Foods, one of the largest KFC franchise
+ * operators in the United States. This file first withheld the name on the
+ * reasoning that a client relationship is the client's to disclose; the owner
+ * was asked directly and chose to name them, on the grounds that the work was
+ * substantial and the invoices evidence it.
+ *
+ * Recorded here rather than left implicit because the archive also contains a
+ * subcontractor-payments dispute, correspondence with attorneys, and a state
+ * licensing-board document request relating to the same programme. The
+ * decision to name a former client in those circumstances is the owner's to
+ * make and he has made it; whoever edits this file next should know that it
+ * was a decision rather than an oversight.
+ *
+ * What is stated is only what the invoices support: the client, the cities,
+ * the counts and the values. No claim is made about how the relationship
+ * ended, because that is not evidenced here and is nobody's business on a
+ * marketing page.
  */
+
+/** The client, as the owner has authorised naming them. */
+export const TX_CLIENT = 'KBP Foods'
+export const TX_CLIENT_NOTE =
+  'One of the largest KFC franchise operators in the United States'
+export const TX_BRAND = 'KFC'
 
 /** Rows on the TX tab carrying invoice evidence. */
 export const TX_INVOICED_JOBS = 23
