@@ -90,6 +90,10 @@ export const CAROLINA_REGIONS = [
     cities: [
       'Charleston', 'North Charleston', 'Mount Pleasant', 'Summerville',
       'Goose Creek', 'Myrtle Beach', 'Hilton Head Island', 'Bluffton',
+      // Hardeeville sits twenty minutes from Savannah and is the crossover
+      // point between this brand and savannahasphaltpaving.com. Florence is the
+      // Pee Dee, inland from the Grand Strand.
+      'Hardeeville', 'Florence',
       'Beaufort', 'Columbia', 'Greenville', 'Spartanburg', 'Rock Hill',
     ],
     headline: 'Asphalt Paving Across South Carolina',
@@ -99,6 +103,7 @@ export const CAROLINA_REGIONS = [
     // a 2019 quote from Carolina Blacktop carries the subject "Chip and tar".
     services: [
       'Commercial lots, drive lanes and loading approaches',
+      'Trailer and equipment parking built for standing axle loads',
       'Driveway paving, widening and resurfacing',
       'Chip-and-tar surfacing for long rural and coastal drives',
       'Sealcoating and crack repair on a maintenance cycle',
