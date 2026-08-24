@@ -35,6 +35,7 @@ const TABS = [
   { to: '/dashboard', label: 'Dashboard', group: 'Work', tier: 'lite', source: 'Core Cockpit Dashboard' },
   // Operator only — 2,610 jobs with client contacts and contract values.
   { to: '/job-book', label: 'Job Book', group: 'Work', owner: true, source: 'Kickserv archive + evidence ledger' },
+  { to: '/photo-review', label: 'Photo Review', group: 'Work', owner: true, source: 'Dropbox GPS clusters — awaiting a human decision' },
   { to: '/estimate', label: 'Estimates', group: 'Work', tier: 'lite', source: 'Manual Estimate Builder' },
   { to: '/customers', label: 'Customers', group: 'Work', tier: 'lite', source: 'Basic CRM & Leads' },
   { to: '/leads', label: 'Leads', group: 'Work', tier: 'lite', source: 'Basic CRM & Leads' },

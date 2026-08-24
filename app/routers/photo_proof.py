@@ -348,7 +348,24 @@ def review_cluster(
         cluster.evidence = evidence
 
     cluster.status = payload.status
-    for field in ("label", "address", "city", "state", "evidence_note"):
+
+    # A residential place never carries a street, whatever the caller sent. The
+    # review screen already hides the field, but a rule that lives only in the
+    # client is not a rule — anything holding an operator token can POST here
+    # directly. A homeowner who let a crew photograph their driveway did not
+    # agree to have the address published, and the address is the one field
+    # that turns a service area into somebody's home.
+    #
+    # Cleared rather than rejected: refusing the whole review would lose a
+    # correct commercial/residential decision over a field the reviewer may not
+    # even have meant to send. City and state stay — a town is not an address.
+    writable = ["label", "city", "state", "evidence_note"]
+    if cluster.kind == "residential":
+        cluster.address = None
+    else:
+        writable.append("address")
+
+    for field in writable:
         value = getattr(payload, field)
         if value is not None:
             setattr(cluster, field, value.strip() or None)

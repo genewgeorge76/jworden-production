@@ -496,3 +496,107 @@ async def test_every_cluster_carries_a_pin_the_reviewer_can_open(client, auth_he
 
     assert "37.5407" in cluster["map_url"]
     assert cluster["sample_paths"] == ["/a.jpg"]
+
+
+@pytest.mark.anyio
+async def test_a_residential_confirmation_never_stores_a_street_address(
+    client, auth_headers, dropbox
+):
+    """
+    The privacy rule has to hold at the API, not only in the review screen.
+
+    The screen hides the address field for a residential place, but anything
+    holding an operator token can POST here directly, and a rule that lives
+    only in the client is not a rule. A homeowner who let a crew photograph
+    their driveway did not agree to have the address published.
+
+    The address is cleared rather than the review refused: rejecting the whole
+    request would throw away a correct commercial/residential decision over a
+    field the reviewer may not have meant to send.
+    """
+    dropbox.append({"entries": [_entry("/a.jpg", lat=37.3505, lon=-77.4400)], "has_more": False})
+    await client.post("/api/v1/photo-proof/scan", json={}, headers=auth_headers)
+    cluster_id = (
+        await client.get("/api/v1/photo-proof/clusters", headers=auth_headers)
+    ).json()["clusters"][0]["id"]
+
+    response = await client.post(
+        f"/api/v1/photo-proof/clusters/{cluster_id}/review",
+        json={
+            "status": "confirmed",
+            "kind": "residential",
+            "label": "A driveway",
+            "address": "12 Private Lane",
+            "city": "Chester",
+            "state": "VA",
+        },
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    cluster = response.json()["cluster"]
+    assert cluster["kind"] == "residential"
+    assert cluster["address"] is None, "a residential place was given a street address"
+    # A town is a service area, not an address — those survive.
+    assert cluster["city"] == "Chester"
+    assert cluster["state"] == "VA"
+    assert cluster["label"] == "A driveway"
+
+
+@pytest.mark.anyio
+async def test_a_commercial_confirmation_does_keep_its_address(
+    client, auth_headers, dropbox
+):
+    """The guard above must not have taken the address off every place."""
+    dropbox.append({"entries": [_entry("/a.jpg", lat=42.3700, lon=-87.8400)], "has_more": False})
+    await client.post("/api/v1/photo-proof/scan", json={}, headers=auth_headers)
+    cluster_id = (
+        await client.get("/api/v1/photo-proof/clusters", headers=auth_headers)
+    ).json()["clusters"][0]["id"]
+
+    response = await client.post(
+        f"/api/v1/photo-proof/clusters/{cluster_id}/review",
+        json={
+            "status": "confirmed",
+            "kind": "commercial",
+            "label": "KFC Waukegan",
+            "address": "1400 N Lewis Ave",
+            "city": "Waukegan",
+            "state": "IL",
+        },
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["cluster"]["address"] == "1400 N Lewis Ave"
+
+
+@pytest.mark.anyio
+async def test_re_reviewing_a_confirmed_commercial_place_as_residential_drops_the_address(
+    client, auth_headers, dropbox
+):
+    """
+    The correction path. If a place was filed as commercial with a street and
+    is later corrected to residential, the street has to go with it — otherwise
+    the mistake is preserved by the very act of fixing it.
+    """
+    dropbox.append({"entries": [_entry("/a.jpg", lat=37.5407, lon=-77.4360)], "has_more": False})
+    await client.post("/api/v1/photo-proof/scan", json={}, headers=auth_headers)
+    cluster_id = (
+        await client.get("/api/v1/photo-proof/clusters", headers=auth_headers)
+    ).json()["clusters"][0]["id"]
+
+    await client.post(
+        f"/api/v1/photo-proof/clusters/{cluster_id}/review",
+        json={"status": "confirmed", "kind": "commercial", "address": "9 Main St"},
+        headers=auth_headers,
+    )
+
+    corrected = await client.post(
+        f"/api/v1/photo-proof/clusters/{cluster_id}/review",
+        json={"status": "confirmed", "kind": "residential"},
+        headers=auth_headers,
+    )
+
+    assert corrected.status_code == 200
+    assert corrected.json()["cluster"]["address"] is None
