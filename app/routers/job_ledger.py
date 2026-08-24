@@ -286,6 +286,8 @@ def _as_dict(record: ClientJobRecord) -> dict:
         "city": record.city,
         "state": record.state,
         "postal_code": record.postal_code,
+        "area_sqft": record.area_sqft,
+        "area_source": record.area_source,
         "invoice_number": record.invoice_number,
         "date_submitted": record.date_submitted.isoformat() if record.date_submitted else None,
         # Strings, because these are money. A float here reaches a page and
@@ -293,6 +295,9 @@ def _as_dict(record: ClientJobRecord) -> dict:
         "invoice_amount": job_ledger.to_dollars(record.invoice_amount_cents),
         "job_total": job_ledger.to_dollars(record.job_total_cents),
         "amount_paid": job_ledger.to_dollars(record.amount_paid_cents),
+        "paid_date": record.paid_date.isoformat() if record.paid_date else None,
+        "check_number": record.check_number,
+        "job_status": record.job_status,
         "evidence": record.evidence,
         "evidence_means": job_ledger.EVIDENCE_MEANING.get(record.evidence, ""),
         "publishable": job_ledger.is_publishable(record.evidence),

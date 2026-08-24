@@ -43,26 +43,50 @@ logger = logging.getLogger(__name__)
 
 # Ordered weakest to strongest. Comparisons use the index, so a re-import can
 # upgrade a listed site to an invoiced one and can never silently downgrade it.
-EVIDENCE_ORDER = ("requested", "listed", "authorized", "invoiced")
+EVIDENCE_ORDER = ("requested", "listed", "quoted", "authorized", "contracted", "invoiced")
 
 REQUESTED = "requested"
 LISTED = "listed"
+QUOTED = "quoted"
 AUTHORIZED = "authorized"
+CONTRACTED = "contracted"
 INVOICED = "invoiced"
 
 # The single rule everything else exists to serve.
 PUBLISHABLE = frozenset({INVOICED})
 
 EVIDENCE_MEANING = {
-    REQUESTED: "On a punch list. Work the client asked for — explicitly not work performed.",
+    REQUESTED: (
+        "The client asked — a punch list, or a request to quote. Work wanted, "
+        "explicitly not work performed and not yet even priced."
+    ),
     LISTED: "An address on a programme list. A site, not a job.",
-    AUTHORIZED: "A signed authorization to proceed, up to an amount. Agreed, not yet finished.",
+    QUOTED: "An estimate we issued. Our price for work at a named site — not proof they accepted it.",
+    AUTHORIZED: "The client approved the work in writing. Agreed, not yet proof it was finished.",
+    CONTRACTED: (
+        "A formal contract naming a sum and a scope. The strongest record short of "
+        "an invoice — and still not proof the work was completed."
+    ),
     INVOICED: "An invoice number, submitted date or amount. Work that was billed.",
 }
 
-# KBP's store identifiers: a G and six digits. Matched with a boundary so a
-# longer code is not silently truncated into a valid-looking one.
+# KBP uses at least two store-numbering systems and both appear in the
+# paperwork, so recognising only one silently loses half the archive:
+#
+#   G135211            the new-build / Project Red programme sheets
+#   KFC (142)          the maintenance estimates — estimate #2228 names its
+#                      service address as "KFC (142), 9300 Midlothian Turnpike"
+#
+# The G form is matched on a word boundary so a longer code is not truncated
+# into a valid-looking one. The parenthesised form requires the brand word in
+# front of it, because a bare "(142)" in a sentence is a number, not a store.
 _STORE_NUMBER = re.compile(r"\b(G\d{6})\b", re.IGNORECASE)
+_BRAND_STORE_NUMBER = re.compile(r"\b(KFC|Taco\s*Bell|Rite\s*Aid)\s*\(\s*(\d{1,5})\s*\)", re.IGNORECASE)
+# A third form, from the facilities-management side. KleenCo's quote requests
+# head their store block "RIT11262 / Rite Aid / 4245 Holland Road, Virginia
+# Beach VA" — the prefix is the brand, so this one is already unambiguous and
+# is kept verbatim.
+_PREFIXED_STORE_NUMBER = re.compile(r"\b(RIT\d{4,6})\b", re.IGNORECASE)
 
 
 def rank(evidence: str) -> int:
@@ -77,9 +101,21 @@ def is_publishable(evidence: str) -> bool:
 
 
 def store_numbers_in(text: str) -> list[str]:
-    """Every store number in a block of free text, uppercased and deduplicated."""
+    """
+    Every store identifier in a block of free text, normalised and deduplicated.
+
+    Two forms, both real. The parenthesised one is normalised with its brand —
+    "KFC 142" rather than "142" — because a bare number is not an identifier:
+    KBP operate more than one brand and a Taco Bell 142 would collide with it.
+    """
     seen: dict[str, None] = {}
-    for match in _STORE_NUMBER.finditer(text or ""):
+    body = text or ""
+    for match in _STORE_NUMBER.finditer(body):
+        seen.setdefault(match.group(1).upper(), None)
+    for match in _BRAND_STORE_NUMBER.finditer(body):
+        brand = re.sub(r"\s+", " ", match.group(1)).strip().upper()
+        seen.setdefault(f"{brand} {match.group(2)}", None)
+    for match in _PREFIXED_STORE_NUMBER.finditer(body):
         seen.setdefault(match.group(1).upper(), None)
     return list(seen)
 
@@ -137,6 +173,8 @@ def grade(
     date_submitted: Any = None,
     invoice_amount_cents: Optional[int] = None,
     authorized: bool = False,
+    contracted: bool = False,
+    quoted: bool = False,
     from_punch_list: bool = False,
 ) -> str:
     """
@@ -153,8 +191,18 @@ def grade(
         return REQUESTED
     if invoice_number or date_submitted is not None or invoice_amount_cents:
         return INVOICED
+    if contracted:
+        # An AIA A105 naming a contract sum and a scope. Stronger than an email
+        # saying go ahead, and still short of an invoice: a contract is what
+        # both sides agreed to do, not a record that it was done.
+        return CONTRACTED
     if authorized:
         return AUTHORIZED
+    if quoted:
+        # Our own estimate. It proves what we offered and at what price; it
+        # does not prove the client said yes, and the gap between the two is
+        # where a portfolio quietly inflates.
+        return QUOTED
     return LISTED
 
 
@@ -205,10 +253,22 @@ _COLUMNS = {
     "postal_code": ("zip", "zip code", "postal code"),
     "invoice_number": ("invoice #", "invoice number"),
     "date_submitted": ("date submitted", "date"),
-    "invoice_amount": ("$ amount of invoice", "amount of invoice", "invoice amount"),
+    # "$ Amount Invoiced" is the QUADS tab's spelling of the same column the
+    # other five tabs write as "$ Amount of Invoice". Missing it did not fail —
+    # it silently reported eleven invoiced jobs carrying no money at all.
+    "invoice_amount": (
+        "$ amount of invoice", "amount of invoice", "invoice amount",
+        "$ amount invoiced", "amount invoiced",
+    ),
     "job_total": ("total amount of job", "job total"),
     "amount_paid": ("$ amount paid", "amount paid"),
-    "outstanding_issues": ("outstanding issues", "issues", "notes"),
+    # Payment, tracked apart from invoicing. An unpaid invoice is still proof
+    # the work was performed — it is a receivable, not a doubt about the job.
+    "paid_date": ("date received", "date paid"),
+    "check_number": ("check #", "check number", "cheque #"),
+    "outstanding_balance": ("outstanding balance", "balance"),
+    "job_status": ("job status", "status"),
+    "outstanding_issues": ("outstanding issues", "oustanding issues", "issues", "notes"),
 }
 
 
@@ -248,12 +308,28 @@ def _find_header(rows: list[tuple]) -> tuple[int, dict[str, int]]:
     return -1, {}
 
 
+# Tabs in the KFC tracker are named GA, TX, NJ, MI, NY — states, not
+# categories. Naming a record's category "ga" is not wrong so much as useless,
+# and it loses the state, which is the field a regional page filters on.
+US_STATES = frozenset(
+    "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO "
+    "MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split()
+)
+
+
+def state_from_sheet_name(name: str) -> Optional[str]:
+    """The two-letter state a worksheet is named for, or None."""
+    candidate = (name or "").strip().upper()
+    return candidate if candidate in US_STATES else None
+
+
 def read_program_sheet(
     rows: list[tuple],
     *,
     client: Optional[str] = None,
     program: Optional[str] = None,
     category: Optional[str] = None,
+    state: Optional[str] = None,
     source_document: Optional[str] = None,
 ) -> list[dict]:
     """
@@ -292,7 +368,10 @@ def read_program_sheet(
                 "category": category,
                 "address": str(address) if address else None,
                 "city": str(cell(row, "city")).strip() if cell(row, "city") else None,
-                "state": str(cell(row, "state")).strip() if cell(row, "state") else None,
+                # The row's own state column wins; the sheet's name is the
+                # fallback, because the tracker's GA/TX/NJ tabs carry no state
+                # column at all.
+                "state": (str(cell(row, "state")).strip() if cell(row, "state") else None) or state,
                 "postal_code": str(cell(row, "postal_code")).strip()
                 if cell(row, "postal_code") else None,
                 "invoice_number": str(invoice_number) if invoice_number else None,
@@ -300,6 +379,11 @@ def read_program_sheet(
                 "invoice_amount_cents": invoice_cents,
                 "job_total_cents": to_cents(cell(row, "job_total")),
                 "amount_paid_cents": to_cents(cell(row, "amount_paid")),
+                "paid_date": _to_datetime(cell(row, "paid_date")),
+                "check_number": str(cell(row, "check_number")).strip()
+                if cell(row, "check_number") else None,
+                "job_status": str(cell(row, "job_status")).strip()
+                if cell(row, "job_status") else None,
                 "outstanding_issues": str(cell(row, "outstanding_issues"))
                 if cell(row, "outstanding_issues") else None,
                 "source_document": source_document,

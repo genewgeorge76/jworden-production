@@ -554,3 +554,348 @@ def test_a_status_of_complete_on_the_clients_schedule_is_not_our_invoice():
 
     assert eunice["evidence"] == job_ledger.LISTED
     assert job_ledger.is_publishable(eunice["evidence"]) is False
+
+
+# ── Two store-numbering systems, both real ──────────────────────────────────
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        # The new-build programme sheets.
+        ("Riverdale G135101- 15 parking blocks", ["G135101"]),
+        # Estimate #2228 names its service address as "KFC (142), 9300
+        # Midlothian Turnpike, Richmond VA". Recognising only the G form would
+        # silently lose every maintenance estimate in the archive.
+        ("KFC (142)\n9300 Midlothian Turnpike", ["KFC 142"]),
+        ("Taco Bell (3311) Colonial Heights", ["TACO BELL 3311"]),
+        ("kfc(142) lowercase and tight", ["KFC 142"]),
+        # A bare number in a sentence is a number.
+        ("we ran (142) tons that week", []),
+        ("no store here", []),
+    ],
+)
+def test_both_store_numbering_systems_are_recognised(text, expected):
+    assert job_ledger.store_numbers_in(text) == expected
+
+
+def test_a_parenthesised_number_keeps_its_brand():
+    """
+    "142" alone is not an identifier. KBP operate more than one brand, so a
+    Taco Bell 142 and a KFC 142 would collapse into one record and one of the
+    two invoices would vanish.
+    """
+    both = job_ledger.store_numbers_in("KFC (142) and Taco Bell (142)")
+
+    assert both == ["KFC 142", "TACO BELL 142"]
+
+
+# ── An estimate is not an acceptance ────────────────────────────────────────
+
+def test_our_own_estimate_grades_quoted_and_is_not_publishable():
+    """
+    Estimate #2228 — KBP Foods, KFC (142), 9300 Midlothian Turnpike, Richmond
+    VA, 16 May 2017, $25,589.39. It is a complete and genuine document, and it
+    proves what we offered, not that they accepted. The gap between those two
+    is where a portfolio quietly inflates.
+    """
+    assert job_ledger.grade(quoted=True) == job_ledger.QUOTED
+    assert job_ledger.is_publishable(job_ledger.QUOTED) is False
+
+
+def test_a_written_approval_grades_authorized():
+    """
+    Meckley Services, 27 September 2013: "I am approving the work you verbally
+    quoted for me $1500.00", with the address of the patch. Stronger than our
+    own estimate — the client has committed — and still not evidence the work
+    was finished.
+    """
+    assert job_ledger.grade(authorized=True) == job_ledger.AUTHORIZED
+    assert job_ledger.is_publishable(job_ledger.AUTHORIZED) is False
+
+
+def test_the_five_grades_rank_in_the_order_the_paperwork_gets_stronger():
+    order = [
+        job_ledger.REQUESTED,
+        job_ledger.LISTED,
+        job_ledger.QUOTED,
+        job_ledger.AUTHORIZED,
+        job_ledger.INVOICED,
+    ]
+    ranks = [job_ledger.rank(g) for g in order]
+
+    assert ranks == sorted(ranks), "a re-import must never be able to demote a record"
+    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}, (
+        "adding grades must not widen what may be published"
+    )
+
+
+def test_an_invoice_still_beats_a_quote_when_both_are_present():
+    """A row carrying both is billed work, not a proposal."""
+    assert job_ledger.grade(quoted=True, invoice_amount_cents=2558939) == job_ledger.INVOICED
+
+
+def test_a_punch_list_line_still_grades_requested_even_with_a_price_on_it():
+    assert job_ledger.grade(
+        from_punch_list=True, quoted=True, authorized=True, invoice_amount_cents=150000
+    ) == job_ledger.REQUESTED
+
+
+def test_the_estimate_total_survives_as_exact_cents():
+    """$25,589.39 — a float round-trip is where a figure stops matching the PDF."""
+    assert job_ledger.to_cents("$25,589.39") == 2558939
+    assert job_ledger.to_dollars(2558939) == "25589.39"
+
+
+# ── A contract, and an area somebody actually signed up to ──────────────────
+
+def test_a_formal_contract_grades_contracted_and_still_does_not_publish():
+    """
+    AIA A105-2007, 31 March 2016: First States Investors 5200, LLC (Gramercy
+    Property Trust) and J Worden & Sons Paving — parking lot overlay at
+    Robinson & Broad, 2601 West Broad Street, Richmond VA. Contract sum
+    $32,500.00.
+
+    Stronger than an email saying go ahead: a contract names a sum and a scope
+    and binds both sides. Still not proof the work was completed — that is what
+    the invoice and the lien waiver are for, which is precisely what the owner's
+    covering letter demanded within 30 days of completion.
+    """
+    assert job_ledger.grade(contracted=True) == job_ledger.CONTRACTED
+    assert job_ledger.is_publishable(job_ledger.CONTRACTED) is False
+
+
+def test_a_contract_outranks_an_approval_and_an_estimate():
+    ranks = [
+        job_ledger.rank(job_ledger.QUOTED),
+        job_ledger.rank(job_ledger.AUTHORIZED),
+        job_ledger.rank(job_ledger.CONTRACTED),
+        job_ledger.rank(job_ledger.INVOICED),
+    ]
+    assert ranks == sorted(ranks)
+
+
+def test_an_invoice_still_outranks_a_contract():
+    assert job_ledger.grade(contracted=True, invoice_amount_cents=3250000) == job_ledger.INVOICED
+
+
+def test_six_grades_and_still_only_one_of_them_publishes():
+    """
+    The count has gone from four to six across two changes. Each time, the
+    temptation is to let the second-strongest grade through as well. It does
+    not, and this test is here to make that a deliberate decision rather than
+    an oversight.
+    """
+    assert len(job_ledger.EVIDENCE_ORDER) == 6
+    assert job_ledger.PUBLISHABLE == {job_ledger.INVOICED}
+
+
+def test_the_contract_sum_survives_as_exact_cents():
+    assert job_ledger.to_cents("$32,500.00") == 3250000
+    assert job_ledger.to_dollars(3250000) == "32500.00"
+
+
+@pytest.mark.anyio
+async def test_a_sourced_area_is_carried_and_an_unsourced_one_stays_empty(client, auth_headers):
+    """
+    14,218 sq ft is in the contract. Every other row has no stated area, and it
+    must stay null rather than being filled from a map measurement — the
+    fabricated database's headline figures were invented square footages, so
+    this is the exact field that has already gone wrong once.
+    """
+    from app.models import ClientJobRecord
+
+    await client.post(
+        "/api/v1/job-ledger/import",
+        json=_rows_payload(category="parking"),
+        headers=auth_headers,
+    )
+    records = (await client.get("/api/v1/job-ledger/records", headers=auth_headers)).json()
+
+    assert all(r["area_sqft"] is None for r in records["records"]), (
+        "a programme sheet states no area, so none is invented"
+    )
+    assert all(r["area_source"] is None for r in records["records"])
+    assert hasattr(ClientJobRecord, "area_sqft")
+
+
+# ── A third numbering system, and a request that is not a job ───────────────
+
+RITE_AID_RFQ = """construct | preserve | maintain
+Chelsea Copeland
+STORE NAME:
+RIT11262
+Rite Aid
+4245 Holland Road
+Virginia Beach, VA 23452
+VENDOR NAME: J Worden and Sons Paving, LLC
+PR NO.: 83746   TR NO.: 1541442
+Scope of Work
+Resurface and restripe parking lot, over 50% alligatored include to repair in proposal as an
+option.
+Quote Request  Due Date: 6/20/2016
+"""
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("RIT11262\nRite Aid\n4245 Holland Road", ["RIT11262"]),
+        ("rit11262 lowercase", ["RIT11262"]),
+        ("RIT112 is too short", []),
+        # All three systems, one block of text.
+        ("G135211 and KFC (142) and RIT11262", ["G135211", "KFC 142", "RIT11262"]),
+    ],
+)
+def test_the_facilities_management_numbering_is_recognised_too(text, expected):
+    """
+    KleenCo's quote requests head their store block "RIT11262 / Rite Aid /
+    4245 Holland Road". The prefix carries the brand, so unlike a bare "(142)"
+    it needs nothing added to be unambiguous.
+    """
+    assert job_ledger.store_numbers_in(text) == expected
+
+
+def test_a_quote_request_is_a_request_and_never_a_job():
+    """
+    KleenCo, 20 June 2016: a request for J Worden to price resurfacing at
+    RIT11262. It proves we were on the vendor list and were invited to quote.
+    It does not prove we quoted, that anyone accepted, or that a wheel turned —
+    the document literally says "This will have to be approved by the client
+    prior to commencement of work."
+
+    An RFQ sitting in a folder of job paperwork reads like a job. It is the
+    weakest thing in the archive.
+    """
+    assert job_ledger.grade(from_punch_list=True) == job_ledger.REQUESTED
+    assert job_ledger.is_publishable(job_ledger.REQUESTED) is False
+    assert "not work performed" in job_ledger.EVIDENCE_MEANING[job_ledger.REQUESTED]
+
+
+def test_the_rfq_reads_as_one_requested_record_keyed_by_its_store_number():
+    records = job_ledger.read_punch_list(RITE_AID_RFQ, client="KleenCo USA")
+
+    assert len(records) == 1
+    assert records[0]["store_number"] == "RIT11262"
+    assert records[0]["evidence"] == job_ledger.REQUESTED
+    assert "alligatored" in records[0]["outstanding_issues"]
+
+
+def test_the_rfq_carries_no_money_even_though_numbers_are_all_over_it():
+    """
+    PR 83746 and TR 1541442 are reference numbers. A reader that treats a large
+    integer near a store as money invents $83,746 of work from a document that
+    records no price at all.
+    """
+    summary = job_ledger.summarise(job_ledger.read_punch_list(RITE_AID_RFQ))
+
+    assert summary["publishable"] == 0
+    assert summary["by_evidence"]["requested"]["invoiced_cents"] == 0
+
+
+# ── The KFC invoice tracker: six tabs, three column spellings ───────────────
+
+# The QUADS tab, verbatim. Note "$ Amount Invoiced" — five of the six tabs
+# spell the same column "$ Amount of Invoice".
+QUADS_ROWS = [
+    ("Store #", "Invoice #", "Store Address", "City", "State", "Date Submitted",
+     "Job Status", "$ Amount Invoiced", "Total Amount of Job", "$ Amount Paid",
+     "Outstanding Issues"),
+    ("G135001", 2067, "2943 18th Avenue", "Quads", "IL", "2016-10-08",
+     "permit", 18719.5, 37439, None, None),
+    ("G135002", 2065, "3843 ElmoreAvenue", "Quads", "IA", "2016-10-08",
+     "at location currently", 14417.5, 28835, None, None),
+]
+
+# The GA tab: no state column at all, and a typo in the issues header.
+GA_ROWS = [
+    ("Store #", "Invoice #", "Store Address", "City", "Date Submitted",
+     "$ Amount of Invoice ", "Date Received", "$ Amount Paid",
+     "Outstanding Balance", "Oustanding Issues", "Notes"),
+    ("G135074", 1699, "3901 Buford Hwy NE", "Atlanta", "2016-02-01",
+     26950, "2016-03-04", 26950, 0, None, None),
+]
+
+
+def test_the_other_spelling_of_the_invoice_column_is_read():
+    """
+    The failure this prevents was silent and expensive: the QUADS tab reported
+    eleven invoiced jobs carrying no money at all, because its header reads
+    "$ Amount Invoiced" and the reader only knew "$ Amount of Invoice". Nothing
+    errored. The eleven jobs were simply worth nothing.
+    """
+    records = job_ledger.read_program_sheet(QUADS_ROWS)
+
+    assert len(records) == 2
+    assert records[0]["invoice_amount_cents"] == 1871950
+    assert records[1]["invoice_amount_cents"] == 1441750
+    assert all(r["evidence"] == job_ledger.INVOICED for r in records)
+
+
+def test_a_half_dollar_survives_the_import():
+    """$18,719.50 — the exact value that a naive int() truncation loses."""
+    assert job_ledger.to_dollars(
+        job_ledger.read_program_sheet(QUADS_ROWS)[0]["invoice_amount_cents"]
+    ) == "18719.50"
+
+
+def test_the_clients_own_job_status_is_kept_verbatim():
+    records = job_ledger.read_program_sheet(QUADS_ROWS)
+
+    assert records[0]["job_status"] == "permit"
+    assert records[1]["job_status"] == "at location currently"
+
+
+def test_payment_is_recorded_without_changing_the_grade():
+    """
+    An unpaid invoice still proves the work was performed — it is a receivable,
+    not a doubt about the job. So payment lands in its own fields and the grade
+    stays 'invoiced' either way.
+    """
+    paid = job_ledger.read_program_sheet(GA_ROWS)[0]
+
+    assert paid["amount_paid_cents"] == 2695000
+    assert paid["paid_date"] is not None
+    assert paid["evidence"] == job_ledger.INVOICED
+
+
+def test_the_misspelled_issues_header_is_still_read():
+    """The GA tab says "Oustanding Issues". A real file has real typos."""
+    rows = [
+        list(GA_ROWS[0]),
+        ["G135074", 1699, "3901 Buford Hwy NE", "Atlanta", "2016-02-01",
+         26950, "2016-03-04", 26950, 0, "kerb damaged on the north side", None],
+    ]
+    assert "kerb damaged" in job_ledger.read_program_sheet(rows)[0]["outstanding_issues"]
+
+
+# ── A tab named for a state is a state ──────────────────────────────────────
+
+@pytest.mark.parametrize(
+    "sheet,state",
+    [("GA", "GA"), ("tx", "TX"), (" NJ ", "NJ"), ("QUADS", None),
+     ("Parking Lots", None), ("Roof", None), ("", None)],
+)
+def test_a_state_tab_is_recognised_and_a_work_tab_is_not(sheet, state):
+    assert job_ledger.state_from_sheet_name(sheet) == state
+
+
+def test_the_sheet_name_supplies_the_state_the_rows_do_not_carry():
+    """
+    The GA, TX, NJ, MI and NY tabs have no state column. Filing them under
+    category "ga" would be useless and would throw away the state, which is the
+    field a regional page filters on.
+    """
+    records = job_ledger.read_program_sheet(GA_ROWS, state="GA")
+
+    assert records[0]["state"] == "GA"
+    assert records[0]["city"] == "Atlanta"
+
+
+def test_a_rows_own_state_column_beats_the_sheet_name():
+    """
+    QUADS is the Quad Cities and straddles a state line — its rows carry IL and
+    IA in their own column, and the tab name must not overwrite that.
+    """
+    records = job_ledger.read_program_sheet(QUADS_ROWS, state="XX")
+
+    assert [r["state"] for r in records] == ["IL", "IA"]

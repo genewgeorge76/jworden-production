@@ -373,6 +373,18 @@ class ClientJobRecord(Base):
     state = Column(String(60), nullable=True)
     postal_code = Column(String(20), nullable=True)
 
+    # Paved area, ONLY where a document states it. The contract for 2601 W
+    # Broad St says "Mill down entire parking lot approx. 14,218 sq. ft." — a
+    # figure both parties signed up to, which is worth having.
+    #
+    # It is nullable and stays null rather than being filled from a map
+    # measurement or a guess. The fabricated database's headline numbers were
+    # invented square footages (18,500 … 28,000 sq ft), so an unsourced area is
+    # precisely the field that already caused this problem once.
+    area_sqft = Column(Integer, nullable=True)
+    # Which document the area came from, so it stays checkable.
+    area_source = Column(String(120), nullable=True)
+
     invoice_number = Column(String(80), nullable=True)
     date_submitted = Column(DateTime(timezone=True), nullable=True)
     # Money in whole cents. Floats do not add up to what an invoice says, and
@@ -381,6 +393,16 @@ class ClientJobRecord(Base):
     invoice_amount_cents = Column(Integer, nullable=True)
     job_total_cents = Column(Integer, nullable=True)
     amount_paid_cents = Column(Integer, nullable=True)
+    # Payment, kept apart from invoicing. An unpaid invoice still proves the
+    # work was performed — it is a receivable, not a doubt about the job — so
+    # these never affect the evidence grade.
+    paid_date = Column(DateTime(timezone=True), nullable=True)
+    # A cheque number is the strongest thing in the archive: the client's own
+    # reference for money that moved.
+    check_number = Column(String(60), nullable=True)
+    # The client's word for where the job stood: "permit", "next job",
+    # "at location currently". Kept verbatim.
+    job_status = Column(String(120), nullable=True)
 
     evidence = Column(String(20), nullable=False, default="listed", index=True)
     # Verbatim from the source document. Kept unparsed: "need dumpster gate

@@ -52,7 +52,14 @@ test:api:
     # Access) to prove an integration reads live data rather than a fixture.
     # Valuable to run by hand; a third party being down must not redden this
     # pipeline. Run them locally with: pytest -m network
-    - python3 -m pytest -q -m "not network"
+    #
+    # -n auto --dist loadfile: the suite outgrew this job's 15-minute limit and
+    # started failing as job_execution_timeout — a red pipeline containing no
+    # failing test, which reads to everyone as "the tests broke". Splitting by
+    # FILE rather than by test is deliberate: conftest's app_modules fixture
+    # reloads app.main and app.models, so tests in one file must share a
+    # worker. Measured 458s -> 168s on four cores.
+    - python3 -m pytest -q -m "not network" -n auto --dist loadfile
     # tests/ outside pytest.ini's testpaths. test_worker_topology.py imports
     # celery, which is installed here but not in every dev sandbox, which is
     # why it is run explicitly rather than folded into testpaths.
@@ -119,7 +126,10 @@ test:api:
           sys.exit('process commands are exec\'d directly; nothing expands these')
       print('fly.toml [processes] OK:', ', '.join(cfg.get('processes', {})))
       PY
-  timeout: 15m
+  # Parallelised, this runs in about a third of the old wall time. The limit is
+  # raised anyway: the suite grows every week, and the failure mode when it
+  # crosses the line is a red pipeline with no failing test in it.
+  timeout: 30m
 
 # ── Deploy ───────────────────────────────────────────────────────────────────
 
