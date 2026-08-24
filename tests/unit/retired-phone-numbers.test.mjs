@@ -35,7 +35,13 @@ function sourceFiles() {
 
 test('no retired number appears in any source file', () => {
   const offenders = []
+  // This file necessarily names the retired numbers — it is the list. Once it
+  // was committed, git ls-files started returning it and the guard flagged
+  // itself. Comment-stripping cannot help: RETIRED is code, not a comment.
+  const SELF = 'tests/unit/retired-phone-numbers.test.mjs'
+
   for (const rel of sourceFiles()) {
+    if (rel === SELF) continue
     const full = path.join(ROOT, rel)
     let text
     try { text = fs.readFileSync(full, 'utf-8') } catch { continue }
