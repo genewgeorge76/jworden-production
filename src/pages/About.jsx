@@ -299,6 +299,56 @@ export default function About() {
               </div>
             </div>
           </div>
+          {/* ── A photograph from the trade, not from this company ──────────
+              The owner asked for this on the site where it would be seen. It
+              is a real photograph and it is NOT J. Worden & Sons work: the
+              hopper decal reads GENEVA CONST. CO, an Aurora, Illinois paving
+              contractor founded in 1926 and still operating. Their unit number
+              is on the machine.
+
+              So it runs with the credit on it. An unlabelled period photograph
+              on a page about this company's own history reads as this
+              company's history, and that is the same move as the fabricated
+              store database — true image, false implication. Captioned, it is
+              simply what it is: the machine and the method this trade was
+              built on, a generation before the mats we lay now. */}
+          <figure className="mb-16">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900">
+              <picture>
+                <source
+                  srcSet="/heritage/barber-greene-sa41-geneva-construction.webp"
+                  type="image/webp"
+                />
+                <img
+                  src="/heritage/barber-greene-sa41-geneva-construction.jpg"
+                  alt="A Barber-Greene SA-41 asphalt paver, unit marked and decalled GENEVA CONST. CO, laying a mat on a rural two-lane road while a tandem dump truck feeds its hopper. A corn field and a farm silo stand behind it; a mid-1960s car passes on the finished lane."
+                  loading="lazy"
+                  width="1920"
+                  height="1547"
+                  className="w-full object-cover"
+                />
+              </picture>
+            </div>
+            <figcaption className="mt-4 text-center text-brand-navy/60 text-sm leading-relaxed max-w-2xl mx-auto">
+              <span className="font-bold text-brand-navy">
+                A Barber-Greene SA-41 laying a rural two-lane, mid-1960s.
+              </span>{' '}
+              Truck to hopper, screed man on the right, one pass. Photograph
+              shows equipment of{' '}
+              <a
+                href="http://www.genevaconstruction.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-brand-amber/60 underline-offset-2 hover:text-brand-navy"
+              >
+                Geneva Construction Co.
+              </a>
+              , Aurora, Illinois &mdash; not J. Worden &amp; Sons. It is here
+              because it is the machine and the method this trade was built on.
+              The compaction spec has changed; the sequence has not.
+            </figcaption>
+          </figure>
+
           <div className="relative">
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-brand-amber/30" />
             <div className="space-y-12">
