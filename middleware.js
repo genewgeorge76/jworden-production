@@ -62,6 +62,48 @@ const HOMEPAGE_BY_HOST = new Set([
 // rewrite, and only the root was wrong.
 const BRAND_DIR_HOSTS = new Set(Object.keys(BRAND_ROUTES));
 
+// Hosts that must not serve anything of their own, and where each one goes.
+//
+// WHY A 301 RATHER THAN A PAGE
+// ────────────────────────────
+// Every entry here is a domain that was serving the WRONG thing, and in two
+// cases something that should never have been public at all:
+//
+//   carolinapavementgroup.com   Served an internal "Competitive Intelligence
+//   nationalpavmentgroup.com    Dossier" — unit rates at $1.35 and $4.80 per
+//                               linear foot, job values, margin figures. That
+//                               is this company's own pricing, on a public
+//                               indexable domain, readable by every competitor
+//                               who finds it. It is not a duplicate-content
+//                               problem; it is a disclosure problem.
+//
+//   atlantapavingandsealing.com The second Atlanta domain. Two domains serving
+//                               Atlanta paving content is cross-domain
+//                               duplicate content, and it splits whatever
+//                               authority either has. One canonical, one 301.
+//
+// A 301 rather than a 404 because these domains have age and inbound links,
+// and a permanent redirect passes that to the canonical host instead of
+// throwing it away. A 404 would be safe and wasteful.
+//
+// WHICH ATLANTA DOMAIN IS CANONICAL, AND HOW TO SWAP IT
+// ─────────────────────────────────────────────────────
+// atlantaasphaltpavingpros.com wins by default, and the reason is mechanical
+// rather than aesthetic: it is the key in REGIONAL_MARKET_PROFILES, it is what
+// build-brand-sites.mjs writes the 18 Georgia pages under, and it is what
+// vercel.json's host rewrite points at. atlantapavingandsealing.com is the
+// better NAME — shorter, and "sealing" is a service people search for.
+//
+// To swap them, three things change together and none of them is this file
+// alone: the profile key in src/data/regionalMarketProfiles.js, the host
+// rewrite in vercel.json, and the direction of the entry below. Do all three
+// or the domain 301s to a host that has no pages.
+const HOST_REDIRECTS = new Map([
+  ['carolinapavementgroup.com', 'https://carolinablacktop.com'],
+  ['nationalpavmentgroup.com', 'https://www.jwordenasphaltpaving.com'],
+  ['atlantapavingandsealing.com', 'https://atlantaasphaltpavingpros.com'],
+]);
+
 // Hosts that have their own robots-<host>.txt / sitemap-<host>.{xml,txt} in
 // public/sitemaps/. Must stay in sync with DOMAINS in
 // scripts/generate-sitemap.mjs — rewriting to a file the build no longer
@@ -180,6 +222,18 @@ export default function middleware(request) {
     const url = new URL(request.url);
     const host = canonicalHost(request.headers.get('host') || url.hostname);
     const pathname = url.pathname;
+
+    // Retired hosts go first, before any rewrite. A redirect that runs after
+    // the homepage rewrite never runs at all for `/`, which is the one path
+    // these domains actually get traffic on.
+    const redirectTo = HOST_REDIRECTS.get(host);
+    if (redirectTo) {
+      // Path and query preserved: an inbound link to a deep path on a retired
+      // domain should land on the same path of the canonical one, not on its
+      // homepage. Google treats a redirect to the homepage as a soft 404 and
+      // passes nothing.
+      return Response.redirect(new URL(pathname + url.search, redirectTo), 301);
+    }
 
     // `/index.html` resolves to the same static file as `/`, so both must be
     // handled identically or the bare filename becomes a duplicate-content
