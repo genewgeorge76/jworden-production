@@ -98,10 +98,25 @@ const BRAND_DIR_HOSTS = new Set(Object.keys(BRAND_ROUTES));
 // alone: the profile key in src/data/regionalMarketProfiles.js, the host
 // rewrite in vercel.json, and the direction of the entry below. Do all three
 // or the domain 301s to a host that has no pages.
+//
+// jwordenandsonspaving.com is the company's literal trading name and the
+// closest thing it has to a brand-protection domain. It is NOT a second site.
+// Two domains both serving the main brand would split its authority exactly
+// the way the two Atlanta domains do, so it consolidates onto the canonical
+// host that every canonical tag, sitemap and schema block in this repository
+// already points at.
+//
+// Same caveat as Atlanta, and it is a real one: jwordenandsonspaving.com is
+// arguably the MORE correct domain for the entity — it is the name on the
+// licence. The direction below follows SITE_URL in
+// src/lib/businessInfo.canonical.js rather than a judgement about which name
+// reads better. Flipping it means changing SITE_URL, the sitemap host list and
+// this entry together; doing one alone points the site at itself.
 const HOST_REDIRECTS = new Map([
   ['carolinapavementgroup.com', 'https://carolinablacktop.com'],
   ['nationalpavmentgroup.com', 'https://www.jwordenasphaltpaving.com'],
   ['atlantapavingandsealing.com', 'https://atlantaasphaltpavingpros.com'],
+  ['jwordenandsonspaving.com', 'https://www.jwordenasphaltpaving.com'],
 ]);
 
 // Hosts that have their own robots-<host>.txt / sitemap-<host>.{xml,txt} in

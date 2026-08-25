@@ -32,6 +32,11 @@ const RETIRED = {
   'carolinapavementgroup.com': 'carolinablacktop.com',
   'nationalpavmentgroup.com': 'www.jwordenasphaltpaving.com',
   'atlantapavingandsealing.com': 'atlantaasphaltpavingpros.com',
+  // The trading-name domain. In transfer away from Registrar.eu as of
+  // 2026-08-25, parked on 185.53.179.136 and serving nothing, so this redirect
+  // costs no live traffic and is ready the moment its nameservers point at
+  // Vercel.
+  'jwordenandsonspaving.com': 'www.jwordenasphaltpaving.com',
 }
 
 test('every retired host answers 301, not 200', () => {
