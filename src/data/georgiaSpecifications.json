@@ -1,0 +1,60 @@
+{
+  "_comment": "Georgia Department of Transportation specification references. Every code and quotation is transcribed from the GDOT documents listed in _sources and verified against them. Nothing here is a Virginia specification renamed.",
+  "_sources": {
+    "mixes": "GDOT Special Provision, Section 828 — Hot Mix Asphaltic Concrete Mixtures, dated September 27, 2018. https://www.dot.ga.gov/PartnerSmart/Business/Source/special_provisions/Special%20Provision/SP%20828%20Hot%20Mix%20Asphalt%20Concrete%20Mixes.pdf",
+    "construction": "GDOT Standard Specifications, Section 400 — Hot Mix Asphaltic Concrete Construction",
+    "permit": "GDOT Regulations for Driveway and Encroachment Control, Chapter 1. https://www.dot.ga.gov/PartnerSmart/permits/Encroachment/Chapter1.pdf",
+    "districts": "GDOT_Boundaries county layer, https://rnhp.dot.ga.gov/hosting/rest/services/GDOT_Boundaries/MapServer/1"
+  },
+  "_note": "Section 828.2.03.B is titled 'Requirements for Superpave Parking Lot Mixes (NOT FOR STANDARD HIGHWAY/STREET PAVING)'. It is cited here because it is the section GDOT wrote for the work this company does in Georgia — commercial parking facilities — rather than a highway section borrowed to sound authoritative.",
+  "parkingSurface": [
+    {
+      "code": "4.75 mm Mix",
+      "section": "GDOT 828.2.03.B.1",
+      "description": "Surface layer mix for parking facilities. Fine-graded; Section 828 lists it separately from the Superpave mixtures.",
+      "source": "GDOT Section 828.2.03.B.1, Surface layers for parking facilities"
+    },
+    {
+      "code": "9.5 mm Superpave Type I",
+      "section": "GDOT 828.2.03.B.1",
+      "description": "Surface layer mix for parking facilities.",
+      "source": "GDOT Section 828.2.03.B.1, Surface layers for parking facilities"
+    },
+    {
+      "code": "9.5 mm Superpave Type II",
+      "section": "GDOT 828.2.03.B.1",
+      "description": "Surface layer mix for parking facilities.",
+      "source": "GDOT Section 828.2.03.B.1, Surface layers for parking facilities"
+    }
+  ],
+  "parkingSubsurface": [
+    {
+      "code": "12.5 mm Superpave",
+      "section": "GDOT 828.2.03.B.2",
+      "description": "Subsurface layer mix for parking facilities.",
+      "source": "GDOT Section 828.2.03.B.2, Subsurface layers for parking facilities"
+    },
+    {
+      "code": "19 mm Superpave",
+      "section": "GDOT 828.2.03.B.2",
+      "description": "Subsurface layer mix for parking facilities.",
+      "source": "GDOT Section 828.2.03.B.2, Subsurface layers for parking facilities"
+    },
+    {
+      "code": "25 mm Superpave",
+      "section": "GDOT 828.2.03.B.2",
+      "description": "Subsurface layer mix for parking facilities.",
+      "source": "GDOT Section 828.2.03.B.2, Subsurface layers for parking facilities"
+    }
+  ],
+  "nominalSizeRule": {
+    "quote": "The Nominal Maximum Sieve Size is one standard sieve size larger than the first sieve to retain more than ten percent of the aggregate, per AASHTO R35. Mixture types in this section are identified according to Nominal Maximum Sieve Size.",
+    "source": "GDOT Section 828.1.01, Definitions"
+  },
+  "permit": {
+    "authority": "Georgia Code Sections 32-6-51 and 32-6-133",
+    "quote": "The regulations and procedures described in this document are established pursuant to Georgia Code Sections 32-6-51 and 32-6-133.",
+    "whenRequired": "A permit is required prior to performing any construction work or non-routine maintenance within the State Highway Right-of-Way.",
+    "source": "GDOT Regulations for Driveway and Encroachment Control, Chapter 1, sections 1C and 1D"
+  }
+}
