@@ -111,7 +111,17 @@ async function landmarksFor(county) {
 
 // Counties come from the existing dataset so the two files stay in step.
 const { VA_COUNTIES } = await import('../src/data/virginia_counties.js')
-const counties = VA_COUNTIES.map((c) => c.name.replace(/ County$/, ''))
+/**
+ * Deduplicated, because the source list is not unique. VA_COUNTIES holds 94
+ * entries for 85 counties — Prince Edward, Prince William, Dickenson, Isle of
+ * Wight, Essex, Orange, Clarke, Charlotte and Highland each appear twice.
+ *
+ * Left alone that produces two identical county pages per duplicate, which is
+ * cross-domain duplicate content aimed at exactly the audience the page is
+ * for. The upstream duplication in virginia_counties.js is a separate defect
+ * and is not fixed here.
+ */
+const counties = [...new Set(VA_COUNTIES.map((c) => c.name.replace(/ County$/, '')))]
 
 // Resumable: a throttled run of 95 counties is long enough to be interrupted.
 const existing = existsSync(outFile) ? JSON.parse(readFileSync(outFile, 'utf8')) : { counties: [] }
@@ -127,6 +137,10 @@ for (const county of counties) {
   const l = await landmarksFor(county)
   await sleep(PAUSE_MS)
 
+  // Marked done immediately. Computing `done` only at startup let a repeated
+  // name through on the same run — which is how the duplicates above reached
+  // the output file before the input was deduplicated.
+  done.add(county)
   out.push({
     county,
     state,

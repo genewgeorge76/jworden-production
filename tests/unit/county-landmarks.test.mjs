@@ -4,6 +4,9 @@ import { readFileSync } from 'node:fs'
 
 const DATA = JSON.parse(readFileSync('src/data/countyLandmarks.virginia.json', 'utf8'))
 
+const vaModule = await import('../../src/data/virginia_counties.js')
+const require_va = () => vaModule
+
 /**
  * The whole value of this file is that nothing in it was written by hand. A
  * landmark placed in the wrong county is invisible to everyone except the
@@ -61,4 +64,23 @@ test('the generator needs no API key, and says so', () => {
   // The rate-limit pause is load-bearing: without it the run fails, not slows.
   assert.match(src, /PAUSE_MS/)
   assert.match(src, /User-Agent/)
+})
+
+/**
+ * Duplicate counties mean duplicate pages, which is cross-domain duplicate
+ * content aimed at exactly the audience the page exists for. The source list
+ * is not unique — VA_COUNTIES holds 94 entries for 85 counties — so this is
+ * guarded at the output rather than trusted at the input.
+ */
+test('no county appears twice', () => {
+  const names = DATA.counties.map((c) => c.county)
+  assert.equal(new Set(names).size, names.length, 'a county is listed more than once')
+})
+
+test('every county in the source list was fetched exactly once', () => {
+  const { VA_COUNTIES } = require_va()
+  const want = new Set(VA_COUNTIES.map((c) => c.name.replace(/ County$/, '')))
+  const got = new Set(DATA.counties.map((c) => c.county))
+  assert.equal(got.size, want.size, 'the fetched set and the source set disagree')
+  for (const n of want) assert.ok(got.has(n), `${n} was never fetched`)
 })
