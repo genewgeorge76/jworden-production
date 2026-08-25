@@ -15,6 +15,7 @@ import {
   RECOVERED_DOMAINS,
   PROFILE_EVIDENCE_AT_RISK,
   REGISTRY_CHECK,
+  FLAGSHIP_MIGRATION,
 } from '../../src/data/ownedProperties.js'
 
 test('every conflict names a resolution the owner can act on', () => {
@@ -160,4 +161,27 @@ test('a domain called unregistered says how that was established', () => {
     assert.ok(d.rdap.evidence, `${d.domain} is called free with nothing backing it`)
     assert.equal(d.nowOperatedBy, null)
   }
+})
+
+/**
+ * The flagship reads exactly like a hijacked domain — parking page, ads,
+ * registrar nameservers, a 2026 creation date. It is not one. This guards
+ * against a later session "discovering" the loss and acting on it.
+ */
+test('the flagship is recorded as owned and mid-migration, not lost', () => {
+  assert.equal(FLAGSHIP_MIGRATION.owned, true)
+  assert.ok(FLAGSHIP_MIGRATION.blockedOn, 'no note of what the migration is waiting on')
+  assert.ok(
+    FLAGSHIP_MIGRATION.isNotATakeover.includes('midflorida'),
+    'the flagship must be explicitly distinguished from the domain that was taken',
+  )
+})
+
+test('the middleware redirects into the flagship are marked leave-alone', () => {
+  assert.ok(FLAGSHIP_MIGRATION.leaveMiddlewareAlone)
+  const mw = readFileSync('middleware.js', 'utf8')
+  // If these ever stop pointing at the flagship, this record is stale and the
+  // reasoning above needs revisiting rather than silently rotting.
+  assert.match(mw, /nationalpavmentgroup\.com/)
+  assert.match(mw, /jwordenandsonspaving\.com/)
 })

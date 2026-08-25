@@ -398,6 +398,62 @@ export const RECOVERY_CHECKLIST = [
   'Then decide the destination in middleware.js. Beaufort earned a page, not a redirect.',
 ]
 
+/**
+ * THE FLAGSHIP IS MID-MIGRATION AND CURRENTLY SHOWS A PARKING PAGE
+ * ───────────────────────────────────────────────────────────────
+ * Read this before concluding that jwordenasphaltpaving.com has been lost. It
+ * has not. It is the owner's, it is moving from Netlify to Name.com, and the
+ * move is not finished — he is waiting on a reply from Name.com support.
+ *
+ * What a check on 2026-08-25 sees, and why each thing looks worse than it is:
+ *
+ *   Apex and www both return `server: Parking/1.0` with a Sedo template and
+ *   ad-tracking scripts. Every path returns it, so /florida answered 200 and
+ *   looked like a working page. It is not a page; it is the same parking
+ *   response for any URL.
+ *
+ *   RDAP shows registrar Name.com and nameservers NS1KPV/NS2KRY/NS3JMT/
+ *   NS4DMX.NAME.COM — the registrar's own defaults, which is exactly what a
+ *   domain looks like when DNS has not been pointed anywhere yet. Name.com
+ *   monetises unconfigured domains through Sedo automatically. The parking
+ *   page is the default state, not a takeover.
+ *
+ *   The 2026-03-04 creation date is NOT the mid-Florida signal here. That
+ *   pattern needs a domain in someone else's hands; this one the owner holds.
+ *
+ * WHAT NOT TO "FIX"
+ * ─────────────────
+ * middleware.js still 301s nationalpavmentgroup.com and jwordenandsonspaving.com
+ * to this domain. Leave those alone. Neither source resolves today —
+ * nationalpavmentgroup.com returns 404 and jwordenandsonspaving.com does not
+ * connect at all, being itself in "pending transfer" — so nothing is currently
+ * being funnelled into the parking page, and both redirects become correct
+ * again the moment the migration lands. Rewriting them now would have to be
+ * undone later.
+ *
+ * THE ONE REAL COST WHILE IT DRAGS ON
+ * ───────────────────────────────────
+ * The parking page's robots.txt disallows only /info/ and /search/ and names
+ * Mediapartners-Google explicitly. Googlebot is free to index the company's
+ * primary domain as a monetised parking page for as long as this lasts. That
+ * cannot be fixed from this side, which makes it a reason to chase the
+ * registrar rather than wait on it.
+ */
+export const FLAGSHIP_MIGRATION = {
+  domain: 'jwordenasphaltpaving.com',
+  owned: true,
+  state: 'migrating Netlify to Name.com, incomplete',
+  blockedOn: 'Name.com support reply',
+  showsParkingPage: true,
+  parkingProvider: 'Sedo, via Name.com default nameservers',
+  isNotATakeover: 'Distinguish from midfloridaasphaltpaving.com. This domain is the owner\u2019s; that one is not.',
+  indexable: true,
+  indexableNote: 'The parking page robots.txt permits Googlebot and Mediapartners-Google.',
+  leaveMiddlewareAlone:
+    'Both domains redirecting here are themselves dead, so nothing is being funnelled in. The redirects become correct again when the migration completes.',
+  checked: '2026-08-25',
+}
+
 export const REGISTRY_CHECK = {
   checked: '2026-08-25',
   source: 'Verisign RDAP',
