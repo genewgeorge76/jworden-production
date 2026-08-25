@@ -127,8 +127,19 @@ def test_the_other_traps_are_covered():
 
 
 def test_an_unambiguous_town_is_left_alone():
-    assert ji.resolve_location("Beaufort", "SC")["ambiguous"] is False
     assert ji.resolve_location("Nellysford")["ambiguous"] is False
+    assert ji.resolve_location("Hardeeville")["ambiguous"] is False
+
+
+def test_beaufort_is_ambiguous_because_the_lead_list_contains_one():
+    """
+    "Holiday Inn Beaufort reseal" carries no state. Beaufort SC is the
+    Lowcountry, where this company works; Beaufort NC is the Crystal Coast,
+    350 miles away. Resolving it silently would invent a market.
+    """
+    assert ji.resolve_location("Beaufort")["ambiguous"] is True
+    assert set(ji.resolve_location("Beaufort")["could_be"]) == {"SC", "NC"}
+    assert ji.resolve_location("Beaufort", "SC")["ambiguous"] is False
 
 
 def test_ambiguous_rows_are_surfaced_rather_than_dropped_silently():
