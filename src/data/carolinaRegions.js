@@ -19,10 +19,25 @@
  *                                     it is a specific checkable number.
  *
  * The owner is from South Carolina and reports years of work there, heavily in
- * the last three. That is enough for the first kind and not for the second. So
- * this file makes the first kind only. When the InvoiceFly export or the
- * carolinablacktop@gmail.com archive turns up, a proof block gets added the way
- * texasProgram.js does it — from invoices, not from assertion.
+ * the last three. That was enough for the first kind and not for the second.
+ *
+ * UPDATE 2026-08-25: the carolinablacktop@gmail.com archive turned up. 83
+ * documents, 2019 to 2026, including 23 invoices and payment receipts and an
+ * SCDOT encroachment permit performed and archived by the department. South
+ * Carolina is now record-backed and the proof lives in
+ * src/data/carolinaBlacktopRecord.js — counts and a permit reference, and
+ * deliberately no dollar total, because only 2 of the 23 invoices carry an
+ * amount and publishing that sum would describe 2 documents as though it
+ * described 23.
+ *
+ * ONE THING THE ARCHIVE REVEALED THAT NEEDS FIXING
+ * ────────────────────────────────────────────────
+ * The documents went out under FOUR trading names in three years: Carolina
+ * Blacktop, Carolina Blacktop Inc, Carolina Asphalt Paving Pros, and — on one
+ * invoice — Savannah Paving & Sealing. To a search engine that is four
+ * entities, and whatever authority any of them earns is split four ways. It is
+ * the same failure the NAP profile had, at brand level rather than address
+ * level, and it is worth settling on one name before more citations accrue.
  *
  * WHY TWO PAGES RATHER THAN ONE
  * ─────────────────────────────

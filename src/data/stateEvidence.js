@@ -118,9 +118,9 @@ export const STATE_EVIDENCE = {
     // for other clients, so it was never going to appear in a KFC franchise
     // programme's correspondence. Its evidence is the job book plus the brand's
     // own 843 Lowcountry line, in use since at least 2019.
-    grade_note: 'Kickserv only — SC work was not KBP',
-    detail: 'Commercial jobs in the Kickserv job book. The Carolina Blacktop brand has carried a Lowcountry number since at least December 2019, when a chip-and-tar contract went out under that name.',
-    sources: ['kickserv', 'carolina-blacktop-correspondence'],
+    grade_note: 'Now record-backed — SCDOT permit plus the Joist archive',
+    detail: 'SCDOT Encroachment Permit #211746: applied for in May 2024, completion photographs submitted, archived by the department in June 2024 — the only third-party-verified record in this repository. Alongside it, 23 invoices and payment receipts from the Carolina Blacktop Joist archive between 2023 and 2025, and a chip-and-tar job as far back as December 2019.',
+    sources: ['scdot-permit', 'joist-archive', 'kickserv', 'carolina-blacktop-correspondence'],
   },
   MD: { grade: SURVEYED, detail: '13 stores in KBP’s 2015 pilot survey, all marked Not Started.', sources: ['kbp-2015-survey'] },
   IL: { grade: SURVEYED, detail: '14 stores in the 2015 pilot survey, all marked Not Started.', sources: ['kbp-2015-survey'] },
