@@ -124,6 +124,7 @@ export const IDENTITY_CONFLICTS = [
   },
   {
     id: 'IC-002',
+    closedBy: 'ATLANTA_RESOLUTION — one DNS change retires the page carrying this',
     conflict: 'Length of service in Atlanta',
     values: ['over 40 years serving Atlanta (atlantapavingandsealing.com)', 'Georgia record begins with the KBP programme (georgiaProgram.js)'],
     severity: 'high',
@@ -132,6 +133,7 @@ export const IDENTITY_CONFLICTS = [
   },
   {
     id: 'IC-003',
+    closedBy: 'ATLANTA_RESOLUTION — one DNS change retires the page carrying this',
     conflict: 'Out-of-market phone number',
     values: ['843-610-8935 on a Georgia site'],
     severity: 'medium',
@@ -140,6 +142,7 @@ export const IDENTITY_CONFLICTS = [
   },
   {
     id: 'IC-004',
+    closedBy: 'ATLANTA_RESOLUTION — one DNS change retires the page carrying this',
     conflict: 'Unattributed testimonial',
     values: ['A named testimonial on atlantapavingandsealing.com with no company, location or date'],
     severity: 'medium',
@@ -288,6 +291,43 @@ export const PROFILE_EVIDENCE_AT_RISK = {
   precedent: 'The Savannah profile is suspended and its contents are already unreachable.',
   action: 'Download the photographs and capture the review text, then store them through media_store.py with provenance.',
   couldEvidence: 'FL completion — the one document Florida is short of.',
+}
+
+/**
+ * THREE FINDINGS, ONE DNS CHANGE
+ * ──────────────────────────────
+ * IC-002, IC-003 and IC-004 are all on atlantapavingandsealing.com: the "over
+ * 40 years serving Atlanta" claim, the South Carolina 843 number on a Georgia
+ * page, and the unattributed testimonial.
+ *
+ * None of them should be fixed by editing that site, because that site was
+ * already sentenced. middleware.js carries a 301 retiring it in favour of
+ * atlantaasphaltpavingpros.com, and the reasoning is written out there: two
+ * domains serving Atlanta paving content split whatever authority either has.
+ *
+ * The redirect has simply never fired. Checked 2026-08-25, the domain resolves
+ * to Netlify rather than Vercel, so requests for it never reach the middleware
+ * at all. The decision was made and recorded; the DNS never caught up.
+ *
+ * Repointing that domain at Vercel closes all three findings at once, because
+ * the page carrying them stops being served. Editing the copy instead would be
+ * work spent improving a site that is meant to disappear — and would leave the
+ * duplicate-content problem the redirect exists to solve.
+ *
+ * The canonical target is already correct on both counts the duplicate gets
+ * wrong. atlantaasphaltpavingpros.com states the company operates from
+ * Chester, Virginia and mobilises crews to Metro Atlanta, which is what
+ * georgiaProgram.js supports, and it carries a 470 number that is in Georgia.
+ */
+export const ATLANTA_RESOLUTION = {
+  closes: ['IC-002', 'IC-003', 'IC-004'],
+  method: 'DNS — repoint atlantapavingandsealing.com at Vercel',
+  notACopyEdit: true,
+  why: 'The redirect retiring the site already exists in middleware.js and has never been reachable. The site carrying all three findings stops being served once it fires.',
+  canonicalTarget: 'atlantaasphaltpavingpros.com',
+  canonicalAlreadyCorrect:
+    'States a Chester, Virginia base with crews mobilised to Metro Atlanta, and carries an in-market 470 number.',
+  checked: '2026-08-25',
 }
 
 /**

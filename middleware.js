@@ -94,6 +94,28 @@ const BRAND_DIR_HOSTS = new Set(Object.keys(BRAND_ROUTES));
 // vercel.json's host rewrite points at. atlantapavingandsealing.com is the
 // better NAME — shorter, and "sealing" is a service people search for.
 //
+// THIS REDIRECT IS NOT CURRENTLY REACHED, AND THAT IS A DNS FACT
+// ──────────────────────────────────────────────────────────────
+// Checked 2026-08-25: atlantapavingandsealing.com resolves to Netlify
+// (atlasphaltpaving.netlify.app), not to Vercel. Traffic for that host never
+// arrives at this file, so the entry below has never fired. The domain
+// returns 200 and serves a separate Atlanta site.
+//
+// That matters more than a stale redirect usually would, because three
+// findings in ownedProperties.js all live on the site this redirect was
+// supposed to retire: a claim of "over 40 years serving Atlanta" that the
+// Georgia record does not support, a South Carolina 843 number on a Georgia
+// page, and a testimonial with no attribution. None of them needs editing.
+// They stop being served the moment the domain points here.
+//
+// The canonical target is already right on both counts the duplicate gets
+// wrong: atlantaasphaltpavingpros.com states the company operates from
+// Chester, Virginia and mobilises crews to Metro Atlanta, and it carries a
+// 470 number that is actually in Georgia.
+//
+// So the fix is one DNS change, not a copy edit — repoint the domain at
+// Vercel and the decision recorded above finally takes effect.
+//
 // To swap them, three things change together and none of them is this file
 // alone: the profile key in src/data/regionalMarketProfiles.js, the host
 // rewrite in vercel.json, and the direction of the entry below. Do all three
