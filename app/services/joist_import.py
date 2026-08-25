@@ -191,6 +191,17 @@ def to_date(value: Any) -> Optional[str]:
             return datetime.strptime(text[:20], fmt).date().isoformat()
         except ValueError:
             continue
+    # A range or a composite: "2024-05-13 to 06-12", "2024-01-29; 2024-10-10",
+    # "2025-05-22 invite; 2025-07-16 status". Nearly every row on the leads and
+    # bills sheets is one of these, because a lead is a correspondence trail
+    # rather than a document with one date on it.
+    #
+    # Take the EARLIEST date present, which is when the thing started. Taking
+    # the last would date a job by the most recent chase email and quietly move
+    # 2023 work into 2024.
+    found = re.findall(r"\b(\d{4})-(\d{2})-(\d{2})\b", text)
+    if found:
+        return min("-".join(f) for f in found)
     logger.warning("could not read %r as a date", value)
     return None
 
@@ -232,18 +243,37 @@ def read_rows(rows: Iterable[dict], sheet_name: str) -> list[dict]:
                     return lower[n]
             return None
 
-        amount_cents = to_cents(pick("total", "amount", "value", "price"))
+        # Column aliases, per sheet-author rather than per specification. A
+        # workbook a person built names the same thing four ways across four
+        # tabs — client / contact / from, date / date sent / date(s), amount /
+        # total / "quoted $ (from email)". Matching only the tidy names read
+        # the entire leads sheet as 19 empty rows: no client, no reference, no
+        # amount, and no error, because every lookup legitimately missed.
+        # A silent empty column is the failure mode to design against here.
+        def like(*fragments):
+            """First column whose NAME contains one of these fragments."""
+            for fragment in fragments:
+                for key, value in lower.items():
+                    if fragment in key and value not in (None, ""):
+                        return value
+            return None
+
+        amount_cents = to_cents(like("amount", "total", "quoted", "value", "price"))
+        status = like("status", "paid", "delivery note", "notes")
+        note = like("scope", "message", "what it is", "note")
         record = {
             "sheet": sheet_name,
             "direction": direction,
-            "evidence": grade_row(sheet_name, pick("status", "paid", "paid status"), pick("scope", "message", "note", "notes")),
-            "ref": (str(pick("number", "ref", "document", "invoice", "estimate") or "").strip() or None),
-            "client": (str(pick("client", "customer", "name") or "").strip() or None),
-            "date": to_date(pick("date", "issued", "created")),
+            "evidence": grade_row(sheet_name, status, note),
+            "ref": (str(like("estimate #", "invoice #", "number", "job / lead", "ref", "type") or "").strip() or None),
+            "client": (str(like("client", "contact", "customer", "from", "name") or "").strip() or None),
+            "date": to_date(like("date")),
             "amount_cents": amount_cents,
-            "note": (str(pick("scope", "message", "note", "notes") or "").strip() or None),
-            "link": (str(pick("link", "url", "document link") or "").strip() or None),
-            **resolve_location(pick("city", "town"), pick("state", "st")),
+            "note": (str(note or "").strip() or None),
+            "status": (str(status or "").strip() or None),
+            "brand": (str(like("business name") or "").strip() or None),
+            "link": (str(like("full document", "link", "url") or "").strip() or None),
+            **resolve_location(like("city", "town"), like("state", " st")),
         }
         out.append(record)
     return out
@@ -284,6 +314,41 @@ def summarise(records: list[dict]) -> dict[str, Any]:
     }
 
 
+#: A row is the header when it carries several of these. Assuming row 1 is the
+#: header is wrong for any workbook a human built: this one opens with a title,
+#: a provenance line and a blank, and the columns start on row 4. Reading row 1
+#: as the header silently produced a table whose every column was named None.
+_HEADER_WORDS = frozenset({
+    "client", "customer", "contact", "date", "date sent", "date(s)", "amount",
+    "total", "number", "invoice #", "estimate #", "type", "status", "notes",
+    "job / lead", "from", "what it is",
+})
+
+
+def find_header(rows: list[tuple]) -> int:
+    """Index of the header row. Falls back to the first populated row."""
+    for index, row in enumerate(rows[:20]):
+        labels = {str(c).strip().lower() for c in row if c not in (None, "")}
+        if len(labels & _HEADER_WORDS) >= 3:
+            return index
+    for index, row in enumerate(rows):
+        if sum(1 for c in row if c not in (None, "")) >= 3:
+            return index
+    return 0
+
+
+def _is_total_row(row: dict) -> bool:
+    """
+    A spreadsheet's own footer, which is not a document.
+
+    "Total (where amount known):" sits in the date column of every sheet here.
+    Counting it as a record inflates the document count and, worse, gives that
+    phantom row a grade.
+    """
+    joined = " ".join(str(v) for v in row.values() if v not in (None, "")).lower()
+    return joined.startswith("total") or "total (where amount known)" in joined
+
+
 def read_workbook(path: str) -> dict[str, Any]:
     """The whole workbook. Every sheet, graded, plus the summary."""
     from openpyxl import load_workbook
@@ -294,7 +359,13 @@ def read_workbook(path: str) -> dict[str, Any]:
         rows = list(sheet.iter_rows(values_only=True))
         if not rows:
             continue
-        header = [str(c or "").strip() for c in rows[0]]
-        dicts = [dict(zip(header, r)) for r in rows[1:] if any(c not in (None, "") for c in r)]
+        head = find_header(rows)
+        header = [str(c or "").strip() for c in rows[head]]
+        dicts = [
+            dict(zip(header, r))
+            for r in rows[head + 1:]
+            if any(c not in (None, "") for c in r)
+        ]
+        dicts = [d for d in dicts if not _is_total_row(d)]
         records.extend(read_rows(dicts, sheet.title))
     return {"records": records, "summary": summarise(records)}
