@@ -32,6 +32,7 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import { generatePage, countyFromSlug, SERVICES } from '@/lib/countyPages';
 import COUNTY_FACTS from '@/data/virginiaCountyFacts.json';
+import COUNTY_LANDMARKS from '@/data/countyLandmarks.virginia.json';
 
 // The publish switch. See the note above before changing it.
 export const NOINDEX_COUNTY_PAGES = false;
@@ -54,6 +55,20 @@ function siteDomain() {
     return window.location.host;
   }
   return 'www.jwordenasphaltpaving.com';
+}
+
+/**
+ * Landmarks and civic facts for one county, or null.
+ *
+ * A separate lookup from factsFor because the two files come from different
+ * sources and fail independently: virginiaCountyFacts.json needs Google and
+ * Exa keys, countyLandmarks.virginia.json needs neither. A county can have
+ * elevation and no landmarks, or landmarks and no elevation, and each section
+ * renders on its own evidence.
+ */
+function landmarksFor(countyName) {
+  const bare = String(countyName).replace(/\s+County$/i, '');
+  return COUNTY_LANDMARKS.counties.find((c) => c.county === bare) ?? null;
 }
 
 /** Facts for one county, or null when nothing usable came back. */
@@ -85,6 +100,7 @@ export default function CountyServicePage() {
   }
 
   const facts = factsFor(page.county);
+  const local = landmarksFor(page.county);
 
   return (
     <>
@@ -188,6 +204,48 @@ export default function CountyServicePage() {
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+
+        {local?.landmarks?.length > 0 && (
+          <section className="mt-10" aria-labelledby="landmarks-heading">
+            <h2 id="landmarks-heading" className="text-xl font-semibold text-foreground">
+              Working around {page.county}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+              {local.seat && (
+                <>
+                  The county seat is {local.seat}.{' '}
+                </>
+              )}
+              {local.landmarks.length} places in {page.county} are on the National Register
+              of Historic Places. Access, staging and lane closures near a listed property
+              are a permitting question before they are a paving one, and the older the
+              surrounding streets, the more that matters.
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {local.landmarks.slice(0, 12).map((name) => (
+                <li
+                  key={name}
+                  className="rounded-full border border-border bg-muted/40 px-3 py-1 text-xs text-muted-foreground"
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+            {local.sources?.length > 0 && (
+              <p className="mt-3 text-xs text-muted-foreground/70">
+                Source:{' '}
+                <a
+                  href={local.sources[local.sources.length - 1]}
+                  rel="noopener noreferrer nofollow"
+                  target="_blank"
+                  className="underline hover:text-foreground"
+                >
+                  National Register listings for {page.county}
+                </a>
+              </p>
+            )}
           </section>
         )}
 
