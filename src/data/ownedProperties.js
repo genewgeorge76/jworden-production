@@ -43,12 +43,19 @@ export const OWNED_PROPERTIES = [
   },
   {
     domain: 'midfloridaasphaltpaving.com',
-    name: 'Mid Florida Asphalt Paving LLC',
+    name: 'NOT THIS COMPANY — see DOMAIN_LOSSES',
     market: 'Sarasota, Bradenton, Punta Gorda',
-    status: 'live',
-    phone: '941-888-4245',
-    contactEmail: 'floridapavingco@gmail.com',
-    identityClaim: 'five generations',
+    status: 'lost — lapsed, then re-registered by a third party',
+    identityClaim: null,
+    googleProfile: null,
+    note: 'The website at this domain is operated by someone else. Nothing on it describes this company and none of its content may be cited as evidence here.',
+  },
+  {
+    domain: null,
+    name: 'Mid Florida Asphalt Paving',
+    market: 'Sarasota / Bradenton / Punta Gorda',
+    status: 'Google Business Profile only — no company-controlled website',
+    identityClaim: '25+ years in business (profile)',
     googleProfile: 'active, owner-managed',
     profile: {
       name: 'Mid Florida Asphalt Paving',
@@ -59,8 +66,8 @@ export const OWNED_PROPERTIES = [
       hours: 'Open 24 hours',
       phone: '804-446-1296',
       source: 'relayed by the owner from the profile dashboard, 2026-08-25; not independently fetched',
+      linkedWebsite: 'UNVERIFIED — see DOMAIN_LOSSES, this is the urgent question',
     },
-    note: 'The site phone is a 941 number, correctly in-market. The PROFILE carries the Virginia number. See IC-005.',
   },
   {
     domain: 'atlantapavingandsealing.com',
@@ -129,26 +136,30 @@ export const IDENTITY_CONFLICTS = [
   },
   {
     id: 'IC-005',
-    conflict: 'Phone number differs between the profile and its own website',
-    values: ['804-446-1296 on the Google Business Profile', '941-888-4245 on midfloridaasphaltpaving.com'],
+    conflict: 'The Google profile may point at a competitor’s website',
+    values: [
+      'Profile phone 804-446-1296',
+      'midfloridaasphaltpaving.com is operated by a third party since the domain lapsed',
+    ],
     severity: 'critical',
     why:
-      'This is the one that costs money today. Google checks a profile against the website it points at, and a phone mismatch between them is among the strongest negative signals in local search — it is also a standing signal of an unverified or reused listing. Worse for the customer: a Sarasota caller reaching a Virginia number, or a profile whose number nobody in Florida answers.',
+      'This was first recorded as a phone mismatch to be resolved by choosing a number. That was wrong, and the correction matters more than the original finding. The website is not this company’s. If the profile’s website field still points there, every visitor who clicks through from a profile this company manages is being handed to the operator who took the domain — and the 941 number and contact address on that site are theirs, so the calls are theirs too.',
     resolution:
-      'Decide which number the Florida market should reach, then make the profile, the website and every citation carry that one number. The 941 is the right answer for a Sarasota profile if it rings somewhere reliable.',
+      'Open the profile and read its website field. If it points at midfloridaasphaltpaving.com, clear it or repoint it the same day. A profile with no website outperforms one that sends its traffic to a competitor.',
   },
   {
     id: 'IC-006',
     conflict: 'Tenure claim, fourth variant',
     values: [
       '4th generation, founded 1984 (canonical)',
-      'five generations (mid-Florida website)',
       '25+ years in business (mid-Florida Google profile)',
       'over 40 years serving Atlanta (Atlanta website)',
     ],
+    corrected:
+      'A fourth value, "five generations", was recorded here from midfloridaasphaltpaving.com before that site was known to belong to someone else. It was never this company’s claim and has been removed.',
     severity: 'high',
     why:
-      'Four owned properties now state four different company ages. 25+ years, 40+ years and 1984 cannot all describe the same business, and the profile and the website it links to disagree with each other directly.',
+      'Three owned properties state three different company ages. 25+ years, 40+ years and a 1984 founding cannot all describe the same business.',
     resolution:
       'One founding year, stated once, repeated identically everywhere. 1984 is the canonical claim; if it is right, everything else changes to match it.',
   },
@@ -219,10 +230,62 @@ export const SUSPENDED_PROFILE_LEAD = {
   relatedTo: ['UR-003', 'UR-004'],
 }
 
-/** A mailbox not previously known, found on the live mid-Florida site. */
-export const NEWLY_FOUND_MAILBOX = {
-  address: 'floridapavingco@gmail.com',
-  foundOn: 'midfloridaasphaltpaving.com',
-  significance:
-    'The Florida operation’s own contact address, and not among the accounts listed so far. The Florida records may sit here rather than anywhere previously searched.',
-}
+/**
+ * A mailbox was recorded here from the mid-Florida site before that site was
+ * known to belong to a third party. It has been removed rather than corrected:
+ * it is a stranger's contact address, it was never this company's, and it does
+ * not belong in this repository in any form.
+ */
+export const NEWLY_FOUND_MAILBOX = null
+
+/**
+ * DOMAINS LOST TO NON-RENEWAL, AND WHAT HAPPENS NEXT TO THEM
+ * ─────────────────────────────────────────────────────────
+ * Webador issued ICANN expiry notices through 2025 for three domains, and its
+ * support reply of 22 April 2025 states the condition plainly: open invoices
+ * must be paid before a domain can renew. The domains were not lost to a
+ * decision. They were lost to an unpaid bill.
+ *
+ * midfloridaasphaltpaving.com shows what follows. It lapsed, someone else
+ * registered it, and there is now a paving website on it trading under a name
+ * this company still holds the Google profile for. That is not a coincidence
+ * of naming — an expired domain in a local trade carries residual search
+ * authority and inbound links, and picking one up is a known tactic.
+ *
+ * Checked 2026-08-25:
+ *   atlantaasphaltpavingpros.com   LIVE and serving this company's own content
+ *   beaufortasphaltpaving.com      DOES NOT RESOLVE — unregistered, available
+ *   charlotteasphaltpavingpros.com DOES NOT RESOLVE — unregistered, available
+ *
+ * The two that do not resolve are the exposure. They are free for anyone to
+ * take, exactly as mid-Florida was, and beaufortasphaltpaving.com is not a
+ * spare: it produced the Holiday Inn enquiry recorded in the Carolina
+ * footprint. Re-registering a lapsed domain costs a few dollars a year and is
+ * cheaper than any other item in this file.
+ */
+export const DOMAIN_LOSSES = [
+  {
+    domain: 'midfloridaasphaltpaving.com',
+    lostTo: 'non-renewal',
+    nowOperatedBy: 'a third party',
+    stillHeld: 'the Google Business Profile for the same business name',
+    urgentQuestion: 'Does that profile’s website field still point at this domain?',
+  },
+  {
+    domain: 'beaufortasphaltpaving.com',
+    lostTo: 'non-renewal, terminated 2025-05-19',
+    nowOperatedBy: null,
+    dnsResolves: false,
+    note: 'Available to re-register. Produced the Holiday Inn / HMV Hotels enquiry.',
+  },
+  {
+    domain: 'charlotteasphaltpavingpros.com',
+    lostTo: 'non-renewal, terminated 2025-06-06',
+    nowOperatedBy: null,
+    dnsResolves: false,
+    note: 'Available to re-register.',
+  },
+]
+
+/** Verified live and still this company's, despite a 2025 expiry notice. */
+export const RECOVERED_DOMAINS = ['atlantaasphaltpavingpros.com']
