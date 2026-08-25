@@ -100,5 +100,72 @@ export const RECONCILED_TEMPLATE = {
     'A client tracker turned an owner’s account into a reconciled figure. The same document exists for every other KBP market; it simply was not recovered. Asking KBP for a vendor work history is the move that turns the rows above into rows like this one.',
 }
 
+/**
+ * THE ROUTE TO KBP IS A PERSON, NOT A COMPANY
+ * ───────────────────────────────────────────
+ * Every note above ends by saying "ask KBP". That advice was nearly useless
+ * as written: a cold request to a franchisee's head office for a decade-old
+ * vendor history is a letter that gets filed.
+ *
+ * There is a named counterparty. Tony Miceli, at KBP Foods, appears across a
+ * mailbox search spanning at least March 2018 to May 2019 — his address is in
+ * the j.wordenandsonspaving account and is deliberately not copied here. The
+ * relationship is not a cold approach; it is years of working correspondence
+ * between a client's man and his paving contractor.
+ *
+ * WHAT THE THREAD LIST ALONE ALREADY CORROBORATES
+ * ──────────────────────────────────────────────
+ * Five threads are visible in the search, and three of them bear directly on
+ * claims recorded above:
+ *
+ *   2018-10-11  "FW: Conduit work at 119th…"  — three image attachments.
+ *               119th is 7100 W 119th Street, Overland Park: store G135020,
+ *               the one invoice in Kansas. Conduit work is not what an
+ *               $8,777.50 line describes, which is the second independent
+ *               reason to treat that figure as partial.
+ *
+ *   2019-04-11  "FW: Kentaco Taco Bell lane"  — four image attachments.
+ *               A Kentaco is a KFC/Taco Bell combined unit. Multibrand work
+ *               is corroborated in KBP's own subject line.
+ *
+ *   2019-01-24  "FW: Double paid" — carries a PDF named for this company.
+ *               A payment document, and a client-side one.
+ *
+ * Every one of those threads carries photographs. The owner's account that
+ * every invoice had pictures is visible in the attachment icons before a
+ * single message is opened.
+ *
+ * WHY THIS MATTERS MORE THAN THE PHOTOGRAPHS THEMSELVES
+ * ────────────────────────────────────────────────────
+ * A Google Photos export gives coordinates and dates — where the crew was and
+ * when. It cannot say which client, which store number, or what was billed.
+ * KBP's records can, because store numbers are how a franchisee organises
+ * everything. The two together turn a cluster of coordinates into a named
+ * restaurant with a job and a figure.
+ *
+ * So the request is small, specific, and to someone who knows the sender: a
+ * vendor work history — store numbers, dates, and amounts — for the period
+ * already documented. That is an ordinary request between parties who
+ * exchanged four million dollars of work.
+ */
+export const KBP_CONTACT = {
+  name: 'Tony Miceli',
+  company: 'KBP Foods',
+  correspondenceSpan: '2018-03 to 2019-05, at least',
+  mailbox: 'j.wordenandsonspaving@gmail.com',
+  addressRecordedHere: false,
+  addressNote: 'A live person\u2019s work address. It is in the owner\u2019s mailbox; it does not need to be in a repository.',
+  threadsSeen: [
+    { date: '2019-05-14', subject: 'Call', attachments: 0 },
+    { date: '2019-04-11', subject: 'FW: Kentaco Taco Bell lane', attachments: 4, bearsOn: 'multibrand work' },
+    { date: '2019-01-24', subject: 'FW: Double paid', attachments: 2, bearsOn: 'a payment document naming this company' },
+    { date: '2018-10-11', subject: 'FW: Conduit work at 119th', attachments: 3, bearsOn: 'Overland Park G135020' },
+    { date: '2018-03-27', subject: '11 and 249', attachments: 2 },
+  ],
+  ask: 'A vendor work history: store numbers, dates and amounts for the documented period.',
+  whyItWorks:
+    'Not a cold letter to a head office. A specific request to a man who worked with the sender for years, for records a franchisee keeps as a matter of course.',
+}
+
 /** Nothing in this file may be published. It is scope, not evidence. */
 export const PUBLISHABLE = false
