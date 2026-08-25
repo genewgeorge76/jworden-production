@@ -80,6 +80,59 @@ export const ARCHIVE = 'carolinablacktop@gmail.com'
 export const EVIDENCE = 'invoiced'
 
 /** Complete counts. These are what the archive actually establishes. */
+/**
+ * THE PAYPAL CROSS-CHECK, AND THE $13,540.85 THAT IS NOT NEW MONEY
+ * ───────────────────────────────────────────────────────────────
+ * carolinablacktop@gmail.com holds six PayPal "payment received" notifications,
+ * July–August 2024, totalling $13,540.85. PayPal is a third party, so these
+ * looked like the strongest evidence in the Carolina file — a processor's own
+ * record of money arriving, not this company's word for it.
+ *
+ * Every one of them was already counted.
+ *
+ * Matched against the Joist workbook line by line, all six are the PAYMENT SIDE
+ * of invoices already in the 18 jobs below. Two are part-payments against the
+ * same $13,500 Lancaster repair. Two more are payments against one $9,000 job.
+ * The remaining two are a $600 job and a partial against it.
+ *
+ * Adding them to INVOICED_USD would have inflated it by $13,540.85 while
+ * describing no work that is not already described.
+ *
+ * THIS IS THE THIRD TIME THIS TRAP HAS BEEN SPRUNG HERE
+ * ────────────────────────────────────────────────────
+ * texasProgram.js: Greenville reads $17,949 twice and is ONE job.
+ * This file, above: 23 documents describe 18 jobs, a $51,750 overstatement.
+ * Now: six processor receipts describe payments on jobs already counted.
+ *
+ * The shape never changes. A record system emits one document per EVENT —
+ * quote, invoice, deposit, final, receipt — and a reader summing documents
+ * counts the job once per event it generated. The rule is the same every time:
+ * deduplicate to the JOB, then sum. A new source of money is only new revenue
+ * if it describes a job the record does not already contain.
+ *
+ * SO THE TOTAL IS UNCHANGED. $155,300.00, 18 jobs. The PayPal receipts
+ * corroborate it; they do not increase it. That is worth more than the money
+ * would have been — an independent processor confirming the same jobs is
+ * exactly the third-party check this file otherwise only gets from SCDOT.
+ *
+ * WHAT THE PAYPAL RECORD DOES NOT CONTAIN
+ * ───────────────────────────────────────
+ * No Savannah payments. No Tybee Island payments. Nothing on the Georgia coast
+ * at all. Every incoming payment on this account is Carolina work. That is
+ * consistent with the Georgia coastal jobs having run through a separate
+ * mailbox and a separate PayPal — see unrecoveredWork.js — and it means this
+ * account cannot be used to evidence them.
+ */
+
+/** Six PayPal receipts, July–August 2024. All matched to invoices already counted. */
+export const PAYPAL_RECEIPTS_USD = 13540.85
+
+/** Not added to INVOICED_USD. See the note above on why. */
+export const PAYPAL_ADDS_NEW_REVENUE = false
+
+/** The PayPal record holds nothing from the Georgia coast. */
+export const PAYPAL_COVERS_SAVANNAH = false
+
 export const INVOICE_DOCUMENTS = 23
 /** 23 documents describe 18 jobs. See the header on the $51,750. */
 export const INVOICE_COUNT = 18

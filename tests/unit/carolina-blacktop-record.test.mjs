@@ -175,3 +175,25 @@ test('the unmanaged Beaufort domain is recorded with what proves it works', () =
   assert.match(M.UNMANAGED_DOMAIN.evidenceItWorks, /Contact-form lead/i)
   assert.match(M.UNMANAGED_DOMAIN.status, /open invoices/i)
 })
+
+/**
+ * The PayPal cross-check. These guard the third instance of the same trap:
+ * a new source of documents that describes jobs already counted.
+ */
+test('the PayPal receipts are not added to the invoiced total', () => {
+  assert.equal(M.PAYPAL_ADDS_NEW_REVENUE, false)
+  assert.equal(M.INVOICED_USD, 155300.0, 'the invoiced total moved when PayPal was cross-checked')
+  assert.equal(M.INVOICE_COUNT, 18, 'the job count moved when PayPal was cross-checked')
+})
+
+test('invoiced plus PayPal is never the number anyone reports', () => {
+  // 155,300 + 13,540.85 = 168,840.85. If that value ever appears as a total,
+  // someone summed a payment onto the invoice it was paying.
+  const inflated = M.INVOICED_USD + M.PAYPAL_RECEIPTS_USD
+  assert.notEqual(M.INVOICED_USD, inflated)
+  assert.ok(M.PAYPAL_RECEIPTS_USD > 0, 'the receipts are real money, just already counted')
+})
+
+test('PayPal is not offered as evidence for the Georgia coast', () => {
+  assert.equal(M.PAYPAL_COVERS_SAVANNAH, false)
+})
