@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const {
   TRACKER_STORES, PUNCH_LIST_STORES, AREA_COACH_STORES, PRE_CONSTRUCTION,
-  georgiaRecord, completedGeorgia, completedGeorgiaCities,
+  georgiaRecord, completedGeorgia, completedGeorgiaCities, KBP_INVOICE_EVIDENCE,
 } = await import(path.join(ROOT, 'src/data/georgiaStores.js'))
 
 test('no tracker store is ever graded completed', () => {
@@ -86,4 +86,30 @@ test('completed cities are deduplicated and sorted', () => {
   const cities = completedGeorgiaCities()
   assert.deepEqual(cities, [...new Set(cities)].sort())
   assert.ok(cities.includes('Riverdale') && cities.includes('Kennesaw'))
+})
+
+/**
+ * The tracker-framing correction. `listed` was being read as "never built"
+ * when it only ever meant "cannot be matched to its own document".
+ */
+test('the invoice evidence is aggregate and says so', () => {
+  const k = KBP_INVOICE_EVIDENCE
+  assert.equal(k.namesStores, false, 'if an invoice ever names a store, per-store grading can move')
+  assert.ok(k.meaning.length > 0)
+  // The post-snapshot run is the whole argument; it must not silently vanish.
+  assert.ok(k.from2017Onward.invoices > 0)
+  assert.ok(k.in2018.invoices > 0, 'invoices after the tracker date are what show it converted')
+})
+
+test('aggregate invoice totals are never attached to individual stores', () => {
+  for (const s of TRACKER_STORES) {
+    assert.equal('amountUsd' in s, false, `${s.city || s.store} was given a figure no invoice supports`)
+    assert.equal('invoice' in s, false, 'an invoice was matched to a store on plausibility')
+  }
+})
+
+test('the aggregate reconciles with the invoice record it came from', () => {
+  const k = KBP_INVOICE_EVIDENCE
+  assert.ok(k.from2017Onward.totalUsd < k.totalUsd, 'a subset exceeds its whole')
+  assert.ok(k.in2018.totalUsd < k.from2017Onward.totalUsd, 'a subset exceeds its whole')
 })

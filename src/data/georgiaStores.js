@@ -36,12 +36,49 @@
  * written by the client, not by us.
  */
 
-/** Stage as recorded by KBP. Neither means the work was finished. */
+/** Stage as recorded by KBP in 2017. Neither is an outcome — both are stages a job passes through. */
 export const PRE_CONSTRUCTION = new Set(['design', 'permitting'])
 
 /**
  * Georgia stores from the 2017 tracker. `stage` is KBP's own column.
- * Graded `listed` — scheduled work, not completed work.
+ *
+ * `listed` MEANS "NOT MATCHABLE", NOT "NEVER BUILT"
+ * ────────────────────────────────────────────────
+ * This grade was previously read as though a 2017 status column were a final
+ * verdict on each store. It is not. A tracker records where a job stood on the
+ * day it was compiled, and Design and Permitting are stages a job passes
+ * THROUGH on the way to being built.
+ *
+ * The programme's own invoice record shows what happened next. Of 146 KFC and
+ * KBP invoices totalling $4,082,440.23, ninety-three fall in 2017 or later and
+ * come to $3,002,404.23 — including twelve invoices worth $766,421.70 dated
+ * 2018, after the tracker was made. The line items include "KFC NEW BUILD" and
+ * "KFC - Change order", which is precisely what a store at Design or
+ * Permitting turns into once it discharges.
+ *
+ * So the pipeline converted. That is not an inference about one store; it is
+ * what a seven-figure invoice run after the snapshot date means.
+ *
+ * WHY THE PER-STORE GRADE STILL DOES NOT MOVE
+ * ───────────────────────────────────────────
+ * Not one of the 146 invoices names a store number or a city. Every job field
+ * reads "Asphalt Paving", "parking lot rehab", "KFC NEW BUILD" and the like.
+ * So no invoice can be matched to any particular row below, and promoting an
+ * individual store to `completed` would be assigning a specific document to a
+ * specific job on nothing but plausibility. That is the error this file exists
+ * to prevent, and it stays prevented.
+ *
+ * The grade is therefore about MATCHABILITY, not about whether the work
+ * happened. Read `listed` as "this store cannot be tied to its own document",
+ * never as "this store was not built".
+ *
+ * AND THE AGGREGATE IS THE STRONGER CLAIM ANYWAY
+ * ─────────────────────────────────────────────
+ * A list of store numbers is the weaker way to say this. $4,082,440.23
+ * invoiced across 146 documents to a single QSR franchisee, with new builds
+ * and change orders among them, says more about capability than any roster of
+ * eighteen addresses — and unlike the roster, every dollar of it is backed by
+ * an invoice that exists.
  */
 export const TRACKER_STORES = [
   { store: 'G135088', address: '5040 Cherokee Street', city: 'Acworth', zip: '30101', stage: 'permitting' },
@@ -104,6 +141,21 @@ export const AREA_COACH_STORES = [
   { city: 'Acworth',        work: 'concrete parking lot',             when: '2016-09' },
   { city: 'Cartersville',   work: 'sealcoating',                      when: '2016-10' },
 ]
+
+/**
+ * What the invoice record says about the programme as a whole. Aggregate only:
+ * no invoice names a store, so none of this attaches to a row above.
+ */
+export const KBP_INVOICE_EVIDENCE = {
+  invoices: 146,
+  totalUsd: 4082440.23,
+  from2017Onward: { invoices: 93, totalUsd: 3002404.23 },
+  in2018: { invoices: 12, totalUsd: 766421.7 },
+  lineItemsInclude: ['KFC NEW BUILD', 'KFC - Change order', 'parking lot rehab', 'Asphalt Paving', 'Asphalt Seal Coating', 'Concrete'],
+  namesStores: false,
+  meaning:
+    'The 2017 tracker is a snapshot, and this is the invoice run that follows it. It shows the pipeline converted; it cannot show which store became which invoice.',
+}
 
 export const COMPLETED = 'completed'
 export const LISTED = 'listed'
