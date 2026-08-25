@@ -9,6 +9,7 @@ import { trackPhoneClick } from '@/lib/analytics';
 import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
 import CommercialClientAuthority from '../components/CommercialClientAuthority';
+import DocumentedRecord from '../components/DocumentedRecord';
 import EstimateForm from '../components/EstimateForm';
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
@@ -366,7 +367,8 @@ export default function Home() {
               Recent Projects
             </h2>
           </div>
-          <CommercialClientAuthority />
+          <DocumentedRecord />
+      <CommercialClientAuthority />
           <CustomerProofGallery />
         </div>
       </section>
