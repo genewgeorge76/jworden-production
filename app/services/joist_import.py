@@ -105,6 +105,10 @@ AMBIGUOUS_CITIES = {
     "richmond": ("VA", "TX"),
     "columbia": ("SC", "MO"),
     "florence": ("SC", "AL"),
+    # Beaufort SC (Lowcountry, where this company works) and Beaufort NC (the
+    # Crystal Coast) are both real and 350 miles apart. Caught because the
+    # lead list holds a "Holiday Inn Beaufort reseal" with no state on it.
+    "beaufort": ("SC", "NC"),
     "jackson": ("GA", "MS", "MI"),
     "franklin": ("VA", "TN"),
     "aurora": ("IL", "CO"),
