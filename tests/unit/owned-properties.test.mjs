@@ -11,6 +11,8 @@ import {
   SUSPENDED_PROFILE_LEAD,
   NEWLY_FOUND_MAILBOX,
   CUSTOMER_REVIEWS,
+  DOMAIN_LOSSES,
+  RECOVERED_DOMAINS,
 } from '../../src/data/ownedProperties.js'
 
 test('every conflict names a resolution the owner can act on', () => {
@@ -55,13 +57,46 @@ test('the suspended profile is treated as a lead with a route', () => {
   )
 })
 
+/**
+ * The correction guard. A third party's site was recorded here as this
+ * company's before the owner said otherwise, and two of its details — a
+ * generation claim and a contact mailbox — reached the register with it.
+ * Nothing from that site may come back.
+ */
+test('nothing from the lost domain is cited as this company', () => {
+  const text = readFileSync('src/data/ownedProperties.js', 'utf8')
+  assert.equal(NEWLY_FOUND_MAILBOX, null, 'a stranger\'s mailbox was reinstated')
+  assert.equal(/floridapavingco/.test(text), false, 'a third party\'s contact address is back in the register')
+  assert.equal(/941-888-4245/.test(text), false, 'a third party\'s phone number is back in the register')
+
+  const gen = IDENTITY_CONFLICTS.find((c) => c.id === 'IC-006')
+  assert.equal(
+    gen.values.some((v) => /five generations/i.test(v)),
+    false,
+    'a claim from a site this company does not own is being counted against it',
+  )
+  assert.ok(gen.corrected, 'the removal happened without a note saying why')
+})
+
+test('every lost domain records whether someone else now holds it', () => {
+  assert.ok(DOMAIN_LOSSES.length > 0)
+  for (const d of DOMAIN_LOSSES) {
+    assert.ok(d.domain && d.lostTo, `${d.domain} is missing how it was lost`)
+    assert.ok('nowOperatedBy' in d, `${d.domain} does not say whether it was taken`)
+  }
+  // Anything verified as still ours must not also be listed as taken.
+  for (const r of RECOVERED_DOMAINS) {
+    const taken = DOMAIN_LOSSES.find((d) => d.domain === r && d.nowOperatedBy)
+    assert.equal(taken, undefined, `${r} is both recovered and recorded as taken`)
+  }
+})
+
 test('the register carries no customer names or personal contact details', () => {
   const text = readFileSync('src/data/ownedProperties.js', 'utf8')
   // Business contact addresses published by the business itself are fine; a
   // named private customer is not. IC-004 describes the testimonial without
   // repeating the name.
   assert.equal(/Jim Johnson/.test(text), false, 'a testimonial name was copied into the register')
-  assert.ok(NEWLY_FOUND_MAILBOX.address.endsWith('@gmail.com'))
 })
 
 /**
