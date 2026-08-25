@@ -16,6 +16,7 @@ import {
   PROFILE_EVIDENCE_AT_RISK,
   REGISTRY_CHECK,
   FLAGSHIP_MIGRATION,
+  ATLANTA_RESOLUTION,
 } from '../../src/data/ownedProperties.js'
 
 test('every conflict names a resolution the owner can act on', () => {
@@ -206,4 +207,29 @@ test('the middleware redirects into the flagship are marked leave-alone', () => 
   // reasoning above needs revisiting rather than silently rotting.
   assert.match(mw, /nationalpavmentgroup\.com/)
   assert.match(mw, /jwordenandsonspaving\.com/)
+})
+
+/**
+ * The Atlanta findings must not be "fixed" by editing a site that is already
+ * sentenced. If someone rewrites that copy, the duplicate-content problem the
+ * redirect exists to solve survives the fix.
+ */
+test('the Atlanta findings all route to the same resolution', () => {
+  const r = ATLANTA_RESOLUTION
+  assert.equal(r.notACopyEdit, true)
+  assert.match(r.method, /DNS/i, 'the resolution stopped being a DNS change')
+  for (const id of r.closes) {
+    const c = IDENTITY_CONFLICTS.find((x) => x.id === id)
+    assert.ok(c, `${id} vanished from the conflict list`)
+    assert.ok(c.closedBy, `${id} lost its link to the shared resolution`)
+  }
+})
+
+test('the redirect that closes them is still in the middleware', () => {
+  const mw = readFileSync('middleware.js', 'utf8')
+  assert.match(mw, /atlantapavingandsealing\.com/, 'the retiring redirect was removed')
+  assert.match(mw, /atlantaasphaltpavingpros\.com/, 'the canonical target was removed')
+  // The comment recording that it is unreachable must survive with it —
+  // without that, a reader assumes the redirect is working.
+  assert.match(mw, /NOT CURRENTLY REACHED/, 'the note that this redirect never fires was dropped')
 })
