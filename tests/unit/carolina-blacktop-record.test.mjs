@@ -20,25 +20,48 @@ import test from 'node:test'
 
 const M = await import('../../src/data/carolinaBlacktopRecord.js')
 
-test('the record publishes counts and a span, never a total', () => {
-  assert.equal(M.INVOICE_COUNT, 23)
-  assert.equal(M.ESTIMATE_COUNT, 27)
-  assert.equal(M.TOTAL_USD, undefined)
-  assert.equal(M.INVOICED_TOTAL_USD, undefined)
-  assert.equal(M.CAROLINA_REVENUE, undefined)
+test('the total counts JOBS, not documents', () => {
+  /**
+   * 23 invoice documents describe 18 jobs, because Joist issues an invoice and
+   * then a payment receipt for the same work and each carries the full total.
+   * Summing documents gives $207,050; summing jobs gives $155,300.
+   */
+  assert.equal(M.INVOICE_DOCUMENTS, 23)
+  assert.equal(M.INVOICE_COUNT, 18)
+  assert.equal(M.INVOICED_USD, 155300)
 })
 
-test('the misleading two-of-twenty-three sum appears nowhere', () => {
-  const text = JSON.stringify(M)
-  for (const shape of ['10285', '10,285', '$10285', '$10,285']) {
-    assert.ok(!text.includes(shape), `the 2-of-23 sum leaked into the record: ${shape}`)
+test('the double-counted document sum appears nowhere', () => {
+  const text = JSON.stringify(M) + M.PUBLISHABLE_LINE
+  for (const shape of ['207050', '207,050']) {
+    assert.ok(!text.includes(shape), `the inflated document sum leaked in: ${shape}`)
   }
 })
 
-test('the publishable line states counts and the permit, and no money', () => {
-  assert.match(M.PUBLISHABLE_LINE, /23 invoices/)
+test('payment status is not recorded in either direction', () => {
+  const text = JSON.stringify(M)
+  assert.equal(M.OUTSTANDING_USD, undefined)
+  assert.equal(M.PAID_USD, undefined)
+  for (const shape of ['138017', '138,017', '69,033', '69033']) {
+    assert.ok(!text.includes(shape), `a payment figure leaked in: ${shape}`)
+  }
+})
+
+test('the publishable line states jobs, the total and the permit', () => {
+  assert.match(M.PUBLISHABLE_LINE, /18 invoiced Carolina jobs/)
+  assert.match(M.PUBLISHABLE_LINE, /155,300/)
   assert.match(M.PUBLISHABLE_LINE, /SCDOT/)
-  assert.ok(!/\$/.test(M.PUBLISHABLE_LINE), 'a dollar figure reached the publishable line')
+})
+
+test('the trading-name sequence is the one the mailbox supports', () => {
+  /**
+   * The second extraction recorded "Carolina Asphalt Paving Pros" on every
+   * document including 2023 ones. The email subject for estimate 2800, dated
+   * 2024-04-24, reads "Your estimate 2800 from Carolina Blacktop". A tidier
+   * column is not always a truer one.
+   */
+  assert.equal(M.TRADING_NAMES[0], 'Carolina Blacktop')
+  assert.match(M.TRADING_NAME_SOURCE, /Email subject/i)
 })
 
 // ── The SCDOT permit ─────────────────────────────────────────────────────────

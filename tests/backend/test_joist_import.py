@@ -200,3 +200,64 @@ def test_the_summary_counts_publishable_separately_from_documents():
     assert s["publishable"] == 1, "only the invoice may reach a page"
     assert s["by_grade"][ji.REQUESTED] == 1
     assert s["by_grade"][ji.QUOTED] == 1
+
+
+# ── One job, several documents ───────────────────────────────────────────────
+
+
+def test_an_invoice_and_its_receipt_are_one_job_not_two():
+    """
+    The $51,750 error. Joist issues an invoice and then a payment receipt for
+    the same work, and every document carries the job's FULL total. Summing
+    documents counts a job once per receipt it generated.
+
+    texasProgram.js states the same rule for the same reason — an advance and a
+    final are never summed, because Greenville reads 17,949 twice and is ONE
+    job. Different system, five years later, identical trap.
+    """
+    records = ji.read_rows(
+        [
+            {"Invoice #": "6571", "Client": "Ascent Realty", "Total": "13500"},
+            {"Invoice #": "6572", "Client": "Ascent Realty", "Total": "13500"},
+            {"Invoice #": "6580", "Client": "Ascent Realty", "Total": "13500"},
+        ],
+        "Joist Invoices",
+    )
+    s = ji.summarise(records)
+    assert s["invoiced_documents"] == 3
+    assert s["invoiced_jobs"] == 1
+    assert s["invoiced_cents"] == 1_350_000, "one job at $13,500, not three"
+    assert s["duplicate_documents"] == 2
+
+
+def test_the_gap_between_documents_and_jobs_is_surfaced_not_absorbed():
+    records = ji.read_rows(
+        [
+            {"Invoice #": "1", "Client": "A", "Total": "100"},
+            {"Invoice #": "2", "Client": "A", "Total": "100"},
+            {"Invoice #": "3", "Client": "B", "Total": "50"},
+        ],
+        "Joist Invoices",
+    )
+    s = ji.summarise(records)
+    assert s["duplicate_documents"] == 1, "a reader must be able to see the collapse happened"
+
+
+def test_two_different_clients_at_the_same_price_stay_two_jobs():
+    records = ji.read_rows(
+        [
+            {"Invoice #": "1", "Client": "A", "Total": "7500"},
+            {"Invoice #": "2", "Client": "B", "Total": "7500"},
+        ],
+        "Joist Invoices",
+    )
+    assert ji.summarise(records)["invoiced_jobs"] == 2
+
+
+def test_a_row_with_no_amount_is_never_collapsed_into_another():
+    """Two amountless rows share a key of (client, None) and are not the same job."""
+    records = ji.read_rows(
+        [{"Invoice #": "1", "Client": "A"}, {"Invoice #": "2", "Client": "A"}],
+        "Joist Invoices",
+    )
+    assert len(ji.distinct_jobs(records)) == 2

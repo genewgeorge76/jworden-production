@@ -279,6 +279,44 @@ def read_rows(rows: Iterable[dict], sheet_name: str) -> list[dict]:
     return out
 
 
+def distinct_jobs(records: list[dict]) -> list[dict]:
+    """
+    One record per JOB, where several documents describe the same one.
+
+    Joist issues an invoice and then a payment receipt for the same work, and
+    every one of those documents carries the job's FULL total. Summing the
+    documents therefore counts a job once per receipt it generated.
+
+    In the Carolina archive that inflates the figure by $51,750 on a $155,300
+    book — a third again — through three jobs alone:
+
+        daven89        9,000  x3   (6557, 6563, 6565)
+        Ascent Realty 13,500  x3   (6571, 6572, 6580)
+        John           6,750  x2   (6583, 6585)
+
+    texasProgram.js states the same rule for the same reason: an advance and a
+    final are never summed, because Greenville reads 17,949 twice and is ONE
+    job. This is that rule, applied structurally rather than by hand.
+
+    The key is (client, amount). Two genuinely separate jobs for one client at
+    an identical price would be collapsed wrongly — but that is far rarer than
+    an invoice followed by its receipt, and understating is the safer error.
+    """
+    seen: dict[tuple, dict] = {}
+    for record in records:
+        if record.get("amount_cents") is None:
+            # No amount, nothing to double count. Kept as its own row.
+            seen[(id(record),)] = record
+            continue
+        key = (str(record.get("client") or "").strip().lower(), record["amount_cents"])
+        first = seen.get(key)
+        if first is None:
+            seen[key] = {**record, "documents": [record.get("ref")]}
+        else:
+            first.setdefault("documents", [first.get("ref")]).append(record.get("ref"))
+    return list(seen.values())
+
+
 def summarise(records: list[dict]) -> dict[str, Any]:
     """
     What the workbook establishes. Earned totals EXCLUDE payable rows.
@@ -289,7 +327,9 @@ def summarise(records: list[dict]) -> dict[str, Any]:
     """
     receivable = [r for r in records if r["direction"] == RECEIVABLE]
     payable = [r for r in records if r["direction"] == PAYABLE]
-    invoiced = [r for r in receivable if r["evidence"] == INVOICED]
+    # Deduplicated FIRST. Summing raw documents counts a job once per receipt.
+    invoiced = distinct_jobs([r for r in receivable if r["evidence"] == INVOICED])
+    invoiced_documents = [r for r in receivable if r["evidence"] == INVOICED]
 
     dates = sorted(r["date"] for r in records if r["date"])
     return {
@@ -300,8 +340,13 @@ def summarise(records: list[dict]) -> dict[str, Any]:
             g: sum(1 for r in receivable if r["evidence"] == g)
             for g in (REQUESTED, QUOTED, CONTRACTED, INVOICED)
         },
-        # The only earned figure, and it counts invoiced receivables alone.
+        # The only earned figure: invoiced receivables, ONE PER JOB.
         "invoiced_cents": sum(r["amount_cents"] or 0 for r in invoiced),
+        "invoiced_jobs": len(invoiced),
+        "invoiced_documents": len(invoiced_documents),
+        # Surfaced so the gap between documents and jobs is visible rather than
+        # quietly absorbed — it is the difference between $207,050 and $155,300.
+        "duplicate_documents": len(invoiced_documents) - len(invoiced),
         # Reported so it is visible, never folded into the line above.
         "payable_cents": sum(r["amount_cents"] or 0 for r in payable),
         "publishable": sum(1 for r in receivable if r["evidence"] in PUBLISHABLE),
