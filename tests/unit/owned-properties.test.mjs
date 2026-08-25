@@ -14,6 +14,7 @@ import {
   DOMAIN_LOSSES,
   RECOVERED_DOMAINS,
   PROFILE_EVIDENCE_AT_RISK,
+  REGISTRY_CHECK,
 } from '../../src/data/ownedProperties.js'
 
 test('every conflict names a resolution the owner can act on', () => {
@@ -143,4 +144,20 @@ test('the profile website field is recorded as unread, not assumed', () => {
   const mf = OWNED_PROPERTIES.find((p) => p.profile?.name === 'Mid Florida Asphalt Paving')
   assert.ok(mf, 'the mid-Florida profile entry is gone')
   assert.match(mf.profile.linkedWebsite, /unknown|unread/i, 'the website field was guessed at')
+})
+
+test('the domain findings rest on registry data, not on how a site looks', () => {
+  // The first version of this finding rested on reading a web page. A page can
+  // be redesigned; a creation date cannot be argued with.
+  const mf = DOMAIN_LOSSES.find((d) => d.domain === 'midfloridaasphaltpaving.com')
+  assert.ok(mf.rdap?.registered, 'the takeover claim lost its registry evidence')
+  assert.equal(mf.rdap.registrantVisible, false, 'do not name a registrant the registry will not name')
+  assert.equal(REGISTRY_CHECK.source, 'Verisign RDAP')
+})
+
+test('a domain called unregistered says how that was established', () => {
+  for (const d of DOMAIN_LOSSES.filter((x) => x.rdap?.status === 'not registered')) {
+    assert.ok(d.rdap.evidence, `${d.domain} is called free with nothing backing it`)
+    assert.equal(d.nowOperatedBy, null)
+  }
 })
