@@ -5,6 +5,19 @@ import { readFileSync } from 'node:fs'
 import { sourceWithoutComments } from '../helpers/source.mjs'
 
 const DATA = JSON.parse(readFileSync('src/data/countyLandmarks.virginia.json', 'utf8'))
+const GEORGIA = JSON.parse(readFileSync('src/data/countyLandmarks.georgia.json', 'utf8'))
+
+/**
+ * Both states, checked by the same rules. The Virginia file was the only one
+ * when these tests were written, and running them over one state let a
+ * whole-state bug through: the generator read Virginia's county list whatever
+ * state it was told to build, so the first Georgia run asked Wikipedia for
+ * Powhatan County, Georgia and wrote six rows of nulls.
+ */
+const DATASETS = [
+  { name: 'Virginia', data: DATA },
+  { name: 'Georgia', data: GEORGIA },
+]
 
 const vaModule = await import('../../src/data/virginia_counties.js')
 const require_va = () => vaModule
@@ -119,4 +132,93 @@ test('a county with nothing to show renders nothing rather than a placeholder', 
   // explanation is not a placeholder. See tests/helpers/source.mjs.
   const page = sourceWithoutComments('src/pages/CountyServicePage.jsx')
   assert.equal(/coming soon|placeholder/i.test(page), false)
+})
+
+/**
+ * THE QUIET VERSION OF THE WRONG-STATE BUG
+ * ────────────────────────────────────────
+ * Georgia and Virginia share Warren, Franklin, Greene, Madison and others. A
+ * generator pointed at the wrong state's county list fetches those cleanly and
+ * files one state's facts under the other's page — a real county, real
+ * landmarks, wrong state, and nothing in the output that looks wrong.
+ *
+ * So every row must name its own state in the URL it came from.
+ */
+for (const { name, data } of DATASETS) {
+  test(`${name}: every county's sources point at that state's pages`, () => {
+    assert.ok(data.counties.length > 0)
+    for (const c of data.counties) {
+      assert.equal(c.state, name, `${c.county} is filed under the wrong state`)
+      for (const s of c.sources) {
+        assert.match(
+          decodeURIComponent(s),
+          new RegExp(`, ${name}$|, ${name}\\b`),
+          `${c.county} cites a page that is not in ${name}: ${s}`,
+        )
+      }
+    }
+  })
+
+  test(`${name}: the county count matches the federal register`, () => {
+    // Georgia 159, Virginia 95 counties. Virginia's file tracks
+    // virginia_counties.js, which holds the 85 counties that have pages.
+    const expected = { Virginia: 85, Georgia: 159 }[name]
+    assert.equal(data.counties.length, expected, `${name} should have ${expected} counties`)
+  })
+
+  test(`${name}: the seat is a place name, not the sentence around it`, () => {
+    for (const c of data.counties) {
+      if (!c.seat) continue
+      // "the small town of Dinwiddie" and "the independent city of Manassas"
+      // both reached the field before the qualifier was stripped.
+      assert.equal(
+        /^(the|its|traditionally)\b/i.test(c.seat),
+        false,
+        `${c.county}: seat "${c.seat}" carries prose`,
+      )
+      assert.ok(c.seat.length < 40, `${c.county}: seat "${c.seat}" is too long to be a place`)
+    }
+  })
+
+  test(`${name}: the population is a number, with nothing trailing it`, () => {
+    for (const c of data.counties) {
+      if (!c.population) continue
+      // "482,204," printed on three live Virginia pages: the digit match ran
+      // through the comma that separated the clause.
+      assert.match(
+        c.population,
+        /^\d{1,3}(,\d{3})*$/,
+        `${c.county}: population "${c.population}" is not a bare figure`,
+      )
+    }
+  })
+}
+
+/**
+ * The county list must come from the Census file, not from another state's
+ * dataset. Wikipedia's own category was tried and rejected: it returns 47
+ * members for South Carolina, which has 46 counties — the extra is Birch
+ * County, authorised in the 1970s and never organised. A county page for a
+ * place that does not exist is the fabricated-service-area failure again.
+ */
+test('the county list is federal, and excludes counties that do not function', () => {
+  const src = sourceWithoutComments('scripts/build-county-landmarks.mjs')
+  assert.match(src, /national_county2020\.txt/, 'the Census county file is no longer the source')
+  assert.match(src, /FUNCSTAT/, 'the functional-status filter was dropped')
+  // Consolidated city-counties are kept: Bibb (Macon), Muscogee (Columbus),
+  // Clarke (Athens) and Richmond (Augusta) are filed FUNCSTAT C, and dropping
+  // them returns 151 counties for a state that has 159.
+  assert.match(src, /'A', 'B', 'C'/, 'consolidated city-counties would be dropped')
+  // VA_COUNTIES may still be read, but only for Virginia.
+  assert.match(src, /stateName === 'Virginia'/, 'the Virginia special case lost its guard')
+})
+
+test('Georgia keeps the counties Virginia does not have, and vice versa', () => {
+  const va = new Set(DATA.counties.map((c) => c.county))
+  const ga = new Set(GEORGIA.counties.map((c) => c.county))
+  // Shared names are expected and fine — the point is that the sets are not
+  // the same set. An identical list is the wrong-state bug.
+  assert.ok(ga.size > va.size)
+  const onlyGa = [...ga].filter((n) => !va.has(n))
+  assert.ok(onlyGa.length > 50, 'the Georgia file looks like a copy of the Virginia one')
 })
