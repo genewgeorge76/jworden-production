@@ -100,3 +100,52 @@ name may be named only where the work itself is evidenced.
 output rather than trusting the convention. Those tests skip when `private/` is
 absent — on a fresh clone there are no people to check, and a skip is honest
 where a silent pass over an empty directory is not.
+
+---
+
+## drive_media_index.json
+
+An index of the media in Google Drive (`genewgeorge@gmail.com`), 52 files, built
+2026-08-25.
+
+### Why an index and not the files
+
+Two hard limits, and neither is a matter of preference:
+
+**The Takeout archive is unreachable.** 28 parts at ~2.1 GB each, ~59 GB total,
+requested 2026-05-03. A Drive download returns base64-encoded content, so a 2 GB
+zip arrives as roughly 2.7 GB of text. That is three orders of magnitude past
+what can be handled, and no amount of chunking changes it.
+
+**The individual files are not much better in bulk.** A 3 MB photograph is ~4 MB
+of base64. A handful is feasible; a hundred is not. So the index records what
+exists, where, and how much it can be trusted — and the files themselves get
+uploaded by hand, in the small number that are actually wanted.
+
+### The grades, and the one that matters
+
+| grade | what it means |
+|---|---|
+| `owner_named` | The operator named the file himself and the name states a place or a job — `SELA PARKING LOT HOPEWELL`, `DRIVEWAY SEAL COAT OFF WESTHAM PARKWAY`. His own label on his own photograph. Same standing as any service-area claim on the site. |
+| `dated_capture` | A camera filename carrying a capture date. The date is real; what the photograph SHOWS is unverified until a person looks at it. |
+| `seo_named` | Named for a search term — `asphalt driveway richmond va.jpg`. May be a real job, may be stock. **Not publishable as our work without confirmation.** |
+| `marketing_set` | Generated or sourced for a specific site build (the Minnesota set). Not evidence of a job. |
+
+Only `owner_named` is publishable, and 18 files qualify. They name Richmond,
+Chesterfield and Hopewell, and cover chip-and-tar, sealcoating, brick pavers and
+gravel — services the site claims and has had no picture for.
+
+`seo_named` is called out separately rather than lumped in with the rest on
+purpose. A file called `cvs asphalt paving.jpg` looks like proof of a CVS job
+and may be a stock photograph someone renamed for a page. Publishing it as our
+work would be the fabricated store database again, in image form.
+
+### The nine that matter most
+
+Nine files carry capture dates of **2023-11-30** and **2023-12-01** — inside the
+gap where the Kickserv job book holds nothing at all (its last record is
+2022-04-04). They are the only recent evidence found anywhere so far. Whether
+they show paving work is unverified; if they do, they are worth more than
+anything else in this index, because recency of first-hand experience is exactly
+what the ranking systems weigh and the record currently makes this company look
+dormant since 2022.
