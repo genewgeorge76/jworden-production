@@ -32,6 +32,23 @@
  * true rows.
  */
 
+/**
+ * A KNOWN TENSION, RECORDED RATHER THAN QUIETLY RESOLVED
+ * ─────────────────────────────────────────────────────
+ * trackRecord.js exports COMMERCIAL_STATES from the Kickserv `state` column,
+ * and Florida is in it. This file grades Florida `pipeline`, which means it may
+ * NOT be presented as a market served. Read side by side those look like a
+ * contradiction, and a reader could cite whichever suits them.
+ *
+ * They are not in conflict. COMMERCIAL_STATES answers "does a commercial
+ * customer record exist in this state" — 39 do, for Florida. This file answers
+ * "is there evidence work was finished there", which is a different and
+ * stricter question. A customer record is not a finished job.
+ *
+ * Where the two are used together, this file governs. Presenting a state as a
+ * market served requires `work`, and nothing else does.
+ */
+
 export const WORK = 'work'
 export const PIPELINE = 'pipeline'
 export const LICENSING = 'licensing'
@@ -93,8 +110,26 @@ export const STATE_EVIDENCE = {
   },
   FL: {
     grade: PIPELINE,
-    detail: 'Coral Springs was in permitting in November 2018 — engineering plans with IBI Group, awaiting city DRC review — and explicitly NOT complete. A Ft. Pierce jobsite appears in a July 2018 workers’ compensation matter, which places a crew in the state but does not evidence a finished job.',
-    sources: ['kbp-correspondence'],
+    detail:
+      'Better documented than a single source suggests, and still short of completion. Three project records: an executed contract for a Ft Pierce site on 4th Street and another for Port St. Lucie, both dated 12 July 2018, and Kalmia Apartments in Clearwater — milling and paving, awarded 24 September 2019 with insurance and W-9 submitted and the schedule confirmed. Coral Springs was in permitting in November 2018 with IBI Group, awaiting city DRC review, and explicitly NOT complete. Separately the Kickserv export carries 39 Florida customer records across two clear clusters, Tampa Bay and the Treasure Coast. Every Florida site named in the project file also appears in that export — Ft Pierce, Port St. Lucie, Clearwater and Coral Springs — which is two systems that were never reconciled at the time naming the same places.',
+    sources: ['national-projects', 'kbp-correspondence', 'kickserv'],
+    /**
+     * WHY THIS IS STILL PIPELINE, WITH MORE BEHIND IT THAN ANY OTHER PIPELINE STATE
+     * ───────────────────────────────────────────────────────────────────────────
+     * An executed contract is a commitment, not a completion. An award with a
+     * W-9 and a confirmed schedule is mobilisation, not completion. A customer
+     * record means someone was entered into the system — the KBP survey taught
+     * that lesson at a cost, where 246 of 262 rows read "Not Started".
+     *
+     * Nothing here is a finished job: no invoice, no after-photograph, no
+     * punch list. So it does not become `work`, however much of it there is.
+     *
+     * But the volume matters for a different reason. Florida is ONE document
+     * away from publishable — a single invoice or jobsite photograph against
+     * any of these four sites would move the whole state. No other pipeline
+     * state is that close.
+     */
+    note: 'Florida is one completion document away from work. Nothing here is that document.',
   },
   OH: {
     grade: PIPELINE,
