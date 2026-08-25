@@ -10,7 +10,7 @@ import { FEATURED_REVIEWS } from '@/lib/reviews'
 import { getRegionalMarketProfile } from '@/data/regionalMarketProfiles'
 import { trackPhoneClick } from '@/lib/analytics'
 import { useTenant } from '@/lib/TenantContext'
-import { SAME_AS, AGGREGATE_RATING, BUSINESS_LEGAL_NAME } from '@/lib/businessInfo.canonical'
+import { SAME_AS, AGGREGATE_RATING, BUSINESS_LEGAL_NAME, OPERATOR, FOUNDER, SITE_URL } from '@/lib/businessInfo.canonical'
 
 const DEFAULT_MARKET_CONTENT = {
   marketName: 'Local Asphalt Paving',
@@ -117,6 +117,23 @@ export default function MarketLanding() {
           '@type': 'AggregateRating',
           ...AGGREGATE_RATING,
         },
+        // A person, referenced by @id rather than repeated. An unconnected
+        // Person node is invisible; the whole value is in the edge from the
+        // business to the human who does the work.
+        //
+        // `employee`, NOT `founder`. The first draft of this line tagged the
+        // operator as founder — the precise conflation the OPERATOR comment in
+        // businessInfo.canonical.js was written to prevent, made in code an
+        // hour after writing the warning. John H. Worden founded this business
+        // in 1984; Gene George took it over in 2015. Two men, two facts, and
+        // the second is corroborated by the first's own correction.
+        employee: { '@id': `${SITE_URL}/#operator` },
+        founder: { '@type': 'Person', ...FOUNDER },
+      },
+      {
+        ...OPERATOR,
+        '@id': `${SITE_URL}/#operator`,
+        worksFor: { '@type': 'Organization', name: BUSINESS_LEGAL_NAME },
       },
       {
         '@type': 'Service',
