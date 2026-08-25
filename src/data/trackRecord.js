@@ -10,6 +10,45 @@
  * hand and the photographs were dealt out to those stores by array slice. It
  * was served on every domain until it was deleted.
  *
+ * THE SOURCE FILE IS STILL ALIVE, AND IT IS NOT IN THIS REPOSITORY
+ * ────────────────────────────────────────────────────────────────
+ * The served copy was deleted. The original was not. Found on 2026-08-25 in
+ * the owner's Google Drive, in TWO folders, as kfc_individual_stores_database
+ * .json, alongside a smaller kfc_projects_database.json and the Python that
+ * built them.
+ *
+ * It is unmistakably the same artefact. Ten stores. Store numbers #1042,
+ * #1105, #1188, #2014, #2099, #2140, #3055, #4012, #5088, #6022 — none of
+ * which match KBP's real format, which is G135xxx throughout their own
+ * trackers. Round square footages. Exactly eight photographs per store.
+ * Scopes written like advertising copy: "Georgia Red Clay Heavy
+ * Stabilization", "Sub-Zero Freeze-Thaw RAP Asphalt Specification",
+ * "Salt-Spray Oxidation Protection".
+ *
+ * And folder names — store_04_atlanta_peachtree, store_07_orlando_idrive —
+ * that are the very strings LegacyStory.jsx had to rename, which settles that
+ * this file is the upstream of what was published.
+ *
+ * Two of its inventions are worth naming because they would be believed. It
+ * puts the Big Chicken at 1150 Cobb Pkwy N as store #2099; the real one is
+ * G135094 at 12 Cobb Pkwy N, and georgiaStores.js has the client's own row for
+ * it. And it invents a Savannah KFC on Abercorn Street — Savannah being
+ * precisely the market whose genuine records are lost, per unrecoveredWork.js,
+ * so a fabrication there would fill the one gap nobody can check.
+ *
+ * WHY THIS IS RECORDED RATHER THAN SIMPLY DELETED
+ * ──────────────────────────────────────────────
+ * Deleting someone's files is their decision, not this repository's. But a
+ * dataset that once reached production and still sits in cloud storage is a
+ * live re-ingestion risk: any future session, script or site builder that
+ * searches that Drive for "KFC stores" finds a clean-looking JSON with
+ * addresses and scopes, and nothing in the file says it is invented.
+ *
+ * So the file IDs are recorded, and the recommendation is quarantine — rename
+ * with a FABRICATED prefix or move to a folder no tool will mistake for
+ * source data. What must not happen is that it is found again in a year and
+ * believed.
+ *
  * The lesson was not "check harder". It was that a number with no stated source
  * is indistinguishable from a number somebody made up, six months later, to
  * everyone including the person who wrote it. So every figure below carries the
@@ -154,3 +193,28 @@ export const money = (n) =>
   n >= 1_000_000
     ? `$${(n / 1_000_000).toFixed(2)}M`
     : `$${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+
+/**
+ * The fabricated dataset that started all of this, located in cloud storage on
+ * 2026-08-25. Recorded so it is never re-ingested by mistake.
+ */
+export const FABRICATION_SOURCE = {
+  filename: 'kfc_individual_stores_database.json',
+  foundIn: "the owner's Google Drive",
+  copies: 2,
+  companion: 'kfc_projects_database.json, plus the Python that generated them',
+  storeCount: 10,
+  inventedStoreNumbers: ['#1042', '#1105', '#1188', '#2014', '#2099', '#2140', '#3055', '#4012', '#5088', '#6022'],
+  realFormatIs: 'G135xxx',
+  tells: [
+    'store numbers matching no real KBP identifier',
+    'round square footages',
+    'exactly eight photographs per store',
+    'scopes written as advertising copy',
+    'folder names LegacyStory.jsx had to rename',
+  ],
+  deletedFromRepo: true,
+  stillInCloudStorage: true,
+  recommendation: 'Quarantine — rename with a FABRICATED prefix or move somewhere no tool reads as source data.',
+  whyNotDeletedHere: 'Deleting the owner’s files is his decision, not this repository’s.',
+}
