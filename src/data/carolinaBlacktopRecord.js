@@ -115,6 +115,22 @@ export const EVIDENCE = 'invoiced'
  * would have been — an independent processor confirming the same jobs is
  * exactly the third-party check this file otherwise only gets from SCDOT.
  *
+ * THE MONEY GOING THE OTHER WAY WAS WAGES
+ * ────────────────────────────────────────
+ * The same account shows roughly $6,800 paid OUT across July and August 2024,
+ * in small frequent amounts, to someone sharing a mailbox with one of the
+ * customers above. The owner has confirmed what it was: his nephew, who worked
+ * on the crew. It is labour cost.
+ *
+ * This is recorded because of what sits beside it. The Lancaster job was
+ * disputed in September 2024 and the client demanded a refund. An outgoing
+ * payment stream next to a refund dispute is the pair a reconciler misreads —
+ * wages get booked as money returned, the dispute looks larger than it was,
+ * and a job that was part-paid starts to read as a job that went wrong.
+ *
+ * It is not revenue and it is not a refund. It is payroll, and it belongs on
+ * the cost side of 2024 wherever that is finally reckoned.
+ *
  * WHAT THE PAYPAL RECORD DOES NOT CONTAIN
  * ───────────────────────────────────────
  * No Savannah payments. No Tybee Island payments. Nothing on the Georgia coast
