@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFileSync } from 'node:fs'
 
-import { SAME_AS, AGGREGATE_RATING, BUSINESS_LEGAL_NAME } from '../../src/lib/businessInfo.canonical.js'
+import { SAME_AS, AGGREGATE_RATING, BUSINESS_LEGAL_NAME, OPERATOR, FOUNDER } from '../../src/lib/businessInfo.canonical.js'
 
 const LANDING = readFileSync('src/pages/MarketLanding.jsx', 'utf8')
 
@@ -49,4 +49,42 @@ test('the legal entity ties the brands together', () => {
   // is what tells Google this is one business, not several thin ones.
   assert.match(BUSINESS_LEGAL_NAME, /Worden/)
   assert.match(LANDING, /BUSINESS_LEGAL_NAME/)
+})
+
+/**
+ * The Person entity. Experience is the first E in Google's framework, and it
+ * belongs to a human — until now these sites were authored by a company,
+ * which is the one thing every competitor's site also is.
+ */
+test('the operator is a Person, connected to the business', () => {
+  assert.equal(OPERATOR['@type'], 'Person')
+  assert.ok(OPERATOR.name && OPERATOR.jobTitle)
+  assert.ok(OPERATOR.knowsAbout.length >= 5, 'the expertise domains were thinned out')
+  // An unconnected Person node is invisible. The edge is the whole value.
+  assert.match(LANDING, /employee: \{ '@id'/)
+  assert.match(LANDING, /worksFor/)
+})
+
+/**
+ * The conflation this repository exists to prevent, guarded in the one place
+ * it actually happened: the first draft of the schema tagged the operator as
+ * founder, an hour after the comment warning against exactly that was written.
+ */
+test('the operator is not recorded as the founder', () => {
+  assert.notEqual(OPERATOR.name, FOUNDER.name, 'two men became one entity')
+  assert.equal(/founder/i.test(OPERATOR.jobTitle), false, 'the operator acquired the founder title')
+  assert.match(LANDING, /founder: \{ '@type': 'Person', \.\.\.FOUNDER \}/)
+})
+
+/**
+ * The load-bearing omission. CREDENTIALS records the DPOR lookup: Class A
+ * licence 2705105644, expiration 2024-06-30, lapsed on that reading. A
+ * credential in JSON-LD is an explicit machine-readable assertion, and
+ * attaching a lapsed state licence to a named individual is materially worse
+ * than leaving it in company copy where it already sits flagged.
+ */
+test('no credential is asserted on the person', () => {
+  assert.equal('hasCredential' in OPERATOR, false, 'a credential was attached to a named individual')
+  const blob = JSON.stringify(OPERATOR)
+  assert.equal(/Class A|licen[cs]e|2705/i.test(blob), false, 'a licence claim reached the Person entity')
 })

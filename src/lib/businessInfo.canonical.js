@@ -23,6 +23,61 @@ export const FOUNDER = {
   jobTitle: 'Founder',
 };
 
+/**
+ * THE OPERATOR — the Person entity, and why it is separate from the founder.
+ *
+ * Google's quality framework leads with Experience: first-hand, demonstrable,
+ * belonging to a person. Until now these sites had no person in them at all.
+ * They were authored by a company, which is the one thing every competitor's
+ * site also is.
+ *
+ * The founder above is a different man and a different fact. John H. Worden
+ * founded the business in 1984. The operator took it over on 15 March 2015 —
+ * and that date is the single third-party corroborated fact in
+ * ownershipRecord.js, confirmed in writing by the prior principal himself.
+ * Both entities exist because collapsing them would be a claim about lineage
+ * that nothing supports.
+ *
+ * THE NAME, DECIDED FROM THE RECORD
+ * Two appear across the archive. "Gene George" is attested by the PayPal
+ * account name on every receipt, the owner's own email address, his Gmail
+ * display name on the 2016 KBP correspondence, and how KBP's own manager
+ * addressed him. "Gene Worden" appears once, in an RV park's billing system —
+ * exactly where a trading name gets entered as a person's.
+ *
+ * WHAT IS DELIBERATELY ABSENT: hasCredential
+ * The obvious thing to attach is the Virginia Class A licence, and it is the
+ * one thing that must not go here. CREDENTIALS in businessInfo.js records the
+ * DPOR lookup of 2026-08-24: licence 2705105644, Class A, expiration
+ * 2024-06-30. Lapsed for over two years on that reading.
+ *
+ * A credential in JSON-LD is an explicit machine-readable assertion, and
+ * attaching a lapsed state licence to a NAMED INDIVIDUAL is a materially worse
+ * act than leaving it in company copy where it already sits flagged. It stays
+ * out until the licence is confirmed current.
+ *
+ * WHAT IS PRESENT is what the documents support: a person, a role, a date
+ * corroborated by the other party to it, and the domains this company has an
+ * invoice trail in.
+ */
+export const OPERATOR = {
+  '@type': 'Person',
+  name: 'Gene George',
+  jobTitle: 'Owner and Operator',
+  description:
+    'Began paving at fourteen, working summers with his grandfather in Highland and Bath County, Virginia. ' +
+    'Took over J. Worden & Sons Paving in March 2015. Runs self-performed crews on every job.',
+  knowsAbout: [
+    'Asphalt paving',
+    'Pavement reconstruction',
+    'Sealcoating',
+    'Night milling',
+    'Multi-site restaurant paving programmes',
+    'VDOT specifications',
+    'ADA parking compliance',
+  ],
+};
+
 export const ALTERNATE_NAMES = [
   'J. Worden and Sons',
   'J Worden and Sons',
