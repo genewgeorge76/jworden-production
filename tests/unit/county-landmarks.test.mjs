@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFileSync } from 'node:fs'
 
+import { sourceWithoutComments } from '../helpers/source.mjs'
+
 const DATA = JSON.parse(readFileSync('src/data/countyLandmarks.virginia.json', 'utf8'))
 
 const vaModule = await import('../../src/data/virginia_counties.js')
@@ -83,4 +85,38 @@ test('every county in the source list was fetched exactly once', () => {
   const got = new Set(DATA.counties.map((c) => c.county))
   assert.equal(got.size, want.size, 'the fetched set and the source set disagree')
   for (const n of want) assert.ok(got.has(n), `${n} was never fetched`)
+})
+
+/**
+ * Data that never reaches a visitor is a file, not a page. These check the
+ * wiring, and the restraint in it.
+ */
+test('the county page renders landmarks from the fetched file', () => {
+  const page = readFileSync('src/pages/CountyServicePage.jsx', 'utf8')
+  assert.match(page, /countyLandmarks\.virginia\.json/)
+  assert.match(page, /landmarksFor/)
+  assert.match(page, /landmarks-heading/)
+})
+
+test('the landmark section cites its source and does not follow it', () => {
+  const page = readFileSync('src/pages/CountyServicePage.jsx', 'utf8')
+  assert.match(page, /local\.sources/, 'the source citation was dropped')
+  // An outbound reference link, not an endorsement or a passed signal.
+  assert.match(page, /nofollow/)
+})
+
+test('the two data files fail independently', () => {
+  const page = readFileSync('src/pages/CountyServicePage.jsx', 'utf8')
+  // virginiaCountyFacts needs Google and Exa keys; countyLandmarks needs
+  // neither. A county with landmarks and no elevation must still show them.
+  assert.match(page, /local\?\.landmarks\?\.length > 0/)
+  assert.match(page, /facts\?\.terrain/)
+})
+
+test('a county with nothing to show renders nothing rather than a placeholder', () => {
+  // The guard is a length check, so an empty list yields no section at all.
+  // Comments are stripped: the file's own header explains this case, and an
+  // explanation is not a placeholder. See tests/helpers/source.mjs.
+  const page = sourceWithoutComments('src/pages/CountyServicePage.jsx')
+  assert.equal(/coming soon|placeholder/i.test(page), false)
 })
