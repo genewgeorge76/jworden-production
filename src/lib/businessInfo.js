@@ -126,6 +126,34 @@ export const CREDENTIALS = {
   // Worden contractor record (JOHN WORDEN, 2705010961, Class B, Highway/Heavy)
   // expired 2006-05-31.
   //
+  // WHY IT LAPSED, WHICH THE DATE ALONE DOES NOT SAY (2026-08-25)
+  //
+  // A Virginia Class A licence requires a qualified individual — a named
+  // person who has passed the trade exam and stands behind the company's
+  // licence. That person for J. Worden & Sons was the owner's son.
+  //
+  // He has since taken out his own licence, which removed him as this
+  // company's qualifier. The licence lapsed at the following renewal because
+  // there was nobody left holding the exam credential, not because a renewal
+  // notice was ignored.
+  //
+  // The owner is scheduling the exam himself to re-qualify the company.
+  //
+  // This matters to how the record reads. "EXPIRATION 2024-06-30" looks like
+  // neglect. What actually happened is a son going independent and a father
+  // sitting the exam to replace him — which is the same shape as the 2025 note
+  // in recentWork.js, where the bare data read colder than the truth.
+  //
+  // It also removes the benign hypothesis the block above rested on. This is
+  // not a DPOR posting lag. The licence is genuinely inactive, and the present
+  // tense in BUSINESS_DESCRIPTION and in the LocalBusiness JSON-LD on every
+  // domain is a claim the state's own register does not currently support.
+  //
+  // Not stripped here, because the remedy is already in motion and stripping a
+  // core credential off twenty-odd sites days before an exam is a worse
+  // outcome than a flagged note. But the decision now belongs to the owner
+  // with the facts in front of him, not to a future reader guessing.
+  //
   // Resolve one of two ways, then delete this block:
   //   - renewed  -> confirm the current expiration date and record it here
   //   - lapsed   -> the claim comes out of CREDENTIALS *and* out of
