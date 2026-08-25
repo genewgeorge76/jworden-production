@@ -112,10 +112,15 @@ export const IDENTITY_CONFLICTS = [
   {
     id: 'IC-001',
     conflict: 'Generation count',
-    values: ['4th generation (canonical, businessInfo)', 'five generations (mid-Florida)'],
-    severity: 'high',
-    why: 'Two owned properties state different family histories for the same operator. Both appear in page copy a search engine will read.',
-    resolution: 'Owner decides which is correct; the other is corrected to match. Neither is evidenced in this repository — see ownershipRecord.js.',
+    values: ['4th generation (canonical, businessInfo)'],
+    severity: 'resolved',
+    why:
+      'Recorded as a conflict between two owned properties stating different family histories. It was never that. The competing value came from midfloridaasphaltpaving.com, which turned out to belong to a third party after the domain lapsed — so only one owned property ever made a generation claim, and the disagreement was with a stranger.',
+    resolution:
+      'Settled by the owner on 2026-08-25: four generations. Still owner-stated, since no document here addresses a generation count and none is likely to, but no longer an open question. Every property says four.',
+    resolvedOn: '2026-08-25',
+    lesson:
+      'This conflict existed for exactly as long as a competitor’s website was mistaken for this company’s. Before treating two sources as disagreeing, establish that both are yours.',
   },
   {
     id: 'IC-002',
@@ -164,6 +169,10 @@ export const IDENTITY_CONFLICTS = [
     ],
     corrected:
       'A fourth value, "five generations", was recorded here from midfloridaasphaltpaving.com before that site was known to belong to someone else. It was never this company’s claim and has been removed.',
+    generationCountSettled:
+      'Four. Confirmed by the owner on 2026-08-25. With the copycat’s "five generations" struck out, no owned property disputes it — the generation half of this conflict is closed.',
+    whatRemains:
+      'Only the company AGE still differs, and the two wrong values are wrong in opposite directions. A 1984 founding is 42 years, so the mid-Florida profile’s "25+ years in business" understates the company by about seventeen years, while the Atlanta site’s "over 40 years serving Atlanta" attaches a roughly right company age to a market entered decades later. One says too little; the other says it about the wrong thing.',
     severity: 'high',
     why:
       'Three owned properties state three different company ages. 25+ years, 40+ years and a 1984 founding cannot all describe the same business.',
