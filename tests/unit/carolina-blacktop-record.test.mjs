@@ -70,7 +70,11 @@ test('the permit is recorded with its reference, so it can be checked', () => {
   assert.match(M.SCDOT_PERMIT.reference, /211746/)
   assert.match(M.SCDOT_PERMIT.authority, /South Carolina Department of Transportation/)
   assert.equal(M.SCDOT_PERMIT.evidence, 'completed')
-  assert.ok(M.SCDOT_PERMIT.archived > M.SCDOT_PERMIT.applied)
+  // `reported`, not `applied`: 2024-05-13 is the date completion was reported
+  // to the department with photographs, which is what the mailbox shows. The
+  // application date is not in the archive and is not invented here.
+  assert.ok(M.SCDOT_PERMIT.archived > M.SCDOT_PERMIT.reported)
+  assert.equal(M.SCDOT_PERMIT.applied, undefined)
 })
 
 test('the permit is described as third-party verification, because that is what it is', () => {
@@ -147,4 +151,27 @@ test('the Savannah invoice is kept, because it evidences that brand traded', () 
   assert.ok(savannah, 'the Savannah trading evidence is gone')
   assert.equal(savannah.client, 'Palmetto Place')
   assert.match(savannah.document, /48/)
+})
+
+test('the SCDOT permit cites the email that reports its completion', () => {
+  /**
+   * Verified in the mailbox rather than taken from the workbook: the company's
+   * own email to the department's permit officer, 2024-05-13, subject
+   * "Permit 211746", reporting completion with photographs attached.
+   */
+  assert.match(M.SCDOT_PERMIT.source, /2024-05-13/)
+  assert.match(M.SCDOT_PERMIT.source, /211746/)
+  assert.match(M.SCDOT_PERMIT.source, /photograph/i)
+})
+
+test('the unmanaged Beaufort domain is recorded with what proves it works', () => {
+  /**
+   * A domain the estate does not know about, which produced a commercial lead
+   * from a hotel group, sitting behind an unpaid registrar invoice. An asset
+   * quietly lapsing matters more than most page content.
+   */
+  assert.equal(M.UNMANAGED_DOMAIN.domain, 'beaufortasphaltpaving.com')
+  assert.equal(M.UNMANAGED_DOMAIN.inThisRepository, false)
+  assert.match(M.UNMANAGED_DOMAIN.evidenceItWorks, /Contact-form lead/i)
+  assert.match(M.UNMANAGED_DOMAIN.status, /open invoices/i)
 })
