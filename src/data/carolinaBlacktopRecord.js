@@ -71,6 +71,33 @@
  * publishing either side of it would be a decision for a lawyer rather than a
  * marketing file.
  *
+ * WHAT THE DISPUTE WAS ACTUALLY ABOUT, WHICH IS NOT THE WORK
+ * ──────────────────────────────────────────────────────────
+ * It stays excluded. But the reason belongs in the record, because
+ * "termination and refund demand" is a sentence that reads like bad
+ * workmanship to anyone who finds it, and that is not what happened.
+ *
+ * The client was remodelling a closed Hardee's on West Meeting Street. The
+ * remodel ran out of money — Lancaster lost a significant part of its
+ * population during the pandemic and the trade to support the site was not
+ * there. He then left the country and did not come back, which is why the
+ * balance was never collected and why the dispute has no other side to it.
+ *
+ * So the shape of this entry is a client's project collapsing, not a paving
+ * job going wrong. The asphalt repair was performed and part-paid. Nothing in
+ * the archive suggests the work was ever the issue.
+ *
+ * This is the same correction as the 2025 note in recentWork.js, and it is
+ * here for the same reason: the record's bare shape reads colder than the
+ * truth, and a future reader — including a later session of this system —
+ * would otherwise conclude something false and act on it.
+ *
+ * One thing is deliberately NOT written down. The owner's account of why the
+ * client could not return involves that person's immigration position. It
+ * changes nothing about the money or the work, and a claim of that kind about
+ * a named third party does not belong in a repository. That he left and did
+ * not return is the whole of what this record needs.
+ *
  * Individual customers, likewise. 19 of the 23 invoices went to private people
  * at their homes. The rule everywhere else in this repository holds here.
  */
@@ -252,7 +279,7 @@ export const NAMED_COMMERCIAL_CLIENTS = [
  * `bid` and `lead` are NOT work and are recorded so nobody mistakes them later.
  */
 export const CAROLINA_FOOTPRINT = [
-  { place: 'Lancaster, SC', state: 'SC', basis: 'invoiced', note: 'Asphalt repair, W Meeting St. Part-paid; see the exclusion note above.' },
+  { place: 'Lancaster, SC', state: 'SC', basis: 'invoiced', note: 'Asphalt repair, W Meeting St. Part-paid; balance uncollected after the client\u2019s own project failed. See the exclusion note above.' },
   { place: 'Chester, SC', state: 'SC', basis: 'quoted', note: '142,000 sq ft shopping centre — sealcoating, striping and patching quoted 2024.' },
   { place: 'Beaufort, SC', state: 'SC', basis: 'lead', note: 'Hotel reseal and restripe enquiry, Boundary Street, 2024.' },
   { place: 'Summerville, SC', state: 'SC', basis: 'lead', note: 'Flex-space build to a heavy-duty section, 2026.' },
