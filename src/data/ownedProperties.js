@@ -311,6 +311,18 @@ export const DOMAIN_LOSSES = [
     domain: 'midfloridaasphaltpaving.com',
     lostTo: 'non-renewal',
     nowOperatedBy: 'a third party',
+    /**
+     * Registry data, not inference. A renewal keeps the original creation
+     * date; only a domain that was released and taken afresh gets a new one.
+     */
+    rdap: {
+      registered: '2025-12-03',
+      expires: '2026-12-03',
+      registrar: 'GoDaddy.com, LLC',
+      nameservers: ['NS35.DOMAINCONTROL.COM', 'NS36.DOMAINCONTROL.COM'],
+      checked: '2026-08-25',
+      registrantVisible: false,
+    },
     stillHeld: 'the Google Business Profile for the same business name',
     urgentQuestion: 'Does that profile’s website field still point at this domain?',
   },
@@ -319,16 +331,56 @@ export const DOMAIN_LOSSES = [
     lostTo: 'non-renewal, terminated 2025-05-19',
     nowOperatedBy: null,
     dnsResolves: false,
-    note: 'Available to re-register. Produced the Holiday Inn / HMV Hotels enquiry.',
+    rdap: { status: 'not registered', evidence: 'Verisign RDAP returns 404', checked: '2026-08-25' },
+    note: 'Free to register today. Produced the Holiday Inn / HMV Hotels enquiry.',
   },
   {
     domain: 'charlotteasphaltpavingpros.com',
     lostTo: 'non-renewal, terminated 2025-06-06',
     nowOperatedBy: null,
     dnsResolves: false,
-    note: 'Available to re-register.',
+    rdap: { status: 'not registered', evidence: 'Verisign RDAP returns 404', checked: '2026-08-25' },
+    note: 'Free to register today.',
   },
 ]
+
+/**
+ * HOW THE REGISTRY SETTLES IT, AND THE PRECEDENT THAT ALREADY WORKED
+ * ─────────────────────────────────────────────────────────────────
+ * Two facts from Verisign RDAP on 2026-08-25 do the work.
+ *
+ * midfloridaasphaltpaving.com was REGISTERED on 2025-12-03. That is a creation
+ * date. Renewing a domain does not reset it — only releasing one and having it
+ * taken again does. Whoever holds it now began holding it that day, and the
+ * registrant is behind a privacy service so the registry will not name them.
+ *
+ * The nameservers finish the argument. That domain answers to
+ * NS35/NS36.DOMAINCONTROL.COM, which is GoDaddy's own hosting. Every domain
+ * this company runs answers to Vercel. Different infrastructure, different
+ * operator.
+ *
+ * The precedent matters more than either. atlantaasphaltpavingpros.com was
+ * terminated by Webador on 2025-07-06 — and it was re-registered on
+ * 2026-05-18, on GoDaddy, pointed at NS1/NS2.VERCEL-DNS.COM, and it serves
+ * this company's content today. That recovery has already been carried out
+ * once, successfully, by this owner.
+ *
+ * Which is why Beaufort and Charlotte are not a warning so much as an open
+ * door. Both return 404 at the registry — unregistered, held by nobody. The
+ * same play that recovered Atlanta works on them for the cost of a
+ * registration, and only until someone else notices.
+ */
+export const REGISTRY_CHECK = {
+  checked: '2026-08-25',
+  source: 'Verisign RDAP',
+  findings: {
+    'midfloridaasphaltpaving.com': 'taken by a third party, registered 2025-12-03, GoDaddy nameservers',
+    'atlantaasphaltpavingpros.com': 'recovered by this company, registered 2026-05-18, Vercel nameservers',
+    'beaufortasphaltpaving.com': 'unregistered — 404',
+    'charlotteasphaltpavingpros.com': 'unregistered — 404',
+  },
+  precedent: 'atlantaasphaltpavingpros.com proves the recovery works; it was terminated in July 2025 and re-registered in May 2026.',
+}
 
 /** Verified live and still this company's, despite a 2025 expiry notice. */
 export const RECOVERED_DOMAINS = ['atlantaasphaltpavingpros.com']
