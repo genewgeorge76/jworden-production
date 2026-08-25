@@ -78,28 +78,76 @@ export const UNRECOVERED_WORK = [
 
 /**
  * The mailbox that holds UR-003 and UR-004, and the trading name it ran under.
- * Recorded because a lost account is a recoverable asset, not a closed door.
  *
- * THE ADDRESS IS NOT CERTAIN, AND THAT IS RECORDED RATHER THAN GUESSED AT
- * ──────────────────────────────────────────────────────────────────────
- * The owner gave two candidates and was not sure which. Both are listed. The
- * second is the likelier of the two, and not because it sounds better:
- * carolinaBlacktopRecord.js already carries "Savannah Paving & Sealing" as one
- * of the four trading names, on Invoice 48 to Palmetto Place, 2024-06-07. A
- * mailbox named for a trading name this company demonstrably used is a better
- * bet than one named for a trading name it did not.
+ * THE ADDRESS IS NOW CONFIRMED, AND THE EARLIER REASONING WAS WRONG
+ * ────────────────────────────────────────────────────────────────
+ * This entry previously listed two candidates and put
+ * savannahpavingandsealing@gmail.com first, arguing that a mailbox named for a
+ * documented trading name — Savannah Paving & Sealing, Invoice 48 — was the
+ * better bet than one named for a trading name the company did not use.
  *
- * That is a lead, not a finding. Recovery will confirm which is real.
+ * The argument was reasonable and the conclusion was wrong. The mailbox is
+ * savannahpaving@gmail.com. Three independent sightings, all inside
+ * carolinablacktop@gmail.com:
+ *
+ *   2023-09-18  A web agency addresses one pitch to three of the owner's
+ *   2023-10-27  accounts at once — carolinablacktop, j.wordenandsonspaving
+ *               and savannahpaving. Two separate threads, same three.
+ *   2024-06-07  An email FROM savannahpaving@gmail.com to this mailbox,
+ *               sent from the owner's phone, carrying a photograph.
+ *
+ * The lesson is worth keeping: a good inference about a naming convention lost
+ * to one line of raw address data. Where a header can be read, read it.
  */
 export const LOST_MAILBOX = {
-  candidates: ['savannahpavingandsealing@gmail.com', 'savannahpaving@gmail.com'],
-  /** Why the first is listed first. Corroborated in carolinaBlacktopRecord.js. */
-  likelierBecause: 'Savannah Paving & Sealing is a documented trading name — Invoice 48, Palmetto Place, 2024-06-07.',
+  address: 'savannahpaving@gmail.com',
+  confirmed: true,
+  confirmedBy: 'Sent from that address to carolinablacktop@gmail.com, 2024-06-07; also addressed alongside it in two 2023 threads.',
+  /** Considered and ruled out. Kept so the question is not reopened. */
+  ruledOut: ['savannahpavingandsealing@gmail.com'],
   tradingName: 'savannahasphaltpaving.com',
   status: 'access lost',
   holds: ['UR-003', 'UR-004'],
   route: 'https://accounts.google.com/signin/recovery',
-  note: 'Recovery needs the phone number or backup address the account was created with. Nothing else in this repository can substitute for it. Try both candidates — the form will say which exists.',
+  note: 'Recovery needs the phone number or backup address the account was created with. Nothing else in this repository can substitute for it.',
+}
+
+/**
+ * THE CROSSOVER, WHICH IS THE REAL FINDING HERE
+ * ─────────────────────────────────────────────
+ * The owner predicted that Savannah material would cross into his other
+ * accounts. It does, and the proof is small but decisive: on 2024-06-07 at
+ * 16:49 Joist sent Invoice 48 to Palmetto Place under the Savannah Paving &
+ * Sealing name, and at 19:06 the same day a photograph came from
+ * savannahpaving@gmail.com into this mailbox.
+ *
+ * That photograph is in an account nobody has lost. A jobsite image from the
+ * Savannah operation survived the loss of the Savannah mailbox because it was
+ * sent somewhere else.
+ *
+ * The consequence: the lost mailbox is not the only route to that work, and
+ * the other accounts have not been searched. The Gmail connector holds ONE
+ * Google account and binds it at session start, so carolinablacktop is all
+ * that has been swept. j.wordenandsonspaving@gmail.com is the strongest of the
+ * unsearched ones — it is already known to have been addressed alongside
+ * savannahpaving twice.
+ */
+export const CROSSOVER = {
+  proven: true,
+  example: {
+    date: '2024-06-07',
+    what: 'Photograph sent from the Savannah account into carolinablacktop@gmail.com, hours after Invoice 48 went out under the Savannah trading name.',
+    filename: 'IMG_5306.heic',
+    significance: 'Savannah-operation material exists outside the lost mailbox.',
+  },
+  unsearchedMailboxes: [
+    'j.wordenandsonspaving@gmail.com',
+    'wordenpaving@gmail.com',
+    'jhworden1@gmail.com',
+    'genewgeorge@gmail.com',
+  ],
+  constraint:
+    'The Gmail connector holds one Google account and binds at session start. Sweeping another mailbox needs that account connected and a new session.',
 }
 
 /**
