@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
-import { SCOPE_CLAIMS, RECONCILED_TEMPLATE, PUBLISHABLE } from '../../src/data/programScope.js'
+import { SCOPE_CLAIMS, RECONCILED_TEMPLATE, PUBLISHABLE, KBP_CONTACT } from '../../src/data/programScope.js'
 import { STATE_EVIDENCE, PUBLISHABLE as EVIDENCE_PUBLISHABLE } from '../../src/data/stateEvidence.js'
 
 test('the whole file is marked unpublishable', () => {
@@ -91,4 +91,30 @@ test('Florida scope does not disturb the Florida grade', () => {
   assert.ok(fl)
   assert.equal(STATE_EVIDENCE.FL.grade, 'pipeline')
   assert.equal(EVIDENCE_PUBLISHABLE.has(STATE_EVIDENCE.FL.grade), false)
+})
+
+test('the KBP contact is a route, and his address is not stored', () => {
+  // A live person's work email. It is in the owner's mailbox and does not
+  // need to be in a repository — the same rule that removed a stranger's
+  // address from ownedProperties.js.
+  assert.equal(KBP_CONTACT.addressRecordedHere, false)
+  const text = readFileSync('src/data/programScope.js', 'utf8')
+  assert.equal(/@kbp-foods/.test(text), false, 'a third party work address was committed')
+  assert.ok(KBP_CONTACT.ask, 'a contact with no request to make of him')
+})
+
+test('the corroborating threads keep what they corroborate', () => {
+  const bearing = KBP_CONTACT.threadsSeen.filter((t) => t.bearsOn)
+  assert.ok(bearing.length >= 3, 'the threads that tie to recorded claims lost their links')
+  const subjects = KBP_CONTACT.threadsSeen.map((t) => t.subject).join(' ')
+  assert.match(subjects, /119th/, 'the Overland Park thread is the tie to G135020')
+  assert.match(subjects, /Kentaco/, 'the multibrand corroboration must survive')
+})
+
+test('the Overland Park figure stays flagged partial, now for two reasons', () => {
+  const op = SCOPE_CLAIMS.find((c) => c.market.includes('Overland Park'))
+  assert.equal(op.documentedFigureLikelyPartial, true)
+  const conduit = KBP_CONTACT.threadsSeen.find((t) => /119th/.test(t.subject))
+  assert.ok(conduit, 'the conduit thread is the second independent reason')
+  assert.ok(conduit.attachments > 0, 'the photographs on it are the point')
 })
