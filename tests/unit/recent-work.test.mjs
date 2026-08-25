@@ -116,3 +116,28 @@ test('the Michigan brand is recorded as trading, which is what the domains neede
   assert.ok(mi, 'the Michigan record is gone')
   assert.match(mi.detail, /parking page|customer base/i)
 })
+
+test('the 2025 note exists, so nobody reads a quiet year as a failing one', () => {
+  /**
+   * The data alone tells a wrong story: Joist thins out after February 2025,
+   * two enquiries sit unanswered, and no 1099-K was issued. Read cold that is
+   * a business winding down. It is not what happened, and a future reader of
+   * this record — including a later session of this system — would otherwise
+   * reach the obvious wrong conclusion and act on it.
+   */
+  assert.ok(M.YEAR_NOTES[2025], 'the 2025 context is gone')
+  assert.match(M.YEAR_NOTES[2025], /not incomplete/i)
+})
+
+test('the 2025 note carries no private detail', () => {
+  const note = M.YEAR_NOTES[2025]
+  assert.ok(note.length < 200, 'this is context, not a story')
+  assert.ok(!/wife|brother|father|son|died|death|funeral/i.test(note), 'no family detail belongs here')
+  assert.ok(!/\b(19|20)\d{2}-\d{2}-\d{2}\b/.test(note), 'no dates that would pin it to a person')
+})
+
+test('the note is not reachable from anything publishable', () => {
+  const publishable = JSON.stringify(M.publishableRecentWork())
+  assert.ok(!publishable.includes(M.YEAR_NOTES[2025]), 'the note reached publishable output')
+  assert.ok(!/bereave/i.test(publishable))
+})
