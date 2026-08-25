@@ -8,6 +8,7 @@ import {
   UNRECOVERED_WORK,
   LOST_MAILBOX,
   UNREAD_DOCUMENTS,
+  CROSSOVER,
   OPEN_LEADS,
 } from '../../src/data/unrecoveredWork.js'
 
@@ -34,11 +35,23 @@ test('the unread document is not counted in either direction', () => {
   }
 })
 
-test('the lost mailbox keeps both candidates rather than picking one', () => {
-  assert.ok(Array.isArray(LOST_MAILBOX.candidates))
-  assert.ok(LOST_MAILBOX.candidates.length >= 2, 'uncertainty was collapsed into a single guess')
-  assert.ok(LOST_MAILBOX.likelierBecause, 'an ordering was asserted without a reason')
+test('the confirmed mailbox cites what confirmed it', () => {
+  assert.equal(LOST_MAILBOX.address, 'savannahpaving@gmail.com')
+  assert.equal(LOST_MAILBOX.confirmed, true)
+  assert.ok(LOST_MAILBOX.confirmedBy, 'an address was asserted without saying what confirmed it')
+  assert.ok(LOST_MAILBOX.ruledOut.includes('savannahpavingandsealing@gmail.com'), 'the ruled-out candidate was dropped rather than recorded')
   assert.ok(OPEN_LEADS.length > 0)
+})
+
+test('the crossover finding names mailboxes still unswept', () => {
+  assert.equal(CROSSOVER.proven, true)
+  assert.ok(CROSSOVER.unsearchedMailboxes.length > 0, 'the crossover is claimed with nowhere left to look')
+  assert.ok(CROSSOVER.constraint, 'no note of why the other mailboxes are unswept')
+  assert.equal(
+    CROSSOVER.unsearchedMailboxes.includes('carolinablacktop@gmail.com'),
+    false,
+    'the swept mailbox is listed as unswept',
+  )
 })
 
 /**
