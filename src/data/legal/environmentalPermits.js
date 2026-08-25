@@ -723,7 +723,7 @@ export default [
     state: 'North Dakota',
     abbr: 'ND',
     npdesAuthority: 'North Dakota Department of Environmental Quality (NDDEQ)',
-    npdesUrl: 'https://www.health.nd.gov/deq',
+    npdesUrl: 'https://www.deq.nd.gov/',
     landDisturbanceThresholdAcres: 1,
     swpppRequired: true,
     swpppNote:
@@ -734,7 +734,7 @@ export default [
       'Army Corps Section 404; NDDEQ Section 401 certification; North Dakota Wetland Conservation Act provides some state protections',
     stateWetlandProgram: false,
     stateEnvAgency: 'North Dakota Department of Environmental Quality (NDDEQ)',
-    stateEnvUrl: 'https://www.health.nd.gov/deq',
+    stateEnvUrl: 'https://www.deq.nd.gov/',
     citation: 'N.D. Cent. Code § 61-28-01 et seq.; NDAC 33.1-16-03',
     notes: '',
     lastVerified: '2026-01-01',

@@ -104,7 +104,7 @@ export default [
     permitFeeStructure: 'Varies by jurisdiction',
     inspectionsRequired: ['Foundation', 'Framing', 'Rough MEP', 'Final'],
     stateBuildingOffice: 'Arkansas State Police - Fire Marshal Division',
-    stateBuildingUrl: 'https://www.dfa.arkansas.gov/insurance/state-fire-marshal',
+    stateBuildingUrl: 'https://dps.arkansas.gov/emergency-management/adem/state-fire-marshals-office/',
     citation: 'Ark. Code Ann. § 20-22-601 et seq.',
     notes:
       'Many rural counties in Arkansas have no building permit requirement. Contractors should verify local requirements.',
@@ -198,7 +198,7 @@ export default [
     inspectionsRequired: ['Foundation', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice:
       'Connecticut Department of Administrative Services - State Building Inspector',
-    stateBuildingUrl: 'https://portal.ct.gov/DAS/Construction-Services/State-Building-Inspector',
+    stateBuildingUrl: 'https://portal.ct.gov/das/office-of-state-building-inspector',
     citation: 'CGS § 29-251 et seq. (State Building Code)',
     notes:
       'Connecticut updates its State Building Code periodically. All municipalities must adopt and enforce the state code. Towns have building officials who issue permits.',
@@ -327,7 +327,7 @@ export default [
     ],
     stateBuildingOffice:
       'Georgia Department of Community Affairs (DCA) - Construction Codes and Housing',
-    stateBuildingUrl: 'https://dca.ga.gov/safe-affordable-housing/codes-and-housing-development',
+    stateBuildingUrl: 'https://dca.georgia.gov/community-assistance/construction-codes',
     citation: 'O.C.G.A. § 8-2-20 et seq.',
     notes:
       'Georgia adopts state minimum codes; local governments may adopt more stringent codes. Coastal construction zone has additional requirements.',
@@ -558,7 +558,7 @@ export default [
     inspectionsRequired: ['Foundation', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice:
       'Maine Department of Agriculture, Conservation and Forestry (DACF) - Building Codes',
-    stateBuildingUrl: 'https://www.maine.gov/dacf/building_codes',
+    stateBuildingUrl: 'https://www.maine.gov/dps/fmo/building-codes',
     citation: '30-A M.R.S.A. § 4101 et seq. (Uniform Building and Energy Code)',
     notes:
       'Maine adopted the Uniform Building and Energy Code (UBEC) for 1-2 family dwellings. Small municipalities (population <4,000) may opt out.',
@@ -587,7 +587,7 @@ export default [
     inspectionsRequired: ['Foundation/Footing', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice:
       'Maryland Department of Labor - Division of Labor and Industry (Code Administration)',
-    stateBuildingUrl: 'https://www.dllr.state.md.us/labor/codes',
+    stateBuildingUrl: 'https://labor.maryland.gov/labor/',
     citation: 'Md. Code Ann., Bus. Reg. § 8-101 et seq.; COMAR 09.12.50 et seq.',
     notes:
       'Maryland Building Performance Standards apply statewide but counties enforce locally with some variations. MDE approvals also required for many projects.',
@@ -679,7 +679,7 @@ export default [
     inspectionsRequired: ['Footings', 'Foundation', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice:
       'Minnesota Department of Labor and Industry (DLI) - Construction Codes and Licensing',
-    stateBuildingUrl: 'https://www.dli.mn.gov/construction-codes-and-licensing',
+    stateBuildingUrl: 'https://www.dli.mn.gov/about-department/our-areas-service/construction-codes-and-licensing',
     citation: 'Minn. Stat. § 326B.02 et seq. (Minnesota State Building Code)',
     notes:
       'Minnesota has a strong statewide code program. State Building Official oversees local enforcement. Snow load and cold climate construction requirements are significant.',
@@ -705,7 +705,7 @@ export default [
     inspectionsRequired: ['Varies by jurisdiction'],
     stateBuildingOffice:
       'Mississippi State Fire Marshal Office (fire code); no statewide building code office',
-    stateBuildingUrl: 'https://www.mid.ms.gov/fire-marshal',
+    stateBuildingUrl: 'https://www.mid.ms.gov/state-fire-marshal',
     citation: 'Miss. Code Ann. § 75-76-1 et seq.; local municipal codes',
     notes:
       'Mississippi does not have a statewide building code mandate for local governments. Code adoption and enforcement varies widely by locality. Coastal areas have enhanced wind and flood requirements.',
@@ -754,7 +754,7 @@ export default [
       'Montana Building Codes Bureau: fee schedule based on construction value; local jurisdictions vary',
     inspectionsRequired: ['Foundation', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice: 'Montana Department of Labor and Industry (DLI) - Building Codes Bureau',
-    stateBuildingUrl: 'https://dli.mt.gov/building-codes',
+    stateBuildingUrl: 'https://bsd.dli.mt.gov/building-codes-permits/',
     citation: 'Mont. Code Ann. § 50-60-101 et seq.',
     notes:
       'Montana has a statewide building code program. In areas without local enforcement, Montana Building Codes Bureau provides permit and inspection services.',
@@ -929,7 +929,7 @@ export default [
     ],
     stateBuildingOffice:
       'New York State Department of State - Division of Building Standards and Codes',
-    stateBuildingUrl: 'https://www.dos.ny.gov/dcea/buildingcodes',
+    stateBuildingUrl: 'https://dos.ny.gov/building-standards-and-codes',
     citation: 'Executive Law § 370 et seq. (Uniform Fire Prevention and Building Code Act)',
     notes:
       'New York City uses its own NYC Building Code (locally enacted but generally consistent with Uniform Code). NYC has particularly complex permit requirements for major construction (Directive 14, etc.).',
@@ -957,7 +957,7 @@ export default [
     inspectionsRequired: ['Footings', 'Foundation', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice:
       'North Carolina Department of Insurance - Engineering Division (Building Code)',
-    stateBuildingUrl: 'https://www.ncdoi.gov/engineering',
+    stateBuildingUrl: 'https://www.ncosfm.gov/codes',
     citation: 'N.C. Gen. Stat. § 160D-1101 et seq. (NC State Building Code)',
     notes:
       'NC State Building Code is enforced by county and municipal building inspection departments. State Building Code Council adopts the code. Coastal areas have enhanced hurricane construction requirements.',
@@ -984,7 +984,7 @@ export default [
     inspectionsRequired: ['Varies by jurisdiction'],
     stateBuildingOffice:
       'North Dakota State Fire Marshal (fire); no statewide building code office',
-    stateBuildingUrl: 'https://www.nd.gov/sfm',
+    stateBuildingUrl: 'https://firemarshal.nd.gov/',
     citation: 'NDCC § 23-01-37 (State Fire Code); local municipal codes',
     notes:
       'North Dakota does not have a mandatory statewide building code. Urban areas have adopted codes; rural areas may have minimal requirements.',
@@ -1050,7 +1050,7 @@ export default [
     permitFeeStructure: 'Varies by jurisdiction',
     inspectionsRequired: ['Foundation', 'Framing', 'Rough MEP', 'Final'],
     stateBuildingOffice: 'Oklahoma Uniform Building Code Commission (UBCC)',
-    stateBuildingUrl: 'https://www.ok.gov/ubcc',
+    stateBuildingUrl: 'https://oklahoma.gov/oubcc.html',
     citation: '74 O.S. § 324.1 et seq. (UBCC Act)',
     notes:
       'Oklahoma UBCC establishes codes that local governments may adopt. Tornado construction requirements are increasingly common. Some municipalities have adopted enhanced standards.',
@@ -1324,7 +1324,7 @@ export default [
       'Final',
     ],
     stateBuildingOffice: 'Vermont Department of Public Safety - Division of Fire Safety',
-    stateBuildingUrl: 'https://dps.vermont.gov/firesafety',
+    stateBuildingUrl: 'https://firesafety.vermont.gov/',
     citation: '20 V.S.A. § 2901 et seq. (Fire Safety); 10 V.S.A. § 6001 et seq. (Act 250)',
     notes:
       'Vermont Act 250 is a major land use permit that applies to significant development projects statewide. Vermont RBES requires blower door testing and energy verification for residential construction.',
@@ -1353,7 +1353,7 @@ export default [
     inspectionsRequired: ['Foundation/Footing', 'Framing', 'Rough MEP', 'Insulation', 'Final'],
     stateBuildingOffice:
       'Virginia Department of Housing and Community Development (DHCD) - Building and Fire Regulation',
-    stateBuildingUrl: 'https://www.dhcd.virginia.gov/buildingcodes',
+    stateBuildingUrl: 'https://www.dhcd.virginia.gov/codes',
     citation: 'Code of Va. § 36-97 et seq. (USBC)',
     notes:
       "Virginia USBC is one of the strongest statewide code programs. DHCD is the Board of Housing and Community Development's administrative agency. The Code requires re-inspection fees and detailed documentation.",
