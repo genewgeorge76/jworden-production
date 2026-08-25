@@ -81,3 +81,30 @@ test('South Carolina is work, and its absence from the KBP archive is explained'
   assert.ok(sc.grade_note, 'the one-source case must say so')
   assert.ok(!sc.sources.includes('kbp-2015-survey'))
 })
+
+/**
+ * Florida. The entry understated what was held — one source cited when three
+ * exist — and a state that reads thinner than its evidence is as much a defect
+ * as one that reads thicker.
+ */
+test('Florida cites every source that actually backs it', () => {
+  const fl = STATE_EVIDENCE.FL
+  for (const s of ['national-projects', 'kbp-correspondence', 'kickserv']) {
+    assert.ok(fl.sources.includes(s), `Florida no longer cites ${s}`)
+  }
+})
+
+test('Florida stays pipeline despite the volume behind it', () => {
+  // Executed contracts, an award with a W-9, and 39 customer rows are still
+  // not a finished job. Volume is not a grade.
+  assert.equal(STATE_EVIDENCE.FL.grade, 'pipeline')
+  assert.equal(PUBLISHABLE.has(STATE_EVIDENCE.FL.grade), false)
+  assert.ok(STATE_EVIDENCE.FL.note, 'the reason Florida is held back is not written down')
+})
+
+test('a state in COMMERCIAL_STATES is not thereby a market served', () => {
+  // The tension this guards: Florida is in COMMERCIAL_STATES and is not
+  // publishable here. Existing in a customer export is not evidence of work.
+  assert.ok(COMMERCIAL_STATES.includes('FL'))
+  assert.equal(PUBLISHABLE.has(STATE_EVIDENCE.FL.grade), false)
+})
