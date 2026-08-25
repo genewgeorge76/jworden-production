@@ -25,18 +25,42 @@
  * it. A DOT permit is a government record, and for a contractor arguing
  * capability to a public body it is worth more than a year of driveways.
  *
- * WHY THERE IS NO DOLLAR TOTAL
- * ────────────────────────────
- * Two of the 23 invoices carry an amount. The other 21 were sent through Joist,
- * whose covering emails do not repeat the figure, and Joist's document pages
- * are app-only so the line items cannot be read from outside.
+ * THE TOTAL, AND THE $51,750 THAT IS NOT IN IT
+ * ────────────────────────────────────────────
+ * A second extraction pulled every figure from Joist's own document API, so
+ * amounts now exist for all 23 invoice documents. Summing them gives
+ * $207,050.00 and that number is wrong.
  *
- * Summing the two gives $10,285.00. That is real arithmetic and it is the wrong
- * number, for exactly the reason kickserv_import.py refuses to publish
- * $41,295,234.93: it is precise, it looks authoritative, and it describes 2
- * documents out of 23. A reader would take it as the Carolina revenue. So this
- * file publishes the COUNT and the SPAN, which are complete, and no total,
- * which would not be.
+ * Joist issues an invoice and then a payment receipt for the same work, and
+ * every one of those documents carries the job's FULL total. Three jobs
+ * account for the error:
+ *
+ *     one client   $9,000   invoiced once, three documents
+ *     another     $13,500   invoiced once, three documents
+ *     a third      $6,750   invoiced once, two documents
+ *
+ * 23 documents describe 18 jobs. Counted once each: $155,300.00.
+ *
+ * texasProgram.js already states this rule — an advance and a final are never
+ * summed, because Greenville reads 17,949 twice and is ONE job. The same trap,
+ * in a different system, five years later. It is now applied structurally in
+ * joist_import.distinct_jobs rather than caught by eye.
+ *
+ * PAYMENT STATUS IS STILL NOT PUBLISHED
+ * ─────────────────────────────────────
+ * The workbook carries paid and outstanding columns showing $138,017
+ * outstanding. Two reasons that figure does not appear on any page.
+ *
+ * First, it is computed against the inflated $207,050, so it inherits the same
+ * double count.
+ *
+ * Second, and more important, this is the Kickserv aging report again. That
+ * export read $0.00 paid on 243 of 256 invoices and the owner's account was
+ * that the work was paid for and the box was never ticked. Joist has the same
+ * shape: payments taken by cheque, cash or Cash App never reach it — one row
+ * in the first extraction says so explicitly, "$1,000 also paid via Cash App
+ * same day". No contractor's website states whether its invoices cleared, and
+ * this one will not become the first.
  *
  * WHAT IS DELIBERATELY EXCLUDED
  * ─────────────────────────────
@@ -56,7 +80,10 @@ export const ARCHIVE = 'carolinablacktop@gmail.com'
 export const EVIDENCE = 'invoiced'
 
 /** Complete counts. These are what the archive actually establishes. */
-export const INVOICE_COUNT = 23
+export const INVOICE_DOCUMENTS = 23
+/** 23 documents describe 18 jobs. See the header on the $51,750. */
+export const INVOICE_COUNT = 18
+export const INVOICED_USD = 155300.0
 export const ESTIMATE_COUNT = 27
 export const FIRST_DOCUMENT = '2019-12-20'
 export const LAST_INVOICE = '2025-02-18'
@@ -75,6 +102,22 @@ export const TRADING_NAMES = [
   'Carolina Asphalt Paving Pros',
   'Savannah Paving & Sealing',
 ]
+
+/**
+ * VERIFIED AGAINST THE MAILBOX, because two extractions disagreed.
+ *
+ * The second workbook records "Carolina Asphalt Paving Pros" as the business
+ * name on every document including the 2023 and 2024 ones. The emails say
+ * otherwise: the delivery notice for estimate 2800, dated 2024-04-24, has the
+ * subject "Your estimate 2800 from Carolina Blacktop".
+ *
+ * So the second extraction normalised a historical field to the current name
+ * and lost the fact. The first extraction had it right, and the sequence above
+ * is the one the mailbox supports. Worth remembering when the next rebuilt
+ * spreadsheet arrives: a tidier column is not always a truer one.
+ */
+export const TRADING_NAME_SOURCE =
+  'Email subject lines in carolinablacktop@gmail.com, which carry the name as sent.'
 
 /**
  * The one item verified by somebody other than us.
@@ -121,5 +164,6 @@ export function publishableFootprint() {
 
 /** What a page may say. Counts and a span — never a total. */
 export const PUBLISHABLE_LINE =
-  `${INVOICE_COUNT} invoices and payment receipts issued for Carolina work between 2023 and 2025, ` +
-  'and an SCDOT encroachment permit performed and archived by the department in 2024.'
+  `${INVOICE_COUNT} invoiced Carolina jobs between 2023 and 2025 totalling ` +
+  `$${INVOICED_USD.toLocaleString('en-US')}, and an SCDOT encroachment permit performed ` +
+  'and archived by the department in 2024.'
