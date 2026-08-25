@@ -135,7 +135,13 @@ export const TAKEOVER_EVIDENCE = {
  */
 export const UNEVIDENCED_HERITAGE_CLAIMS = [
   { claim: 'Founded 1984', basis: 'owner-stated', note: 'The ownership letter says nothing about the founding year.' },
-  { claim: '4th generation', basis: 'owner-stated', note: 'Generation count is not addressed by any document in this repository.' },
+  {
+    claim: '4th generation',
+    basis: 'owner-stated',
+    settled: '2026-08-25',
+    note:
+      'Confirmed by the owner and closed. It remains owner-stated — no document here addresses a generation count and none is likely to — but it is no longer an open question between competing numbers, and every property must now say four.',
+  },
   { claim: 'Continuous trading since 1984', basis: 'owner-stated', note: 'No document here covers the years between founding and 2015.' },
 ]
 

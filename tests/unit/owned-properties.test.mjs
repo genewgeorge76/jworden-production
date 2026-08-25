@@ -22,11 +22,14 @@ test('every conflict names a resolution the owner can act on', () => {
   assert.ok(IDENTITY_CONFLICTS.length > 0)
   for (const c of IDENTITY_CONFLICTS) {
     assert.ok(c.values.length >= 1, `${c.id} states a conflict without its values`)
+    if (c.severity === 'resolved') assert.ok(c.resolvedOn, `${c.id} is resolved without a date`)
     assert.ok(c.why, `${c.id} does not say why it matters`)
     assert.ok(c.resolution, `${c.id} is a complaint rather than a finding`)
     // Ordered worst-first. 'critical' means it is costing something today,
     // not merely that it is wrong.
-    assert.ok(['critical', 'high', 'medium', 'low'].includes(c.severity), `${c.id} has an unrecognised severity`)
+    // 'resolved' is terminal: the finding stays on the record with its answer
+    // rather than being deleted, so the reasoning survives for whoever reads it.
+    assert.ok(['critical', 'high', 'medium', 'low', 'resolved'].includes(c.severity), `${c.id} has an unrecognised severity`)
   }
 })
 
@@ -35,11 +38,30 @@ test('every conflict names a resolution the owner can act on', () => {
  * settles it — a repository that silently picks one has invented a family
  * history, which is the exact failure mode everything else here guards.
  */
-test('the generation conflict is recorded, not silently resolved', () => {
+test('the generation count was settled by the owner, not by the repository', () => {
   const gen = IDENTITY_CONFLICTS.find((c) => c.conflict === 'Generation count')
   assert.ok(gen, 'the generation conflict was dropped')
-  assert.equal(gen.values.length, 2, 'one side of the conflict was deleted')
   assert.match(gen.resolution, /owner/i, 'the repository decided a fact only the owner knows')
+
+  const tenure = IDENTITY_CONFLICTS.find((c) => c.id === 'IC-006')
+  assert.match(tenure.generationCountSettled, /^Four\./, 'the settled count must state the answer plainly')
+  assert.match(tenure.generationCountSettled, /2026-08-25/, 'a settlement needs the date it was given')
+
+  // The count is settled but still rests on the owner's word. If a document
+  // ever addresses it, THAT is when the basis changes — not before.
+  assert.equal(
+    IDENTITY_CONFLICTS.some((c) => /five generations/i.test(JSON.stringify(c.values))),
+    false,
+    'the copycat\'s claim is back in the tally',
+  )
+})
+
+test('what remains of the tenure conflict is the age, not the generations', () => {
+  const tenure = IDENTITY_CONFLICTS.find((c) => c.id === 'IC-006')
+  assert.ok(tenure.whatRemains, 'the remaining half of the conflict lost its description')
+  // Both surviving errors must stay named, because they need opposite fixes.
+  assert.match(tenure.whatRemains, /25\+/)
+  assert.match(tenure.whatRemains, /Atlanta/)
 })
 
 test('no property claims a market tenure the record does not support', () => {
