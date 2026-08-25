@@ -66,7 +66,14 @@ export const OWNED_PROPERTIES = [
       hours: 'Open 24 hours',
       phone: '804-446-1296',
       source: 'relayed by the owner from the profile dashboard, 2026-08-25; not independently fetched',
-      linkedWebsite: 'UNVERIFIED — see DOMAIN_LOSSES, this is the urgent question',
+      linkedWebsite: 'SET but unread — the profile renders a Website button, so a URL is configured. Where it points is still unknown.',
+      webrootClassification: 'yellow — the owner\u2019s browser extension rates the linked destination as suspicious. Not proof, but consistent with the domain having changed hands.',
+      services: [
+        'Asphalt Driveways', 'Asphalt Resurfacing', 'Chip & Tar', 'Driveway Sealing',
+        'Line Striping', 'New Asphalt Driveways', 'Parking Lot', 'Parking Lot Paving',
+        'Patching And Repairs',
+      ],
+      hasPhotos: true,
     },
   },
   {
@@ -237,6 +244,42 @@ export const SUSPENDED_PROFILE_LEAD = {
  * not belong in this repository in any form.
  */
 export const NEWLY_FOUND_MAILBOX = null
+
+/**
+ * THE PHOTOGRAPHS ON THAT PROFILE ARE EVIDENCE, AND THEY ARE NOT BACKED UP
+ * ───────────────────────────────────────────────────────────────────────
+ * The mid-Florida profile carries a photo gallery. Those images were uploaded
+ * by this company, they are dated by Google, and they show Florida work. That
+ * is the completion evidence stateEvidence.js says Florida is one document
+ * short of — not a contract, not a customer record, but pictures of finished
+ * jobs held on a platform this company does not control.
+ *
+ * The last clause is the problem.
+ *
+ * The Savannah profile is suspended. Whatever photographs and reviews it held
+ * are behind that suspension now, unreachable without an appeal, and that
+ * happened without warning. There is no reason to believe the Florida profile
+ * is safer than the Savannah one was — the same operator, the same platform,
+ * the same exposure.
+ *
+ * So the photographs should be pulled down and stored while they can be. This
+ * repository already has the machinery: media_store.py writes to a private
+ * intake bucket, and mailbox_attachments.py records provenance by SHA-256 of
+ * the bytes rather than by filename. Evidence that exists in exactly one place,
+ * on someone else's server, is one suspension away from the Savannah problem.
+ *
+ * The reviews deserve the same treatment. Two customer statements about
+ * completed work are the only such statements anywhere in this project, and
+ * they live entirely inside a profile that could be suspended tomorrow.
+ */
+export const PROFILE_EVIDENCE_AT_RISK = {
+  profile: 'Mid Florida Asphalt Paving',
+  holds: ['jobsite photographs', '2 customer reviews at 5.0'],
+  backedUp: false,
+  precedent: 'The Savannah profile is suspended and its contents are already unreachable.',
+  action: 'Download the photographs and capture the review text, then store them through media_store.py with provenance.',
+  couldEvidence: 'FL completion — the one document Florida is short of.',
+}
 
 /**
  * DOMAINS LOST TO NON-RENEWAL, AND WHAT HAPPENS NEXT TO THEM
