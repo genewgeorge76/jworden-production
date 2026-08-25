@@ -21,6 +21,22 @@
  * evidence supports, and five real records beat a fuller list that is partly
  * assumed.
  *
+ * 2025 IS THIN FOR A REASON, AND IT IS NOT DECLINE
+ * ───────────────────────────────────────────────
+ * Activity in 2025 was reduced by a family bereavement. The year was quiet
+ * because the owner was with his family, not because the evidence for it is
+ * missing.
+ *
+ * This is recorded because the data alone tells a wrong story. Joist activity
+ * thins out after February 2025, two enquiries sit unanswered from the middle
+ * of that year, and no 1099-K was issued for it. Read cold, that is the shape
+ * of a business winding down. It is not what happened, and anyone working on
+ * this record later — including a future session of this system — would
+ * otherwise reach the obvious wrong conclusion and act on it.
+ *
+ * Nothing here belongs on a page. It is context for whoever reads the record,
+ * and no more than that.
+ *
  * WHAT IS NOT HERE, AND WHY
  * ─────────────────────────
  * NO NAMES. Four of these five are private individuals — a homeowner who wanted
@@ -57,6 +73,15 @@ export const INVOICED = 'invoiced'
  * cannot quietly present these five as though they were the whole period.
  */
 export const LEDGER_ENDS = '2022-04-04'
+
+/**
+ * Why 2025 is quiet. Internal context, never page content — there is a test
+ * that keeps it out of anything publishable.
+ */
+export const YEAR_NOTES = {
+  2025: 'Reduced activity following a family bereavement. The year was quiet; the record is not incomplete.',
+}
+
 export const GAP_NOTE =
   'The job book and the invoice record both end on 2022-04-04, when invoicing moved off Kickserv. These are what correspondence evidences since — not a complete record of the period.'
 
