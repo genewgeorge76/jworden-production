@@ -332,7 +332,8 @@ export const DOMAIN_LOSSES = [
     nowOperatedBy: null,
     dnsResolves: false,
     rdap: { status: 'not registered', evidence: 'Verisign RDAP returns 404', checked: '2026-08-25' },
-    note: 'Free to register today. Produced the Holiday Inn / HMV Hotels enquiry.',
+    note: 'Produced the Holiday Inn / HMV Hotels enquiry. Owner is re-registering at GoDaddy directly, 2026-08-25.',
+    recovery: 'owner-handled at GoDaddy',
   },
   {
     domain: 'charlotteasphaltpavingpros.com',
@@ -340,7 +341,8 @@ export const DOMAIN_LOSSES = [
     nowOperatedBy: null,
     dnsResolves: false,
     rdap: { status: 'not registered', evidence: 'Verisign RDAP returns 404', checked: '2026-08-25' },
-    note: 'Free to register today.',
+    note: 'Owner is re-registering at GoDaddy directly, 2026-08-25.',
+    recovery: 'owner-handled at GoDaddy',
   },
 ]
 
@@ -370,6 +372,32 @@ export const DOMAIN_LOSSES = [
  * same play that recovered Atlanta works on them for the cost of a
  * registration, and only until someone else notices.
  */
+/**
+ * WHAT A RECOVERED DOMAIN STILL NEEDS AFTER IT IS BOUGHT
+ * ─────────────────────────────────────────────────────
+ * Registration alone gets a parking page, which is worth nothing and can be
+ * worse than nothing — a lapsed domain that returns as a GoDaddy placeholder
+ * looks abandoned to the crawler that used to index a real site.
+ *
+ * atlantaasphaltpavingpros.com is the working template: registered at GoDaddy,
+ * nameservers pointed at NS1/NS2.VERCEL-DNS.COM, and serving this company's
+ * content. Two of the four settings that matter are the ones that caused the
+ * loss in the first place — auto-renew, and a billing card that is not blocked
+ * by an unpaid invoice.
+ *
+ * Once DNS is delegated, each domain needs a destination decided in
+ * middleware.js. Beaufort is not a redirect candidate by default: it generated
+ * a real hotel enquiry, so it earned a page rather than a 301 to somewhere
+ * else. That is a decision for when the domain is back, not before.
+ */
+export const RECOVERY_CHECKLIST = [
+  'Register at GoDaddy (owner-handled).',
+  'Nameservers to NS1.VERCEL-DNS.COM and NS2.VERCEL-DNS.COM, matching atlantaasphaltpavingpros.com.',
+  'Auto-renew ON — non-renewal is what lost all three.',
+  'WHOIS privacy ON, and registrant details reachable; ICANN suspends on failed verification.',
+  'Then decide the destination in middleware.js. Beaufort earned a page, not a redirect.',
+]
+
 export const REGISTRY_CHECK = {
   checked: '2026-08-25',
   source: 'Verisign RDAP',
