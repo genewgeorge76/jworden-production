@@ -50,6 +50,67 @@
  * and the .docx has not been read.
  */
 
+/**
+ * THREE DIFFERENT FACTS THAT KEEP GETTING TOLD AS ONE
+ * ──────────────────────────────────────────────────
+ * Most of the tenure confusion across the properties comes from collapsing
+ * three separate things into a single number. They are not the same claim and
+ * they do not have the same evidence:
+ *
+ *   1. WHEN THE COMPANY WAS FOUNDED      1984, owner-stated, unevidenced here.
+ *   2. WHEN THE CURRENT OWNER TOOK OVER  15 March 2015, corroborated by the
+ *                                        prior principal in writing.
+ *   3. HOW LONG HE HAS BEEN IN THE TRADE ~1991, owner-stated, and the
+ *                                        strongest of the three in practice.
+ *
+ * A Google profile's "years in business" field means the first. A biography
+ * saying "35 years of experience" means the third. Both can be true at once,
+ * and stating one where the other belongs is how the estate ended up claiming
+ * four different company ages.
+ *
+ * WHAT HE ACTUALLY SAID, AND WHY IT IS WORTH MORE THAN THE OTHER TWO
+ * ─────────────────────────────────────────────────────────────────
+ * He began paving with his grandfather at fourteen and worked the summers
+ * until he was eighteen or nineteen — Monterey, Williamsville and Franklin in
+ * Virginia, among others. He is now almost fifty, which places the start
+ * around 1991 and the last of those summers around 1995.
+ *
+ * Google's own quality framework leads with Experience — first-hand,
+ * demonstrable, personal. "Fourth generation since 1984" is a slogan with
+ * nothing behind it and every competitor has one. "On a paving crew at
+ * fourteen with my grandfather, in Highland and Bath County, and still doing
+ * it at fifty" is a specific person in specific places over a specific span,
+ * and it cannot be copied by anyone who did not live it.
+ *
+ * The 25+ years on the mid-Florida profile is not merely inconsistent with
+ * the rest. Against his own account it understates him by about a decade.
+ *
+ * WHAT THIS IS NOT
+ * ────────────────
+ * It is not a service area. Monterey, Williamsville and Franklin are where a
+ * teenager worked summers thirty years ago, and listing them as markets served
+ * today would be the same overreach as attaching the company's age to Atlanta.
+ * They belong in a biography and nowhere else.
+ *
+ * It is also not a generation count. He worked with his grandfather; how that
+ * line runs, and whether it makes four generations or five, is not something
+ * to infer from a sentence about summer work. It stays open below.
+ */
+
+/** Roughly when the current owner started in the trade. His own account. */
+export const TRADE_EXPERIENCE = {
+  startedApprox: 1991,
+  startedAge: 14,
+  workedWith: 'his grandfather',
+  throughApprox: 1995,
+  earlyPlaces: ['Monterey, VA', 'Williamsville, VA', 'Franklin, VA'],
+  basis: 'owner-stated',
+  yearsInTrade: 35,
+  /** Biography only. Never a service area, never a market served. */
+  publishableAs: 'experience',
+  publishableAsMarkets: false,
+}
+
 /** The takeover date, per the prior principal's own correction. */
 export const TAKEOVER_DATE = '2015-03-15'
 
