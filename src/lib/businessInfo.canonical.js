@@ -151,8 +151,16 @@ export const REVIEW_PROFILES = {
   experience: 'https://www.experience.com/reviews/j-worden-and-sons-paving-22451772',
 };
 
-/** Schema.org `sameAs` array — the entity-disambiguation glue. */
-export const SAME_AS = [
+/**
+ * Schema.org `sameAs` array — the entity-disambiguation glue.
+ *
+ * Deduplicated at the end, because two keys can resolve to the same URL and
+ * one pair already does: REVIEW_PROFILES.google and REVIEW_PROFILES.googleMaps
+ * are both the place_id link. A repeated sameAs is not an error Google
+ * complains about, which is exactly why it survives — it just reads as
+ * carelessness on the one structure whose whole job is to look authoritative.
+ */
+export const SAME_AS = [...new Set([
   REVIEW_PROFILES.google,
   REVIEW_PROFILES.googleMaps,
   REVIEW_PROFILES.houzz,
@@ -167,7 +175,7 @@ export const SAME_AS = [
   SOCIAL_PROFILES.youtube,
   SOCIAL_PROFILES.tiktok,
   SOCIAL_PROFILES.twitter,
-];
+])];
 
 // ──────────────────────────────────────────────────────────────────────────────
 // SERVICES

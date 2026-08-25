@@ -10,6 +10,7 @@ import { FEATURED_REVIEWS } from '@/lib/reviews'
 import { getRegionalMarketProfile } from '@/data/regionalMarketProfiles'
 import { trackPhoneClick } from '@/lib/analytics'
 import { useTenant } from '@/lib/TenantContext'
+import { SAME_AS, AGGREGATE_RATING, BUSINESS_LEGAL_NAME } from '@/lib/businessInfo.canonical'
 
 const DEFAULT_MARKET_CONTENT = {
   marketName: 'Local Asphalt Paving',
@@ -93,12 +94,29 @@ export default function MarketLanding() {
       {
         '@type': 'LocalBusiness',
         name: market.marketName,
+        // The trading name differs per market; the legal entity does not, and
+        // it is what ties these sites to one business rather than several.
+        legalName: BUSINESS_LEGAL_NAME,
         areaServed: {
           '@type': 'AdministrativeArea',
           name: market.primaryRegion,
         },
         telephone: `+1${String(phoneDisplay || '').replace(/\D/g, '') || '8044461296'}`,
         url: tenant?.canonicalUrl || 'https://www.thewordenstandard.com',
+        // WHY THESE TWO WERE MISSING AND WHY IT MATTERED
+        // The brand sites build their own JSON-LD rather than reusing
+        // HomeSchema, and this graph omitted both. The result: eight verified
+        // review profiles and a real Houzz-sourced rating existed in the
+        // codebase and reached no brand page, so Google had no way to connect
+        // carolinablacktop.com to the Google Business Profile or to any
+        // citation. Connecting an entity to its citations is the entire job
+        // sameAs does, and an unlinked profile is a citation nobody can follow
+        // home.
+        sameAs: SAME_AS,
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ...AGGREGATE_RATING,
+        },
       },
       {
         '@type': 'Service',
