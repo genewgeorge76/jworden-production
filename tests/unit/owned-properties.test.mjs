@@ -13,6 +13,7 @@ import {
   CUSTOMER_REVIEWS,
   DOMAIN_LOSSES,
   RECOVERED_DOMAINS,
+  PROFILE_EVIDENCE_AT_RISK,
 } from '../../src/data/ownedProperties.js'
 
 test('every conflict names a resolution the owner can act on', () => {
@@ -127,4 +128,19 @@ test('the phone mismatch is carried as the most severe finding', () => {
   assert.ok(nap, 'the profile/website phone mismatch was dropped')
   assert.equal(nap.severity, 'critical')
   assert.equal(nap.values.length, 2, 'a mismatch needs both numbers to stay legible')
+})
+
+test('evidence held only on a third-party platform is flagged as at risk', () => {
+  const risk = PROFILE_EVIDENCE_AT_RISK
+  assert.equal(risk.backedUp, false, 'if this is now true, the flag should be removed rather than flipped')
+  assert.ok(risk.precedent, 'no reason given for treating the platform as unsafe')
+  assert.ok(risk.holds.length > 0)
+  // The precedent must reference a real loss, not a hypothetical one.
+  assert.match(risk.precedent, /suspend/i)
+})
+
+test('the profile website field is recorded as unread, not assumed', () => {
+  const mf = OWNED_PROPERTIES.find((p) => p.profile?.name === 'Mid Florida Asphalt Paving')
+  assert.ok(mf, 'the mid-Florida profile entry is gone')
+  assert.match(mf.profile.linkedWebsite, /unknown|unread/i, 'the website field was guessed at')
 })
