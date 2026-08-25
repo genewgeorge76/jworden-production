@@ -74,3 +74,21 @@ test('scope claims are not reachable from anything publishable', () => {
   roots.forEach(walk)
   assert.deepEqual(seen, [], `owner-stated scope is reachable from ${seen.join(', ')}`)
 })
+
+test('a documented figure known to be partial says so', () => {
+  // $8,777.50 does not buy all the concrete and asphalt on a multibrand
+  // remodel. Recording that stops the figure being quoted as the job's total.
+  const op = SCOPE_CLAIMS.find((c) => c.market.includes('Overland Park'))
+  assert.ok(op, 'the Overland Park entry is gone')
+  assert.equal(op.documentedFigureLikelyPartial, true)
+  assert.match(op.documented, /8,777\.50/)
+})
+
+test('Florida scope does not disturb the Florida grade', () => {
+  // The owner says "a lot of KFCs". The grade still needs a completion
+  // document, and ownedProperties.js holds the candidate — unverified.
+  const fl = SCOPE_CLAIMS.find((c) => c.states.includes('FL'))
+  assert.ok(fl)
+  assert.equal(STATE_EVIDENCE.FL.grade, 'pipeline')
+  assert.equal(EVIDENCE_PUBLISHABLE.has(STATE_EVIDENCE.FL.grade), false)
+})

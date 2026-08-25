@@ -58,6 +58,25 @@ export const SCOPE_CLAIMS = [
     cheapestWin: true,
   },
   {
+    market: 'Florida',
+    states: ['FL'],
+    claim: 'a lot of KFCs',
+    documented: '2 KBP sites with executed contracts — Ft Pierce and Port St. Lucie — plus Coral Springs in permitting',
+    note:
+      'Florida is graded `pipeline` because nothing in hand shows a finished job, and stateEvidence.js records that it is one completion document away from `work`. The owner also lived and worked in the state for years, which is why 39 Florida customer records sit in the Kickserv export across Tampa Bay and the Treasure Coast. See ownedProperties.js — the mid-Florida Google profile holds photographs and two customer reviews, and those may be the missing document.',
+    basis: 'owner-stated',
+  },
+  {
+    market: 'Overland Park — the 3-in-1',
+    states: ['KS'],
+    claim: 'the full remodel: all the concrete and all the asphalt paving',
+    documented: 'one invoice, $8,777.50, 7100 W 119th Street (G135020), reported November 2018 as "all work is completed"',
+    note:
+      'A 3-in-1 is a multibrand unit — KFC, Taco Bell and Pizza Hut in one building. Three brands share a kitchen, a drive-through and a lot, which makes the sitework larger and the sequencing harder than any single-brand store. Taking all the concrete AND all the asphalt on a remodel of one is the largest single scope the owner has described anywhere in this programme.\n\nAnd $8,777.50 does not buy it. That figure is almost certainly one line of a much bigger job rather than the job itself, which means the documented Kansas total understates this site specifically — not only the market around it. Worth checking against the full invoice run before any Kansas figure is quoted.',
+    basis: 'owner-stated',
+    documentedFigureLikelyPartial: true,
+  },
+  {
     market: 'Detroit',
     states: ['MI'],
     claim: 'every KFC KBP owned',
