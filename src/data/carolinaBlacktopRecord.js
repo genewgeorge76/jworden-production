@@ -125,13 +125,49 @@ export const TRADING_NAME_SOURCE =
 export const SCDOT_PERMIT = {
   authority: 'South Carolina Department of Transportation',
   reference: 'Encroachment Permit #211746',
-  applied: '2024-05-13',
+  reported: '2024-05-13',
   archived: '2024-06-12',
   evidence: 'completed',
   detail:
-    'Encroachment permit issued by SCDOT, work performed, completion photographs submitted, and the permit archived by the department.',
+    'Encroachment permit issued by SCDOT, work performed, completion photographs submitted to the department, and the permit archived.',
+  // Verified in the mailbox on 2026-08-25 rather than taken from the workbook.
+  // The company's own email to the department's permit officer, 2024-05-13:
+  // "Per our conversation concerning permit 21146 Has been completed Please
+  // see attached photos". The subject line carries the full number, 211746;
+  // the body drops a digit, which is a typing slip and not a second permit.
+  source:
+    'Email to the SCDOT permit officer, 2024-05-13, subject "Permit 211746", reporting completion with photographs attached.',
   whyItMatters:
     'A state transportation agency’s own record that work was permitted, performed and closed out. It is the only third-party verification in this repository.',
+}
+
+/**
+ * beaufortasphaltpaving.com — a working site nobody in this repository knew about.
+ *
+ * It does not appear in the Vercel account, in vercel.json, in middleware.js,
+ * or in any audit run against the estate. It surfaced in the mailbox because it
+ * DOES something: the Holiday Inn enquiry of 2024-07-09 arrived from
+ * no-reply@beaufortasphaltpaving.com with the subject "Contact Beaufort Asphalt
+ * Paving from kelley@hmvhotels.com" — a contact form on a live site producing a
+ * commercial lead from a hotel group, which then ran to an arranged site visit.
+ *
+ * It is hosted at Webador, and in April 2025 the registrar wrote under the
+ * ICANN Expired Registration Recovery Policy. The owner asked to renew. Webador
+ * replied that open invoices had to be settled first. Nothing in the archive
+ * shows they were.
+ *
+ * So: a domain that has demonstrably generated commercial work is sitting
+ * behind an unpaid invoice, and no part of the system this repository builds
+ * knows it exists. Recorded because a lead-generating asset quietly lapsing is
+ * worth more attention than most of what is on the pages.
+ */
+export const UNMANAGED_DOMAIN = {
+  domain: 'beaufortasphaltpaving.com',
+  host: 'Webador',
+  status: 'renewal requested 2025-04-21; Webador replied that open invoices must be paid first',
+  evidenceItWorks:
+    'Contact-form lead from HMV Hotels, 2024-07-09, for a Holiday Inn reseal and restripe at 2225 Boundary St, Beaufort SC.',
+  inThisRepository: false,
 }
 
 /**
