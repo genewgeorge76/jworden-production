@@ -112,7 +112,13 @@ const CITY_CONTEXT = {
   Riverdale: { sector: 'southMetro', angle: 'Riverdale sits directly under the Hartsfield-Jackson approach in Clayton County, and the commercial traffic here is airport-economy traffic — shift workers, hotel shuttles and delivery vehicles running at hours when nothing else is moving.' },
   'Union City': { sector: 'southMetro', angle: 'Union City is where south Fulton meets the freight corridor along I-85 South, with distribution and big-box parcels whose loading approaches take standing axle loads rather than passing ones.' },
   Lovejoy: { sector: 'southMetro', angle: 'Lovejoy is the outer edge of Clayton County, where the metro thins into Henry County farmland and lots are built on undisturbed clay with room to grade properly.' },
-  Clarkston: { sector: 'southMetro', angle: 'Clarkston is one of the most densely settled square miles in Georgia, and the commercial parcels are small, tightly bounded and heavily used — phasing matters here more than volume does.' },
+  // Clarkston sat under `southMetro` until 2026-08-25, which put it in
+  // "Clayton, south Fulton and Fayette" beneath a paragraph about the
+  // Hartsfield freight economy. Clarkston is in DeKalb County, inside I-285 on
+  // the northeast side, twenty-five miles from the airport — stated outright by
+  // the Census place register, and now checked by a test rather than trusted.
+  // The name looks like Clayton. That is the whole explanation.
+  Clarkston: { sector: 'northeast', angle: 'Clarkston is one of the most densely settled square miles in Georgia, and the commercial parcels are small, tightly bounded and heavily used — phasing matters here more than volume does.' },
   'East Point': { sector: 'insidePerimeter', angle: 'East Point is old inside-perimeter Fulton, laid out around rail and airport ground, and its commercial parcels sit on fill whose history nobody recorded.' },
   Adamsville: { sector: 'insidePerimeter', angle: 'Adamsville, on the west side off Martin Luther King Jr Drive, carries the same century of cut-and-fill and the same requirement to prove what is under a lot before committing to a section.' },
   Acworth: { sector: 'northwest', angle: 'Acworth sits at the top of the Cobb County stretch of I-75 by Lake Allatoona, with weekend recreation traffic layered onto weekday commercial use.' },
