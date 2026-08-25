@@ -89,10 +89,12 @@ export default function CommercialClientAuthority() {
             NATIONAL COMMERCIAL CLIENT AUTHORITY
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-100 tracking-tight mb-4">
-            Trusted Paving Partner for America's Premier Brands
+            The Work Itself
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-            Over 40 years of commercial asphalt paving, night milling, sealcoating, and ADA compliance for Fortune 500 retail anchors and national QSR franchises.
+            Commercial asphalt paving, night milling, sealcoating and ADA compliance,
+            self-performed. The figures above are what that came to on one national
+            franchise programme; the work below is what it looked like on the ground.
           </p>
         </div>
 
