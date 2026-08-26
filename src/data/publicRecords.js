@@ -134,13 +134,10 @@ export const PUBLIC_RECORDS = [
       { number: 'LSM0900109', obligee: 'Village of Midlothian, Illinois', effective: '2016-10-10', penalSum: 10000, licensedAs: 'Contractor' },
       { number: 'LSM0900702', obligee: 'Village of South Chicago Heights, Illinois', effective: '2016-11-11', penalSum: 10000, licensedAs: 'General or Trade Contractor' },
     ],
-    // A FOURTH BOND EXISTS AND IS NOT NAMED HERE
-    // The broker's statement of 2016-11-15 invoices four bonds at $75 each,
-    // $300 in total. Three are above. The fourth, LSM0900110, was issued on
-    // 2016-10-10 alongside Oak Forest and Midlothian and is almost certainly a
-    // fourth Illinois municipality — and "almost certainly" is not a name, so
-    // it stays out of the count on the page.
-    fourthBondUnidentified: 'LSM0900110, issued 2016-10-10, obligee not yet identified.',
+    // A fourth bond exists and is not named. Its number and the search for its
+    // obligee live in publicRecordsWithheld.js, NOT here — this module ships to
+    // the browser, and an unresolved internal note does not belong in it. The
+    // page says three because three is what is known.
     // WHY THE TENSE IS 2016
     // Each instrument is headed "Continuous License and Permit Bond" and bears
     // no expiry on its face. The broker's statement tells the other half of the

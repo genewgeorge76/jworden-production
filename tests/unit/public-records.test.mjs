@@ -18,6 +18,7 @@ import {
   recordById,
 } from '../../src/data/publicRecords.js'
 import {
+  FOURTH_ILLINOIS_BOND,
   WITHHELD_RECORDS,
   USDOT_UNPUBLISHED,
   SAFETY_AUDIT_2015,
@@ -379,8 +380,11 @@ test('the Illinois bond stays a dated municipal fact', () => {
     assert.match(x.number, /^LSM\d+$/)
     assert.ok(x.obligee && x.effective && x.penalSum === 10000)
   }
-  // The fourth bond is invoiced but unnamed, and stays uncounted on the page.
-  assert.match(b.fourthBondUnidentified, /LSM0900110/)
+  // The fourth bond is invoiced but unnamed. Its number lives in the withheld
+  // module, never in this one: publicRecords.js ships to the browser, and the
+  // first build after it was added put LSM0900110 straight into the bundle.
+  assert.equal('fourthBondUnidentified' in b, false)
+  assert.doesNotMatch(JSON.stringify(b), /LSM0900110/)
   assert.doesNotMatch(b.plain, /four/i)
   assert.equal(b.state, 'IL')
   assert.equal(b.year, 2016)
@@ -398,4 +402,19 @@ test('the Illinois bond stays a dated municipal fact', () => {
   // It belongs to the J. Worden brand, not Carolina.
   assert.ok(publishableFor(BRAND_JWORDEN).some((r) => r.id === b.id))
   assert.equal(publishableFor(BRAND_CAROLINA).some((r) => r.id === b.id), false)
+})
+
+
+/** The fourth bond is chaseable, unnamed, and off the public bundle. */
+test('the fourth Illinois bond stays out of the published module', () => {
+  assert.equal(FOURTH_ILLINOIS_BOND.number, 'LSM0900110')
+  assert.equal(FOURTH_ILLINOIS_BOND.obligee, null)
+  assert.equal(FOURTH_ILLINOIS_BOND.publishable, false)
+  assert.match(FOURTH_ILLINOIS_BOND.resolvedBy, /surety|Contractors Bonding/i)
+  // The inference is labelled as an inference.
+  assert.match(FOURTH_ILLINOIS_BOND.likelyObligee, /not evidence/i)
+  // And the chase is recorded so nobody repeats it.
+  assert.ok(FOURTH_ILLINOIS_BOND.faxChased)
+  assert.ok(FOURTH_ILLINOIS_BOND.mailboxSearched)
+  assert.equal(recordById('illinois-municipal-licences-2016').bonds.length, 3)
 })

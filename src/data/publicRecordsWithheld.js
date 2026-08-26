@@ -582,3 +582,61 @@ export const LICENSING_POLICY = {
     'src/data/blogPosts.js and src/lib/fallbackBlogPosts.js and src/pages/generated-blogs/HoaAsphaltPavingGuideBlog.jsx carry licensing language inside article prose rather than as site claims. Lower stakes and different register — advice about checking a contractor’s licensing is not a claim about ours — but they should be read before the next content pass.',
   ],
 }
+
+/**
+ * THE FOURTH ILLINOIS BOND
+ * ────────────────────────
+ * The broker's statement of 2016-11-15 invoices four bonds at $75 each, $300
+ * in total, all through Contractors Bonding and Insurance Company. Three are
+ * published in publicRecords.js against Oak Forest, Midlothian and South
+ * Chicago Heights. This is the fourth.
+ *
+ * WHAT THE MAILBOX CAN AND CANNOT SETTLE
+ *
+ * It can settle that the bond exists: the statement names policy LSM0900110,
+ * effective 2016-10-10, term to 2017-10-10, invoice 631097, $75 — issued the
+ * same day as Oak Forest (LSM0900108) and Midlothian (LSM0900109), both of
+ * which are south Cook County villages. A fourth south-suburban Chicago
+ * municipality is the obvious reading.
+ *
+ * It cannot settle which one. Searched 2026-08-26: all correspondence between
+ * 2016-09-20 and 2016-10-26 mentioning a village, city, bond, licence, permit
+ * or clerk — twelve threads, every one a newsletter or an unrelated invoice.
+ * The three October bonds were evidently arranged by telephone, and the
+ * archive holds no municipal correspondence from that window at all.
+ *
+ * THE FAX WAS CHASED AND IS NOT THE ANSWER
+ *
+ * On 2016-11-11 the broker faxed a bond to 1-708-755-1881. The chain reads:
+ * 09:35 the owner sends a photograph, "This one I need next"; 09:36 he gives
+ * that fax number; 15:56 the broker faxes the bond; 17:07 she emails him the
+ * South Chicago Heights bond LSM0900702.
+ *
+ * So the fax is same-day with LSM0900702, and 708-755 is the Chicago Heights
+ * exchange. It is South Chicago Heights being served by fax as well as by
+ * email, not a fifth municipality — and it is a November transaction, while
+ * LSM0900110 is an October one. The fax cannot identify it.
+ *
+ * The fax cover note carries no bond attachment, only the broker's signature
+ * image, so nothing further can be read out of it.
+ *
+ * HOW IT ACTUALLY GETS RESOLVED
+ *
+ * The surety holds the answer and one enquiry gets it. This does not need the
+ * mailbox at all.
+ */
+export const FOURTH_ILLINOIS_BOND = {
+  number: 'LSM0900110',
+  surety: 'Contractors Bonding and Insurance Company (an RLI company), Peoria, Illinois',
+  effective: '2016-10-10',
+  termEnds: '2017-10-10',
+  brokerInvoice: '631097',
+  premiumUsd: 75,
+  obligee: null,
+  likelyObligee: 'A fourth south Cook County municipality — inferred from the two bonds issued the same day, and not evidence.',
+  faxChased: '2026-08-26 — 1-708-755-1881 is same-day with the November South Chicago Heights bond and on the Chicago Heights exchange. Not a separate municipality.',
+  mailboxSearched: '2026-08-26 — no municipal correspondence exists between 2016-09-20 and 2016-10-26.',
+  resolvedBy:
+    'Ask Contractors Bonding and Insurance Company for the obligee on bond LSM0900110. The surety holds it and the mailbox never will.',
+  publishable: false,
+}
