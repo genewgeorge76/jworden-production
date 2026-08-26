@@ -413,6 +413,90 @@ export const VERIFIED_CITATIONS = [
       'Eight calendar months stored as 240 days, and the four-month period for a single family ' +
       'dwelling was missing entirely.',
   },
+  {
+    abbr: 'MA', topic: 'mechanicsLien', citation: 'Mass. Gen. Laws c.254, § 8',
+    source: 'https://malegislature.gov/Laws/GeneralLaws/PartIII/TitleIV/Chapter254/Section8',
+    checked: '2026-08-26', heading: 'Chapter 254 Section 8 — Dissolution of lien',
+    quote:
+      'ninety days after the filing or recording of the notice of substantial completion under ' +
+      'section two A … one hundred and twenty days after the filing or recording of the notice of ' +
+      'termination under section two B … one hundred and twenty days after the last day a person ' +
+      'entitled to enforce a lien … performed or furnished labor or material',
+    verdict: 'corrected',
+    finding:
+      'The exception recorded as the rule, the same shape as Utah. Ninety days applies once a ' +
+      'notice of substantial completion is filed; with none filed the period is 120 days from the ' +
+      'last day labour or material was furnished. The row held 90 as the general case.',
+  },
+  {
+    abbr: 'ND', topic: 'mechanicsLien', citation: 'N.D.C.C. §§ 35-27-13, 35-27-25',
+    source: 'https://ndlegis.gov/cencode/t35c27.pdf',
+    checked: '2026-08-26',
+    heading: '35-27-13 How lien perfected; 35-27-25 Requiring suit to be commenced — Limitations',
+    quote:
+      'shall record with the recorder of the county … within ninety days after all the person\u2019s ' +
+      'contribution is done … Upon written demand by or on behalf of the owner which has been ' +
+      'delivered to the lienor and filed with the county recorder, suit must be commenced and ' +
+      'filed and a lis pendens … recorded within thirty days after the date of delivery of the ' +
+      'demand or the lien is forfeited.',
+    verdict: 'corrected',
+    finding:
+      'Ninety days to file was right. What the row did not carry is § 35-27-25: the owner can ' +
+      'force suit within thirty days by written demand, whatever the three-year limitation says. ' +
+      'An owner who knows the statute can close the window at will.',
+  },
+  {
+    abbr: 'NH', topic: 'mechanicsLien', citation: 'N.H. Rev. Stat. Ann. § 447:9',
+    source: 'https://gc.nh.gov/rsa/html/XLI/447/447-9.htm',
+    checked: '2026-08-26', heading: 'Section 447:9 Duration.',
+    quote:
+      'shall continue for 120 days after the services are performed, or the materials, supplies ' +
+      'or other things are furnished, unless payment therefor is previously made',
+    verdict: 'corrected',
+    finding:
+      'The count was right. The note glossed it as "120 days (4 months)", and this file has ' +
+      'already found five states where treating those as interchangeable produced a wrong date. ' +
+      'The gloss is gone.',
+  },
+  {
+    abbr: 'RI', topic: 'mechanicsLien', citation: 'R.I. Gen. Laws § 34-28-7',
+    source: 'https://webserver.rilegislature.gov/Statutes/TITLE34/34-28/34-28-7.HTM',
+    checked: '2026-08-26', heading: '§ 34-28-7 Notice of intention',
+    quote:
+      'before the later of two hundred (200) days of the performance of the work or ten (10) days ' +
+      'after the actual and visible commencement, by excavation or otherwise, of the construction',
+    verdict: 'confirmed', finding: '200 days. Matches exactly.',
+  },
+  {
+    abbr: 'LA', topic: 'mechanicsLien', citation: 'La. Rev. Stat. § 9:4822',
+    source: 'https://legis.la.gov/Legis/Law.aspx?d=108062',
+    checked: '2026-08-26', heading: 'RS 9:4822 — Statement of claim or privilege; time for filing',
+    quote:
+      'sixty days after: (1) The filing of a notice of termination of the work. (2) The ' +
+      'substantial completion or abandonment of the work, if a notice of termination is not filed.',
+    verdict: 'confirmed',
+    finding:
+      'Sixty days from either trigger — matches the row exactly, which already carried both. ' +
+      'Where a notice of contract was filed, § 9:4822(C) gives a general contractor seven months ' +
+      'from substantial completion absent a notice of termination, a longer period this row does ' +
+      'not claim.',
+  },
+  {
+    abbr: 'OK', topic: 'mechanicsLien', citation: 'Okla. Stat. tit. 42, §§ 142.6, 172',
+    source: 'https://oksenate.gov/sites/default/files/2019-12/os42.pdf',
+    checked: '2026-08-26',
+    heading: '§42-142.6 Pre-lien notice; §42-172 Enforcement by civil actions — Limitations',
+    quote:
+      'no later than seventy-five (75) days after the last date of supply of material, services, ' +
+      'labor, or equipment … such action shall be brought within one (1) year from the time of ' +
+      'the filing of said lien with the county clerk',
+    verdict: 'confirmed',
+    finding:
+      'PARTIAL. The one-year enforcement period matches the row exactly, and the 75-day pre-lien ' +
+      'notice for non-original contractors is confirmed. The lien statement filing deadline itself ' +
+      'could not be extracted from the chapter PDF and remains unread — the row\u2019s 90 days is ' +
+      'still only what the dataset says.',
+  },
 ]
 
 /**

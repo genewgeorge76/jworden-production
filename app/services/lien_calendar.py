@@ -268,6 +268,23 @@ def calculate_deadlines(
             "that is not recorded here"
         )
 
+    accelerated = law.get("enforcement_accelerated_by")
+    if accelerated:
+        # North Dakota. The owner can close the enforcement window at will, and
+        # a calendar that reports only the general limitation period would show
+        # years of runway that a single letter removes.
+        unresolved.append(
+            f"enforcement can be cut to {accelerated['days']} days by {accelerated['trigger']}; "
+            "whether that has happened is not recorded here"
+        )
+
+    by_project = law.get("lien_filing_by_project_type")
+    if by_project:
+        unresolved.append(
+            "the period depends on the project type: "
+            + ", ".join(f"{v} ({k})" for k, v in by_project.items())
+        )
+
     by_claimant = law.get("lien_filing_by_claimant")
     if by_claimant:
         unresolved.append(

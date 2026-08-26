@@ -465,8 +465,23 @@ export default [
     preliminaryNoticeDeadline:
       'Within 30 days of first furnishing for subcontractors and suppliers',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier'],
-    lienFilingDeadlineDays: 90,
-    lienFilingDeadlineNote: '90 days from last date of furnishing labor or materials',
+    // Read against G.L. c.254 § 8 on 2026-08-26. The exception recorded as the
+    // rule again, the same shape as Utah: ninety days is what applies once a
+    // notice of substantial completion is filed. With none filed the period is
+    // one hundred and twenty days from the last day labour or material was
+    // furnished.
+    lienFilingDeadlineDays: 120,
+    lienFilingShortenedBy: {
+      trigger: 'a notice of substantial completion is filed or recorded under G.L. c.254 § 2A',
+      days: 90,
+      note:
+        'Runs from the filing of that notice. A notice of termination under § 2B instead gives ' +
+        '120 days from its filing.',
+    },
+    lienFilingDeadlineNote:
+      'One hundred and twenty days after the last day labour or material was performed or ' +
+      'furnished; ninety days after a notice of substantial completion is filed; one hundred and ' +
+      'twenty days after a notice of termination is filed',
     lienForeClosureDeadlineDays: 90,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -632,7 +647,19 @@ export default [
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
     lienFilingDeadlineDays: 120,
-    lienFilingDeadlineNote: '120 days (4 months) from last furnishing of labor or materials',
+    // Read against RSA 447:9 on 2026-08-26: the lien "shall continue for 120
+    // days after the services are performed, or the materials, supplies or
+    // other things are furnished". The parenthetical "(4 months)" was the
+    // author's gloss, and it is not what the statute says — four months and 120
+    // days are different periods, and this file has already found five states
+    // where treating them as interchangeable produced a wrong date.
+    lienFilingDeadlineNote:
+      'One hundred twenty days after the services are performed or the materials, supplies or ' +
+      'other things are furnished',
+    // Same lesson as North Dakota in this commit: quoting RSA 447:9 verbatim
+    // removed the phrase the anchor parser keys on. Stated outright rather than
+    // left to be inferred from prose that no longer contains the magic words.
+    lienFilingDeadlineAnchor: 'last_furnishing',
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -731,7 +758,23 @@ export default [
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
     lienFilingDeadlineDays: 90,
-    lienFilingDeadlineNote: '90 days from last furnishing of labor or materials',
+    // Read against N.D.C.C. §§ 35-27-13 and 35-27-25 on 2026-08-26. The ninety
+    // days was right. What the row did not carry is § 35-27-25: on the owner's
+    // written demand, suit must be commenced within THIRTY DAYS or the lien is
+    // forfeited — regardless of the three-year period below. An owner who knows
+    // the statute can close the window at will, and nothing here said so.
+    lienFilingDeadlineNote:
+      'Ninety days after all of the claimant\u2019s contribution is done',
+    // Stated outright. Rewriting the note to the statute's own words —
+    // "contribution is done" rather than "last furnishing" — stopped the
+    // parser recognising the anchor, and the calculator silently returned no
+    // date at all. Quoting the statute must not cost the row its meaning.
+    lienFilingDeadlineAnchor: 'last_furnishing',
+    enforcementAcceleratedBy: {
+      trigger: "the owner's written demand, delivered to the lienor and filed with the county recorder",
+      days: 30,
+      note: 'Suit and a recorded lis pendens within 30 days of delivery, or the lien is forfeited.',
+    },
     lienForeClosureDeadlineDays: 1095,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
