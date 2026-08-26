@@ -241,9 +241,29 @@ test('the Leesville cost never becomes a project value', () => {
   )
 })
 
-/** It does establish who held the contract, which is the point. */
+/**
+ * IT ESTABLISHES WHO HELD THE CONTRACT, WHICH IS THE POINT
+ * ───────────────────────────────────────────────────────
+ * Owner-confirmed and independently corroborated: IBS was a subcontractor to
+ * this company, not a construction manager sitting above it. Two sources that
+ * were not derived from each other — a third party's invoice and the owner's
+ * account — agreeing on the direction of the relationship.
+ *
+ * The project team list in nationalProjects.json is asserted here too, because
+ * a flat list of firms reads as peers and is exactly how a reader would reach
+ * the opposite conclusion.
+ */
 test('the Leesville invoice establishes the prime position', () => {
   assert.equal(LEESVILLE_CM_INVOICE.issuedTo, 'J Worden & Sons Paving LLC')
   assert.match(LEESVILLE_CM_INVOICE.whatItProves, /prime/i)
+  assert.match(LEESVILLE_CM_INVOICE.relationship, /subcontractor to this company/i)
+  assert.ok(LEESVILLE_CM_INVOICE.relationshipOwnerConfirmed)
   assert.match(LEESVILLE_CM_INVOICE.whatItDoesNotProve, /contract value|was paid/i)
+
+  const projects = JSON.parse(readFileSync('src/data/nationalProjects.json', 'utf8'))
+  const programme = projects.programs[0].newBuildProgram
+  assert.equal(programme.role, 'General contractor')
+  assert.match(programme.contractingRelationship, /prime contract/i)
+  const ibs = programme.projectTeam.find((t) => /Innovative Building/.test(t))
+  assert.match(ibs, /subcontractor/i, 'the team list still reads as peers')
 })

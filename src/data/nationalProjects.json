@@ -11,7 +11,19 @@
       "years": "2015–2023",
       "engagementStart": "2015-12-21",
       "_coverageNote": "The programme ran through 2023. The site list below is drawn from project correspondence in one mailbox, which documents 2015–2019 in detail; later years are under-represented here and are not bounded by this list. Atlanta in particular ran to well over 100 restaurants — only the locations with a dated email record are enumerated below.",
-      "states": ["VA", "NC", "MI", "NJ", "GA", "TX", "IL", "TN", "MO", "FL", "LA"],
+      "states": [
+        "VA",
+        "NC",
+        "MI",
+        "NJ",
+        "GA",
+        "TX",
+        "IL",
+        "TN",
+        "MO",
+        "FL",
+        "LA"
+      ],
       "sites": [
         {
           "store": "135",
@@ -373,13 +385,27 @@
           "Plaza Street Partners — developer",
           "Davidson AE — architect",
           "Burns & McDonnell — engineering",
-          "Innovative Building Solutions LLC — construction management"
+          "Innovative Building Solutions LLC — construction management, engaged by this company as its subcontractor"
         ],
         "sites": [
-          { "city": "Leesville", "state": "LA", "note": "Ground-up KFC build" },
-          { "city": "DeRidder", "state": "LA", "note": "Ground-up KFC build" },
-          { "city": "Sulphur Springs", "state": "TX", "note": "TxDOT entrance permit obtained", "stateCorrected": "Recorded as TN with a TDOT permit until 2026-08-26. The owner confirms only one Sulphur Springs job was ever done, and its own budget workbook is unambiguously Texas: 903 area codes, Hopkins County contacts, and TX DOT named on the project's city-officials sheet. TDOT was TxDOT mis-keyed." }
-        ]
+          {
+            "city": "Leesville",
+            "state": "LA",
+            "note": "Ground-up KFC build"
+          },
+          {
+            "city": "DeRidder",
+            "state": "LA",
+            "note": "Ground-up KFC build"
+          },
+          {
+            "city": "Sulphur Springs",
+            "state": "TX",
+            "note": "TxDOT entrance permit obtained",
+            "stateCorrected": "Recorded as TN with a TDOT permit until 2026-08-26. The owner confirms only one Sulphur Springs job was ever done, and its own budget workbook is unambiguously Texas: 903 area codes, Hopkins County contacts, and TX DOT named on the project's city-officials sheet. TDOT was TxDOT mis-keyed."
+          }
+        ],
+        "contractingRelationship": "This company held the prime contract as general contractor and engaged Innovative Building Solutions as a subcontractor for construction management. Owner-confirmed 2026-08-26 and corroborated by the direction of billing: IBS invoiced this company, not the reverse. Listed explicitly because a flat team list reads as peers and invites the opposite conclusion."
       }
     }
   ],

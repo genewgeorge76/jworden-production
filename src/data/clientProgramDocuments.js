@@ -278,10 +278,18 @@ export const NEW_BUILD_PROGRAMME_CROSSCHECK = {
  *
  * That inversion is the whole value of the document, and it would be easy to
  * get backwards. A contractor who PAYS the construction manager is the party
- * holding the contract: the prime, not a trade subcontracted under someone
- * else. It corroborates the same capability the Sulphur Springs workbook
- * shows — this company running ground-up KFC builds as the responsible party —
- * and it does so from a third party's letterhead rather than our own.
+ * holding the contract. The owner confirms the relationship directly: IBS was
+ * a SUBCONTRACTOR to this company, engaged by it to provide construction
+ * management on a job this company held as general contractor.
+ *
+ * The billing direction and the owner's account agree, which is worth stating
+ * because they are independent of each other — one is a document from a third
+ * party, the other is testimony, and neither was derived from the other.
+ *
+ * It corroborates the same capability the Sulphur Springs workbook shows —
+ * this company running ground-up KFC builds as the responsible party, engaging
+ * and paying its own trades — and it does so on a third party's letterhead
+ * rather than our own.
  *
  * WHY THE FIGURE IS RECORDED BUT MUST NEVER BE A PROJECT VALUE
  * $31,143.75 is a COST this company paid, not revenue it earned and not the
@@ -296,6 +304,9 @@ export const LEESVILLE_CM_INVOICE = {
   issuedBy: 'Innovative Building Solutions, Fairhope, Alabama',
   issuedTo: 'J Worden & Sons Paving LLC',
   directionOfPayment: 'outgoing — this company was the payer',
+  relationship: 'Innovative Building Solutions was a subcontractor to this company, engaged to provide construction management.',
+  relationshipOwnerConfirmed: '2026-08-26',
+  relationshipCorroboratedBy: 'The invoice runs from IBS to this company, which is only consistent with IBS being the party engaged.',
   store: 'KFC-618',
   workOrder: 'WO-7170336',
   site: '1102 S. 5th Street, Leesville, Louisiana 71446',
@@ -304,7 +315,7 @@ export const LEESVILLE_CM_INVOICE = {
   amountUsd: 31143.75,
   amountIsACostNotRevenue: true,
   whatItProves:
-    'This company held the contract on a ground-up KFC build and paid the construction manager — the position of a prime, not of a trade subcontracted under another contractor.',
+    'This company held the prime contract on a ground-up KFC build as general contractor, engaging and paying its own construction manager as a subcontractor.',
   whatItDoesNotProve:
     'What this company was paid for the project, or the contract value of the restaurant. It is an outgoing cost and must never be presented as either.',
   status: 'held',
