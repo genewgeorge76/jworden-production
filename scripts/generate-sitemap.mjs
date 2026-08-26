@@ -330,7 +330,8 @@ const DOMAINS = [
   'savannahasphaltpaving.com',
   'carolinablacktop.com',
   'www.jwordenasphaltpaving.com',
-  'thewordenstandard.com'
+  'thewordenstandard.com',
+  'jwordenuniversity.com'
 ];
 
 try { mkdirSync(resolve(ROOT, 'public/sitemaps'), { recursive: true }); } catch (e) {}
@@ -352,6 +353,20 @@ const STOREFRONT_DOMAINS = new Map([
       '/admin', '/super-admin', '/diamond', '/jarvis', '/scanner',
       '/estimate', '/consultant', '/autonomy', '/mobile', '/register',
       '/login', '/advisory/',
+    ],
+  }],
+  // jwordenuniversity.com is the training/certification site. It renders a
+  // single catch-all <WordenUniversity /> route, so "/" is its whole public
+  // surface. It was NOT in DOMAINS, so it had no sitemap-<host>.xml, so
+  // middleware fell through and Vercel served the generic public/sitemap.xml
+  // — 265 URLs, every one of them on www.jwordenasphaltpaving.com, a domain
+  // currently serving a Sedo parking page. A live site was handing Google a
+  // sitemap of 265 dead URLs on someone else's host.
+  ['jwordenuniversity.com', {
+    urls: ['/'],
+    disallow: [
+      '/lms', '/command-center', '/leads', '/portal', '/staff', '/dashboard',
+      '/admin', '/super-admin', '/jarvis', '/login', '/register',
     ],
   }],
 ]);

@@ -65,6 +65,14 @@ const SITEMAP_HOSTS = new Set([
   'savannahasphaltpaving.com',
   'carolinablacktop.com',
   'thewordenstandard.com',
+  // Added: without this, /sitemap.xml and /robots.txt on this host fell
+  // through to the generic public/ files — a 265-URL sitemap for a parked
+  // domain. The build now emits sitemap-/robots-jwordenuniversity.com.*
+  // (see STOREFRONT_DOMAINS in scripts/generate-sitemap.mjs).
+  // NOT added to HOMEPAGE_BY_HOST on purpose: there is no
+  // jwordenuniversity.com.html; its homepage is the SPA's UNIVERSITY route
+  // mode, and rewriting to a missing file would 404 the homepage.
+  'jwordenuniversity.com',
 ]);
 
 /**

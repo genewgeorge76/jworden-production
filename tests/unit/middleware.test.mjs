@@ -138,6 +138,32 @@ test('robots and sitemaps resolve per-domain, honouring the differing www conven
   );
 });
 
+test('jwordenuniversity.com serves its own sitemap, not the flagship one', () => {
+  // Regression: this host was absent from SITEMAP_HOSTS, so middleware fell
+  // through to next() and Vercel served the static public/sitemap.xml — 265
+  // URLs, all on www.jwordenasphaltpaving.com, which is currently a parked
+  // domain. A live site was advertising 265 dead URLs on another host.
+  assert.deepEqual(
+    decide('https://jwordenuniversity.com/sitemap.xml', 'jwordenuniversity.com'),
+    { action: 'rewrite', to: '/sitemaps/sitemap-jwordenuniversity.com.xml' },
+  );
+  assert.deepEqual(
+    decide('https://www.jwordenuniversity.com/sitemap.xml', 'www.jwordenuniversity.com'),
+    { action: 'rewrite', to: '/sitemaps/sitemap-jwordenuniversity.com.xml' },
+  );
+  assert.deepEqual(
+    decide('https://jwordenuniversity.com/robots.txt', 'jwordenuniversity.com'),
+    { action: 'rewrite', to: '/sitemaps/robots-jwordenuniversity.com.txt' },
+  );
+});
+
+test('jwordenuniversity.com homepage is NOT rewritten to a prebuilt HTML file', () => {
+  // It has no jwordenuniversity.com.html; the homepage is the SPA's UNIVERSITY
+  // route mode. Adding it to HOMEPAGE_BY_HOST would 404 the homepage.
+  const d = decide('https://jwordenuniversity.com/', 'jwordenuniversity.com');
+  assert.notEqual(d.action, 'rewrite', 'homepage must not rewrite to a missing file');
+});
+
 test('host header is normalised (port, casing)', () => {
   assert.deepEqual(
     decide('https://richmondasphaltpaving.com/', 'RichmondAsphaltPaving.com:443'),

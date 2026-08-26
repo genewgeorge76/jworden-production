@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /lms
+Disallow: /command-center
+Disallow: /leads
+Disallow: /portal
+Disallow: /staff
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /super-admin
+Disallow: /jarvis
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://jwordenuniversity.com/sitemap.xml
