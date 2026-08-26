@@ -220,6 +220,54 @@ export const WITHHELD_RECORDS = [
   },
 
   {
+    id: 'nascla-accredited-exam',
+    brand: BRAND_JWORDEN,
+    status: UNCONFIRMED,
+    authority: 'National Association of State Contractors Licensing Agencies',
+    authorityShort: 'NASCLA',
+    kind: 'Accredited Examination',
+    reference: null,
+    state: null,
+    year: 2015,
+    headline: 'NASCLA accredited examination',
+    plain:
+      'The owner states the company held NASCLA accreditation. NASCLA accreditation rests on a passed examination held by a named individual.',
+    // WHY THIS IS WORTH CHASING RATHER THAN DROPPING
+    //
+    // A NASCLA accredited exam pass is not a licence and does not lapse the
+    // way one does. It is a credential the person keeps, recognised for
+    // reciprocity across participating states, and it would survive the Class A
+    // licence lapsing. If the owner passed it, it is a genuine and durable
+    // credential — the only one in this record that the 2024 lapse did not
+    // touch.
+    //
+    // WHAT THE ARCHIVE ACTUALLY HOLDS, WHICH IS NOT THE CERTIFICATE
+    //
+    //   2015-01-05  PSI registration confirmation, support@psionline.com
+    //   2020-01-07  a PSI candidate exam bulletin PDF, sent onward
+    //
+    // PSI administers the NASCLA examination among many others, so an account
+    // and a bulletin are consistent with sitting it and equally consistent
+    // with looking into it. Neither is a result. Searched in:anywhere for
+    // nascla, "accredited examination", psiexams, psionline, score report,
+    // exam result, prometric, candidate id — those two items are everything.
+    //
+    // The 2015 PSI registration does sit sensibly before the Class A licence,
+    // which a customer confirmed against the state register in June 2016. A
+    // coherent sequence is not a proof of one.
+    whyNotPublished:
+      'No score report or certificate in the archive. A PSI account and an exam bulletin are consistent with sitting the exam and with merely considering it.',
+    resolvedBy:
+      'NASCLA holds a national registry of individuals who have passed the Accredited Examination, and PSI retains candidate score reports. Either will confirm or refute it in one request.',
+    removedFromSite: '2026-08-26',
+    removedFromSiteNote:
+      'The site claimed "NASCLA certified" in the Home trust points and the locations FAQ. Removed with the lapsed Class A claim, on the same rule: unverified credentials do not sit on pages. It goes back the day the certificate or registry entry appears.',
+    source:
+      'PSI registration confirmation 2015-01-05; PSI candidate exam bulletin PDF 2020-01-07. Owner states NASCLA accreditation was held (owner-stated, 2026-08-26).',
+    sourceVerified: '2026-08-26',
+  },
+
+  {
     id: 'va-dmv-irp-ifta',
     brand: BRAND_SHARED,
     status: HELD,
@@ -478,4 +526,58 @@ export const SAFETY_AUDIT_2015 = {
 
 export function withheldById(id) {
   return WITHHELD_RECORDS.find((r) => r.id === id) || null
+}
+
+/**
+ * THE OWNER'S LICENSING POLICY, AND WHAT IT OBLIGES THE SITES TO DO
+ * ────────────────────────────────────────────────────────────────
+ * Stated 2026-08-26: "when this system can produce work in marketed locations
+ * the licences will be obtained to do the said work."
+ *
+ * That is ordinary and sound contracting practice. Nobody carries credentials
+ * in fifty states on the chance of a job; you licence to the contract. It also
+ * fits the shape of the business after the pandemic — a smaller operation with
+ * a national record, licensing per market as work lands.
+ *
+ * But it has a direct consequence for what the pages may say, and the
+ * consequence is the whole reason this block exists:
+ *
+ *     MARKETING A LOCATION IS NOT CLAIMING A CREDENTIAL IN IT.
+ *
+ * The sites market Virginia, the Carolinas, Georgia, Michigan, Texas and more,
+ * and under this policy the licences for most of those markets do not exist
+ * yet and are not meant to. So a page may say where we work, what we have
+ * built and to which specification. It may not say we are licensed there.
+ *
+ * That distinction is what the 2026-08-26 sweep enforced. Ten claims came off
+ * the pages, including a hasCredential node in the JSON-LD — which
+ * businessInfo.canonical.js had already documented as forbidden while
+ * schemas.js emitted it anyway. Insurance claims were left alone: general
+ * liability and workers' compensation are separate, were not stated to have
+ * lapsed, and are not credentials granted by a state.
+ */
+export const LICENSING_POLICY = {
+  stated: '2026-08-26',
+  policy: 'Licences are obtained per market when work is secured there, not carried speculatively.',
+  basis: 'owner-stated',
+  siteRule:
+    'Pages may state where work is performed and to what specification. Pages may not state or imply a licence in a market where one is not currently held.',
+  insuranceUnaffected:
+    'General liability and workers’ compensation are separate from state licensing, were not stated to have lapsed, and remain on the pages.',
+  sweptOn: '2026-08-26',
+  claimsRemoved: [
+    'src/lib/schemas.js — hasCredential node naming the Virginia Class A licence in JSON-LD',
+    'src/pages/Home.jsx — trust point and licensing FAQ answer',
+    'src/components/locations/LocationsFAQ.jsx — "we hold a Virginia Class A Contractor license"',
+    'src/components/CommercialClientAuthority.jsx — "Verified Class A License" badge',
+    'src/data/corridorServiceAreas.js — public-work FAQ answer',
+    'src/components/ChatWidget.jsx — "fully licensed in Virginia"',
+    'src/pages/CityPage.jsx — "Fully licensed and insured" bullet',
+    'src/pages/ResidentialAsphalt.jsx — "Licensed And Insured" heading',
+    'src/pages/RichmondPaving.jsx — "fully licensed and insured"',
+    'NASCLA certification claims alongside the above',
+  ],
+  stillToReview: [
+    'src/data/blogPosts.js and src/lib/fallbackBlogPosts.js and src/pages/generated-blogs/HoaAsphaltPavingGuideBlog.jsx carry licensing language inside article prose rather than as site claims. Lower stakes and different register — advice about checking a contractor’s licensing is not a claim about ours — but they should be read before the next content pass.',
+  ],
 }

@@ -37,10 +37,10 @@ export default function LocationsHero({ cityCount }) {
               </div>
               <div>
                 <p className="font-display font-black text-foreground text-xs tracking-wider uppercase">
-                  VA Licensed Contractor
+                  Fourth-Generation Contractor
                 </p>
                 <p className="font-display text-muted-foreground text-[10px] tracking-wider uppercase mt-0.5">
-                  Bonded · Insured · NASCLA
+                  Bonded · Insured · USDOT 2568168
                 </p>
               </div>
             </div>

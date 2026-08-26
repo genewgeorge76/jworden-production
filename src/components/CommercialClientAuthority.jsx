@@ -154,7 +154,7 @@ export default function CommercialClientAuthority() {
               </p>
               <div className="flex items-center gap-1.5 text-amber-400 text-xs font-bold">
                 <Star className="w-4 h-4 fill-amber-400" />
-                <span>Verified Class A License & General Liability Protected</span>
+                <span>USDOT 2568168 &middot; General Liability Protected</span>
               </div>
             </div>
           </div>

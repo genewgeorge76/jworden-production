@@ -160,7 +160,7 @@ export default function RichmondPaving() {
                 <h2 className="text-3xl font-black text-white tracking-tight">Licensed Class A VA Contractor</h2>
               </div>
               <p className="text-white/60 text-lg leading-relaxed mb-6">
-                We're fully licensed and insured for both residential and heavy commercial scope throughout the Commonwealth of Virginia.
+                We're insured for both residential and heavy commercial scope throughout the Commonwealth of Virginia, and licensed to the requirements of the work in hand.
                 When you hire J. Worden &amp; Sons, you&rsquo;re getting heavy iron and full liability protection.
               </p>
               <ul className="space-y-4">

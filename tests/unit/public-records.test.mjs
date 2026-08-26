@@ -21,6 +21,7 @@ import {
   WITHHELD_RECORDS,
   USDOT_UNPUBLISHED,
   SAFETY_AUDIT_2015,
+  LICENSING_POLICY,
   withheldById,
 } from '../../src/data/publicRecordsWithheld.js'
 
@@ -291,4 +292,60 @@ test('the MCS-150 fleet figure is recorded as current, not stale', () => {
   assert.equal(USDOT_UNPUBLISHED.powerUnits, 1)
   assert.match(USDOT_UNPUBLISHED.fleetFigureBasis, /owner-stated/)
   assert.equal('ownerShouldReview' in USDOT_UNPUBLISHED, false, 'the retracted MCS-150 advice is still present')
+})
+
+
+/**
+ * MARKETING A LOCATION IS NOT CLAIMING A CREDENTIAL IN IT
+ * ──────────────────────────────────────────────────────
+ * The owner's policy is to obtain licences per market when work is secured
+ * there rather than carry them speculatively. That is ordinary contracting
+ * practice and it means the sites market many markets in which no licence is
+ * currently held — so no page may state or imply one.
+ *
+ * The first pass at this test checked two files for one exact casing and
+ * passed while ten claims sat elsewhere, including a hasCredential node in the
+ * JSON-LD. It now sweeps every page and component.
+ */
+test('no page or component claims a contractor licence', () => {
+  const roots = ['src/pages', 'src/components']
+  const offenders = []
+  const claim = /class\s+a\s+(contractor\s+)?licen[cs]e|fully licensed|licensed and insured|licensed in virginia|nascla/i
+  const walk = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, e.name)
+      if (e.isDirectory()) walk(full)
+      else if (/\.jsx?$/.test(e.name)) {
+        // Comments explain the rule and must not trip it. Same trap, sixth time.
+        const src = sourceWithoutComments(full)
+        if (claim.test(src)) offenders.push(full)
+      }
+    }
+  }
+  for (const r of roots) walk(r)
+  // Generated blog prose is a separate register — advice about vetting a
+  // contractor's licensing is not a claim about ours — and is tracked in
+  // LICENSING_POLICY.stillToReview rather than silently exempted.
+  const unexpected = offenders.filter((f) => !f.includes('generated-blogs'))
+  assert.deepEqual(unexpected, [], `licence claims still on pages: ${unexpected.join(', ')}`)
+})
+
+/** The JSON-LD must not assert the credential its own canonical file forbids. */
+test('the structured data carries no contractor credential', () => {
+  const src = sourceWithoutComments('src/lib/schemas.js')
+  assert.equal(/hasCredential/.test(src), false, 'schemas.js emits a credential node again')
+  assert.equal(/Class A/i.test(src), false)
+})
+
+/** The policy and the sweep are recorded together, so neither drifts alone. */
+test('the licensing policy is on the record with what it removed', () => {
+  assert.match(LICENSING_POLICY.basis, /owner-stated/)
+  assert.match(LICENSING_POLICY.siteRule, /may not state or imply a licence/i)
+  assert.ok(LICENSING_POLICY.claimsRemoved.length >= 9)
+  assert.ok(LICENSING_POLICY.insuranceUnaffected, 'insurance is a separate claim and must stay distinguished')
+  // NASCLA came off with the rest and is chaseable, not discarded.
+  const n = withheldById('nascla-accredited-exam')
+  assert.equal(n.status, UNCONFIRMED)
+  assert.equal(n.removedFromSite, '2026-08-26')
+  assert.match(n.resolvedBy, /registry|score report/i)
 })

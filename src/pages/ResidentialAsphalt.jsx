@@ -279,7 +279,7 @@ export default function ResidentialAsphalt() {
 
             <div className="premium-panel rounded-2xl p-6 md:p-8">
               <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
-                Licensed And Insured
+                Insured And Accountable
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">
                 We build residential projects with the same discipline used on commercial work: documented scope,

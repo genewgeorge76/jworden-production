@@ -103,8 +103,8 @@ const PAGE_HELP = {
         a: 'We serve the greater Richmond, VA area and operate franchise paving programs in VA, NC, GA, FL, MI, TX, and more.',
       },
       {
-        q: 'Are you licensed and insured?',
-        a: 'Yes \u2014 fully licensed in Virginia with general liability and workers\u2019 compensation coverage.',
+        q: 'Are you insured?',
+        a: 'Yes \u2014 general liability and workers\u2019 compensation coverage, and we are a USDOT-registered carrier (2568168). Licensing is obtained for the specific work and jurisdiction; ask us about your project.',
       },
     ],
   },

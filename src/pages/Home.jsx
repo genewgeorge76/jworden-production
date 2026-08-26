@@ -37,8 +37,7 @@ const SERVICES = [
 ];
 
 const TRUST_POINTS = [
-  'Virginia Class A Contractor License',
-  'NASCLA certified',
+  'USDOT 2568168 — active FMCSA registration',
   '$5M general liability + workers\' comp',
   'Family-owned since 1984 — Chester, VA',
   'Written estimates with line-item breakdown',
@@ -435,8 +434,8 @@ export default function Home() {
                 a: 'We operate statewide from our Chester, VA headquarters — with full crews regularly working Richmond, Chesterfield, Henrico, Midlothian, Hampton Roads, Williamsburg, Northern Virginia, Fredericksburg, the Shenandoah Valley, and rural Southside and Piedmont counties. Central Virginia and the I-95 corridor typically get same-week estimates.',
               },
               {
-                q: 'Are you licensed and insured to pave in Virginia?',
-                a: 'Yes. Virginia Class A Contractor license (Board for Contractors, 9960 Mayland Drive, Richmond), NASCLA certified, $5M general liability, and workers\' compensation. We can provide certificates of insurance naming your property as additional insured — common for HOA and commercial projects.',
+                q: 'Are you insured, and how do you handle licensing?',
+                a: 'We carry $5M general liability and workers\' compensation, and can provide certificates of insurance naming your property as additional insured — common for HOA and commercial projects. We are a USDOT-registered carrier, number 2568168, which you can check yourself at safer.fmcsa.dot.gov. On licensing: we hold the licences the work in front of us requires and obtain them market by market as work is secured, rather than carrying credentials speculatively. Ask us about your specific project and we will tell you exactly what applies.',
               },
               {
                 q: 'When is the best time of year to pave in Virginia?',

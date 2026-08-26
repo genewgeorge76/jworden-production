@@ -19,8 +19,8 @@ const FAQS = [
     a: 'Virginia spans four distinct paving environments: Piedmont clay (Richmond, Midlothian), coastal sandy subgrade with salt aerosol (Virginia Beach, Chesapeake), Blue Ridge freeze-thaw with 40+ cycles per winter (Roanoke, Harrisonburg), and Northern Valley commuter-load corridors (Winchester, Fredericksburg). Each demands different binders, base depths, and drainage specs. Contractors using one-size-fits-all mixes see failure in 5–7 years across most of Virginia.',
   },
   {
-    q: 'Are you licensed to pave anywhere in Virginia?',
-    a: 'Yes — we hold a Virginia Class A Contractor license (registered with the Virginia Board for Contractors, 9960 Mayland Drive, Richmond) and are NASCLA certified, bonded, and fully insured with $5M liability coverage. That licensing covers every county and independent city in the Commonwealth of Virginia.',
+    q: 'Do you work across Virginia, and how does licensing work?',
+    a: 'We work throughout the Commonwealth and are bonded and insured with $5M liability coverage. Licensing is obtained for the work in hand rather than carried speculatively — tell us the project and the jurisdiction and we will confirm exactly what it requires before we quote it.',
   },
   {
     q: 'How long does it take to get a paving estimate in Virginia?',

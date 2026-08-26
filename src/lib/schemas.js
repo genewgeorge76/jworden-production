@@ -357,14 +357,11 @@ export function premiumBlogPostingSchema({
       name: 'Gene Worden George',
       jobTitle: 'Fourth-Generation Paving Contractor & Owner',
       url: `${SITE_URL}/about`,
-      hasCredential: {
-        '@type': 'EducationalOccupationalCredential',
-        credentialCategory: 'Virginia Class A Contractor License',
-        recognizedBy: {
-          '@type': 'GovernmentOrganization',
-          name: 'Virginia Department of Professional and Occupational Regulation',
-        },
-      },
+      // hasCredential DELIBERATELY ABSENT — see businessInfo.canonical.js,
+      // which documented this rule and which this file was quietly breaking.
+      // The Class A licence lapsed when the qualifying individual took out his
+      // own, and a credential asserted in JSON-LD is the version a search
+      // engine parses. It goes back when DPOR says so, and not before.
       worksFor: {
         '@type': 'LocalBusiness',
         '@id': SCHEMA_IDS.organization,

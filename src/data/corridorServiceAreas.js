@@ -284,7 +284,7 @@ export const CORRIDOR_SERVICE_AREAS = [
       {
         question: 'Do you take on county and institutional paving work?',
         answer:
-          'Yes. Public work runs to a written specification and expects documentation — compaction, material tickets, accessible layout — rather than a finished invoice and a handshake. That is how we prefer to work in any case. We hold a Virginia Class A Contractor licence and have run to public and franchise specifications for four decades.',
+          'Yes. Public work runs to a written specification and expects documentation — compaction, material tickets, accessible layout — rather than a finished invoice and a handshake. That is how we prefer to work in any case. We have run to public and franchise specifications for four decades, and we hold an SCDOT encroachment permit performed and closed out by that department in 2024. Licensing for a specific public contract is obtained to that contract.',
       },
       {
         question: 'Why does the entrance off Route 29 fail before the rest of a lot?',

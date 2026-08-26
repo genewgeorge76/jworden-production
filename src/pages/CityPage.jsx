@@ -211,7 +211,7 @@ export default function CityPage() {
                   '40+ years of asphalt expertise',
                   'Free on-site estimates',
                   'Commercial-grade equipment',
-                  'Fully licensed and insured',
+                  'Insured — $5M general liability',
                   'KFC national QSR vendor — 12+ states',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3">
