@@ -246,6 +246,41 @@ export const SAFETY_AUDIT_2015 = {
     '49 CFR 385.319 — a safety audit produces no safety fitness determination. The result is delivered as written notice to the carrier within 45 days, not published.',
   publicSystemsChecked: ['SAFER company snapshot', 'FMCSA SMS', 'QCMobile', 'Licensing & Insurance'],
   checkedOn: '2026-08-26',
+
+  // THE MAILBOX SWEEP, RECORDED SO NOBODY REPEATS IT
+  //
+  // The owner's recollection was that the record is in the email. It is not in
+  // the connected mailbox, and that is worth writing down rather than leaving
+  // for the next person to rediscover over another hour.
+  //
+  // j.wordenandsonspaving@gmail.com — 33,610 inbox, 1,916 sent, one account,
+  // no other mailbox attached. Searched 2026-08-26:
+  //
+  //   in:anywhere "safety audit" | "management controls" | "new entrant"
+  //     | "safety fitness" | 385.319        28 threads, all newsletters bar one
+  //   in:anywhere filename:audit|safety|SA|MCS|CSA     5 threads, same one
+  //   2568168                                 vendor compliance spam, 2020–21
+  //   .gov senders                            DOT, DMV, SCC, VSP credentials
+  //   to:dmv.virginia.gov 2015-09 → 2016-03   two IRP notices, no audit
+  //   has:attachment 2015-09-14 → 2016-02     nothing
+  //
+  // in:anywhere covers trash and spam. The single relevant hit in every sweep
+  // is the same August 2015 scheduling letter. The result is not here.
+  //
+  // WHERE IT MORE LIKELY IS
+  // Jessica Lewis was the office manager through 2015 and 2016 and handled the
+  // paperwork this would have landed in — certificates of insurance, W-9s,
+  // carrier filings. In November 2015, two months after the audit, she was the
+  // one arranging DOT numbers for the truck doors with the sign company.
+  // jessica.wordenandsons@gmail.com is the mailbox to search next and it is not
+  // connected to this session.
+  mailboxSwept: {
+    account: 'j.wordenandsonspaving@gmail.com',
+    sweptOn: '2026-08-26',
+    found: false,
+    coveredTrashAndSpam: true,
+    nextMailbox: 'jessica.wordenandsons@gmail.com — office manager 2015–2016, handled carrier and insurance filings',
+  },
   // OWNER'S ACCOUNT, 2026-08-26, AND WHY IT FITS THE REGULATION EXACTLY
   //
   // "In 2015 we met a state trooper and he approved us onsite."

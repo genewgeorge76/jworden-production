@@ -232,6 +232,12 @@ test('the 2015 safety audit stays unpublished until the notice is in hand', () =
 
   // It is not a record in the publishable module under any id.
   assert.equal(PUBLIC_RECORDS.some((r) => /audit/i.test(r.kind)), false)
+
+  // The mailbox sweep is a result in its own right: a negative that stops the
+  // next reader spending an hour re-running it.
+  assert.equal(SAFETY_AUDIT_2015.mailboxSwept.found, false)
+  assert.equal(SAFETY_AUDIT_2015.mailboxSwept.coveredTrashAndSpam, true)
+  assert.ok(SAFETY_AUDIT_2015.mailboxSwept.nextMailbox)
 })
 
 /**
