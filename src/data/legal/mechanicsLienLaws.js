@@ -152,15 +152,24 @@ export default [
     preliminaryNoticeRequired: false,
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
+    // Read against D.C. Code § 40-301.02 on 2026-08-26: "The notice of intent
+    // shall be recorded during the construction or within 90 days after the
+    // earlier of the completion or termination of the project."
+    //
+    // The note this replaces read "Advisory baseline: file promptly after last
+    // furnishing; verify claimant-specific statutory timing before filing" —
+    // which is not a deadline, and the citation beside it was a description of
+    // where to look rather than a statute. The row was a placeholder wearing
+    // the same shape as the fifty rows that were not.
     lienFilingDeadlineDays: 90,
     lienFilingDeadlineNote:
-      'Advisory baseline: file promptly after last furnishing; verify claimant-specific statutory timing before filing',
+      'Ninety days after the earlier of completion or termination of the project; may be recorded during construction',
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
     claimantTypes: ['GC', 'Subcontractor', 'Supplier'],
     residentialOwnerOccupiedExceptions: false,
-    citation: 'District of Columbia mechanics lien statutes and Superior Court filing procedures',
+    citation: 'D.C. Code § 40-301.01 et seq. (filing deadline at § 40-301.02)',
     notes:
       'Public property is generally not lienable; verify notice and filing prerequisites against current District statute before action.',
     lastVerified: '2026-01-01',
@@ -243,8 +252,13 @@ export default [
     preliminaryNoticeRequired: false,
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
-    lienFilingDeadlineDays: 120,
-    lienFilingDeadlineNote: '4 months from last date of furnishing labor or materials',
+    // Read against 770 ILCS 60/7 on 2026-08-26: "within 4 months after
+    // completion". Four calendar months, not 120 days, and the period runs
+    // from COMPLETION rather than the last date of furnishing.
+    lienFilingDeadlineDays: null,
+    lienFilingDeadlineMonths: 4,
+    lienFilingDeadlineNote:
+      'Four months after completion, or four months after completion of any extra or additional work',
     lienForeClosureDeadlineDays: 730,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -298,8 +312,15 @@ export default [
     preliminaryNoticeRequired: true,
     preliminaryNoticeDeadline: 'Within 3 months of first furnishing for suppliers',
     preliminaryNoticeWho: ['Supplier'],
-    lienFilingDeadlineDays: 120,
-    lienFilingDeadlineNote: '4 months from completion of contract or last furnishing',
+    // Read against K.S.A. § 60-1102 on 2026-08-26: "within four months after
+    // the date material, equipment or supplies, used or consumed was last
+    // furnished or last labor performed under the contract." Four calendar
+    // months, not 120 days — the two differ by up to three days depending on
+    // which months the job spans.
+    lienFilingDeadlineDays: null,
+    lienFilingDeadlineMonths: 4,
+    lienFilingDeadlineNote:
+      'Four months after material was last furnished or labor last performed under the contract',
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -463,8 +484,19 @@ export default [
     preliminaryNoticeRequired: true,
     preliminaryNoticeDeadline: 'Within 10 days of first delivery for suppliers to owners',
     preliminaryNoticeWho: ['Supplier'],
-    lienFilingDeadlineDays: 180,
-    lienFilingDeadlineNote: '6 months from last furnishing of labor or materials',
+    // Read against Mo. Rev. Stat. § 429.080 on 2026-08-26: "within six months
+    // after the indebtedness shall have accrued". Six calendar months, not 180
+    // days — and the period runs from when the debt accrued, which is not the
+    // same event as last furnishing. Recorded as the statute states it.
+    lienFilingDeadlineDays: null,
+    lienFilingDeadlineMonths: 6,
+    // The clock starts when the debt accrued, which is not last furnishing and
+    // is not a date a caller supplies. Named as its own anchor so the
+    // calculator reports it as unresolved rather than quietly substituting the
+    // last day on site and presenting the result as the statute's answer.
+    lienFilingDeadlineAnchor: 'indebtedness_accrued',
+    lienFilingDeadlineNote:
+      'Six months after the indebtedness accrued (60 days for rental equipment, from its last removal)',
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -740,7 +772,16 @@ export default [
     preliminaryNoticeWho: ['Subcontractor', 'Supplier'],
     lienFilingDeadlineDays: 90,
     lienFilingDeadlineNote: '90 days from last furnishing of labor or materials',
-    lienForeClosureDeadlineDays: 365,
+    // Read against S.C. Code § 29-5-90 and § 29-5-120 on 2026-08-26.
+    //
+    // Filing was right. Enforcement was not, and it was wrong in the dangerous
+    // direction. § 29-5-120(A): the lien "must be dissolved" unless suit is
+    // commenced within SIX MONTHS after the claimant "ceases to labor" — six
+    // months from the work, not a year from the filing. This row said 365 days
+    // from filing, which lands roughly fifteen months after work ends and
+    // would have reported nine months of time that does not exist.
+    lienForeClosureDeadlineDays: 180,
+    lienForeClosureFrom: 'last_furnishing',
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
     claimantTypes: ['GC', 'Subcontractor', 'Supplier', 'Equipment'],

@@ -104,6 +104,115 @@ export const VERIFIED_CITATIONS = [
     verdict: 'confirmed',
     finding: '120 days from the last of the work. Matches the dataset exactly.',
   },
+  {
+    abbr: 'SC',
+    topic: 'mechanicsLien',
+    citation: 'S.C. Code Ann. §§ 29-5-90, 29-5-120',
+    source: 'https://www.scstatehouse.gov/code/t29c005.php',
+    checked: '2026-08-26',
+    heading: '§ 29-5-90 (filing); § 29-5-120 (dissolution unless suit commenced)',
+    quote:
+      'within ninety days after he ceases to labor on or furnish labor or materials for such ' +
+      'building or structure … Unless a suit for enforcing the lien is commenced and notice of ' +
+      'pendency of the action is filed within six months after the person desiring to avail ' +
+      'himself of it ceases to labor on or furnish labor or material for the building or ' +
+      'structure, the lien must be dissolved.',
+    verdict: 'corrected',
+    finding:
+      'Filing at 90 days was right. Enforcement was wrong in the dangerous direction: the row ' +
+      'held 365 days FROM FILING, which lands about fifteen months after work ends. The statute ' +
+      'dissolves the lien six months after the claimant ceases to labor. Roughly nine months of ' +
+      'time that does not exist.',
+  },
+  {
+    abbr: 'IA',
+    topic: 'mechanicsLien',
+    citation: 'Iowa Code §§ 572.9, 572.27',
+    source: 'https://www.legis.iowa.gov/docs/code/572.pdf',
+    checked: '2026-08-26',
+    heading: '572.9 Time of lien posting; 572.27 Limitation on action',
+    quote:
+      'shall be posted by a general contractor or subcontractor within two years and ninety days ' +
+      'after the date on which the last of the material was furnished or the last of the labor ' +
+      'was performed … Any action to enforce a mechanic\u2019s lien shall be brought within two ' +
+      'years from the expiration of ninety days after the date on which the last of the material ' +
+      'was furnished or the last of the labor was performed.',
+    verdict: 'confirmed',
+    finding:
+      'Both figures check out. The 730-day enforcement period measured from a 90-day filing ' +
+      'deadline reproduces the statute exactly: two years from the expiration of those ninety ' +
+      'days. Worth knowing that §§ 572.10 and 572.11 allow posting after ninety days with the ' +
+      'lien\u2019s extent limited against the owner — the 90 days is the full-priority window, ' +
+      'not an absolute cutoff.',
+  },
+  {
+    abbr: 'KS',
+    topic: 'mechanicsLien',
+    citation: 'Kan. Stat. Ann. § 60-1102',
+    source: 'https://ksrevisor.gov/statutes/chapters/ch60/060_011_0002.html',
+    checked: '2026-08-26',
+    heading: '60-1102. Filing and recording of lien statement; notice of extension.',
+    quote:
+      'within four months after the date material, equipment or supplies, used or consumed was ' +
+      'last furnished or last labor performed under the contract',
+    verdict: 'corrected',
+    finding:
+      'The row stored 120 days for what the statute states as four calendar months. The two ' +
+      'differ by up to three days depending on which months a job spans, and the difference ' +
+      'always runs short.',
+  },
+  {
+    abbr: 'IL',
+    topic: 'mechanicsLien',
+    citation: '770 ILCS 60/7',
+    source: 'https://www.ilga.gov/documents/legislation/ilcs/documents/077000600K7.htm',
+    checked: '2026-08-26',
+    heading: 'Sec. 7. Claim for lien; third parties; errors or overcharges; multiple buildings or lots.',
+    quote:
+      'within 4 months after completion, or if extra or additional work is done or labor, ' +
+      'services, material, fixtures, apparatus or machinery, forms or form work is delivered ' +
+      'therefor within 4 months after the completion of such extra or additional work',
+    verdict: 'corrected',
+    finding:
+      'Two errors. The row stored 120 days for four calendar months, and it ran the period from ' +
+      'the last date of furnishing when the statute runs it from COMPLETION.',
+  },
+  {
+    abbr: 'MO',
+    topic: 'mechanicsLien',
+    citation: 'Mo. Rev. Stat. § 429.080',
+    source: 'https://revisor.mo.gov/main/OneSection.aspx?section=429.080',
+    checked: '2026-08-26',
+    heading: 'Section 429.080. Lien filed with circuit clerk, when.',
+    quote:
+      'within six months after the indebtedness shall have accrued, or, with respect to rental ' +
+      'equipment or machinery rented to others, then, within sixty days after the date the last ' +
+      'of the rental equipment or machinery was last removed from the property',
+    verdict: 'corrected',
+    finding:
+      'The row said "6 months from last furnishing" and stored 180 days. The statute states six ' +
+      'calendar months and runs them from when the INDEBTEDNESS ACCRUED, which is a question ' +
+      'about the contract rather than the last day on site. The calculator now declines to ' +
+      'compute Missouri and says why, instead of answering from the wrong event.',
+  },
+  {
+    abbr: 'DC',
+    topic: 'mechanicsLien',
+    citation: 'D.C. Code § 40-301.02',
+    source: 'https://code.dccouncil.gov/us/dc/council/code/sections/40-301.02',
+    checked: '2026-08-26',
+    heading: '§ 40–301.02. Notice.',
+    quote:
+      'The notice of intent shall be recorded during the construction or within 90 days after ' +
+      'the earlier of the completion or termination of the project.',
+    verdict: 'corrected',
+    finding:
+      'This row was a placeholder wearing the shape of a real one. Its note read "Advisory ' +
+      'baseline: file promptly after last furnishing; verify claimant-specific statutory timing ' +
+      'before filing", which is not a deadline, and its citation read "District of Columbia ' +
+      'mechanics lien statutes and Superior Court filing procedures", which is a description of ' +
+      'where to look rather than a statute. Both replaced with the section and its rule.',
+  },
 ]
 
 /**
@@ -117,6 +226,19 @@ export const UNVERIFIABLE_SOURCES = [
     reason:
       'statutes.capitol.texas.gov serves a JavaScript shell. The Property Code chapter URL ' +
       'returns 250KB containing no section text.',
+  },
+  {
+    abbr: 'MI',
+    reason:
+      'legislature.mi.gov did not answer — the MCL section URL returns no HTTP response and the ' +
+      'PDF mirror returns 503. Not evidence the statute is unavailable, only that it could not ' +
+      'be read from here.',
+  },
+  {
+    abbr: 'NJ',
+    reason:
+      'The New Jersey statutes are served through an NXT gateway that exposes a search interface ' +
+      'rather than fetchable section text.',
   },
   {
     abbr: 'GA',
