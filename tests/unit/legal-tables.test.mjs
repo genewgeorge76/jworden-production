@@ -166,3 +166,43 @@ test('the generated file says it is generated', () => {
   assert.match(PY, /GENERATED\. Do not hand-edit/)
   assert.match(PY, /build-python-legal-tables\.mjs/)
 })
+
+/**
+ * QUOTING THE STATUTE MUST NOT COST THE ROW ITS MEANING
+ * ────────────────────────────────────────────────────
+ * Rewriting North Dakota's note to the statute's own words — "contribution is
+ * done" instead of "last furnishing" — stopped the anchor parser recognising
+ * it, and the calculator silently returned no filing date at all. New
+ * Hampshire did the same thing in the same commit.
+ *
+ * The parser reads prose, so improving the prose can break it. Every row must
+ * resolve an anchor from somewhere: its own explicit field, its rule, or the
+ * note. None may resolve from nothing.
+ */
+test('every jurisdiction resolves a filing anchor', () => {
+  const rows = [...PY.matchAll(/"([A-Z]{2})": \{(.*?)\},\n/gs)]
+  assert.ok(rows.length >= 51)
+  for (const row of lien) {
+    const hasExplicit = Boolean(row.lienFilingDeadlineAnchor)
+    const noteHasAnchor = /last furnish|last (date|day)|completion|work completed|providing/i.test(
+      row.lienFilingDeadlineNote ?? '',
+    )
+    const hasMonths = Boolean(row.lienFilingDeadlineMonths)
+    assert.ok(
+      hasExplicit || noteHasAnchor || hasMonths,
+      `${row.abbr} states no anchor its calculator can use`,
+    )
+  }
+})
+
+test('an owner-controlled shortening is never silently absorbed', () => {
+  // Four kinds of fact the owner or the project controls, none computed:
+  // a notice of completion, a notice of substantial completion, a written
+  // demand forcing suit, and the project type.
+  assert.match(PY, /"lien_filing_shortened_by"/)
+  assert.match(PY, /"enforcement_accelerated_by"/)
+  assert.match(PY, /"lien_filing_by_project_type"/)
+  const calc = pythonSourceWithoutComments('app/services/lien_calendar.py')
+  assert.match(calc, /enforcement can be cut to/)
+  assert.match(calc, /the period depends on the project type/)
+})

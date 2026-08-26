@@ -164,6 +164,12 @@ const lienRows = lien.map((r) => ({
   lien_filing_shortened_by: r.lienFilingShortenedBy ?? null,
   // Where the period depends on whether the claimant contracted with the owner.
   lien_filing_by_claimant: r.lienFilingByClaimant ?? null,
+  // Where the project type changes the period — New York gives four months on a
+  // single family dwelling against eight on anything else.
+  lien_filing_by_project_type: r.lienFilingByProjectType ?? null,
+  // North Dakota: the owner's written demand forces suit within thirty days or
+  // the lien is forfeited, whatever the general limitation period says.
+  enforcement_accelerated_by: r.enforcementAcceleratedBy ?? null,
   preliminary_notice_required: r.preliminaryNoticeRequired ?? false,
   preliminary_notice_days: noticeDays(r.preliminaryNoticeDeadline),
   preliminary_notice_anchor: noticeAnchor(r.preliminaryNoticeDeadline),
