@@ -379,7 +379,7 @@ export const LANDING_PAGES = [
     metaDescription:
       'Midlothian VA driveway paving contractor. New construction, replacement, and resurfacing by J. Worden & Sons. Engineered for durability on Virginia clay.',
     canonicalPath: '/lp/midlothian-driveway-paving',
-    ogImage: '/work/imported/Gallery/IMG_7781.jpg',
+    ogImage: '/og-default.jpg',
     serviceArea: 'Midlothian, VA',
     primaryKeyword: 'midlothian driveway paving',
     adIntent: 'high_residential_replacement',
@@ -435,7 +435,7 @@ export const LANDING_PAGES = [
     metaDescription:
       'Commercial sealcoating in Virginia Beach. J. Worden & Sons uses premium, coastal-spec materials to extend pavement life and protect against salt and sun damage.',
     canonicalPath: '/lp/virginia-beach-sealcoating',
-    ogImage: '/work/imported/Gallery/IMG_6045.jpg',
+    ogImage: '/og-default.jpg',
     serviceArea: 'Virginia Beach, VA',
     primaryKeyword: 'virginia beach sealcoating',
     adIntent: 'high_commercial_maintenance',

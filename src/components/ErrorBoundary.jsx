@@ -17,7 +17,7 @@ export default class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     // Log for visibility. A production app would forward this to Sentry/etc.
-    console.error('[ErrorBoundary]', error, errorInfo);
+    console.error('[ErrorBoundary]', this.props.label || '', error, errorInfo);
   }
 
   handleReset = () => {
@@ -26,6 +26,14 @@ export default class ErrorBoundary extends React.Component {
 
   render() {
     if (!this.state.hasError) return this.props.children;
+
+    // SILENT MODE, FOR THINGS THAT ARE NOT THE PAGE
+    // A floating chat bubble, a call bar, a concierge avatar — if one of those
+    // throws, the right outcome is that it disappears and the site carries on.
+    // Replacing a paving company's homepage with a full-screen "Something Went
+    // Wrong" panel because an optional widget failed is a far worse failure
+    // than the widget failing. Ancillary UI gets `silent`; routes do not.
+    if (this.props.silent) return this.props.fallback ?? null;
 
     const kicker = this.props.kicker || 'Something Went Wrong';
     const title = this.props.title || 'Unexpected Error';

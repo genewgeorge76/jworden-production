@@ -18,7 +18,13 @@ import { readdirSync, statSync, existsSync } from 'node:fs';
 import { join, extname, basename, dirname } from 'node:path';
 import sharp from 'sharp';
 
-const ROOT = 'public/work';
+// WHY MORE THAN ONE ROOT
+// This script only ever walked public/work, so the KFC store photographs under
+// public/images — the proof gallery, which is the part of the site a buyer
+// actually studies before calling — were never optimised. Nine of them ship at
+// 0.5–2.9 MB apiece. On a phone, on a local search, that is the LCP and it is
+// the ranking signal and the conversion at the same time.
+const ROOTS = ['public/work', 'public/images'];
 const MIN_BYTES = 200 * 1024; // 200 KB
 const MAX_WIDTH = 1920;
 
@@ -30,7 +36,9 @@ function* walk(dir) {
   }
 }
 
-const targets = [...walk(ROOT)].filter((p) => /\.(jpe?g|png)$/i.test(p));
+const targets = ROOTS.filter((r) => existsSync(r))
+  .flatMap((r) => [...walk(r)])
+  .filter((p) => /\.(jpe?g|png)$/i.test(p));
 const big = targets.filter((p) => statSync(p).size >= MIN_BYTES);
 
 console.log(`[optimize] scanning ${targets.length} images, ${big.length} need work`);

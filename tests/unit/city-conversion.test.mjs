@@ -69,3 +69,37 @@ test('the quote block draws credentials through the verified gate only', () => {
   // And it must not reintroduce the licence claim next to the strongest CTA.
   assert.equal(/Class A|fully licensed|NASCLA/i.test(block), false)
 })
+
+/**
+ * A WIDGET FAILING MUST NEVER COST THE PAGE
+ * ─────────────────────────────────────────
+ * ChatWidget, AIConciergeBubble and MobileCallBar rendered at the app root
+ * outside any boundary. React unmounts the whole tree when a render throws, so
+ * any one of them failing white-screened the entire site — every page, on
+ * every domain, over an optional floating bubble.
+ *
+ * They are now individually boundaried in silent mode: the widget disappears,
+ * the site carries on. Routes keep the visible fallback; ancillary UI does not.
+ */
+test('root-level widgets are individually boundaried', () => {
+  const app = sourceWithoutComments('src/App.jsx')
+  for (const widget of ['MobileCallBar', 'ChatWidget', 'AIConciergeBubble']) {
+    const re = new RegExp(`<ErrorBoundary[^>]*silent[^>]*label="${widget}"[^>]*>`, 's')
+    assert.match(app, re, `${widget} renders without a silent error boundary`)
+  }
+})
+
+/**
+ * The quote block is the money path, so its fallback is NOT silent-null — a
+ * blank section would delete the only conversion route on the page. It falls
+ * back to the phone number.
+ */
+test('the quote block fails over to a phone number, not to nothing', () => {
+  const page = sourceWithoutComments(CITY_PAGE)
+  assert.match(page, /<ErrorBoundary[\s\S]*?label="CityQuoteBlock"/)
+  assert.match(page, /fallback=\{/)
+  const raw = readFileSync(CITY_PAGE, 'utf8')
+  const start = raw.indexOf('label="CityQuoteBlock"')
+  const region = raw.slice(start, start + 900)
+  assert.match(region, /tel:\+18044461296/, 'the fallback offers no way to make contact')
+})

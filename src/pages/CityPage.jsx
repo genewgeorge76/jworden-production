@@ -8,6 +8,7 @@ import { AGGREGATE_RATING } from '../lib/reviews'
 import { trackEvent } from '../api/client'
 import NotFound from './NotFound'
 import CityQuoteBlock from '../components/CityQuoteBlock'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 // Build LocalBusiness schema with city-specific areaServed
 function cityLocalBusinessSchema(area) {
@@ -199,7 +200,27 @@ export default function CityPage() {
       </section>
 
       {/* ── Quote capture, on the page rather than a link away ── */}
-      <CityQuoteBlock city={area.city} stateCode={area.stateCode} slug={area.slug} />
+      <ErrorBoundary
+        silent
+        label="CityQuoteBlock"
+        fallback={
+          // If the quote block ever throws, the page must still tell somebody
+          // how to make contact. A silent null here would delete the only
+          // conversion path on the page.
+          <section id="quote" className="py-16 bg-brand-navy text-white text-center">
+            <p className="font-display text-2xl uppercase tracking-tight mb-2">Request a Quote</p>
+            <a
+              href="tel:+18044461296"
+              className="text-brand-amber text-xl font-bold"
+              onClick={() => trackEvent('phone_click', { location: `city_quote_fallback_${area.slug}` })}
+            >
+              Call (804) 446-1296
+            </a>
+          </section>
+        }
+      >
+        <CityQuoteBlock city={area.city} stateCode={area.stateCode} slug={area.slug} />
+      </ErrorBoundary>
 
       {/* ── About this area ── */}
       <section className="py-16 bg-gray-50">
@@ -238,7 +259,11 @@ export default function CityPage() {
                 </div>
                 <div className="flex justify-between border-b border-white/10 pb-2">
                   <span>Phone</span>
-                  <a href="tel:+18044461296" className="text-brand-amber font-medium">
+                  <a
+                    href="tel:+18044461296"
+                    className="text-brand-amber font-medium"
+                    onClick={() => trackEvent('phone_click', { location: `city_sidebar_${area.slug}` })}
+                  >
                     (804) 446-1296
                   </a>
                 </div>

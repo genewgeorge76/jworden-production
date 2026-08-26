@@ -874,9 +874,20 @@ function AppContent() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <AuthenticatedApp />
-          <MobileCallBar />
-          {shouldRenderChatWidget ? <ChatWidget /> : null}
-          <AIConciergeBubble />
+          {/* Ancillary UI is individually boundaried in silent mode: any one of
+              these throwing used to unmount the whole tree and white-screen the
+              site. A widget failing must never cost the page. */}
+          <ErrorBoundary silent label="MobileCallBar">
+            <MobileCallBar />
+          </ErrorBoundary>
+          {shouldRenderChatWidget ? (
+            <ErrorBoundary silent label="ChatWidget">
+              <ChatWidget />
+            </ErrorBoundary>
+          ) : null}
+          <ErrorBoundary silent label="AIConciergeBubble">
+            <AIConciergeBubble />
+          </ErrorBoundary>
         </Router>
         <Toaster />
       </QueryClientProvider>
