@@ -115,12 +115,31 @@ export const WITHHELD_RECORDS = [
     // or a confirmation sent to the registered agent rather than here, would
     // leave the same silence. What it rules out is publishing Georgia
     // registration as a current fact.
+    // OWNER CONFIRMED, 2026-08-26: "i havent renewed the georgia one".
+    //
+    // So the inference above is settled and the sixty-day cure window was not
+    // used. The registration is not current.
+    //
+    // WHAT THIS DOES NOT TOUCH, WHICH MATTERS MORE THAN IT SOUNDS
+    // The 29 paid Georgia stores were done while the registration WAS current
+    // — annual registrations processed 2018 and 2020, and the work sits inside
+    // that span. A past job does not become unsayable because a registration
+    // later lapsed. The Georgia work, the county pages and the landmark data
+    // are all unaffected.
+    //
+    // What is affected is any PRESENT-TENSE claim to operate in Georgia, and
+    // any new Georgia work, which needs the registration reinstated first.
+    ownerConfirmed: {
+      status: 'not renewed',
+      basis: 'owner-stated, 2026-08-26',
+      consequence: 'Registration not current. Past Georgia work is unaffected; new work needs reinstatement.',
+    },
     whyNotPublished:
-      'Georgia issued a Notice of Intent to Administratively Dissolve and a Notice of Intent to Revoke on 2021-07-28, with sixty days from 2021-07-19 to cure. No cure and no later annual registration appears in the archive.',
+      'Owner confirms the Georgia registration was not renewed after the 2021 notices. It is not current and may not be stated as such.',
     resolvedBy:
-      'Search ecorp.sos.ga.gov for control number 16031980 and read the entity status. If it was cured or has since been reinstated, record the status date; if it was dissolved, that is the fact and no Georgia page may imply otherwise.',
+      'If Georgia work resumes, reinstate at ecorp.sos.ga.gov against control number 16031980 and record the new status date.',
     ownerShouldReview:
-      'This is the one to check first. Georgia carries 29 paid stores and the Atlanta market pages, and an administratively dissolved entity cannot lawfully transact there until reinstated.',
+      'No page may imply current Georgia registration. Historic Georgia work stays publishable — it was performed while the registration was live.',
     registeredAgent: 'InCorp (agent of record on the 2018 and 2020 filings)',
     source:
       'Georgia SOS e-notifications to this address: annual registrations 2018-02-01 and 2020-08-22; Notice of Intent to Administratively Dissolve and Notice of Intent to Revoke, both 2021-07-28.',
@@ -146,6 +165,11 @@ export const WITHHELD_RECORDS = [
     // them, so nothing goes on a page until the SOS record itself is read.
     whyNotPublished:
       'The confirmation names no entity number and does not say which filing was approved. Formation, foreign qualification and amendment are different claims; the archive cannot tell them apart.',
+    // Owner's view, 2026-08-26: "the south carolina one should be good i think".
+    // Hedged, and hedging is not evidence. It stays UNCONFIRMED. This is the
+    // state holding the SCDOT permit and 18 invoiced Carolina jobs, so it is
+    // worth five minutes on the register rather than a guess.
+    ownerBelief: 'likely current — owner-stated and explicitly uncertain, 2026-08-26',
     resolvedBy:
       'Search the SC Secretary of State business entity register for the company name and record the entity ID and filing type.',
     // The full sequence, recovered 2026-08-26. It was not one filing but four

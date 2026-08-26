@@ -553,3 +553,35 @@ export const VERIFIED_KEYS = new Set(
 export function verificationFor(abbr, topic = 'mechanicsLien') {
   return VERIFIED_CITATIONS.find((v) => v.abbr === abbr && v.topic === topic) ?? null
 }
+
+/**
+ * SCOPE CAVEATS ON CONTRACTOR_LICENSING
+ * ─────────────────────────────────────
+ * `CONTRACTOR_LICENSING` in app/services/legal_tables.py carries one boolean
+ * per state: `state_license_required`. A boolean cannot hold trade scope, and
+ * trade scope is usually the whole question for a paving contractor. Most
+ * state licensing acts are written around building construction, and sitework
+ * — parking lots, drives, grading — often sits outside them.
+ *
+ * These rows are flagged because the boolean reads as settled and is not.
+ */
+export const LICENSING_SCOPE_CAVEATS = [
+  {
+    abbr: 'GA',
+    tableSays: 'state_license_required: true, Georgia State Licensing Board for Residential and General Contractors, $2,500 threshold',
+    caveat:
+      'The board named licenses residential and general contracting. Whether asphalt paving and sitework fall inside that act is a scope question the boolean does not answer, and the row was never read at source — Georgia is in UNVERIFIABLE_SOURCES above because the Official Code is published under contract with LexisNexis.',
+    // The owner has run 29 paid store sites in Georgia and reports there is
+    // "really not much of a paving licence" in the state. That is operating
+    // experience against an unverified dataset boolean, and on this repository's
+    // own rules the unverified figure is the weaker of the two.
+    ownerAccount: 'Owner reports no meaningful paving licence requirement in Georgia (owner-stated, 2026-08-26).',
+    conflictsWithTable: true,
+    resolvedBy:
+      'Read O.C.G.A. § 43-41-17 and its exemptions for the scope of the licensing requirement. Until then no page may state a Georgia licensing position either way.',
+    // NOT the same thing as the Secretary of State registration, which is a
+    // separate obligation on any entity transacting in the state regardless of
+    // whether its trade is licensed. See ga-sos-16031980 in publicRecordsWithheld.js.
+    doNotConflateWith: 'Georgia Secretary of State entity registration (control number 16031980)',
+  },
+]

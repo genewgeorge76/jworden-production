@@ -107,9 +107,20 @@ test('no state entity registration is published without a live status', () => {
   const ga = withheldById('ga-sos-16031980')
   assert.equal(ga.status, UNCONFIRMED)
   assert.equal(ga.reference, '16031980')
-  assert.match(ga.whyNotPublished, /Dissolve|Revoke/)
+  // Assert the substance, not the wording. This test first pinned the phrase
+  // "Dissolve|Revoke" from the 2021 notices, and then broke the moment the
+  // owner confirmed the lapse and the field was rewritten to say so — a test
+  // failing on better information rather than on a regression.
+  assert.equal(ga.ownerConfirmed.status, 'not renewed')
+  assert.match(ga.ownerConfirmed.basis, /owner-stated/)
+  assert.match(ga.whyNotPublished, /not current|not renewed/i)
   assert.ok(ga.ownerShouldReview, 'Georgia carries paid work and needs an explicit owner action')
   assert.equal(recordById('ga-sos-16031980'), null)
+
+  // The past Georgia work is NOT collateral damage of the lapsed registration.
+  // It was performed while the registration was live, and the record says so
+  // rather than leaving a later reader to assume the whole state is tainted.
+  assert.match(ga.ownerConfirmed.consequence, /[Pp]ast Georgia work is unaffected/)
 })
 
 /**
