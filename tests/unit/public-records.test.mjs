@@ -20,6 +20,7 @@ import {
 import {
   WITHHELD_RECORDS,
   USDOT_UNPUBLISHED,
+  SAFETY_AUDIT_2015,
   withheldById,
 } from '../../src/data/publicRecordsWithheld.js'
 
@@ -198,4 +199,49 @@ test('no page-facing code imports the withheld records', () => {
   }
   for (const r of roots) walk(r)
   assert.deepEqual(offenders, [], `withheld records reachable from page code: ${offenders.join(', ')}`)
+})
+
+
+/**
+ * THE 2015 SAFETY AUDIT IS NOT A PUBLISHABLE CREDENTIAL, AND THE REASON IS
+ * REGULATORY RATHER THAN ARCHIVAL
+ * ────────────────────────────────────────────────────────────────────────
+ * 49 CFR 385.319: a safety audit produces no safety fitness determination, and
+ * the result reaches the carrier as written notice rather than a public field.
+ * SAFER showing "Rating: None" is therefore expected and says nothing either
+ * way.
+ *
+ * The owner's account — a trooper reviewed the findings on site and approved
+ * the company — matches 385.319(a) exactly. It is still a recollection of
+ * something said aloud, and "we passed our FMCSA safety audit" needs the
+ * letter. This test keeps that distinction from eroding.
+ */
+test('the 2015 safety audit stays unpublished until the notice is in hand', () => {
+  assert.equal(SAFETY_AUDIT_2015.resultInArchive, false)
+  assert.equal(SAFETY_AUDIT_2015.publiclyRetrievable, false)
+  assert.match(SAFETY_AUDIT_2015.whyNotPublic, /385\.319/)
+  assert.ok(SAFETY_AUDIT_2015.publicSystemsChecked.length >= 4)
+
+  // The on-site approval is owner-stated and must never be graded as the result.
+  assert.equal(SAFETY_AUDIT_2015.onSiteReview.publishable, false)
+  assert.match(SAFETY_AUDIT_2015.onSiteReview.basis, /owner-stated/)
+  assert.match(SAFETY_AUDIT_2015.handedToDmv.basis, /owner-stated/)
+  // The DMV date sequence is suggestive, and the caution against reading it as
+  // proof is part of the record rather than left to the next reader.
+  assert.ok(SAFETY_AUDIT_2015.handedToDmv.caution)
+
+  // It is not a record in the publishable module under any id.
+  assert.equal(PUBLIC_RECORDS.some((r) => /audit/i.test(r.kind)), false)
+})
+
+/**
+ * The MCS-150 fleet figure was flagged as possibly stale and is not: the owner
+ * sold trucks during the pandemic and runs one dump truck. The correction is
+ * pinned so the earlier advice cannot be acted on by a later reader.
+ */
+test('the MCS-150 fleet figure is recorded as current, not stale', () => {
+  assert.equal(USDOT_UNPUBLISHED.fleetFigureIsCurrent, true)
+  assert.equal(USDOT_UNPUBLISHED.powerUnits, 1)
+  assert.match(USDOT_UNPUBLISHED.fleetFigureBasis, /owner-stated/)
+  assert.equal('ownerShouldReview' in USDOT_UNPUBLISHED, false, 'the retracted MCS-150 advice is still present')
 })

@@ -173,8 +173,135 @@ export const USDOT_UNPUBLISHED = {
   // The owner's to act on, not the site's: the MCS-150 on file declares one
   // power unit and one driver. That is the filed figure, not a judgement about
   // the operation.
-  ownerShouldReview:
-    'MCS-150 declares 1 power unit and 1 driver. If that is out of date, it is corrected by filing an updated MCS-150 with FMCSA.',
+  // CORRECTED 2026-08-26. An earlier note here flagged the 1 power unit / 1
+  // driver figure as possibly stale and suggested filing an updated MCS-150.
+  // The owner's account: trucks were sold when the pandemic hit and the
+  // operation now runs one dump truck. The filed figure is accurate. No
+  // correction is needed and none should be filed on the strength of that
+  // earlier note.
+  fleetFigureIsCurrent: true,
+  fleetFigureBasis: 'owner-stated, 2026-08-26 — trucks sold during the pandemic, one dump truck now',
+
+  // WHY 0 INSPECTIONS IS COHERENT RATHER THAN SUSPICIOUS
+  // SAFER counts roadside inspections over a rolling 24 months. The owner
+  // reports the last time the truck was pulled over was 2024, in South
+  // Carolina. One truck running reduced miles, with the last stop at or beyond
+  // the edge of that window, produces exactly the empty inspection record the
+  // snapshot shows.
+  //
+  // Note also that being pulled over is not the same as a recorded inspection:
+  // a stop that produces no inspection report never reaches SMS at all. So the
+  // owner's account and the zero on the record do not even conflict.
+  lastStopReported: '2024, South Carolina (owner-stated, 2026-08-26)',
+}
+
+/**
+ * THE 2015 NEW ENTRANT SAFETY AUDIT, AND WHY ITS RESULT IS NOT ON SAFER
+ * ────────────────────────────────────────────────────────────────────
+ * The archive holds the scheduling letter — a Virginia State Police safety
+ * auditor set an audit of USDOT 2568168 for 15 September 2015 — and no result.
+ * Every public FMCSA system was checked for one on 2026-08-26:
+ *
+ *   SAFER company snapshot   Review Information: Rating Date None, Review Date
+ *                            None, Rating None, Type None.
+ *   FMCSA SMS (A&I)          "Most Recent Investigation" empty. 0 inspections,
+ *                            0 crashes.
+ *   QCMobile API             requires a webKey; returns no audit field anyway.
+ *   Licensing & Insurance    captcha-gated, and covers authority and insurance
+ *                            rather than audits.
+ *   The mailbox              only the scheduling letter.
+ *
+ * That is not a gap in the record. It is what the regulation prescribes.
+ *
+ * 49 CFR 385.319, read at the source: "A safety audit will not result in a
+ * safety fitness determination. Safety fitness determinations follow
+ * completion of a compliance review." On a pass the Agency "will provide the
+ * new entrant written notice as soon as practicable, but not later than 45
+ * days after completion of the safety audit, that it has adequate basic safety
+ * management controls."
+ *
+ * So the result exists as a letter sent to the carrier, not as a public field.
+ * SAFER reading "Rating: None" is exactly what a carrier looks like when it
+ * passed a safety audit and never had a compliance review. It is not evidence
+ * of anything either way.
+ *
+ * WHAT THE PUBLIC RECORD SUPPORTS, AND WHERE IT STOPS
+ * Registered 2015, ACTIVE in 2026, no out-of-service date, no investigation on
+ * record. Under Part 385 a new entrant whose audit finds inadequate controls
+ * is notified and, unremedied, has its registration revoked. Eleven years of
+ * unbroken ACTIVE status is consistent with a pass.
+ *
+ * Consistent with. Not proof of. It is an inference from the absence of a
+ * revocation, and "we passed our FMCSA safety audit" is a sentence that needs
+ * the letter, not the inference. Nothing goes on a page until the letter or an
+ * FMCSA record is in hand.
+ */
+export const SAFETY_AUDIT_2015 = {
+  usdot: '2568168',
+  scheduled: '2015-09-15',
+  auditor: 'Virginia State Police, Motor Carrier Safety & Hazardous Materials Unit',
+  resultInArchive: false,
+  publiclyRetrievable: false,
+  whyNotPublic:
+    '49 CFR 385.319 — a safety audit produces no safety fitness determination. The result is delivered as written notice to the carrier within 45 days, not published.',
+  publicSystemsChecked: ['SAFER company snapshot', 'FMCSA SMS', 'QCMobile', 'Licensing & Insurance'],
+  checkedOn: '2026-08-26',
+  // OWNER'S ACCOUNT, 2026-08-26, AND WHY IT FITS THE REGULATION EXACTLY
+  //
+  // "In 2015 we met a state trooper and he approved us onsite."
+  //
+  // That is not a loose recollection — it is the procedure. 49 CFR 385.319(a):
+  // "Upon completion of the safety audit, the auditor will review the findings
+  // with the new entrant." A trooper going through the findings on site and
+  // saying it was fine IS that step, and it is the step that comes before the
+  // written notice rather than instead of it.
+  //
+  // So the audit was conducted and the on-site review was favourable. Still
+  // owner-stated recollection of something said aloud eleven years ago, and
+  // the determination of record is the letter. It moves nothing to publishable
+  // on its own.
+  onSiteReview: {
+    reported: 'The auditor reviewed the findings on site and approved the company.',
+    basis: 'owner-stated, 2026-08-26',
+    matchesRegulation: '49 CFR 385.319(a) — auditor reviews findings with the new entrant on completion.',
+    publishable: false,
+  },
+
+  // WHERE THE DOCUMENT WENT, WHICH IS THE MOST USEFUL THING THE OWNER SAID
+  //
+  // "We had to give that to the DMV at that time."
+  //
+  // This explains the missing copy and points at one that may still exist. The
+  // dates line up without being forced:
+  //
+  //     2015-06-10  IRP ORIGINAL processed by Virginia DMV (log 96992372)
+  //     2015-08-12  safety audit scheduled by Virginia State Police
+  //     2015-09-15  safety audit conducted
+  //     2015-09-24  IRP SUPPLEMENTAL processed by Virginia DMV (log 100878139)
+  //
+  // The DMV transaction nine days after the audit is consistent with the audit
+  // documentation having been handed over as part of it. Consistent with —
+  // the sequence is suggestive and it is not proof of a causal link, and this
+  // note must not harden into one.
+  //
+  // The practical point stands either way: Virginia DMV was given the document
+  // and its motor carrier file is a place to ask.
+  handedToDmv: {
+    reported: 'The audit documentation was given to Virginia DMV at the time.',
+    basis: 'owner-stated, 2026-08-26',
+    supportingSequence:
+      'IRP supplemental processed by Virginia DMV 2015-09-24, nine days after the 2015-09-15 audit.',
+    caution: 'The sequence is consistent with the account. It does not establish a causal link.',
+  },
+
+  howToObtain: [
+    'FMCSA Portal (portal.fmcsa.dot.gov) — the carrier’s own login lists its own investigations and audits. Free, immediate, already the owner’s account.',
+    'Virginia DMV motor carrier / IRP file — the owner states the audit documentation was handed to DMV in 2015, and a DMV transaction followed nine days after the audit. Ask against USDOT 2568168.',
+    'Virginia State Police Motor Carrier Safety Unit — they conducted the audit and hold the report.',
+    'The written notice itself — posted to the company address within 45 days of 2015-09-15, so October or November 2015. A paper file, not an email.',
+  ],
+  ifObtained:
+    'A passed safety audit moves to publicRecords.js as VERIFIABLE only if a reader can confirm it. If the only artefact is a letter in a drawer, it stays here — holding a copy is not the same as being checkable.',
 }
 
 export function withheldById(id) {
