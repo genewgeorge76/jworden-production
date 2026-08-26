@@ -88,6 +88,14 @@ async def track_lien_project(
 
     deadlines = calculate_deadlines(req.state_code, start, last_furnish)
 
+    # An unrecognised state used to be saved anyway, because the calculator
+    # substituted a 90/180 default and the row looked complete. It now returns
+    # no dates, so saving would create an entry that tracks nothing and
+    # reminds about nothing — a lien calendar entry that quietly does not
+    # protect the lien. Refuse instead.
+    if not deadlines.get("known"):
+        raise HTTPException(status_code=400, detail=deadlines.get("reason", "Unknown state code."))
+
     def _parse_opt(d: Optional[str]) -> Optional[datetime]:
         if not d:
             return None
