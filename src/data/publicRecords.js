@@ -126,6 +126,16 @@ export const PUBLIC_RECORDS = [
       'Licensed as a contractor by the City of Oak Forest, the Village of Midlothian and the Village of South Chicago Heights, Illinois in October and November 2016, each licence backed by a $10,000 licence and permit bond written by Contractors Bonding and Insurance Company, an RLI company.',
     whyItMatters:
       'Three separate municipalities each examined this company and licensed it to work on their streets, and a surety underwrote all three with its own money. Four independent parties took a position, none of them a customer.',
+    // WHAT THE ILLINOIS WORK ACTUALLY WAS
+    // The record described these as municipal contractor licences and stopped
+    // there, which left them looking like unexplained paperwork in a state with
+    // no other entry. The covering email that delivered the Oak Forest bond to
+    // the city on 27 October 2016 is titled "Kfc bond". So the Illinois
+    // licensing was obtained to perform KFC work, which places this state
+    // inside the same national restaurant programme as Texas, Georgia and the
+    // Carolinas rather than beside it as an oddity.
+    programme: 'Obtained to perform KFC work — the covering email delivering the Oak Forest bond to the city is titled "Kfc bond".',
+    programmeSourceVerified: '2026-08-26',
     howToCheck:
       'Each municipality holds its own licence and bond filing. Contractors Bonding and Insurance Company (Peoria, Illinois) holds bonds LSM0900108, LSM0900109 and LSM0900702.',
     // Each bond read from the instrument itself, not from correspondence.

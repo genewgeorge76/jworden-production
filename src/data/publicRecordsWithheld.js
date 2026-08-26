@@ -808,3 +808,87 @@ export const JEFFERSON_CITY_EPA_MATTER = {
   whyWithheld:
     'An enforcement action against this company. It is already public at EPA, so the company must know about it; that is not a reason to repeat it on a page that exists to win work.',
 }
+
+
+/**
+ * GEORGIA: A FILED REGISTRATION, WHICH IS NOT THE SAME AS A CURRENT ONE
+ * ────────────────────────────────────────────────────────────────────
+ * The Georgia entry has rested on the owner's word that he never renewed it.
+ * That is still the operative fact and it still governs. But the archive now
+ * contains a document for the other half of the story: a confirmation from the
+ * Georgia Secretary of State's eCorp system that the 2018 Annual Registration
+ * for J. Worden and Sons Paving LLC was successfully processed on 1 February
+ * 2018. It is addressed to the office manager who filed it, and copied to the
+ * company's registered agent at InCorp.
+ *
+ * WHY THIS CHANGES NOTHING ABOUT PUBLISHING AND SOMETHING ABOUT ACCURACY
+ * Georgia registration is annual. A 2018 filing says the company was properly
+ * registered in Georgia in 2018 and says nothing whatever about 2026 — the
+ * exact tense error that demoted the Virginia SCC entry, and it is not going to
+ * be repeated here in the opposite direction because a document turned up.
+ *
+ * What it does do is move the Georgia record off pure inference. The company
+ * did register in Georgia, through a registered agent, and let it lapse. That
+ * is an ordinary commercial decision about a state that stopped producing work,
+ * and it reads very differently from never having registered at all — which is
+ * what an unexplained gap invites a reader to assume.
+ */
+export const GEORGIA_REGISTRATION_2018 = {
+  authority: 'Georgia Secretary of State, Corporations Division (eCorp)',
+  filing: '2018 Annual Registration',
+  entity: 'J. Worden and Sons Paving LLC',
+  processed: '2018-02-01',
+  filedBy: 'The company office manager',
+  registeredAgent: 'InCorp',
+  isCurrent: false,
+  whyNotCurrent: 'Georgia registration is annual. This evidences 2018 and nothing later.',
+  ownerConfirmedNotRenewed: true,
+  status: LAPSED,
+  publishable: false,
+  whyWithheld:
+    'A 2018 annual registration cannot support a present-tense claim in 2026, and the owner confirms it was never renewed. Recorded so the Georgia gap reads as a lapse rather than as an absence.',
+  sourceVerified: '2026-08-26',
+}
+
+/**
+ * WHO RAN WHAT, WHICH IS HOW THE ARCHIVE GAPS GET NAVIGATED
+ * ────────────────────────────────────────────────────────
+ * Three people appear across the administrative record and knowing which is
+ * which turns a dead end into a phone call.
+ *
+ * The office manager filed the Georgia annual registration, is copied on
+ * bonds, insurance, supplier invoices, payroll and hiring throughout 2016-2019,
+ * and the owner confirms she was project manager on Jefferson City. That last
+ * point is the operative one: the Jefferson City asbestos correspondence and
+ * any contract or purchase order for that site would have passed through her,
+ * not through the company Gmail.
+ *
+ * The owner's brother, a company officer appointed in the April 2015 minutes,
+ * ran the ground-up new-build programme from a personal mailbox — see
+ * ARCHIVE_COVERAGE in clientProgramDocuments.js.
+ *
+ * Names are recorded here and nowhere page-facing. The office manager is named
+ * on a Georgia state filing, which is a public record; that is the basis for
+ * naming her at all, and it does not extend to publishing anything about her.
+ */
+export const RECORD_CUSTODY = {
+  officeManager: {
+    name: 'Jennifer Niemier',
+    namedOnPublicFiling: 'Georgia Secretary of State 2018 Annual Registration confirmation',
+    responsibilities: [
+      'Georgia annual registration filing',
+      'Bonds, certificates of insurance and supplier invoices, 2016-2019',
+      'Hiring and payroll administration',
+      'Project manager, KFC Jefferson City — owner-confirmed 2026-08-26',
+    ],
+    whyItMatters:
+      'The Jefferson City asbestos correspondence, and any contract or purchase order for that site, would have run through the project manager rather than the company Gmail.',
+  },
+  newBuildProgramme: {
+    role: 'Company officer, brother of the owner',
+    note: 'Ran the 2018 ground-up programme from a personal mailbox not connected to this system.',
+  },
+  addressesWithheld: true,
+  addressesWithheldReason:
+    'Personal mailbox addresses are not written into this repository. The roles are what make the gaps actionable.',
+}

@@ -418,3 +418,51 @@ test('the fourth Illinois bond stays out of the published module', () => {
   assert.ok(FOURTH_ILLINOIS_BOND.mailboxSearched)
   assert.equal(recordById('illinois-municipal-licences-2016').bonds.length, 3)
 })
+
+/**
+ * A DOCUMENT FOR A LAPSED THING IS STILL A LAPSED THING
+ * ────────────────────────────────────────────────────
+ * A Georgia Secretary of State confirmation turned up for the 2018 annual
+ * registration. Georgia registration is annual, so it evidences 2018 and
+ * nothing later, and the owner confirms it was never renewed. The temptation a
+ * new document creates is to promote the record because there is finally paper
+ * behind it — which is the Virginia SCC tense error run in reverse.
+ */
+test('the Georgia 2018 registration cannot be published as current', async () => {
+  const { GEORGIA_REGISTRATION_2018 } = await import('../../src/data/publicRecordsWithheld.js')
+  // LAPSED is defined in publicRecords.js; the withheld module consumes it.
+  const { LAPSED } = await import('../../src/data/publicRecords.js')
+  assert.equal(GEORGIA_REGISTRATION_2018.isCurrent, false)
+  assert.equal(GEORGIA_REGISTRATION_2018.publishable, false)
+  assert.equal(GEORGIA_REGISTRATION_2018.status, LAPSED)
+  assert.match(GEORGIA_REGISTRATION_2018.whyNotCurrent, /annual/i)
+
+  const { PUBLIC_RECORDS } = await import('../../src/data/publicRecords.js')
+  assert.equal(
+    PUBLIC_RECORDS.some((r) => /georgia secretary/i.test(r.authority || '')),
+    false,
+    'the Georgia registration reached the published record',
+  )
+})
+
+/**
+ * Illinois looked like unexplained paperwork in a state with no other entry.
+ * The covering email that delivered the Oak Forest bond is titled "Kfc bond",
+ * which places it inside the national restaurant programme.
+ */
+test('the Illinois licences say what the work was', async () => {
+  const { recordById } = await import('../../src/data/publicRecords.js')
+  const il = recordById('illinois-municipal-licences-2016')
+  assert.match(il.programme, /KFC/)
+  assert.ok(il.programmeSourceVerified)
+})
+
+/** Roles are recorded to navigate the archive; addresses are not. */
+test('record custody names roles without carrying personal addresses', async () => {
+  const { RECORD_CUSTODY } = await import('../../src/data/publicRecordsWithheld.js')
+  assert.equal(RECORD_CUSTODY.addressesWithheld, true)
+  assert.match(RECORD_CUSTODY.officeManager.whyItMatters, /Jefferson City/)
+  const raw = readFileSync('src/data/publicRecordsWithheld.js', 'utf8')
+  assert.equal(/@yahoo\.com/i.test(raw), false, 'a personal mailbox address was copied in')
+  assert.equal(/wordenpaving@gmail/i.test(raw), false, 'a personal mailbox address was copied in')
+})
