@@ -70,12 +70,39 @@ test('a disagreement is settled by the statute, not by which file it came from',
   assert.equal(lien.find((r) => r.abbr === 'TX').lienForeClosureDeadlineDays, 730)
 })
 
-test('a gap in the source stays a gap', () => {
-  // Kentucky states no foreclosure period. The old default silently supplied
-  // 180 days for it and for the other 37 jurisdictions the table lacked.
-  const ky = lien.find((r) => r.abbr === 'KY')
-  assert.equal(ky.lienForeClosureDeadlineDays, null)
-  assert.match(PY, /"KY": \{[^}]*"foreclosure_days": None/)
+/**
+ * A GAP MUST STAY A GAP — BUT KENTUCKY WAS NOT ONE
+ * ────────────────────────────────────────────────
+ * This test used to pin Kentucky's null foreclosure period as the example,
+ * on the reading that the source stated none. Reading KRS 376.090(1) showed
+ * otherwise: the lien dissolves unless an action is brought "within twelve
+ * (12) months from the day of filing the statement". The null was a defect,
+ * and this test was holding it in place.
+ *
+ * An absent deadline is worse than a wrong one. A wrong number is something a
+ * reader checks; an absent one reads as "this state has no limit", which
+ * nobody goes looking to disprove. Every jurisdiction now states a foreclosure
+ * period, so the rule is asserted on its own terms rather than through an
+ * example that turned out to be an error.
+ */
+test('a gap in the source stays a gap, and is never a silent one', () => {
+  // No foreclosure period may be null any more — the one that was has been read.
+  for (const row of lien) {
+    assert.notEqual(
+      row.lienForeClosureDeadlineDays,
+      null,
+      `${row.abbr} states no enforcement deadline, which reads as "no limit"`,
+    )
+  }
+  // Where a filing period is null it is because the row states months instead,
+  // never because nothing was recorded.
+  for (const row of lien.filter((r) => r.lienFilingDeadlineDays === null)) {
+    assert.ok(
+      row.lienFilingDeadlineMonths,
+      `${row.abbr} has neither a day count nor a month count`,
+    )
+  }
+  // Topics no cited dataset covers are named rather than left to be inferred.
   assert.match(PY, /UNCOVERED_TOPICS/)
   assert.match(PY, /retainage_limit/)
 })

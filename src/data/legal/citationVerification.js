@@ -381,6 +381,38 @@ export const VERIFIED_CITATIONS = [
       'to 71-3-533',
     verdict: 'confirmed', finding: '90 days from final furnishing. Matches.',
   },
+  {
+    abbr: 'KY', topic: 'mechanicsLien', citation: 'Ky. Rev. Stat. §§ 376.080(1), 376.090(1)',
+    source: 'https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=35289',
+    checked: '2026-08-26',
+    heading: '376.080 Lien dissolved unless statement filed; 376.090 Limitation on action to enforce lien',
+    quote:
+      'shall be dissolved unless the claimant, within six (6) months after he ceases to labor or ' +
+      'furnish materials, files in the office of the county clerk … shall be deemed dissolved ' +
+      'unless an action is brought to enforce the lien within twelve (12) months from the day of ' +
+      'filing the statement in the clerk\u2019s office',
+    verdict: 'corrected',
+    finding:
+      'Two errors. Six calendar months was stored as 180 days. And the enforcement period was ' +
+      'recorded as null, so the calculator reported no deadline to sue at all — KRS 376.090(1) ' +
+      'gives twelve months from filing. An absent deadline is worse than a wrong one: a wrong ' +
+      'number is something to check, an absent one reads as "this state has no limit". An earlier ' +
+      'verification pass in this repository took that null at face value and wrote that the source ' +
+      'states no foreclosure period. Nobody had opened KRS 376.090.',
+  },
+  {
+    abbr: 'NY', topic: 'mechanicsLien', citation: 'N.Y. Lien Law § 10',
+    source: 'https://www.nysenate.gov/legislation/laws/LIE/10',
+    checked: '2026-08-26', heading: 'Lien Law § 10 — Filing of notice of lien',
+    quote:
+      'within eight months after the completion of the contract, or the final performance of the ' +
+      'work, or the final furnishing of the materials, dating from the last item of work performed ' +
+      'or materials furnished … within four months … [single family dwelling]',
+    verdict: 'corrected',
+    finding:
+      'Eight calendar months stored as 240 days, and the four-month period for a single family ' +
+      'dwelling was missing entirely.',
+  },
 ]
 
 /**
@@ -407,6 +439,12 @@ export const UNVERIFIABLE_SOURCES = [
     reason:
       'The New Jersey statutes are served through an NXT gateway that exposes a search interface ' +
       'rather than fetchable section text.',
+  },
+  {
+    abbr: 'IN',
+    reason:
+      'iga.in.gov serves the code through a viewer that returns a bare page title, and its own ' +
+      'linked chapter PDF is a 691-byte HTML redirect rather than a PDF.',
   },
   {
     abbr: 'GA',
