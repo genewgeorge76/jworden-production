@@ -731,7 +731,7 @@
     "category": "LegalAndCompliance",
     "file": "jarvis_os/abilities/LegalAndCompliance/state_51_compliance_engine.py",
     "class_name": "State51ComplianceEngine",
-    "description": "Autonomous In-House Counsel. Processes state-specific regulations for mechanics liens, prevailing wage, and contractor licensing.",
+    "description": "State compliance lookup across mechanics liens, prevailing wage and contractor licensing for all 51 US jurisdictions, read from the cited datasets with a statute citation per answer. Does not cover statutory retainage limits.",
     "params": [],
     "tags": [
       "counsel",

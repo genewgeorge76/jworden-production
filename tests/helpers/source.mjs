@@ -23,3 +23,25 @@ export function sourceWithoutComments(path) {
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/^\s*\/\/.*$/gm, '')
 }
+
+/**
+ * The same idea for Python, whose comments this does not resemble at all.
+ *
+ * The fourth instance of the bug above: a test asserted that
+ * state_51_compliance_engine.py no longer contains "Hardcoded database" or
+ * "Reverting to Federal default guidelines", and it failed on the module
+ * docstring — the paragraph explaining that those phrases are what the file
+ * used to say and why they were wrong.
+ *
+ * Stripping the JS way finds nothing to strip in a .py file, so the file's own
+ * account of its history reads as the history repeating.
+ *
+ * Triple-quoted strings go first, so a `#` inside one is not treated as the
+ * start of a comment, and a quoted string on a code line keeps its `#`.
+ */
+export function pythonSourceWithoutComments(path) {
+  return readFileSync(path, 'utf8')
+    .replace(/"""[\s\S]*?"""/g, '')
+    .replace(/'''[\s\S]*?'''/g, '')
+    .replace(/(^|[^'"])#.*$/gm, '$1')
+}
