@@ -640,3 +640,104 @@ export const FOURTH_ILLINOIS_BOND = {
     'Ask Contractors Bonding and Insurance Company for the obligee on bond LSM0900110. The surety holds it and the mailbox never will.',
   publishable: false,
 }
+
+/**
+ * THE AURORA INSURANCE CERTIFICATE — CORROBORATION, NOT A CREDENTIAL
+ * ─────────────────────────────────────────────────────────────────
+ * An ACORD 25 certificate of liability insurance dated 11 October 2017, naming
+ * the City of Aurora at 44 E Downer Place as certificate holder. It is the
+ * same date as performance bond LSM1151451, which is the useful part: a
+ * municipality releasing a right-of-way permit asks for a bond and a
+ * certificate together, and here both were produced on the same day for the
+ * same obligee. Two independent documents describing one transaction.
+ *
+ * WHY IT IS NOT PUBLISHED, THOUGH THE BOND IS
+ * The certificate says so itself, in capitals across the top: issued as a
+ * matter of information only, conferring no rights, and not amending the
+ * policies. It is a snapshot of coverage on one day in 2017, not a credential
+ * and not something a stranger can confirm at any authority — an insurer will
+ * not discuss a policy with a member of the public. Under this repository's
+ * test it is HELD.
+ *
+ * Every policy period on it expired in 2018. Publishing 2017 limits in 2026
+ * would imply current coverage that this document cannot support, which is the
+ * same tense error that demoted the Virginia SCC registration.
+ *
+ * The limits are recorded because a bid package asks for them and an operator
+ * needs to know what was carried. They are not marketing copy.
+ */
+export const AURORA_INSURANCE_CERTIFICATE = {
+  form: 'ACORD 25 Certificate of Liability Insurance',
+  issued: '2017-10-11',
+  certificateHolder: 'City of Aurora, 44 E Downer Place, Aurora, IL 60505',
+  certificateNumber: '17-18 MASTER COI',
+  broker: 'MIG, Rock Hill, South Carolina',
+  carriers: ['Selective Insurance Co. (general liability, auto, umbrella, inland marine)', 'Accident Fund National Insurance Co. (workers compensation)'],
+  coverageAsOf2017: {
+    generalLiabilityEachOccurrenceUsd: 1000000,
+    generalAggregateUsd: 2000000,
+    productsCompletedOperationsAggregateUsd: 2000000,
+    automobileCombinedSingleLimitUsd: 1000000,
+    umbrellaEachOccurrenceUsd: 1000000,
+    workersCompEmployersLiabilityEachAccidentUsd: 500000,
+    inlandMarineAnyOneItemUsd: 25000,
+    inlandMarineTotalLimitUsd: 100000,
+  },
+  allPolicyPeriodsExpired: 2018,
+  corroborates: 'aurora-performance-bond-2017',
+  status: UNCONFIRMED,
+  publishable: false,
+  whyWithheld:
+    'An ACORD certificate confers no rights by its own terms, cannot be confirmed by a member of the public, and its policy periods all expired in 2018. Publishing 2017 limits would imply current coverage the document cannot support.',
+  sourceVerified: '2026-08-26',
+}
+
+/**
+ * THE SUCCESSION, IN A CORPORATE DOCUMENT RATHER THAN CORRESPONDENCE ABOUT ONE
+ * ───────────────────────────────────────────────────────────────────────────
+ * ownershipRecord.js rests the handover on an exchange in which the prior
+ * principal corrected a draft letter and put the takeover at 15 March 2015.
+ * That was the best evidence available and it was correspondence about a
+ * document, not the document.
+ *
+ * This is a corporate one: minutes of a shareholders' meeting of J. Worden &
+ * Sons Paving LLC held 6 April 2015, recording that the prior principal was
+ * reported deceased on 25 February 2015, appointing the current owner and one
+ * other as officers, and recording two family members withdrawing from their
+ * positions. It is signed off by a chairperson.
+ *
+ * TWO DATES THAT DO NOT MATCH, LEFT UNMATCHED
+ * The prior principal's own correction says 15 March 2015. These minutes put
+ * the formal appointment at 6 April 2015. Both can be true — an operational
+ * handover followed by its formalisation three weeks later is the ordinary
+ * shape of such a thing — but "can be true" is not evidence, and this file does
+ * not merge two dates into one story.
+ *
+ * WHY IT IS NOT PUBLISHED, AND WOULD NOT BE EVEN IF IT COULD BE
+ * Internal minutes on a commercial template are not a state filing; no
+ * registrar holds them and no stranger can confirm them. Beyond that, the
+ * document contains a named private individual's date of death and the names of
+ * family members leaving the business. A marketing page has no business
+ * carrying either, whatever it might do for a heritage claim.
+ *
+ * What it supports internally is narrow and real: that a succession occurred in
+ * 2015 and was minuted. It says nothing at all about 1984, or about how many
+ * generations preceded it.
+ */
+export const SHAREHOLDERS_RESOLUTION_2015 = {
+  document: 'Minutes of a meeting of shareholders, J. Worden & Sons Paving LLC',
+  meetingDate: '2015-04-06',
+  priorPrincipalReportedDeceased: '2015-02-25',
+  officersAppointed: 2,
+  membersWithdrawing: 2,
+  chairpersonSigned: true,
+  corroborates: 'A 2015 succession, minuted by the company itself.',
+  tensionWithOwnershipRecord:
+    'ownershipRecord.js carries 15 March 2015 from the prior principal’s own correction; these minutes formalise on 6 April 2015. Recorded as two dates, not reconciled into one.',
+  provesNothingAbout: ['the 1984 founding year', 'the generation count', 'unbroken trading'],
+  status: HELD,
+  publishable: false,
+  whyWithheld:
+    'Internal minutes on a commercial template, held by no registrar and confirmable by nobody. Contains a named individual’s date of death and family members’ withdrawal, neither of which belongs on a marketing page.',
+  sourceVerified: '2026-08-26',
+}

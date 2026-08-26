@@ -160,6 +160,53 @@ export const PUBLIC_RECORDS = [
   },
 
   {
+    id: 'aurora-performance-bond-2017',
+    brand: BRAND_JWORDEN,
+    status: VERIFIABLE,
+    authority: 'City of Aurora, Illinois',
+    authorityShort: 'City of Aurora',
+    kind: 'Performance and Maintenance Bond',
+    reference: 'LSM1151451',
+    state: 'IL',
+    year: 2017,
+    headline: 'City of Aurora Performance and Maintenance Bond #LSM1151451',
+    plain:
+      'A $20,000 performance and maintenance bond running to the City of Aurora, Illinois, written by RLI Insurance Company on 11 October 2017, covering work in the public right-of-way under City of Aurora permits and warranting that work for one year after the City Engineer accepts it.',
+    // WHY THIS IS A DIFFERENT CLASS OF EVIDENCE FROM THE 2016 BONDS
+    // A licence and permit bond says a municipality was willing to license the
+    // company. This one says a surety put twenty thousand dollars behind the
+    // proposition that specific work in Aurora's right-of-way would be
+    // COMPLETED, on time, and would still be sound a year after the City
+    // Engineer signed it off. The first is permission to work; the second is
+    // money staked on the work itself. They are not the same claim and this
+    // file should not blur them.
+    whyItMatters:
+      'A surety underwrote completion and a one-year warranty on work inside a city right-of-way — not permission to bid, but money staked on the finished result being accepted by the City Engineer and holding up for a year afterwards.',
+    howToCheck:
+      'The City of Aurora holds the bond and the associated right-of-way permits. RLI Insurance Company (Peoria, Illinois) holds bond LSM1151451.',
+    bonds: [
+      { number: 'LSM1151451', obligee: 'City of Aurora, Illinois', effective: '2017-10-11', penalSum: 20000, licensedAs: 'Performance and maintenance, public right-of-way' },
+    ],
+    // The 2016 instruments carry the Evelake Road address; this one carries
+    // Ware Bottom Springs Road, which matches company correspondence from 2017.
+    // Both are superseded and neither is published.
+    addressWithheld: true,
+    addressWithheldReason: 'The bond carries a former company address; superseded and not published.',
+    // A SEPARATE EVENT, NOT A RENEWAL
+    // Different year, different surety entity (RLI directly rather than its
+    // CBIC subsidiary), different instrument type, different bond series, and
+    // double the penal sum. Nothing here renews the 2016 municipal licences,
+    // and presenting it as continuity would be an invention.
+    tenseNote:
+      'A dated 2017 bonding event for specific right-of-way work. Not a renewal of the 2016 municipal licences and not a current standing.',
+    scopeNote:
+      'Bonded for performance and maintenance under City of Aurora permits. Not a state contractor licence.',
+    source:
+      'The bond instrument itself, read 2026-08-26: penal sum $20,000, dated 11 October 2017, executed for RLI Insurance Company by Barton W. Davis, Vice President, attested by Cherie L. Montgomery, Assistant Secretary, with power of attorney attached.',
+    sourceVerified: '2026-08-26',
+  },
+
+  {
     id: 'usdot-2568168',
     brand: BRAND_SHARED,
     status: VERIFIABLE,
