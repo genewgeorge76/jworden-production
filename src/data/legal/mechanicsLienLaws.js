@@ -373,9 +373,26 @@ export default [
     preliminaryNoticeRequired: false,
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
-    lienFilingDeadlineDays: 180,
-    lienFilingDeadlineNote: '6 months from last furnishing of labor or materials',
-    lienForeClosureDeadlineDays: null,
+    // Read against KRS 376.080(1) and 376.090(1) on 2026-08-26.
+    //
+    // Two things were wrong. Six calendar months was stored as 180 days, which
+    // is the fifth state found doing that. And the enforcement period was
+    // recorded as null — meaning the calculator reported NO deadline to sue at
+    // all. KRS 376.090(1) dissolves the lien unless an action is brought
+    // "within twelve (12) months from the day of filing the statement".
+    //
+    // A null there is worse than a wrong number. A wrong number is something to
+    // check; an absent one reads as "this state has no limit", which is the
+    // sort of thing nobody goes looking to disprove.
+    //
+    // Recorded here as a correction to an earlier verification pass in this
+    // repository, which took the null at face value and wrote that the source
+    // states no foreclosure period. Nobody had opened KRS 376.090.
+    lienFilingDeadlineDays: null,
+    lienFilingDeadlineMonths: 6,
+    lienFilingDeadlineNote:
+      'Six months after the claimant ceases to labor or furnish materials',
+    lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
     claimantTypes: ['GC', 'Subcontractor', 'Supplier', 'Equipment'],
@@ -669,9 +686,16 @@ export default [
     preliminaryNoticeRequired: false,
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
-    lienFilingDeadlineDays: 240,
+    // Read against N.Y. Lien Law § 10 on 2026-08-26. Eight calendar months,
+    // not 240 days — and a single family dwelling gets four months, which the
+    // row did not mention at all.
+    lienFilingDeadlineDays: null,
+    lienFilingDeadlineMonths: 8,
     lienFilingDeadlineNote:
-      '8 months from last furnishing on private projects; 30 days on public projects from final payment date',
+      'Eight months after completion of the contract or final performance of the work, dating ' +
+      'from the last item of work performed or materials furnished; four months for a single ' +
+      'family dwelling. Public projects run 30 days from the final payment date.',
+    lienFilingByProjectType: { singleFamilyDwellingMonths: 4, otherMonths: 8 },
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
