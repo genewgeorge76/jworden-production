@@ -77,13 +77,29 @@ export const SCOPE_CLAIMS = [
     documentedFigureLikelyPartial: true,
   },
   {
-    market: 'Detroit',
+    market: 'Michigan — Detroit and Flint',
     states: ['MI'],
-    claim: 'every KFC KBP owned',
-    documented: '2 sites with photographs — W Seven Mile Road and Michigan Avenue, Dearborn',
+    claim: 'every KFC KBP owned in Michigan, Flint and Detroit both',
+    documented:
+      '6 invoiced stores in the KBP tracker — Canton, Davison, Detroit, Flint and Grand Blanc, ' +
+      'resolving to Wayne and Genesee counties — plus 2 sites with photographs, W Seven Mile Road ' +
+      'and Michigan Avenue in Dearborn. A further 24 Michigan stores sit at grade `listed`.',
     note:
-      'The archive already states the denominator: KBP’s Detroit market ran to 31 stores. So this is not a vague shortfall — the record names the number it is 29 short of, and it named it before the owner said anything.',
+      'Stated by the owner on 2026-08-26, widening an earlier claim that named Detroit only. The ' +
+      'earlier row read as a Detroit-metro claim against a denominator of 31 stores; the claim is ' +
+      'actually the whole state, and the tracker holds 30 Michigan stores across both markets.\n\n' +
+      'The 24 at `listed` are the crux. That grade means the store is on the programme roster and ' +
+      'cannot be tied to its own invoice — it has never meant the work was not done. The owner ' +
+      'says it was. Georgia went the same way earlier in this record, where `listed` was reading ' +
+      'as "never built" until he pointed out the pipeline behind it.\n\n' +
+      'Nothing is regraded on the strength of this. Testimony and a document are different things ' +
+      'and the grading ladder exists to keep them apart. What changes is that the gap is now ' +
+      'described accurately: 6 invoiced against a stated 30, in two named markets, rather than a ' +
+      'Detroit shortfall of 29.',
     basis: 'owner-stated',
+    documentedStores: 6,
+    listedStores: 24,
+    counties: ['Wayne', 'Genesee'],
   },
 ]
 
