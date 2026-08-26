@@ -99,10 +99,14 @@ test('the geocoder needs no API key and honours the published rate limit', () =>
  * What this file is for: deciding which counties get a page. `listed` is a
  * roster entry, not a job, so it must not put a county on that list.
  */
-test('only paid and invoiced work can put a county on the page list', () => {
+test('only documented work can put a county on the page list', () => {
+  // `completed` joined the ladder on 2026-08-26: a completed job with revenue
+  // in this company's own Kickserv record. It is documentary and publishable,
+  // and it is what moved Michigan from two counties to four. `listed` is still
+  // a roster entry and still cannot put a county on the list.
   const publishable = DATA.stores.filter((s) => s.grade !== 'listed' && s.county)
   assert.ok(publishable.length > 0)
-  for (const s of publishable) assert.ok(['paid', 'invoiced'].includes(s.grade))
+  for (const s of publishable) assert.ok(['paid', 'invoiced', 'completed'].includes(s.grade))
 
   const gaCounties = new Set(publishable.filter((s) => s.state === 'GA').map((s) => s.county))
   // Eleven counties from 159. The gap between those numbers is the whole
