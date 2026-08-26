@@ -15,7 +15,7 @@
 #     masked: yes   protected: yes
 # Without it the deploy job fails loudly rather than silently doing nothing.
 
-stages: [test, deploy]
+stages: [test, deploy, monitor]
 
 # ── Tests ────────────────────────────────────────────────────────────────────
 
@@ -231,3 +231,51 @@ deploy:api:
       echo "post-deploy /health -> $code"
       [ "$code" = "200" ] || echo "WARNING: health check did not return 200"
   timeout: 30m
+
+# ── Live-site monitoring ─────────────────────────────────────────────────────
+#
+# WHY THIS STAGE EXISTS
+#
+# The same faults kept coming back, and the cause was not carelessness. Every
+# guard this project owns lived in .github/workflows/ — seo-guardrails.yml,
+# reliability-synthetic-monitor.yml and seven others — and this file's own
+# header records that GitHub Actions is dead on this account: every job dies at
+# steps=0. A guard in a CI system that does not execute is indistinguishable
+# from no guard, except that it is more comforting.
+#
+# Meanwhile everything that DOES run here tests the repository. Task #17 in this
+# project's task list, "Stop 3 domains canonicalizing to the parked flagship",
+# is marked completed; an audit on 2026-08-26 found FIVE domains canonicalizing
+# to the parked flagship. It was never un-fixed. It was fixed in the repository
+# and never reached production, and 440 green tests could not tell the
+# difference because not one of them looks at a live site.
+#
+# This job does. It is the only thing in this pipeline that checks what the
+# public actually sees.
+#
+# WHY IT DOES NOT GATE PUSHES
+#
+# Production can break without anybody committing anything — a domain lapses, a
+# DNS record changes, a deploy is rolled back by someone else. Blocking every
+# merge request on the state of production would mean an expired domain stops
+# all development, and the reliable result of that is somebody disabling the
+# check. It runs on a schedule and on demand instead, and it fails loudly.
+#
+# TO ARM IT: Settings -> CI/CD -> Schedules -> New schedule.
+#   interval: daily is enough — indexing damage accrues over weeks, not hours
+#   branch:   main
+# Without a schedule this job exists and never runs, which is the exact failure
+# it was written to end.
+monitor:live-sites:
+  stage: monitor
+  image: node:20-slim
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: manual
+      allow_failure: true
+    - when: manual
+      allow_failure: true
+  script:
+    - node scripts/verify-live-sites.mjs
+  timeout: 10m
