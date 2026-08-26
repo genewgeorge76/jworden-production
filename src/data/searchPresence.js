@@ -132,14 +132,56 @@ export const GBP_CONVERSION = {
 export const GBP_REVIEWS_2019_2020 = {
   fiveStar: { count: 5, from: '2019-11-12', to: '2019-11-29' },
   oneStar: { count: 2, dates: ['2019-12-06', '2020-01-23'] },
+  // WHAT THE COMPLAINTS SAY ON THEIR FACE
   complaintSubstance: [
     'Scheduling and communication — lateness, and a job taking longer than promised.',
     'Base material — the aggregate used under a residential driveway described as too coarse.',
   ],
+  /**
+   * AND WHY THAT SUBSTANCE SHOULD NOT BE READ AS OPERATIONAL FEEDBACK
+   * ────────────────────────────────────────────────────────────────
+   * This file originally treated both complaints as signal about how the work
+   * was performed — lateness on one, aggregate size on the other — and listed
+   * them as things to fix. The owner disputes the premise: neither reviewer was
+   * a customer. One is described as a prospect who called about finishing a
+   * concrete driveway another contractor had formed and never poured, and whose
+   * stated grievance was being asked for a deposit.
+   *
+   * That is owner testimony and it is not self-proving, so it was checked
+   * against the customer archive rather than accepted. Neither surname nor
+   * forename appears anywhere in 2,263 Kickserv customers spanning March 2013
+   * to June 2022 — a window that fully covers the August 2019 job one review
+   * describes — across 920 customers with a completed job. A fuzzy sweep for
+   * near-spellings returns six unrelated Tiffanys and no Morse, and nothing
+   * resembling the other name at all.
+   *
+   * The archive cannot prove a negative. A Google display name need not match
+   * the name on a job record — a spouse, a maiden name, a company. But an
+   * absence this complete across a nine-year archive is meaningful, and it is
+   * the strongest thing available to put behind a removal request.
+   *
+   * WHY THIS MATTERS BEYOND THE RATING
+   * Both reviews assert completed work: "took forever to complete my driveway",
+   * "the base asphalt they used". If no work was performed, they are not
+   * opinions about this company's service — they describe another contractor's
+   * job, or no job, attributed to this company. That is a different and much
+   * stronger basis for removal than disagreeing with an unhappy customer.
+   */
+  ownerDisputesBothAreCustomers: {
+    stated: '2026-08-26',
+    account:
+      'Neither reviewer was a customer. One called about finishing a concrete driveway another contractor had formed and never poured, and objected to being asked for a deposit.',
+    archiveChecked: '2026-08-26',
+    archiveResult:
+      'Neither name appears among 2,263 Kickserv customers, 2013-03-19 to 2022-06-15, including 920 with a completed job. Fuzzy matching returns no near-spellings.',
+    archiveCannotProveANegative:
+      'A Google display name need not match a job record. The absence is strong support, not proof.',
+    bothReviewsAssertCompletedWork: true,
+  },
   whyItMatters:
-    'Two one-star reviews against five five-star ones is heavy drag in the local pack, which is where residential work is won. This is the highest-leverage thing on the list and it is a phone call, not a page.',
+    'Two one-star reviews against five five-star ones is heavy drag in the local pack, which is where residential work is won. The response depends entirely on whether the reviewers were customers: if they were, it is service recovery; if they were not, it is a removal request on the ground that the reviews describe work this company never performed.',
   actionable:
-    '920 customers in the Kickserv archive have a completed job on file. That is the review-request list.',
+    '920 customers in the Kickserv archive have a completed job on file. That is the review-request list, and it is worth running whatever happens to the two one-stars.',
 }
 
 /**
@@ -238,7 +280,7 @@ export const SUMMARY = {
   blockersInOrder: [
     'The flagship jwordenasphaltpaving.com resolves to Sedo parking, so nothing on that name can rank.',
     'Business Profile verification state is unknown and three separate profile names appear.',
-    'Two one-star reviews against five five-star ones, unaddressed since January 2020.',
+    'Two one-star reviews against five five-star ones, unaddressed since January 2020 — and both disputed by the owner as non-customers, with neither name appearing in a nine-year customer archive.',
     'atlantaasphaltpavingpros.com has an unresolved indexing fault Google has reported twice.',
   ],
   sourcesRead: '2026-08-26, from googlemybusiness-noreply, businessprofile-noreply and sc-noreply messages in the archive.',
