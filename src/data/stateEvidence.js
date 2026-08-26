@@ -120,8 +120,17 @@ export const STATE_EVIDENCE = {
   },
   LA: {
     grade: WORK,
-    detail: 'KFC Leesville, reported by the general contractor as 99.9% complete internally in October 2018. DeRidder property work with gravel receipts on file. A Louisiana State Licensing Board document request in December 2018 confirms the company was operating in-state.',
-    sources: ['kbp-correspondence', 'kickserv'],
+    // Strengthened 2026-08-26. "Reported 99.9% complete internally" was the
+    // company's own word for it. There is now a third party's document: the
+    // construction manager's final invoice for KFC-618, addressed TO this
+    // company — which also establishes that this company held the contract and
+    // was paying the CM, rather than working under another prime.
+    //
+    // Its amount is deliberately absent. Every figure in this file is money
+    // received; that one is money paid out, and putting it here would turn a
+    // cost into a project value. See LEESVILLE_CM_INVOICE.
+    detail: 'KFC-618 at Leesville, ground-up build: the construction manager\'s final invoice of 15 October 2018 is addressed to this company, which held the contract and paid the CM. DeRidder property work with gravel receipts on file. A Louisiana State Licensing Board document request in December 2018 confirms the company was operating in-state.',
+    sources: ['kbp-correspondence', 'kickserv', 'cm-invoice'],
   },
   MO: {
     grade: WORK,

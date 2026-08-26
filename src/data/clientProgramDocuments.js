@@ -264,8 +264,57 @@ export const NEW_BUILD_PROGRAMME_CROSSCHECK = {
     'Any role for this company at Jefferson City. The set names no contractor and the invoice archive has no Jefferson City entry.',
 }
 
+/**
+ * THE LEESVILLE INVOICE, AND WHICH WAY THE MONEY WAS FLOWING
+ * ─────────────────────────────────────────────────────────
+ * Found in the archive on 2026-08-26 while looking for something else. An
+ * invoice dated 15 October 2018 for KFC-618 at 1102 S. 5th Street, Leesville,
+ * Louisiana, work order WO-7170336, described as "Final payment".
+ *
+ * READ THE ADDRESSEE BEFORE READING THE AMOUNT
+ * This is not an invoice this company issued. Innovative Building Solutions of
+ * Fairhope, Alabama — the construction manager named in the 2018 new-build
+ * programme — invoiced J Worden & Sons Paving. The money was flowing OUT.
+ *
+ * That inversion is the whole value of the document, and it would be easy to
+ * get backwards. A contractor who PAYS the construction manager is the party
+ * holding the contract: the prime, not a trade subcontracted under someone
+ * else. It corroborates the same capability the Sulphur Springs workbook
+ * shows — this company running ground-up KFC builds as the responsible party —
+ * and it does so from a third party's letterhead rather than our own.
+ *
+ * WHY THE FIGURE IS RECORDED BUT MUST NEVER BE A PROJECT VALUE
+ * $31,143.75 is a COST this company paid, not revenue it earned and not the
+ * contract value of the restaurant. stateEvidence.js carries amounts like
+ * "Brukner Boulevard invoiced at $27,170", and every one of those is money
+ * received. Dropping this number into that company would silently convert an
+ * outgoing payment into a project value. It stays here instead.
+ */
+export const LEESVILLE_CM_INVOICE = {
+  document: 'Invoice from the construction manager to this company',
+  invoiceNumber: 'D1015006',
+  issuedBy: 'Innovative Building Solutions, Fairhope, Alabama',
+  issuedTo: 'J Worden & Sons Paving LLC',
+  directionOfPayment: 'outgoing — this company was the payer',
+  store: 'KFC-618',
+  workOrder: 'WO-7170336',
+  site: '1102 S. 5th Street, Leesville, Louisiana 71446',
+  date: '2018-10-15',
+  description: 'Final payment',
+  amountUsd: 31143.75,
+  amountIsACostNotRevenue: true,
+  whatItProves:
+    'This company held the contract on a ground-up KFC build and paid the construction manager — the position of a prime, not of a trade subcontracted under another contractor.',
+  whatItDoesNotProve:
+    'What this company was paid for the project, or the contract value of the restaurant. It is an outgoing cost and must never be presented as either.',
+  status: 'held',
+  publishable: false,
+  sourceVerified: '2026-08-26',
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
+  LEESVILLE_CM_INVOICE,
   JEFFERSON_CITY_CIVIL_SET,
   SULPHUR_SPRINGS_BUDGET,
 ]

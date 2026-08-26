@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { CLIENT_DOCUMENTS, KFC_RESPONSIBILITY_MATRIX, JEFFERSON_CITY_CIVIL_SET, SULPHUR_SPRINGS_BUDGET,
-  SULPHUR_SPRINGS_STATE_RESOLVED, NEW_BUILD_PROGRAMME_CROSSCHECK }
+  SULPHUR_SPRINGS_STATE_RESOLVED, NEW_BUILD_PROGRAMME_CROSSCHECK, LEESVILLE_CM_INVOICE }
   from '../../src/data/clientProgramDocuments.js'
 import { STATE_EVIDENCE, WORK } from '../../src/data/stateEvidence.js'
 import { JEFFERSON_CITY_EPA_MATTER } from '../../src/data/publicRecordsWithheld.js'
@@ -217,4 +217,33 @@ test('the demolition standard is in the canonical standards block', () => {
   assert.match(block, /10-working-day|10 working day/i, 'the NESHAP notification period is missing')
   assert.match(block, /Subpart M/, 'the governing rule is not cited')
   assert.match(block, /Never on a developer|not.*developer/i, 'the standard does not say whose word is worthless here')
+})
+
+/**
+ * AN OUTGOING PAYMENT IS NOT A PROJECT VALUE
+ * ──────────────────────────────────────────
+ * The Leesville invoice was issued BY the construction manager TO this company.
+ * Its $31,143.75 is money paid out. Every amount in stateEvidence.js is money
+ * received, so letting this one drift into that file would silently convert a
+ * cost into a contract value — the same class of error as the unreconciled
+ * Sulphur Springs totals, and easier to make because the figure looks like all
+ * the others.
+ */
+test('the Leesville cost never becomes a project value', () => {
+  assert.equal(LEESVILLE_CM_INVOICE.amountIsACostNotRevenue, true)
+  assert.equal(LEESVILLE_CM_INVOICE.directionOfPayment, 'outgoing — this company was the payer')
+  assert.equal(LEESVILLE_CM_INVOICE.publishable, false)
+  const evidence = readFileSync('src/data/stateEvidence.js', 'utf8')
+  assert.equal(
+    /31,143|31143/.test(evidence),
+    false,
+    'an outgoing payment reached the file where every figure is money received',
+  )
+})
+
+/** It does establish who held the contract, which is the point. */
+test('the Leesville invoice establishes the prime position', () => {
+  assert.equal(LEESVILLE_CM_INVOICE.issuedTo, 'J Worden & Sons Paving LLC')
+  assert.match(LEESVILLE_CM_INVOICE.whatItProves, /prime/i)
+  assert.match(LEESVILLE_CM_INVOICE.whatItDoesNotProve, /contract value|was paid/i)
 })
