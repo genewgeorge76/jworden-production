@@ -157,6 +157,13 @@ const lienRows = lien.map((r) => ({
   // counts it from the day the claimant ceased to labor, which is a different
   // and much earlier clock — S.C. Code § 29-5-120(A).
   foreclosure_from: r.lienForeClosureFrom ?? 'filing',
+  // An event the OWNER controls that shortens the claimant's window. California
+  // and Nevada both cut a 90-day period to 60, 40 or 30 once a notice of
+  // completion is recorded. Nothing here knows whether one was recorded, so
+  // this is surfaced as a warning rather than computed into a date.
+  lien_filing_shortened_by: r.lienFilingShortenedBy ?? null,
+  // Where the period depends on whether the claimant contracted with the owner.
+  lien_filing_by_claimant: r.lienFilingByClaimant ?? null,
   preliminary_notice_required: r.preliminaryNoticeRequired ?? false,
   preliminary_notice_days: noticeDays(r.preliminaryNoticeDeadline),
   preliminary_notice_anchor: noticeAnchor(r.preliminaryNoticeDeadline),

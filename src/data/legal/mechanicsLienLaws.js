@@ -79,8 +79,27 @@ export default [
     preliminaryNoticeDeadline: 'Within 20 days of first furnishing',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier', 'Equipment rental', 'Design professional'],
     lienFilingDeadlineDays: 90,
+    // Read against Cal. Civ. Code §§ 8412 and 8414 on 2026-08-26. The old note
+    // had the two periods THE WRONG WAY ROUND: it gave general contractors 30
+    // days after a notice of completion and subcontractors 60. The statute is
+    // the reverse — § 8412 gives a direct contractor 60 days, § 8414 gives
+    // every other claimant 30.
+    //
+    // The direction matters. As a GC the row understated the time available,
+    // which is merely wrong. As a subcontractor it promised sixty days where
+    // the statute allows thirty, and a lien filed on day 45 in reliance on it
+    // is simply lost. Most of this company's California-pattern work is
+    // subcontracted.
     lienFilingDeadlineNote:
-      '90 days from completion of the project (notice of completion triggers 30-day filing period for GCs, 60 days for subs/suppliers)',
+      'Ninety days after completion of the work of improvement, or — if the owner records a ' +
+      'notice of completion or cessation — sixty days for a direct contractor and thirty days ' +
+      'for any other claimant, whichever is earlier',
+    lienFilingShortenedBy: {
+      trigger: 'owner records a notice of completion or cessation',
+      directWithOwner: 60,
+      other: 30,
+      note: 'Runs from the recording of the notice and replaces the 90-day period.',
+    },
     lienForeClosureDeadlineDays: 90,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -134,8 +153,17 @@ export default [
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
     lienFilingDeadlineDays: 120,
+    // Read against 25 Del. C. § 2711 on 2026-08-26. Both figures in the old
+    // note were wrong: it said 60 days for original contractors and 90 for
+    // subcontractors. The statute gives a contractor dealing directly with the
+    // owner 180 days after completion of the structure — three times the
+    // figure quoted — and 120 days to every other claimant. This company holds
+    // prime contracts as well as subcontracts, so the badly wrong number was
+    // the one covering its own direct work.
     lienFilingDeadlineNote:
-      'Within 120 days of last work: 60 days for original contractors; 90 days for subcontractors and suppliers from notice of completion',
+      'Contractor dealing directly with the owner: 180 days after completion of the structure. ' +
+      'All other claimants: 120 days from completion of the labor performed or last delivery of materials',
+    lienFilingByClaimant: { directWithOwner: 180, other: 120 },
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -550,7 +578,18 @@ export default [
     preliminaryNoticeDeadline: 'Within 31 days of first furnishing',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier', 'Equipment rental'],
     lienFilingDeadlineDays: 90,
-    lienFilingDeadlineNote: '90 days from last furnishing or from date work stopped',
+    // Read against NRS 108.226 on 2026-08-26. Ninety days was right but
+    // incomplete: a notice of completion recorded and served under NRS 108.228
+    // cuts the window to forty days, and the row said nothing about it.
+    lienFilingDeadlineNote:
+      'Ninety days after the latest of completion of the work of improvement, the claimant\u2019s ' +
+      'last delivery of material, or the claimant\u2019s last performance of work; or forty days ' +
+      'after a notice of completion is recorded and served under NRS 108.228',
+    lienFilingShortenedBy: {
+      trigger: 'a notice of completion is recorded and served under NRS 108.228',
+      days: 40,
+      note: 'Runs from the recording of the notice and replaces the 90-day period.',
+    },
     lienForeClosureDeadlineDays: 180,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -952,8 +991,15 @@ export default [
     preliminaryNoticeRequired: true,
     preliminaryNoticeDeadline: 'Within 60 days of first furnishing for subs/suppliers',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier'],
-    lienFilingDeadlineDays: 180,
-    lienFilingDeadlineNote: '6 months from last furnishing of labor or materials',
+    // Read against Wis. Stat. § 779.06(1) on 2026-08-26: "within 6 months from
+    // the date the lien claimant performed, furnished, or procured the last
+    // labor, services, materials, plans, or specifications". Six calendar
+    // months, not 180 days.
+    lienFilingDeadlineDays: null,
+    lienFilingDeadlineMonths: 6,
+    lienFilingDeadlineNote:
+      'Six months from the date the claimant last performed, furnished or procured labor, ' +
+      'services, materials, plans or specifications',
     lienForeClosureDeadlineDays: 730,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,

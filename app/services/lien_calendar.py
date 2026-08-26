@@ -247,6 +247,34 @@ def calculate_deadlines(
         # Kentucky. Stated as absent in the source, so absent here.
         unresolved.append("the source states no foreclosure period for this jurisdiction")
 
+    # ── Deadlines the owner can shorten, and periods that depend on privity ──
+    # These are not computed. Whether a notice of completion was recorded is a
+    # fact about the job that nothing here knows, and guessing it either invents
+    # a deadline or hides one. They are reported so the answer cannot be read as
+    # complete when it is not.
+    shortened = law.get("lien_filing_shortened_by")
+    if shortened:
+        # Nevada states one period; California states two, split by whether the
+        # claimant contracted with the owner. The single-period case is labelled
+        # plainly rather than as "40 days (days)".
+        periods = {k: v for k, v in shortened.items() if isinstance(v, int)}
+        variants = (
+            f"{next(iter(periods.values()))} days"
+            if len(periods) == 1
+            else ", ".join(f"{v} days ({k})" for k, v in periods.items())
+        )
+        unresolved.append(
+            f"this deadline is shortened to {variants} if {shortened['trigger']}; "
+            "that is not recorded here"
+        )
+
+    by_claimant = law.get("lien_filing_by_claimant")
+    if by_claimant:
+        unresolved.append(
+            "the period depends on whether the claimant contracted directly with the owner: "
+            + ", ".join(f"{v} days ({k})" for k, v in by_claimant.items())
+        )
+
     now = datetime.now(timezone.utc)
 
     def _days_until(when: Optional[datetime]) -> Optional[int]:
