@@ -31,6 +31,22 @@
  *
  * The rest are unchecked and say so. Filling them in from a page that merely
  * loaded would be the same lie as the uniform date, told more expensively.
+ *
+ * ONE REJECTED SOURCE TURNED OUT TO BE RIGHT
+ * ──────────────────────────────────────────
+ * An unsourced 51-state lien table in another repository disagreed with the
+ * cited datasets on 21 of 51 states and was rejected rather than imported. On
+ * Utah it said 180 days where the cited dataset said 90.
+ *
+ * Utah Code § 38-1a-502(1) says 180. The rejected table was right and the
+ * cited one was wrong.
+ *
+ * The rejection was still correct as a method — a figure with no citation
+ * cannot be trusted because it happens to agree with a statute nobody had
+ * read, and being right about Utah says nothing about the other twenty. What
+ * it does mean is that the cited dataset does not automatically win a
+ * disagreement. The remaining twenty are open questions, and each one is a
+ * candidate for the next statute to read.
  */
 
 /** A statute this repository has read, and what it said. */
@@ -316,6 +332,54 @@ export const VERIFIED_CITATIONS = [
     checked: '2026-08-26', heading: '52-137. Lien; recording; time.',
     quote: "not later than one hundred twenty days after his or her final furnishing of services or materials, he or she has recorded a lien",
     verdict: 'confirmed', finding: '120 days from final furnishing. Matches.',
+  },
+  {
+    abbr: 'UT', topic: 'mechanicsLien', citation: 'Utah Code § 38-1a-502(1)',
+    source: 'https://le.utah.gov/xcode/Title38/Chapter1a/C38-1a-S502_1800010118000101.pdf',
+    checked: '2026-08-26',
+    heading: '38-1a-502 Notice of construction lien -- Contents -- Recording -- Service on owner.',
+    quote:
+      '(i) 180 days after the date on which final completion of the original contract occurs, if ' +
+      'no notice of completion is filed under Section 38-1a-507; or (ii) 90 days after the date on ' +
+      'which a notice of completion is filed under Section 38-1a-507, but not later than 180 days ' +
+      'after the date on which final completion of the original contract occurs.',
+    verdict: 'corrected',
+    finding:
+      'The row had the EXCEPTION recorded as the rule. Ninety days is what a claimant gets once ' +
+      'the owner files a notice of completion. With no notice filed the period is 180 days, so ' +
+      'every Utah job was being told it had half the time it has.',
+  },
+  {
+    abbr: 'AZ', topic: 'mechanicsLien', citation: 'Ariz. Rev. Stat. § 33-993',
+    source: 'https://www.azleg.gov/ars/33/00993.htm',
+    checked: '2026-08-26', heading: '33-993. Notice and claim of lien; recording',
+    quote:
+      'within one hundred twenty days after completion of a building, structure or improvement … ' +
+      'if a notice of completion has been recorded, within sixty days after recordation of such notice',
+    verdict: 'corrected',
+    finding:
+      'The 120 days was right. The row said nothing about the recorded notice of completion that ' +
+      'halves the window.',
+  },
+  {
+    abbr: 'WV', topic: 'mechanicsLien', citation: 'W. Va. Code § 38-2-8',
+    source: 'https://code.wvlegislature.gov/38-2-8/',
+    checked: '2026-08-26', heading: '§38-2-8. Notice of lien by general contractor.',
+    quote: 'within one hundred days after the completion of his work provided for in such contract',
+    verdict: 'corrected',
+    finding:
+      'The count of 100 days was right, the anchor was not. The period runs from completion of the ' +
+      'contract work, not from the last day materials happened to be furnished.',
+  },
+  {
+    abbr: 'MT', topic: 'mechanicsLien', citation: 'Mont. Code Ann. § 71-3-535',
+    source: 'https://mca.legmt.gov/bills/mca/title_0710/chapter_0030/part_0050/section_0350/0710-0030-0050-0350.html',
+    checked: '2026-08-26', heading: '71-3-535. Attachment of lien -- filing.',
+    quote:
+      'the person has filed a lien not later than 90 days after: (a) the person\u2019s final ' +
+      'furnishing of services or materials; or (b) the owner files a notice of completion pursuant ' +
+      'to 71-3-533',
+    verdict: 'confirmed', finding: '90 days from final furnishing. Matches.',
   },
 ]
 
