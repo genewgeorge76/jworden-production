@@ -132,7 +132,11 @@ export const PUBLIC_RECORDS = [
     bonds: [
       { number: 'LSM0900108', obligee: 'City of Oak Forest, Illinois', effective: '2016-10-10', penalSum: 10000, licensedAs: 'Contractor' },
       { number: 'LSM0900109', obligee: 'Village of Midlothian, Illinois', effective: '2016-10-10', penalSum: 10000, licensedAs: 'Contractor' },
-      { number: 'LSM0900702', obligee: 'Village of South Chicago Heights, Illinois', effective: '2016-11-11', penalSum: 10000, licensedAs: 'General or Trade Contractor' },
+      // The instrument reads "Gereral or Trade Contractor" — a clerical slip on
+      // the surety's own form, appearing identically in the bond and in the
+      // attached power of attorney. Corrected here, and the correction recorded,
+      // so anyone holding the PDF next to this page can see why the two differ.
+      { number: 'LSM0900702', obligee: 'Village of South Chicago Heights, Illinois', effective: '2016-11-11', penalSum: 10000, licensedAs: 'General or Trade Contractor', verbatimOnInstrument: 'Gereral or Trade Contractor' },
     ],
     // A fourth bond exists and is not named. Its number and the search for its
     // obligee live in publicRecordsWithheld.js, NOT here — this module ships to
