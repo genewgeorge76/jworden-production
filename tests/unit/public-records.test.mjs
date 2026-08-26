@@ -99,6 +99,11 @@ test('no state entity registration is published without a live status', () => {
   for (const r of PUBLIC_RECORDS) {
     assert.notEqual(r.kind, 'Registered Entity', `${r.id} publishes a registration status that was never read`)
   }
+  // The Illinois bond is a licence and therefore perishable in principle, so
+  // it carries its tense on the record rather than in a reviewer's memory.
+  const bond = recordById('scheights-bond-LSM0900702')
+  assert.match(bond.tenseNote, /dated|not a current/i)
+  assert.match(bond.scopeNote, /[Nn]ot a state contractor licence/)
   const va = withheldById('va-scc-s1800053')
   assert.equal(va.status, UNCONFIRMED)
   assert.equal(va.demotedFromPublished, '2026-08-26')
@@ -348,4 +353,41 @@ test('the licensing policy is on the record with what it removed', () => {
   assert.equal(n.status, UNCONFIRMED)
   assert.equal(n.removedFromSite, '2026-08-26')
   assert.match(n.resolvedBy, /registry|score report/i)
+})
+
+
+/**
+ * THE ILLINOIS BOND IS THE STRONGEST DOCUMENT IN THE RECORD, AND THE EASIEST
+ * TO OVERSTATE
+ * ────────────────────────────────────────────────────────────────────────
+ * Every other published row rests on correspondence describing a thing. This
+ * one is the instrument: a bond number, a named surety executing under seal, a
+ * named municipal obligee, a penal sum and an effective date, read directly.
+ *
+ * Which is exactly why it needs guarding. It is a MUNICIPAL licence, it is
+ * dated 2016, and the bond is "continuous" — no expiry on its face — so the
+ * page must not slide into the present tense or into sounding like a state
+ * credential. That would rebuild, in one row, the problem this session spent
+ * ten commits removing.
+ */
+test('the Illinois bond stays a dated municipal fact', () => {
+  const b = recordById('scheights-bond-LSM0900702')
+  assert.equal(b.status, VERIFIABLE)
+  assert.equal(b.reference, 'LSM0900702')
+  assert.equal(b.state, 'IL')
+  assert.equal(b.year, 2016)
+
+  const rendered = [b.plain, b.whyItMatters, b.howToCheck, b.headline].join(' ')
+  // The year must be visible on the page, so no reader mistakes it for current.
+  assert.match(rendered, /2016/)
+  // And it must never read as a state licence.
+  assert.doesNotMatch(rendered, /state licen[cs]e|state.licensed|Illinois state/i)
+  assert.doesNotMatch(rendered, /Class A/i)
+  // The former company address on the instrument stays off the page.
+  assert.equal(b.addressWithheld, true)
+  assert.doesNotMatch(rendered, /Evelake|\d{4}\s+\w+\s+Road/i)
+
+  // It belongs to the J. Worden brand, not Carolina.
+  assert.ok(publishableFor(BRAND_JWORDEN).some((r) => r.id === b.id))
+  assert.equal(publishableFor(BRAND_CAROLINA).some((r) => r.id === b.id), false)
 })

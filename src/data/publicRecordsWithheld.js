@@ -267,61 +267,6 @@ export const WITHHELD_RECORDS = [
     sourceVerified: '2026-08-26',
   },
 
-  {
-    id: 'illinois-municipal-bonds-2016',
-    brand: BRAND_JWORDEN,
-    status: UNCONFIRMED,
-    authority: 'Village of South Chicago Heights and City of Oak Forest, Illinois',
-    authorityShort: 'IL municipalities',
-    kind: 'Contractor Bond Filed With a Municipality',
-    reference: null,
-    state: 'IL',
-    year: 2016,
-    headline: 'Contractor bonds filed with two Illinois municipalities, 2016',
-    plain:
-      'A contractor bond was issued through the company’s insurance broker and filed with two Illinois municipalities for KFC projects in autumn 2016.',
-    // WHY THIS IS A LEAD AND NOT JUST PAPERWORK
-    //
-    // A bond sitting in a mailbox is like the IRP and IFTA rows below: real,
-    // and unverifiable by a stranger. But this bond was not merely issued — it
-    // was FILED WITH A MUNICIPALITY, twice. Once filed, it enters that
-    // municipality's own contractor or permit record, which puts it in the
-    // same category as the Richmond and SCDOT permits rather than the DMV
-    // credentials: a government body holding a record with our name on it.
-    //
-    // The trail:
-    //
-    //   2016-10-27  "Kfc bond" sent to the City of Oak Forest, Illinois.
-    //               An earlier attempt bounced on a misspelled address, so
-    //               there are two sends and one delivery.
-    //   2016-11-11  Broker issues "J Worden and Sons Paving Bond.pdf" and it
-    //               is forwarded the same day to the Village of South Chicago
-    //               Heights, Illinois.
-    //   2016-11-11  Certificates of workers' compensation and general
-    //               liability requested to the same village address.
-    //   2018-01-16  Both forwarded to the office manager for filing.
-    //
-    // Sending a bond plus a certificate of insurance to a village clerk is the
-    // shape of a municipal contractor registration, which is ordinarily a
-    // public record at that municipality.
-    //
-    // It also corroborates the Illinois KBP work independently of the client's
-    // tracker — kbpStoreMap.js carries seven invoiced Illinois stores.
-    //
-    // WHAT COULD NOT BE READ, AND WHY
-    // The bond PDF is attached to the thread and the Gmail tools available
-    // here expose attachment names and not attachment contents. So the surety,
-    // the bond number and the penal sum are all unknown. Without the surety
-    // and number this cannot be published, and with them it very likely can.
-    whyNotPublished:
-      'The bond document could not be opened from here, so the surety, bond number and amount are unknown. A bond with no issuer and no number is not checkable by anyone.',
-    resolvedBy:
-      'Open "J Worden and Sons Paving Bond.pdf" (2016-11-11, from the insurance broker) and record the surety, bond number and penal sum. Then ask Oak Forest and South Chicago Heights whether the filing survives in their contractor records — a municipality holding it makes it verifiable in the way the Richmond permit is.',
-    corroborates: 'Seven invoiced Illinois stores in kbpStoreMap.js, from a second and independent direction.',
-    source:
-      'Broker email 2016-11-11 attaching "J Worden and Sons Paving Bond.pdf", forwarded same day to the Village of South Chicago Heights; "Kfc bond" sent to the City of Oak Forest 2016-10-27.',
-    sourceVerified: '2026-08-26',
-  },
 
   {
     id: 'va-dmv-irp-ifta',

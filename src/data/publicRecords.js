@@ -112,6 +112,47 @@ export const PUBLIC_RECORDS = [
   },
 
   {
+    id: 'scheights-bond-LSM0900702',
+    brand: BRAND_JWORDEN,
+    status: VERIFIABLE,
+    authority: 'Village of South Chicago Heights, Illinois',
+    authorityShort: 'South Chicago Heights, IL',
+    kind: 'Contractor Licence & Permit Bond',
+    reference: 'LSM0900702',
+    state: 'IL',
+    year: 2016,
+    headline: 'Licensed contractor, Village of South Chicago Heights — bond LSM0900702',
+    plain:
+      'Licensed by the Village of South Chicago Heights, Illinois as a General or Trade Contractor in November 2016, backed by a $10,000 continuous licence and permit bond written by Contractors Bonding and Insurance Company, an RLI company.',
+    whyItMatters:
+      'A municipality examined this company and licensed it to work there, and a surety underwrote that licence with its own money. Two independent parties — one government, one insurer — each took a position on whether this contractor could be trusted on a public street.',
+    howToCheck:
+      'The Village of South Chicago Heights holds the licence and bond filing. Contractors Bonding and Insurance Company (Peoria, Illinois) holds bond LSM0900702.',
+    // WHY THE TENSE IS 2016 AND NOT THE PRESENT
+    // The instrument is a CONTINUOUS bond — it stays in force until the surety
+    // gives the village thirty days' notice, so it carries no expiry date on
+    // its face. That is not the same as being in force now, and nothing in the
+    // archive says it still is. Stated as what it is: a dated municipal
+    // licensing event, like the Richmond permit, not a current standing.
+    //
+    // AND IT IS A MUNICIPAL LICENCE, NOT A STATE ONE
+    // The bond's own words are that the Principal "has been licensed as a
+    // General or Trade Contractor by the Obligee" — the Obligee being the
+    // village. After a session spent stripping unsupported state licence
+    // claims off these pages, it would be a poor joke to let this one drift
+    // into sounding like an Illinois state licence. It is not.
+    tenseNote: 'A dated 2016 licensing event, not a current standing.',
+    scopeNote: 'Municipal licence issued by the village. Not a state contractor licence.',
+    // The bond names a former company address. It is a real historical detail
+    // and it is not going on a page.
+    addressWithheld: true,
+    addressWithheldReason: 'The bond carries a former company address; superseded and not published.',
+    source:
+      'The bond instrument itself, read 2026-08-26: "Continuous License and Permit Bond", bond number LSM0900702, principal J Worden and Sons Paving LLC, obligee Village of South Chicago Heights, penal sum $10,000, effective 11 November 2016, executed for the surety by a vice president under corporate seal, with power of attorney and Illinois disclosure notice attached.',
+    sourceVerified: '2026-08-26',
+  },
+
+  {
     id: 'usdot-2568168',
     brand: BRAND_SHARED,
     status: VERIFIABLE,
