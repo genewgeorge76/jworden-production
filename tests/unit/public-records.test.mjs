@@ -83,6 +83,36 @@ test('brand-specific records stay on their own site', () => {
 })
 
 /**
+ * STATE REGISTRATIONS ARE PERISHABLE AND PERMITS ARE NOT
+ * ─────────────────────────────────────────────────────
+ * A permit approved in 2016 records something that happened; it cannot lapse.
+ * A company registration is a present-tense status that expires quietly every
+ * year the fee goes unpaid, and Georgia proved the point — dissolution and
+ * revocation notices in July 2021, no cure in the archive.
+ *
+ * So no state entity registration may sit in the published module unless its
+ * register has actually been read. The Virginia row shipped as VERIFIABLE on
+ * the strength of filings that stop in 2016; it was demoted on 2026-08-26.
+ */
+test('no state entity registration is published without a live status', () => {
+  for (const r of PUBLIC_RECORDS) {
+    assert.notEqual(r.kind, 'Registered Entity', `${r.id} publishes a registration status that was never read`)
+  }
+  const va = withheldById('va-scc-s1800053')
+  assert.equal(va.status, UNCONFIRMED)
+  assert.equal(va.demotedFromPublished, '2026-08-26')
+  assert.match(va.lastFilingInArchive, /^2016/)
+  assert.equal(recordById('va-scc-s1800053'), null)
+
+  const ga = withheldById('ga-sos-16031980')
+  assert.equal(ga.status, UNCONFIRMED)
+  assert.equal(ga.reference, '16031980')
+  assert.match(ga.whyNotPublished, /Dissolve|Revoke/)
+  assert.ok(ga.ownerShouldReview, 'Georgia carries paid work and needs an explicit owner action')
+  assert.equal(recordById('ga-sos-16031980'), null)
+})
+
+/**
  * NO CLAIM WITHOUT A NUMBER OR AN AUTHORITY THAT HOLDS IT
  * A record with no reference must at least say who to ask.
  */

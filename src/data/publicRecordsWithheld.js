@@ -31,6 +31,103 @@ import { HELD, UNCONFIRMED, LAPSED, BRAND_JWORDEN, BRAND_CAROLINA, BRAND_SHARED 
 
 export const WITHHELD_RECORDS = [
   {
+    id: 'va-scc-s1800053',
+    brand: BRAND_JWORDEN,
+    status: UNCONFIRMED,
+    authority: 'Virginia State Corporation Commission',
+    authorityShort: 'Virginia SCC',
+    kind: 'Registered Entity',
+    reference: 'S1800053',
+    state: 'VA',
+    year: 2015,
+    headline: 'Virginia SCC — J. Worden & Sons Paving, LLC',
+    plain:
+      'Limited liability company registered with the Virginia State Corporation Commission under SCC ID S1800053.',
+    // DEMOTED FROM PUBLISHED, 2026-08-26. THIS ONE WAS MY ERROR.
+    //
+    // It shipped as VERIFIABLE, on the site, worded "with annual registration
+    // filings on record". Four SCC emails exist in the archive and the most
+    // recent is 2016-06-08. The last annual registration FEE payment is
+    // 2016-02-29. A Virginia LLC owes that fee every year, so "filings on
+    // record" was true of 2016 and asserted of the present tense.
+    //
+    // What prompted the re-check was Georgia. The same company let its Georgia
+    // registration lapse to the point of a dissolution notice, and once that
+    // was on the table an unexamined ten-year silence in the Virginia file
+    // stopped looking like an archiving gap.
+    //
+    // Ten years of silence is not proof of termination — fees may have been
+    // paid by another route, or notices sent elsewhere. It is equally not
+    // proof of good standing, and good standing was what the page implied.
+    // Neither register is machine-checkable from here: cis.scc.virginia.gov
+    // sits behind a cookie gate and Georgia's behind Cloudflare.
+    //
+    // So it comes off the site until the register itself is read. That is the
+    // same rule the DPOR licence got, applied to my own work.
+    whyNotPublished:
+      'Last SCC filing in the archive is 2016. Virginia’s registration fee is annual, so ten years of silence cannot support a present-tense claim of good standing. The register was not readable from here.',
+    resolvedBy:
+      'Search cis.scc.virginia.gov for SCC ID S1800053. If active and in good standing, restore to publicRecords.js as VERIFIABLE with the status date.',
+    lastFilingInArchive: '2016-06-08',
+    demotedFromPublished: '2026-08-26',
+    source:
+      'SCC eFile confirmations: registered agent change 2015-11-19, annual registration fee 2016-02-29, certificate order 2016-06-08. Nothing after.',
+    sourceVerified: '2026-08-26',
+  },
+
+  {
+    id: 'ga-sos-16031980',
+    brand: BRAND_JWORDEN,
+    status: UNCONFIRMED,
+    authority: 'Georgia Secretary of State, Corporations Division',
+    authorityShort: 'Georgia SOS',
+    kind: 'Registered Entity',
+    reference: '16031980',
+    state: 'GA',
+    year: 2016,
+    headline: 'Georgia SOS — J. Worden and Sons Paving LLC, control number 16031980',
+    plain:
+      'Registered with the Georgia Secretary of State under control number 16031980, with annual registrations processed in 2018 and 2020.',
+    // FOUND 2026-08-26, AND IT IS NOT THE CREDENTIAL IT FIRST LOOKED LIKE
+    //
+    // Georgia matters more here than any other secondary state: 29 paid KBP
+    // stores, the Atlanta market pages, and a domain pointed at that market. A
+    // Georgia registration would have been the natural thing to publish beside
+    // them.
+    //
+    // The trail in the archive:
+    //
+    //   2018-02-01  2018 annual registration processed
+    //   2020-08-22  2020 annual registration processed
+    //   2021-02..04 four "2021 Annual Registration Season" reminders
+    //   2021-07-19  grounds determined for administrative dissolution
+    //   2021-07-28  Notice of Intent to Administratively Dissolve
+    //   2021-07-28  Notice of Intent to Revoke
+    //   thereafter  nothing
+    //
+    // The notice gives sixty days from 2021-07-19 to cure by filing the annual
+    // registration — so the window closed around 2021-09-17. The account was
+    // subscribed to the Corporations Division e-notification service, which is
+    // why the reminders and both notices arrived at all, and no cure
+    // confirmation followed them.
+    //
+    // That is strong, and it is still circumstantial. A filing made by post,
+    // or a confirmation sent to the registered agent rather than here, would
+    // leave the same silence. What it rules out is publishing Georgia
+    // registration as a current fact.
+    whyNotPublished:
+      'Georgia issued a Notice of Intent to Administratively Dissolve and a Notice of Intent to Revoke on 2021-07-28, with sixty days from 2021-07-19 to cure. No cure and no later annual registration appears in the archive.',
+    resolvedBy:
+      'Search ecorp.sos.ga.gov for control number 16031980 and read the entity status. If it was cured or has since been reinstated, record the status date; if it was dissolved, that is the fact and no Georgia page may imply otherwise.',
+    ownerShouldReview:
+      'This is the one to check first. Georgia carries 29 paid stores and the Atlanta market pages, and an administratively dissolved entity cannot lawfully transact there until reinstated.',
+    registeredAgent: 'InCorp (agent of record on the 2018 and 2020 filings)',
+    source:
+      'Georgia SOS e-notifications to this address: annual registrations 2018-02-01 and 2020-08-22; Notice of Intent to Administratively Dissolve and Notice of Intent to Revoke, both 2021-07-28.',
+    sourceVerified: '2026-08-26',
+  },
+
+  {
     id: 'sc-sos-filing',
     brand: BRAND_CAROLINA,
     status: UNCONFIRMED,
@@ -51,7 +148,23 @@ export const WITHHELD_RECORDS = [
       'The confirmation names no entity number and does not say which filing was approved. Formation, foreign qualification and amendment are different claims; the archive cannot tell them apart.',
     resolvedBy:
       'Search the SC Secretary of State business entity register for the company name and record the entity ID and filing type.',
-    source: 'noreply@noreply.sc.gov, 2020-08-24, "Business Filing Transaction Approved".',
+    // The full sequence, recovered 2026-08-26. It was not one filing but four
+    // messages over three days, and the shape of it is informative:
+    //
+    //   2020-08-22 04:28  registration confirmation, SC Business Entities Online
+    //   2020-08-22 04:40  filing confirmation, "j worden and sons paving llc"
+    //   2020-08-24 13:47  TRANSACTION REJECTED
+    //   2020-08-24 17:43  filing confirmation, "J Worden & Sons paving LLC"
+    //   2020-08-24 18:53  TRANSACTION APPROVED
+    //
+    // A rejection followed by a refile under a differently-punctuated name and
+    // then an approval. Still no entity number in any of the five messages and
+    // still no statement of which filing type was approved, so the row does
+    // not move. But it is now clear a filing was actually completed rather
+    // than merely attempted.
+    filingSequence: '2020-08-22 submitted, 2020-08-24 rejected, refiled, approved same day',
+    source:
+      'noreply@noreply.sc.gov: registration confirmation and filing confirmation 2020-08-22; "Business Filing Transaction Rejected" 2020-08-24 13:47; filing confirmation 17:43; "Business Filing Transaction Approved" 18:53.',
     sourceVerified: '2026-08-26',
   },
 

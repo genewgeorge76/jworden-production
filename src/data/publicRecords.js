@@ -134,28 +134,6 @@ export const PUBLIC_RECORDS = [
     sourceVerified: '2026-08-26',
   },
 
-  {
-    id: 'va-scc-s1800053',
-    brand: BRAND_JWORDEN,
-    status: VERIFIABLE,
-    authority: 'Virginia State Corporation Commission',
-    authorityShort: 'Virginia SCC',
-    kind: 'Registered Entity',
-    reference: 'S1800053',
-    state: 'VA',
-    year: 2015,
-    headline: 'Virginia SCC — J. Worden & Sons Paving, LLC',
-    plain:
-      'Limited liability company registered with the Virginia State Corporation Commission under SCC ID S1800053, with annual registration filings on record.',
-    whyItMatters:
-      'It establishes that the entity signing the contract exists in Virginia and is in the state’s own register under the name on the invoice.',
-    howToCheck:
-      'Virginia SCC Clerk’s Information System — search the entity name or SCC ID S1800053.',
-    verifyUrl: 'https://cis.scc.virginia.gov/',
-    source:
-      'SCC eFile confirmations to the company address: registered agent change 2015-11-19, annual registration fee 2016-02-29, certificate order 2016-06-08.',
-    sourceVerified: '2026-08-26',
-  },
 
 
 
