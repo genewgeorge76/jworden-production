@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { CLIENT_DOCUMENTS, KFC_RESPONSIBILITY_MATRIX, JEFFERSON_CITY_CIVIL_SET, SULPHUR_SPRINGS_BUDGET,
-  SULPHUR_SPRINGS_STATE_RESOLVED, NEW_BUILD_PROGRAMME_CROSSCHECK, LEESVILLE_CM_INVOICE }
+  SULPHUR_SPRINGS_STATE_RESOLVED, NEW_BUILD_PROGRAMME_CROSSCHECK, LEESVILLE_CM_INVOICE, ARCHIVE_COVERAGE }
   from '../../src/data/clientProgramDocuments.js'
 import { STATE_EVIDENCE, WORK } from '../../src/data/stateEvidence.js'
 import { JEFFERSON_CITY_EPA_MATTER } from '../../src/data/publicRecordsWithheld.js'
@@ -266,4 +266,33 @@ test('the Leesville invoice establishes the prime position', () => {
   assert.match(programme.contractingRelationship, /prime contract/i)
   const ibs = programme.projectTeam.find((t) => /Innovative Building/.test(t))
   assert.match(ibs, /subcontractor/i, 'the team list still reads as peers')
+})
+
+/**
+ * SILENCE IS NOT ABSENCE
+ * ──────────────────────
+ * The 2018 new-build programme was run from a mailbox this system cannot
+ * search, so every empty search result for that programme means "not here",
+ * never "does not exist". Recording the gap is what makes the difference
+ * legible to whoever reads a nothing-found result next — including a future
+ * reader who might otherwise conclude the asbestos correspondence or a
+ * Jefferson City contract was never real.
+ */
+test('the archive gap is recorded so empty results are not read as absence', () => {
+  assert.match(ARCHIVE_COVERAGE.howToRead, /does not mean the document does not exist/i)
+  assert.ok(ARCHIVE_COVERAGE.searchesThatReturnedNothingBecauseOfThis.length >= 3)
+  assert.ok(ARCHIVE_COVERAGE.ownerConfirmed)
+  assert.ok(ARCHIVE_COVERAGE.howToClose.length > 30)
+})
+
+/**
+ * A relative's personal address gets the same protection the Sulphur Springs
+ * subcontractors got, and more readily. The role makes the gap actionable; the
+ * address adds nothing the owner does not already have.
+ */
+test('the officer mailbox address is not written into the repository', () => {
+  assert.equal(ARCHIVE_COVERAGE.addressWithheld, true)
+  const raw = readFileSync('src/data/clientProgramDocuments.js', 'utf8')
+  assert.equal(/@yahoo\.com/i.test(raw), false, 'a personal mailbox address was copied in')
+  assert.equal(/mdg\d/i.test(raw), false, 'a personal mailbox handle was copied in')
 })

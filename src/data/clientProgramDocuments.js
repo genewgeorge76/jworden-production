@@ -323,6 +323,64 @@ export const LEESVILLE_CM_INVOICE = {
   sourceVerified: '2026-08-26',
 }
 
+/**
+ * WHAT THIS ARCHIVE CANNOT SEE, AND WHY THAT CHANGES HOW TO READ IT
+ * ────────────────────────────────────────────────────────────────
+ * Every "nothing found" in this repository has been recorded as though it
+ * meant "no such document exists". For one whole body of work that is wrong,
+ * and the difference matters enough to write down.
+ *
+ * The 2018 KFC new-build programme was not run from the company mailbox. It
+ * was run from the personal mailbox of the owner's brother — a company officer
+ * appointed in the 2015 succession — and that account is not connected to this
+ * system and cannot be searched from it.
+ *
+ * THE EVIDENCE FOR THAT IS STRUCTURAL, NOT ANECDOTAL
+ * The construction manager's final invoice for Leesville was addressed solely
+ * to that mailbox, with the company Gmail merely copied. It is the ONLY thread
+ * from that construction manager anywhere in the connected archive, on a
+ * programme spanning at least three ground-up restaurants in three states.
+ * One copied email out of an entire programme is not a filing accident; it is
+ * where the work was actually conducted.
+ *
+ * WHAT THIS EXPLAINS
+ * Searches run on 2026-08-26 for the developer, its principal, Jefferson City,
+ * Missouri Blvd, asbestos, NESHAP and the engineer's project number all
+ * returned nothing across the whole connected archive. That silence has been
+ * read correctly as "not here", and must NOT be read as "does not exist" —
+ * including the asbestos correspondence, and including any contract or
+ * purchase order that would raise Jefferson City from owner-confirmed to
+ * documented.
+ *
+ * THE ADDRESS IS DELIBERATELY NOT WRITTEN HERE
+ * It is a family member's personal email account. The owner knows it; this
+ * repository does not need it, and the same rule that kept fifteen
+ * subcontractors' mobile numbers out of the Sulphur Springs record applies
+ * with more force to a relative. The role is what makes the gap actionable.
+ */
+export const ARCHIVE_COVERAGE = {
+  connected: 'The company Gmail account.',
+  notConnected: 'A company officer’s personal mailbox, on a provider with no connector available here.',
+  officerRole: 'Brother of the owner; appointed an officer in the April 2015 shareholders’ minutes.',
+  ownerConfirmed: '2026-08-26',
+  programmeRunFromIt: '2018 KFC ground-up new-build programme',
+  structuralEvidence:
+    'The construction manager’s final Leesville invoice was addressed solely to that mailbox with the company Gmail copied, and it is the only thread from that construction manager in the entire connected archive.',
+  searchesThatReturnedNothingBecauseOfThis: [
+    'the developer and its principal',
+    'Jefferson City and the site address',
+    'asbestos and NESHAP',
+    'the engineer’s project number',
+  ],
+  howToRead:
+    'For this programme, an empty search result means "not in the connected mailbox". It does not mean the document does not exist.',
+  howToClose:
+    'Forward or export the programme threads from that mailbox into the company account. The asbestos correspondence and any Jefferson City contract or purchase order would both arrive that way.',
+  addressWithheld: true,
+  addressWithheldReason:
+    'A family member’s personal email account. The owner knows it; the record does not need it.',
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
   LEESVILLE_CM_INVOICE,
