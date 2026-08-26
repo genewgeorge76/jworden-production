@@ -39,19 +39,34 @@ test('every lien row carries the citation and verification date it had', () => {
 })
 
 /**
- * The 51-state table in another repository disagreed with the cited data on 21
- * of 51 states — Mississippi 90 days against 365, Utah 180 against 90, Texas
- * foreclosure 180 against 730, Rhode Island 40 against 365. It was rejected
- * rather than imported. These four are pinned so a future paste is caught.
+ * THE UNSOURCED TABLE WAS RIGHT ABOUT UTAH, AND THAT IS WORTH RECORDING
+ * ────────────────────────────────────────────────────────────────────
+ * A 51-state lien table in another repository disagreed with the cited data on
+ * 21 of 51 states, carried no citations, and was rejected rather than imported.
+ * This test pinned three of those disagreements so a future paste would be
+ * caught — including Utah, where the other table said 180 days and the cited
+ * dataset said 90.
+ *
+ * Reading Utah Code § 38-1a-502(1) settled it: 180 days after final completion
+ * where no notice of completion is filed, and 90 only once one is. The other
+ * table had it right. The cited dataset had the exception recorded as the rule.
+ *
+ * The rejection was still the correct call — an unsourced figure cannot be
+ * trusted because it happens to be right, and being right about Utah says
+ * nothing about the other twenty. But it does mean the cited dataset does not
+ * automatically win a disagreement, and the remaining twenty are now open
+ * questions rather than settled ones.
+ *
+ * The pins that survive are the ones a statute has since confirmed.
  */
-test('the rejected unsourced figures did not get in', () => {
-  const bad = { MS: 90, UT: 180, RI: 40 }
-  for (const [abbr, wrong] of Object.entries(bad)) {
-    const row = lien.find((r) => r.abbr === abbr)
-    assert.notEqual(row.lienFilingDeadlineDays === wrong && row.lienForeClosureDeadlineDays === wrong, true)
-  }
+test('a disagreement is settled by the statute, not by which file it came from', () => {
+  // Utah: read, and the answer was 180. This pin now records the statute.
+  assert.equal(lien.find((r) => r.abbr === 'UT').lienFilingDeadlineDays, 180)
+  assert.equal(lien.find((r) => r.abbr === 'UT').lienFilingShortenedBy.days, 90)
+
+  // Mississippi and Texas remain as the cited dataset has them; neither
+  // statute has been read, so neither figure is more than a starting point.
   assert.equal(lien.find((r) => r.abbr === 'MS').lienFilingDeadlineDays, 365)
-  assert.equal(lien.find((r) => r.abbr === 'UT').lienFilingDeadlineDays, 90)
   assert.equal(lien.find((r) => r.abbr === 'TX').lienForeClosureDeadlineDays, 730)
 })
 

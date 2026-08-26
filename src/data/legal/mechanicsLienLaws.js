@@ -42,8 +42,16 @@ export default [
     preliminaryNoticeDeadline: 'Within 20 days of first furnishing',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier', 'Equipment rental'],
     lienFilingDeadlineDays: 120,
+    // Read against A.R.S. § 33-993 on 2026-08-26. The 120 days was right; the
+    // row said nothing about the recorded notice of completion that halves it.
     lienFilingDeadlineNote:
-      '120 days from completion, abandonment, or last furnishing of materials',
+      'One hundred twenty days after completion of the building, structure or improvement; or, ' +
+      'if a notice of completion has been recorded, sixty days after that recordation',
+    lienFilingShortenedBy: {
+      trigger: 'a notice of completion is recorded',
+      days: 60,
+      note: 'Runs from the recordation of the notice and replaces the 120-day period.',
+    },
     lienForeClosureDeadlineDays: 180,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -892,8 +900,29 @@ export default [
     preliminaryNoticeRequired: true,
     preliminaryNoticeDeadline: 'Within 20 days of first furnishing',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier', 'Equipment rental'],
-    lienFilingDeadlineDays: 90,
-    lienFilingDeadlineNote: '90 days from completion of the original contract or last furnishing',
+    // Read against Utah Code § 38-1a-502(1) on 2026-08-26. The row had the
+    // EXCEPTION recorded as the rule. The statute:
+    //
+    //   (i)  180 days after final completion of the original contract, if no
+    //        notice of completion is filed under § 38-1a-507; or
+    //   (ii) 90 days after a notice of completion is filed, but not later than
+    //        180 days after final completion.
+    //
+    // Ninety days is what a claimant gets only once the owner files a notice.
+    // With no notice filed the period is twice that, and the row was telling
+    // every Utah job it had half the time it has.
+    lienFilingDeadlineDays: 180,
+    lienFilingShortenedBy: {
+      trigger: 'a notice of completion is filed under Utah Code § 38-1a-507',
+      days: 90,
+      note:
+        'Runs from the filing of the notice, and in no case extends beyond 180 days after final ' +
+        'completion of the original contract.',
+    },
+    lienFilingDeadlineNote:
+      'One hundred eighty days after final completion of the original contract where no notice of ' +
+      'completion is filed; ninety days after a notice of completion is filed, and never later ' +
+      'than 180 days after final completion',
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
@@ -974,7 +1003,12 @@ export default [
     preliminaryNoticeDeadline: null,
     preliminaryNoticeWho: [],
     lienFilingDeadlineDays: 100,
-    lienFilingDeadlineNote: '100 days from last furnishing of labor or materials',
+    // Read against W. Va. Code § 38-2-8 on 2026-08-26: "within one hundred days
+    // after the completion of his work provided for in such contract". The
+    // count was right, the anchor was not — completion of the contract work,
+    // not the last day materials happened to be furnished.
+    lienFilingDeadlineNote:
+      'One hundred days after completion of the work provided for in the contract',
     lienForeClosureDeadlineDays: 365,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,
