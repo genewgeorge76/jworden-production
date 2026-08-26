@@ -7,6 +7,7 @@ import { SITE_URL } from '../lib/schemas'
 import { AGGREGATE_RATING } from '../lib/reviews'
 import { trackEvent } from '../api/client'
 import NotFound from './NotFound'
+import CityQuoteBlock from '../components/CityQuoteBlock'
 
 // Build LocalBusiness schema with city-specific areaServed
 function cityLocalBusinessSchema(area) {
@@ -146,13 +147,13 @@ export default function CityPage() {
             <p className="text-white/70 text-xl max-w-2xl mb-8">{area.tagline}</p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/quote"
+              <a
+                href="#quote"
                 className="btn-primary text-lg px-8 py-4"
                 onClick={() => trackEvent('cta_click', { location: `city_hero_${area.slug}` })}
               >
                 Get a Free Estimate in {area.city}
-              </Link>
+              </a>
               <a
                 href="tel:+18044461296"
                 className="btn-outline-light text-lg px-8 py-4"
@@ -196,6 +197,9 @@ export default function CityPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Quote capture, on the page rather than a link away ── */}
+      <CityQuoteBlock city={area.city} stateCode={area.stateCode} slug={area.slug} />
 
       {/* ── About this area ── */}
       <section className="py-16 bg-gray-50">
@@ -251,13 +255,13 @@ export default function CityPage() {
                   <span className="text-green-400 font-medium">Always Free</span>
                 </div>
               </div>
-              <Link
-                to="/quote"
+              <a
+                href="#quote"
                 className="mt-6 w-full text-center btn-primary block"
                 onClick={() => trackEvent('cta_click', { location: `city_sidebar_${area.slug}` })}
               >
                 Get My Free Quote
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -425,16 +429,17 @@ export default function CityPage() {
             Free estimate. No pressure. Fast response.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/quote"
+            <a
+              href="#quote"
               className="bg-brand-navy text-white font-bold px-8 py-4 rounded-lg hover:bg-brand-navy/90 transition-colors text-lg"
               onClick={() => trackEvent('cta_click', { location: `city_bottom_${area.slug}` })}
             >
               Request a Free Quote
-            </Link>
+            </a>
             <a
               href="tel:+18044461296"
               className="border-2 border-brand-navy text-brand-navy font-bold px-8 py-4 rounded-lg hover:bg-brand-navy hover:text-white transition-colors text-lg"
+              onClick={() => trackEvent('phone_click', { location: `city_bottom_${area.slug}` })}
             >
               📞 (804) 446-1296
             </a>

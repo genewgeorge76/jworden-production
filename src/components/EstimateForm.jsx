@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react'
 import { trackEvent } from '../api/client'
+import { submitLead } from '../lib/leadCapture'
 
 const SERVICE_OPTIONS = [
   { value: '', label: 'Select a service…' },
@@ -42,25 +43,28 @@ export default function EstimateForm({ source = 'homepage' }) {
       const jobDescription =
         [fields.service, fields.message].map((s) => s && s.trim()).filter(Boolean).join(' — ') ||
         'Free estimate request'
-      const res = await fetch('/api/v1/leads/website', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: firstName || fields.name.trim(),
-          lastName: restName.join(' ') || undefined,
-          phone: fields.phone.trim(),
-          email: fields.email.trim() || undefined,
-          jobDescription,
-          source: `estimate-form:${source}`,
-        }),
-      })
+      // Shares the retry, absolute-URL fallback and durable localStorage queue
+      // in lib/leadCapture rather than hand-rolling a bare fetch. A live site
+      // was returning 404 for every /api path and losing leads silently.
+      const { status } = await submitLead({
+        firstName: firstName || fields.name.trim(),
+        lastName: restName.join(' ') || undefined,
+        phone: fields.phone.trim(),
+        email: fields.email.trim() || undefined,
+        jobDescription,
+        source: `estimate-form:${source}`,
+      }, '/api/v1/leads/website')
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      trackEvent('estimate_form_submit', { source, service: fields.service })
+      trackEvent('estimate_form_submit', { source, service: fields.service, status })
       setDone(true)
     } catch (error) {
       console.error('[EstimateForm] submit error', error)
-      setErr('Something went wrong. Please call or text us directly — your request was not lost.')
+      // The previous copy said "your request was not lost". When both attempts
+      // fail it IS lost, and telling someone otherwise is how a customer sits
+      // waiting for a call that is never coming.
+      setErr(
+        'We could not send that just now. Please call or text (804) 446-1296 so your request is not missed.',
+      )
       trackEvent('estimate_form_error', { source, error: String(error?.message || error) })
     } finally {
       setBusy(false)

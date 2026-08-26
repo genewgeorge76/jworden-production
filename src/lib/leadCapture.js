@@ -21,6 +21,8 @@
  * hard, unexpected throw (which callers still catch) means show-them-the-phone.
  */
 
+import { canonicalApiBaseUrl } from '@/config/integration';
+
 const ENDPOINT = '/api/v1/leads/quote';
 const QUEUE_KEY = 'worden_lead_queue_v1';
 const MAX_ATTEMPTS = 3;
@@ -64,13 +66,43 @@ function beacon(payload) {
   }
 }
 
-async function postOnce(payload, signal) {
-  const res = await fetch(ENDPOINT, {
+/**
+ * WHY THE ABSOLUTE FALLBACK EXISTS
+ * ────────────────────────────────
+ * The relative path only resolves on a deployment whose host config rewrites
+ * /api/* to the Fly backend. This repository's vercel.json does that; not
+ * every site carrying these components is served from this repository, and on
+ * 2026-08-26 a live one was not — atlantapavingandsealing.com returned 404 for
+ * every /api/v1/* path.
+ *
+ * Without a fallback that is the worst possible outcome for this module. A 404
+ * is non-retryable, so the retry loop below burns its attempts, the lead is
+ * queued to localStorage, and every later flush hits the same 404. The lead is
+ * "safe" forever and delivered never — which reads as working right up until
+ * somebody asks why nobody called back.
+ *
+ * The backend permits the cross-origin retry: a CORS preflight from these
+ * origins returns access-control-allow-origin echoing the caller.
+ */
+async function postTo(url, payload, signal) {
+  return fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     signal,
   });
+}
+
+async function postOnce(payload, signal, endpoint = ENDPOINT) {
+  let res;
+  try {
+    res = await postTo(endpoint, payload, signal);
+    // A 404 here means this deployment has no /api rewrite rather than a bad
+    // payload, so it is worth one direct attempt before giving up.
+    if (res.status === 404) throw new Error('no same-origin api route');
+  } catch {
+    res = await postTo(`${canonicalApiBaseUrl}${endpoint}`, payload, signal);
+  }
   if (!res.ok) {
     let detail = '';
     try {
@@ -95,11 +127,11 @@ async function postOnce(payload, signal) {
  * @returns {Promise<{status:'sent'|'queued', data?:object}>}
  * @throws only on a non-retryable validation error (4xx) — caller shows the message.
  */
-export async function submitLead(payload) {
+export async function submitLead(payload, endpoint = ENDPOINT) {
   let lastErr;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     try {
-      const data = await postOnce(payload);
+      const data = await postOnce(payload, undefined, endpoint);
       return { status: 'sent', data };
     } catch (err) {
       lastErr = err;
