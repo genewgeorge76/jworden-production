@@ -120,3 +120,71 @@ test('the blanket verification date is not treated as evidence anywhere', () => 
     'the verification record claims every jurisdiction was read',
   )
 })
+
+/**
+ * THE SECOND PASS: THE STATES THE OWNER ACTUALLY BIDS IN
+ * ─────────────────────────────────────────────────────
+ * Six more statutes read. Five of them were wrong, which is the argument for
+ * reading the rest.
+ */
+test('South Carolina enforcement runs from ceasing labor, not from filing', () => {
+  // The one that was wrong in the direction that loses the lien. The row held
+  // 365 days from filing — about fifteen months after work ends. The statute
+  // dissolves the lien six months after the claimant ceases to labor.
+  const sc = lien.find((r) => r.abbr === 'SC')
+  assert.equal(sc.lienForeClosureDeadlineDays, 180)
+  assert.equal(sc.lienForeClosureFrom, 'last_furnishing')
+  assert.notEqual(sc.lienForeClosureDeadlineDays, 365)
+  assert.match(PY, /"foreclosure_from"/)
+  assert.match(verificationFor('SC').quote, /six months/)
+})
+
+test('a period stated in months is stored in months', () => {
+  // "Four months" is not 120 days and "six months" is not 180. Kansas,
+  // Illinois and Missouri all state calendar months.
+  for (const [abbr, months] of [['KS', 4], ['IL', 4], ['MO', 6]]) {
+    const row = lien.find((r) => r.abbr === abbr)
+    assert.equal(row.lienFilingDeadlineMonths, months, `${abbr} lost its month count`)
+    assert.equal(row.lienFilingDeadlineDays, null, `${abbr} still carries a day count`)
+  }
+  assert.match(PY, /"kind": "calendar_months"/)
+})
+
+test('Illinois runs from completion, not last furnishing', () => {
+  const il = lien.find((r) => r.abbr === 'IL')
+  assert.match(il.lienFilingDeadlineNote, /after completion/)
+  assert.equal(/last date of furnishing/.test(il.lienFilingDeadlineNote), false)
+})
+
+test('Missouri declines rather than answering from the wrong event', () => {
+  // Six months from when the indebtedness accrued — a question about the
+  // contract, not the last day on site. Substituting last furnishing would
+  // present a guess as the statute's answer.
+  const mo = lien.find((r) => r.abbr === 'MO')
+  assert.equal(mo.lienFilingDeadlineAnchor, 'indebtedness_accrued')
+  const calc = pythonSourceWithoutComments('app/services/lien_calendar.py')
+  assert.match(calc, /indebtedness_accrued/)
+  // And it must say why. The first version returned a silent null.
+  assert.match(calc, /which is not a date this calculator is given/)
+})
+
+test('the DC row is no longer a placeholder', () => {
+  const dc = lien.find((r) => r.abbr === 'DC')
+  // Its citation was "District of Columbia mechanics lien statutes and
+  // Superior Court filing procedures" — a description of where to look. Its
+  // note was "file promptly", which is not a deadline.
+  assert.match(dc.citation, /D\.C\. Code § 40-301/)
+  assert.equal(/Superior Court filing procedures/.test(dc.citation), false)
+  assert.equal(/file promptly/i.test(dc.lienFilingDeadlineNote), false)
+  assert.match(dc.lienFilingDeadlineNote, /completion or termination/)
+})
+
+test('a state that could not be read is not silently marked verified', () => {
+  const { UNVERIFIABLE_SOURCES: unreadable } = { UNVERIFIABLE_SOURCES }
+  const codes = unreadable.map((u) => u.abbr)
+  // Michigan and New Jersey joined Texas and Georgia on this list. All four
+  // are states with documented work, which is exactly why the gap is named.
+  for (const abbr of ['TX', 'GA', 'MI', 'NJ']) {
+    assert.ok(codes.includes(abbr), `${abbr} is neither verified nor listed unreadable`)
+  }
+})

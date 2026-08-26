@@ -105,6 +105,19 @@ function noticeDays(prose) {
  * walks the months rather than adding days.
  */
 function specialRule(row) {
+  // "Four months" is not 120 days and "six months" is not 180. Kansas,
+  // Illinois and Missouri all state their periods in calendar months, and the
+  // difference against a day count runs to three days depending on which
+  // months the job spans. Stored as months so it is walked, not approximated.
+  if (row.lienFilingDeadlineMonths) {
+    return {
+      kind: 'calendar_months',
+      months_after: row.lienFilingDeadlineMonths,
+      day_of_month: null,
+      residential_months_after: null,
+      anchor: filingAnchor(row) ?? 'last_furnishing',
+    }
+  }
   const n = String(row.lienFilingDeadlineNote ?? '')
   const m = n.match(/(\d+)(?:st|nd|rd|th) day of (?:the )?(\d+)(?:st|nd|rd|th) (?:calendar )?month/i)
   if (!m) return null
@@ -140,6 +153,10 @@ const lienRows = lien.map((r) => ({
   lien_filing_note: r.lienFilingDeadlineNote ?? null,
   lien_filing_rule: specialRule(r),
   foreclosure_days: r.lienForeClosureDeadlineDays ?? null,
+  // Most states count the enforcement window from the filing. South Carolina
+  // counts it from the day the claimant ceased to labor, which is a different
+  // and much earlier clock — S.C. Code § 29-5-120(A).
+  foreclosure_from: r.lienForeClosureFrom ?? 'filing',
   preliminary_notice_required: r.preliminaryNoticeRequired ?? false,
   preliminary_notice_days: noticeDays(r.preliminaryNoticeDeadline),
   preliminary_notice_anchor: noticeAnchor(r.preliminaryNoticeDeadline),

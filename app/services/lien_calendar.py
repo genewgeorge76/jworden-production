@@ -92,6 +92,12 @@ def _anchor_date(
         return project_start_date
     if anchor == "completion":
         return completion_date or last_furnishing_date
+    if anchor == "indebtedness_accrued":
+        # Missouri. Mo. Rev. Stat. § 429.080 runs six months from when the debt
+        # accrued. That is a legal determination about the contract, not the
+        # last day on site, and nothing here knows it. Returning None makes the
+        # caller say so instead of answering from the wrong event.
+        return None
     if anchor == "month_end_of_last_furnishing":
         # Virginia. Va. Code § 43-4 runs the ninety days from the last day of
         # the month in which work ended, not the day it ended. Anchoring to the
@@ -151,7 +157,26 @@ def calculate_deadlines(
     # ── Lien filing ───────────────────────────────────────────────────────
     lien_deadline: Optional[datetime] = None
     rule = law["lien_filing_rule"]
-    if rule and rule["kind"] == "calendar_month_day":
+    if rule and rule["kind"] == "calendar_months":
+        # "Four months after completion" (Illinois), "four months after last
+        # furnished" (Kansas), "six months after the indebtedness accrued"
+        # (Missouri). Calendar months, walked rather than turned into a day
+        # count that is wrong by up to three days.
+        base = _anchor_date(
+            rule["anchor"], project_start_date, last_furnishing_date, completion_date
+        )
+        if base is not None:
+            lien_deadline = _add_months(base, rule["months_after"])
+        else:
+            # Missouri's six months run from when the indebtedness accrued, and
+            # nothing here knows that date. Returning no deadline is correct;
+            # returning it with no explanation is not — the first version of
+            # this branch did exactly that and the caller got a silent null.
+            unresolved.append(
+                f"the period runs {rule['months_after']} months from "
+                f"{rule['anchor'].replace('_', ' ')}, which is not a date this calculator is given"
+            )
+    elif rule and rule["kind"] == "calendar_month_day":
         # Texas: the 15th day of the Nth calendar month after the month in
         # which work was completed. Walking months, not adding days.
         base = _anchor_date(rule["anchor"], project_start_date, last_furnishing_date, completion_date)
@@ -204,8 +229,20 @@ def calculate_deadlines(
 
     # ── Foreclosure ───────────────────────────────────────────────────────
     foreclosure_deadline: Optional[datetime] = None
-    if law["foreclosure_days"] is not None and lien_deadline is not None:
-        foreclosure_deadline = lien_deadline + timedelta(days=law["foreclosure_days"])
+    # South Carolina counts enforcement from the day the claimant ceased to
+    # labor, not from the filing. Treating it as "days from filing" put the
+    # deadline about nine months later than the statute allows — the direction
+    # that loses the lien rather than the one that files early.
+    foreclosure_from = law.get("foreclosure_from", "filing")
+    foreclosure_base = (
+        lien_deadline
+        if foreclosure_from == "filing"
+        else _anchor_date(
+            foreclosure_from, project_start_date, last_furnishing_date, completion_date
+        )
+    )
+    if law["foreclosure_days"] is not None and foreclosure_base is not None:
+        foreclosure_deadline = foreclosure_base + timedelta(days=law["foreclosure_days"])
     elif law["foreclosure_days"] is None:
         # Kentucky. Stated as absent in the source, so absent here.
         unresolved.append("the source states no foreclosure period for this jurisdiction")
