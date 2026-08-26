@@ -849,7 +849,16 @@ export default [
     preliminaryNoticeDeadline: 'Within 150 days of last furnishing',
     preliminaryNoticeWho: ['Subcontractor', 'Supplier'],
     lienFilingDeadlineDays: 90,
-    lienFilingDeadlineNote: '90 days from last furnishing of labor or materials',
+    // Read against Va. Code § 43-4 on 2026-08-26 — see citationVerification.js.
+    // This note said "90 days from last furnishing", which is wrong twice. The
+    // 90 days runs from the last day of the MONTH in which work ended, not the
+    // day it ended; and there is a second, independent cap at 90 days from
+    // completion, whichever expires first.
+    lienFilingDeadlineNote:
+      '90 days from the last day of the month in which labor or materials were last furnished, ' +
+      'and in no event later than 90 days from completion — whichever comes first',
+    lienFilingDeadlineAnchor: 'month_end_of_last_furnishing',
+    lienFilingAlsoCappedBy: { days: 90, from: 'completion' },
     lienForeClosureDeadlineDays: 180,
     noticeOfIntentRequired: false,
     noticeOfIntentDeadlineDays: null,

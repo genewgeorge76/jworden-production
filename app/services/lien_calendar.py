@@ -92,6 +92,12 @@ def _anchor_date(
         return project_start_date
     if anchor == "completion":
         return completion_date or last_furnishing_date
+    if anchor == "month_end_of_last_furnishing":
+        # Virginia. Va. Code § 43-4 runs the ninety days from the last day of
+        # the month in which work ended, not the day it ended. Anchoring to the
+        # day understates the time available by up to a month.
+        last_day = monthrange(last_furnishing_date.year, last_furnishing_date.month)[1]
+        return last_furnishing_date.replace(day=last_day)
     return None
 
 
@@ -168,6 +174,34 @@ def calculate_deadlines(
     else:
         unresolved.append("the source states no filing period")
 
+    # ── A second deadline that can expire first ───────────────────────────
+    # Virginia's lien is cut off at 90 days from completion regardless of the
+    # month-end period, whichever comes first. Reporting only the later of two
+    # deadlines overstates the time available, which is the one direction a
+    # lien calendar must never be wrong in.
+    cap = law.get("lien_filing_also_capped_by")
+    capped_by: Optional[str] = None
+    if cap and lien_deadline is not None:
+        # A cap is applied only from a date the caller actually supplied. The
+        # completion fallback used elsewhere is wrong here: substituting last
+        # furnishing for completion produces a SHORTER deadline than the
+        # statute gives, presented as the statute's answer. On the first
+        # Virginia test that silently reproduced the pre-fix date and made the
+        # month-end correction invisible.
+        cap_from = completion_date if cap["from"] == "completion" else _anchor_date(
+            cap["from"], project_start_date, last_furnishing_date, completion_date
+        )
+        if cap_from is not None:
+            cap_deadline = cap_from + timedelta(days=cap["days"])
+            if cap_deadline < lien_deadline:
+                lien_deadline = cap_deadline
+                capped_by = f"{cap['days']} days from {cap['from'].replace('_', ' ')}"
+        else:
+            unresolved.append(
+                f"a second deadline of {cap['days']} days from {cap['from']} also applies and "
+                f"may expire first; supply completion_date to evaluate it"
+            )
+
     # ── Foreclosure ───────────────────────────────────────────────────────
     foreclosure_deadline: Optional[datetime] = None
     if law["foreclosure_days"] is not None and lien_deadline is not None:
@@ -194,6 +228,9 @@ def calculate_deadlines(
         "preliminary_notice_note": law["preliminary_notice_note"],
         "lien_filing_deadline": lien_deadline.isoformat() if lien_deadline else None,
         "lien_filing_note": law["lien_filing_note"],
+        # Set when a second statutory deadline expired before the main one and
+        # became the operative date.
+        "lien_filing_capped_by": capped_by,
         "foreclosure_deadline": foreclosure_deadline.isoformat() if foreclosure_deadline else None,
         "days_until_lien_deadline": _days_until(lien_deadline),
         "days_until_foreclosure_deadline": _days_until(foreclosure_deadline),
