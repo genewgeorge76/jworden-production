@@ -320,3 +320,47 @@ export const MISFILED_BY_STATE = [
     checked: '2026-08-26',
   },
 ]
+
+/**
+ * BURTON, MICHIGAN — TWO JOBS AT ONE ADDRESS, NOT ONE JOB ENTERED TWICE
+ * ─────────────────────────────────────────────────────────────────────
+ * 1145 North Belsay Road, Burton, Genesee County. Two Kickserv customers, one
+ * address, one contact, one phone, and the same figure twice:
+ *
+ *   #2071  KFC-Burton              $51,500.00   completed 2018-08-13
+ *   #1993  Plaza Street Partners   $51,500.00   completed 2018-08-21
+ *
+ * Every automated check says duplicate. Identical coordinates to five decimal
+ * places, identical amount, same contact — Brett Elliott, 913-683-9459, a
+ * 913 area code, which is Overland Park, the same town as KBP's office.
+ *
+ * It is not a duplicate. The owner said so on 2026-08-26, and he did the work.
+ * A KFC sitting in a shopping plaza has two payers: the tenant for the
+ * restaurant pad, the landlord for the rest of the lot. Two contracts, two
+ * invoices, eight days apart, and the prices landing on the same number is a
+ * coincidence rather than a copy.
+ *
+ * Recorded because the coincidence is the problem. This repository already
+ * carries five documented double-counts, and the habit of hunting them is what
+ * found this pair. The next reader who runs that check will find it too, and
+ * will be right about the arithmetic and wrong about the job. The correct
+ * Burton total is $103,000.00 across two jobs.
+ *
+ * Not in KBP_STORES: Burton is not on KBP's thirty-store Michigan roster, and
+ * Plaza Street Partners is a property company rather than a franchisee.
+ */
+export const BURTON_MI = {
+  address: '1145 North Belsay Road',
+  city: 'Burton',
+  county: 'Genesee',
+  state: 'MI',
+  jobs: [
+    { customer: 'KFC-Burton', customerNumber: '2071', usd: 51500, completedOn: '2018-08-13', payer: 'tenant' },
+    { customer: 'Plaza Street Partners', customerNumber: '1993', usd: 51500, completedOn: '2018-08-21', payer: 'landlord' },
+  ],
+  totalUsd: 103000,
+  source: 'kickserv',
+  looksLikeADuplicate: true,
+  isADuplicate: false,
+  basis: 'owner-stated, 2026-08-26 — asked directly and answered directly',
+}
