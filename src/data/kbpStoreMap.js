@@ -13,11 +13,44 @@
  *             work was done and paid for it. The strongest evidence here.
  *   invoiced  A bill appears in the client's own tracker. Work was
  *             commissioned. The payment column is not completed.
+ *   completed The store has a COMPLETED JOB WITH REVENUE in this company's own
+ *             Kickserv record. Not the client's document — ours. It proves the
+ *             work was done and billed; it does not prove KBP acknowledged the
+ *             bill, which is what `invoiced` proves.
  *   listed    The store was assigned to the programme. Nothing more. A roster
  *             entry is a place to look, not a job done.
  *
- * Only `paid` and `invoiced` may be shown as work. `listed` exists so the
- * footprint can be understood without being claimed, and a test enforces it.
+ * Only `paid`, `invoiced` and `completed` may be shown as work. `listed` exists
+ * so the footprint can be understood without being claimed, and a test enforces
+ * it.
+ *
+ * WHY `completed` WAS ADDED, AND WHY IT IS NOT JUST `invoiced`
+ * ───────────────────────────────────────────────────────────
+ * Michigan forced the question. KBP's tracker carries 30 Michigan stores and
+ * fills in an invoice number for six of them. The other twenty-four rows hold a
+ * store number, an address, a city and a zip, and nothing else — which is
+ * precisely why they sat at `listed`.
+ *
+ * The owner said he did every KFC KBP owned in Michigan, Flint and Detroit
+ * both. The Kickserv export settles it: twenty-one of those twenty-four have a
+ * completed job with revenue in this company's own invoicing system.
+ *
+ * That is documentary evidence and it deserves a grade. But it is not the same
+ * evidence as `invoiced`. A line in KBP's tracker means the client wrote the
+ * bill down. A completed Kickserv job means we did. Collapsing the two would
+ * have quietly widened `invoiced` to mean "somebody, somewhere, has a record",
+ * and the whole reason this ladder is trusted is that each rung says exactly
+ * whose document it rests on.
+ *
+ * THE TWO SYSTEMS DISAGREE ON AMOUNTS, AND MUST NEVER BE SUMMED TOGETHER
+ * ────────────────────────────────────────────────────────────────────
+ * All six Michigan stores KBP invoiced also appear in Kickserv, with different
+ * figures — Davison $69,400 against $79,583, Detroit 362 $23,040 against
+ * $48,642, Flint 377 $14,532 against $27,520, Grand Blanc 370 $30,780 against
+ * $11,842. Kickserv shows two or three separate jobs at several of those
+ * stores, so these are almost certainly different scopes rather than a
+ * contradiction. Either way a Michigan total has to name which system it came
+ * from, and adding the two produces a number that is true of neither.
  *
  * ADDRESSES ARE HERE; STORE NUMBERS ARE NOT FOR PUBLICATION
  * ────────────────────────────────────────────────────────
@@ -39,12 +72,25 @@
 
 export const PAID = 'paid'
 export const INVOICED = 'invoiced'
+export const COMPLETED = 'completed'
 export const LISTED = 'listed'
 
-/** Only these two may be drawn as work performed. */
-export const SHOWABLE_AS_WORK = new Set([PAID, INVOICED])
+/** Only these three may be drawn as work performed. */
+export const SHOWABLE_AS_WORK = new Set([PAID, INVOICED, COMPLETED])
 
-const S = (store, address, city, state, grade, usd = null) => ({ store, address, city, state, grade, usd })
+/**
+ * `source` names whose document the grade rests on, so a reader never has to
+ * infer it: 'kbp-tracker' for paid and invoiced, 'kickserv' for completed.
+ */
+const S = (store, address, city, state, grade, usd = null, source = null) => ({
+  store,
+  address,
+  city,
+  state,
+  grade,
+  usd,
+  source: source ?? (grade === COMPLETED ? 'kickserv' : grade === LISTED ? null : 'kbp-tracker'),
+})
 
 export const KBP_STORES = [
   // Georgia — invoiced AND paid
@@ -134,30 +180,30 @@ export const KBP_STORES = [
   S('G135381', '1765 South Dort Highway', 'Flint', 'MI', INVOICED, 66980),
   S('G135383', '10018 Lapeer Road', 'Davison', 'MI', INVOICED, 69400),
   // Michigan — listed
-  S('G135354', '9848 Livernois Ave', 'Detroit', 'MI', LISTED),
-  S('G135355', '383 S Broadway St', 'Lake Orion', 'MI', LISTED),
-  S('G135356', '8939 W 7 Mile Rd', 'Detroit', 'MI', LISTED),
+  S('G135354', '9848 Livernois Ave', 'Detroit', 'MI', COMPLETED, 29871),
+  S('G135355', '383 S Broadway St', 'Lake Orion', 'MI', COMPLETED, 19284),
+  S('G135356', '8939 W 7 Mile Rd', 'Detroit', 'MI', COMPLETED, 11356),
   S('G135357', '15700 E 8 Mile Rd', 'Detroit', 'MI', LISTED),
-  S('G135358', '2600 E 8 Mile Rd', 'Detroit', 'MI', LISTED),
-  S('G135359', '4790 Dixie Hwy', 'Waterford', 'MI', LISTED),
-  S('G135360', '3510 Clio Rd', 'Flint', 'MI', LISTED),
-  S('G135361', '2716 W Grand Blvd', 'Detroit', 'MI', LISTED),
-  S('G135363', '3785 Gratiot St', 'Detroit', 'MI', LISTED),
-  S('G135364', '9041 Chalmers', 'Detroit', 'MI', LISTED),
+  S('G135358', '2600 E 8 Mile Rd', 'Detroit', 'MI', COMPLETED, 23985),
+  S('G135359', '4790 Dixie Hwy', 'Waterford', 'MI', COMPLETED, 26412),
+  S('G135360', '3510 Clio Rd', 'Flint', 'MI', COMPLETED, 30428),
+  S('G135361', '2716 W Grand Blvd', 'Detroit', 'MI', COMPLETED, 25985),
+  S('G135363', '3785 Gratiot St', 'Detroit', 'MI', COMPLETED, 65705),
+  S('G135364', '9041 Chalmers', 'Detroit', 'MI', COMPLETED, 30892),
   S('G135365', '606 S Rochester Rd', 'Rochester Hills', 'MI', LISTED),
-  S('G135366', '13546 W McNichols Rd', 'Detroit', 'MI', LISTED),
-  S('G135367', '20990 Harper Ave', 'Harper Woods', 'MI', LISTED),
-  S('G135368', '13253 Woodward Ave', 'Highland Park', 'MI', LISTED),
-  S('G135369', '12721 Michigan Ave', 'Dearborn', 'MI', LISTED),
+  S('G135366', '13546 W McNichols Rd', 'Detroit', 'MI', COMPLETED, 37467),
+  S('G135367', '20990 Harper Ave', 'Harper Woods', 'MI', COMPLETED, 41509),
+  S('G135368', '13253 Woodward Ave', 'Highland Park', 'MI', COMPLETED, 33415),
+  S('G135369', '12721 Michigan Ave', 'Dearborn', 'MI', COMPLETED, 24789),
   S('G135371', '2339 S Wayne Rd', 'Westland', 'MI', LISTED),
-  S('G135373', '4427 Corunna Road', 'Flint', 'MI', LISTED),
-  S('G135374', '22345 Grand River', 'Detroit', 'MI', LISTED),
-  S('G135375', '1361 N Opdyke Road', 'Auburn Hills', 'MI', LISTED),
-  S('G135376', '2601 W Davison Avenue', 'Detroit', 'MI', LISTED),
-  S('G135379', '14201 W 7 Mile Rd', 'Detroit', 'MI', LISTED),
-  S('G135380', '1000 S Opdyke Road', 'Pontiac', 'MI', LISTED),
-  S('G135384', '4255 West Vienna Road', 'Clio', 'MI', LISTED),
-  S('G135385', '9230 Birch Run Road', 'Birch Run', 'MI', LISTED),
+  S('G135373', '4427 Corunna Road', 'Flint', 'MI', COMPLETED, 39720),
+  S('G135374', '22345 Grand River', 'Detroit', 'MI', COMPLETED, 27124),
+  S('G135375', '1361 N Opdyke Road', 'Auburn Hills', 'MI', COMPLETED, 29542),
+  S('G135376', '2601 W Davison Avenue', 'Detroit', 'MI', COMPLETED, 26846),
+  S('G135379', '14201 W 7 Mile Rd', 'Detroit', 'MI', COMPLETED, 28567),
+  S('G135380', '1000 S Opdyke Road', 'Pontiac', 'MI', COMPLETED, 26404),
+  S('G135384', '4255 West Vienna Road', 'Clio', 'MI', COMPLETED, 12872),
+  S('G135385', '9230 Birch Run Road', 'Birch Run', 'MI', COMPLETED, 34894),
 
   // Illinois — deposit invoiced
   S('G135001', '2943 18th Avenue', 'Rock Island', 'IL', INVOICED, 37439),
@@ -206,7 +252,7 @@ export const KBP_STORES = [
 
 /** Counts by grade, derived rather than asserted. */
 export function tally() {
-  const t = { paid: 0, invoiced: 0, listed: 0 }
+  const t = { paid: 0, invoiced: 0, completed: 0, listed: 0 }
   for (const s of KBP_STORES) t[s.grade] += 1
   return t
 }
@@ -220,8 +266,57 @@ export function workStores() {
 export function byState() {
   const out = {}
   for (const s of KBP_STORES) {
-    out[s.state] ??= { paid: 0, invoiced: 0, listed: 0 }
+    out[s.state] ??= { paid: 0, invoiced: 0, completed: 0, listed: 0 }
     out[s.state][s.grade] += 1
   }
   return out
 }
+
+/**
+ * THE LARGEST COMPLETED JOB IN THE KICKSERV EXPORT IS NOT A KBP STORE, AND
+ * NOT IN THE STATE ITS RECORD CLAIMS
+ * ──────────────────────────────────────────────────────────────────────────
+ * Found on 2026-08-26 while reconciling Michigan. The Kickserv record reads
+ * `state: "MI"`, which put a $351,576.10 job into the Michigan pile — larger
+ * than any KBP Michigan store and larger than the entire Michigan
+ * `completed` total.
+ *
+ * Everything else on the record says otherwise:
+ *
+ *   zip          39429            Columbia, Mississippi
+ *   coordinates  31.2418, -89.8097
+ *   address      950 Hwy 98 Bypass
+ *   phone        area code 251    Mobile, Alabama
+ *
+ * Reverse-geocoded through the Census: Mississippi, Marion County, Columbia
+ * city. The address resolves to 950 HWY 98 E, COLUMBIA, MS 39429. `MI` is a
+ * typo for `MS`, and it is the only one of the fifty Michigan-labelled records
+ * with a non-Michigan zip.
+ *
+ * It is recorded here rather than deleted because it is real work — a Burger
+ * King, not a KFC, and nothing to do with the KBP programme. Mississippi
+ * appears nowhere else in this record, so without this note the state has no
+ * presence at all and the largest single job in the export stays misfiled.
+ *
+ * Not added to KBP_STORES: that array is the KBP programme, and this is
+ * neither KBP nor a KFC.
+ */
+export const MISFILED_BY_STATE = [
+  {
+    customer: 'BK - Columbia',
+    brand: 'Burger King',
+    address: '950 Hwy 98 Bypass',
+    city: 'Columbia',
+    recordedState: 'MI',
+    actualState: 'MS',
+    county: 'Marion',
+    zip: '39429',
+    usd: 351576.1,
+    completedJobs: 1,
+    lastCompletedOn: '2018-11-27',
+    source: 'kickserv',
+    verifiedBy:
+      'US Census reverse geocode of 31.2418343, -89.8096773 — Mississippi, Marion County, Columbia city; and forward geocode of the address to 950 HWY 98 E, COLUMBIA, MS 39429.',
+    checked: '2026-08-26',
+  },
+]
