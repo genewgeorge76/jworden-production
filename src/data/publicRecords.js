@@ -112,43 +112,49 @@ export const PUBLIC_RECORDS = [
   },
 
   {
-    id: 'scheights-bond-LSM0900702',
+    id: 'illinois-municipal-licences-2016',
     brand: BRAND_JWORDEN,
     status: VERIFIABLE,
-    authority: 'Village of South Chicago Heights, Illinois',
-    authorityShort: 'South Chicago Heights, IL',
-    kind: 'Contractor Licence & Permit Bond',
-    reference: 'LSM0900702',
+    authority: 'Cities and villages of Oak Forest, Midlothian and South Chicago Heights, Illinois',
+    authorityShort: 'Illinois municipalities',
+    kind: 'Municipal Contractor Licences',
+    reference: 'LSM0900108 · LSM0900109 · LSM0900702',
     state: 'IL',
     year: 2016,
-    headline: 'Licensed contractor, Village of South Chicago Heights — bond LSM0900702',
+    headline: 'Licensed contractor in three Illinois municipalities, 2016',
     plain:
-      'Licensed by the Village of South Chicago Heights, Illinois as a General or Trade Contractor in November 2016, backed by a $10,000 continuous licence and permit bond written by Contractors Bonding and Insurance Company, an RLI company.',
+      'Licensed as a contractor by the City of Oak Forest, the Village of Midlothian and the Village of South Chicago Heights, Illinois in October and November 2016, each licence backed by a $10,000 licence and permit bond written by Contractors Bonding and Insurance Company, an RLI company.',
     whyItMatters:
-      'A municipality examined this company and licensed it to work there, and a surety underwrote that licence with its own money. Two independent parties — one government, one insurer — each took a position on whether this contractor could be trusted on a public street.',
+      'Three separate municipalities each examined this company and licensed it to work on their streets, and a surety underwrote all three with its own money. Four independent parties took a position, none of them a customer.',
     howToCheck:
-      'The Village of South Chicago Heights holds the licence and bond filing. Contractors Bonding and Insurance Company (Peoria, Illinois) holds bond LSM0900702.',
-    // WHY THE TENSE IS 2016 AND NOT THE PRESENT
-    // The instrument is a CONTINUOUS bond — it stays in force until the surety
-    // gives the village thirty days' notice, so it carries no expiry date on
-    // its face. That is not the same as being in force now, and nothing in the
-    // archive says it still is. Stated as what it is: a dated municipal
-    // licensing event, like the Richmond permit, not a current standing.
-    //
-    // AND IT IS A MUNICIPAL LICENCE, NOT A STATE ONE
-    // The bond's own words are that the Principal "has been licensed as a
-    // General or Trade Contractor by the Obligee" — the Obligee being the
-    // village. After a session spent stripping unsupported state licence
-    // claims off these pages, it would be a poor joke to let this one drift
-    // into sounding like an Illinois state licence. It is not.
-    tenseNote: 'A dated 2016 licensing event, not a current standing.',
-    scopeNote: 'Municipal licence issued by the village. Not a state contractor licence.',
-    // The bond names a former company address. It is a real historical detail
-    // and it is not going on a page.
+      'Each municipality holds its own licence and bond filing. Contractors Bonding and Insurance Company (Peoria, Illinois) holds bonds LSM0900108, LSM0900109 and LSM0900702.',
+    // Each bond read from the instrument itself, not from correspondence.
+    bonds: [
+      { number: 'LSM0900108', obligee: 'City of Oak Forest, Illinois', effective: '2016-10-10', penalSum: 10000, licensedAs: 'Contractor' },
+      { number: 'LSM0900109', obligee: 'Village of Midlothian, Illinois', effective: '2016-10-10', penalSum: 10000, licensedAs: 'Contractor' },
+      { number: 'LSM0900702', obligee: 'Village of South Chicago Heights, Illinois', effective: '2016-11-11', penalSum: 10000, licensedAs: 'General or Trade Contractor' },
+    ],
+    // A FOURTH BOND EXISTS AND IS NOT NAMED HERE
+    // The broker's statement of 2016-11-15 invoices four bonds at $75 each,
+    // $300 in total. Three are above. The fourth, LSM0900110, was issued on
+    // 2016-10-10 alongside Oak Forest and Midlothian and is almost certainly a
+    // fourth Illinois municipality — and "almost certainly" is not a name, so
+    // it stays out of the count on the page.
+    fourthBondUnidentified: 'LSM0900110, issued 2016-10-10, obligee not yet identified.',
+    // WHY THE TENSE IS 2016
+    // Each instrument is headed "Continuous License and Permit Bond" and bears
+    // no expiry on its face. The broker's statement tells the other half of the
+    // story: the terms billed were 10/10/2016–10/10/2017 and
+    // 11/11/2016–11/11/2017. One year each, $75 apiece. So these were annual
+    // credentials that lapsed unless renewed, and nothing in the archive shows
+    // a renewal. Stated as a dated 2016 licensing event, with the year on the
+    // page.
+    tenseNote: 'A dated 2016 licensing event, not a current standing. Terms billed ran one year.',
+    scopeNote: 'Municipal licences issued by each village or city. Not a state contractor licence.',
     addressWithheld: true,
-    addressWithheldReason: 'The bond carries a former company address; superseded and not published.',
+    addressWithheldReason: 'The bonds carry a former company address; superseded and not published.',
     source:
-      'The bond instrument itself, read 2026-08-26: "Continuous License and Permit Bond", bond number LSM0900702, principal J Worden and Sons Paving LLC, obligee Village of South Chicago Heights, penal sum $10,000, effective 11 November 2016, executed for the surety by a vice president under corporate seal, with power of attorney and Illinois disclosure notice attached.',
+      'The three bond instruments themselves, read 2026-08-26, each executed for the surety by a vice president under corporate seal with power of attorney attached; and the broker statement of 2016-11-15 invoicing four bonds totalling $300.',
     sourceVerified: '2026-08-26',
   },
 

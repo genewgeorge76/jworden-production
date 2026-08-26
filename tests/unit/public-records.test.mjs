@@ -101,7 +101,7 @@ test('no state entity registration is published without a live status', () => {
   }
   // The Illinois bond is a licence and therefore perishable in principle, so
   // it carries its tense on the record rather than in a reviewer's memory.
-  const bond = recordById('scheights-bond-LSM0900702')
+  const bond = recordById('illinois-municipal-licences-2016')
   assert.match(bond.tenseNote, /dated|not a current/i)
   assert.match(bond.scopeNote, /[Nn]ot a state contractor licence/)
   const va = withheldById('va-scc-s1800053')
@@ -371,9 +371,17 @@ test('the licensing policy is on the record with what it removed', () => {
  * ten commits removing.
  */
 test('the Illinois bond stays a dated municipal fact', () => {
-  const b = recordById('scheights-bond-LSM0900702')
+  const b = recordById('illinois-municipal-licences-2016')
   assert.equal(b.status, VERIFIABLE)
-  assert.equal(b.reference, 'LSM0900702')
+  // Three bonds read from the instruments, each with an obligee and a number.
+  assert.equal(b.bonds.length, 3)
+  for (const x of b.bonds) {
+    assert.match(x.number, /^LSM\d+$/)
+    assert.ok(x.obligee && x.effective && x.penalSum === 10000)
+  }
+  // The fourth bond is invoiced but unnamed, and stays uncounted on the page.
+  assert.match(b.fourthBondUnidentified, /LSM0900110/)
+  assert.doesNotMatch(b.plain, /four/i)
   assert.equal(b.state, 'IL')
   assert.equal(b.year, 2016)
 
