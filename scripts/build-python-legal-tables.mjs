@@ -62,8 +62,13 @@ const licensing = (await import('../src/data/legal/constructionLicensing.js')).d
  * The anchor is read from the source's own wording. A note that does not state
  * one yields null, and the calculator says so instead of guessing.
  */
-function filingAnchor(note) {
-  const n = String(note ?? '').toLowerCase()
+function filingAnchor(row) {
+  // An explicit anchor on the row wins. Virginia carries one because reading
+  // Va. Code § 43-4 showed the period runs from the last day of the MONTH in
+  // which work ended, not the day it ended — a distinction the prose note did
+  // not make and the parser below cannot infer.
+  if (row.lienFilingDeadlineAnchor) return row.lienFilingDeadlineAnchor
+  const n = String(row.lienFilingDeadlineNote ?? '').toLowerCase()
   if (/last (date|day)? ?of ?(furnishing|providing)|last furnishing/.test(n)) return 'last_furnishing'
   if (/completion|work completed|completed/.test(n)) return 'completion'
   return null
@@ -109,7 +114,7 @@ function specialRule(row) {
     day_of_month: Number(m[1]),
     months_after: Number(m[2]),
     residential_months_after: residential ? Number(residential[1]) : null,
-    anchor: filingAnchor(n) ?? 'completion',
+    anchor: filingAnchor(row) ?? 'completion',
   }
 }
 
@@ -127,7 +132,11 @@ const py = (v) => {
 const lienRows = lien.map((r) => ({
   state: r.state,
   lien_filing_days: r.lienFilingDeadlineDays ?? null,
-  lien_filing_anchor: filingAnchor(r.lienFilingDeadlineNote),
+  lien_filing_anchor: filingAnchor(r),
+  // A second, independent deadline that can expire first. Virginia's lien is
+  // cut off at 90 days from completion regardless of the month-end period, so
+  // reporting only the later of the two would overstate the time available.
+  lien_filing_also_capped_by: r.lienFilingAlsoCappedBy ?? null,
   lien_filing_note: r.lienFilingDeadlineNote ?? null,
   lien_filing_rule: specialRule(r),
   foreclosure_days: r.lienForeClosureDeadlineDays ?? null,
