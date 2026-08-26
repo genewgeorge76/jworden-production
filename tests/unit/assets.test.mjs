@@ -82,33 +82,30 @@ test('the phantom Gallery directory is not referenced again', () => {
 })
 
 /**
- * A RATCHET, NOT A CLIFF
- * ──────────────────────
+ * A RATCHET THAT HAS REACHED ZERO
+ * ───────────────────────────────
  * Heavy hero images cost Core Web Vitals, and Core Web Vitals cost rankings on
- * exactly the mobile local searches this business lives on. The nine KFC store
- * photographs below ship at 0.5-2.9 MB each and sit on the proof gallery - the
- * page a buyer studies immediately before calling. On a phone they ARE the LCP.
+ * exactly the mobile local searches this business lives on. Eight KFC store
+ * photographs used to ship at 0.5-2.9 MB each on the proof gallery - the page a
+ * buyer studies immediately before calling. On a phone they WERE the LCP.
  *
- * They are a pre-existing backlog, not a regression, and failing the suite over
- * a condition that predates the test helps nobody. So this is a ratchet: the
- * known set is named and frozen, and any NEW large JPEG without a modern
- * sibling fails immediately.
+ * They are gone. scripts/optimize-images.mjs encoded 118 files and took 57 MB
+ * off the wire; the worst offender, a 2.9 MB JPEG, now serves as a 356 KB AVIF.
+ * The set below is empty and should stay that way.
  *
- * To clear the backlog, run:  node scripts/optimize-images.mjs
- * It now walks public/images as well as public/work, and is idempotent. AVIF
- * encoding at this volume runs for a long while, which is why it is a
- * deliberate task rather than something wedged into a commit.
+ * It stays as a ratchet rather than a plain assertion because the useful thing
+ * is not the empty list, it is the pair of tests around it: a new large JPEG
+ * with no modern sibling fails immediately, and if a future backlog is ever
+ * added here, clearing an entry without deleting its line fails too. A list
+ * that is allowed to drift stops meaning anything.
+ *
+ * If a batch of unoptimised images ever does land, name them here and run:
+ *   node scripts/optimize-images.mjs
+ * It encodes what the browser can actually request - all of public/work, since
+ * SmartImage claims .avif/.webp siblings for anything under it, plus whatever
+ * public/images src/ genuinely references. --all encodes the rest.
  */
-const KNOWN_UNOPTIMISED = new Set([
-  '/images/kfc_stores/set_01/kfc_store_01_photo_1.jpg',
-  '/images/kfc_stores/set_02/kfc_store_02_photo_1.jpg',
-  '/images/kfc_stores/set_03/kfc_store_03_photo_1.jpg',
-  '/images/kfc_stores/set_04/kfc_store_04_photo_1.JPG',
-  '/images/kfc_stores/set_05/kfc_store_05_photo_1.JPG',
-  '/images/kfc_stores/set_06/kfc_store_06_photo_1.JPG',
-  '/images/kfc_stores/set_07/kfc_store_07_photo_1.JPG',
-  '/images/kfc_stores/set_08/kfc_store_08_photo_1.JPG',
-])
+const KNOWN_UNOPTIMISED = new Set([])
 
 function unoptimisedLargeJpegs() {
   const out = []
