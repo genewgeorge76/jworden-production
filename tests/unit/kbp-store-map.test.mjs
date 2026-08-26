@@ -123,3 +123,28 @@ test('the misfiled job is recorded in the state it is actually in', () => {
   assert.equal(KBP_STORES.some((s) => s.state === 'MS'), false)
   assert.equal(KBP_STORES.some((s) => s.usd === bk.usd), false)
 })
+
+/**
+ * BURTON MUST NOT GET "FIXED" INTO ONE JOB
+ * ────────────────────────────────────────
+ * Two jobs at 1145 North Belsay Road, eight days apart, both $51,500 — the
+ * tenant's restaurant pad and the landlord's plaza lot. Identical coordinates,
+ * identical amount, same contact. Every duplicate-hunting heuristic in this
+ * repository flags it, and this one is a false positive: the owner confirmed
+ * two separate contracts.
+ *
+ * This test exists because the habit of hunting double-counts is a good habit,
+ * and the next person to run that check will be right about the arithmetic and
+ * wrong about the job.
+ */
+test('Burton is two jobs and stays two jobs', async () => {
+  const { BURTON_MI } = await import('../../src/data/kbpStoreMap.js')
+  assert.equal(BURTON_MI.jobs.length, 2)
+  assert.equal(BURTON_MI.totalUsd, 103000)
+  assert.equal(BURTON_MI.isADuplicate, false)
+  // The trap is named on the record so it reads as a decision, not an oversight.
+  assert.equal(BURTON_MI.looksLikeADuplicate, true)
+  assert.match(BURTON_MI.basis, /owner-stated/)
+  const payers = BURTON_MI.jobs.map((j) => j.payer).sort()
+  assert.deepEqual(payers, ['landlord', 'tenant'])
+})
