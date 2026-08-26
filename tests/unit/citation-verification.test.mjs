@@ -188,3 +188,57 @@ test('a state that could not be read is not silently marked verified', () => {
     assert.ok(codes.includes(abbr), `${abbr} is neither verified nor listed unreadable`)
   }
 })
+
+/**
+ * THIRD PASS. Twenty-one statutes read, ten corrected.
+ */
+test('California is not the wrong way round', () => {
+  // The row gave general contractors 30 days after a notice of completion and
+  // subcontractors 60. Civ. Code § 8412 gives a direct contractor 60 and
+  // § 8414 gives every other claimant 30. As a sub the old row promised
+  // sixty days where thirty are allowed, and a lien filed on day 45 is lost.
+  const ca = lien.find((r) => r.abbr === 'CA')
+  assert.equal(ca.lienFilingShortenedBy.directWithOwner, 60)
+  assert.equal(ca.lienFilingShortenedBy.other, 30)
+  assert.equal(/30-day filing period for GCs/.test(ca.lienFilingDeadlineNote), false)
+})
+
+test('a deadline the owner can shorten is reported, never silently computed', () => {
+  // Whether a notice of completion was recorded is a fact about the job that
+  // nothing here knows. Computing it would invent a deadline; ignoring it
+  // would hide one.
+  for (const abbr of ['CA', 'NV']) {
+    assert.ok(lien.find((r) => r.abbr === abbr).lienFilingShortenedBy)
+  }
+  assert.match(PY, /"lien_filing_shortened_by"/)
+  const calc = pythonSourceWithoutComments('app/services/lien_calendar.py')
+  assert.match(calc, /this deadline is shortened to/)
+  assert.match(calc, /that is not recorded here/)
+})
+
+test('Delaware distinguishes the claimant, and by the right numbers', () => {
+  // The old note said 60 days for original contractors and 90 for
+  // subcontractors. 25 Del. C. § 2711 says 180 and 120.
+  const de = lien.find((r) => r.abbr === 'DE')
+  assert.deepEqual(de.lienFilingByClaimant, { directWithOwner: 180, other: 120 })
+  assert.equal(/60 days for original contractor/.test(de.lienFilingDeadlineNote), false)
+  assert.match(PY, /"lien_filing_by_claimant"/)
+})
+
+test('Wisconsin states months and is stored in months', () => {
+  const wi = lien.find((r) => r.abbr === 'WI')
+  assert.equal(wi.lienFilingDeadlineMonths, 6)
+  assert.equal(wi.lienFilingDeadlineDays, null)
+  assert.equal(wi.lienForeClosureDeadlineDays, 730)
+})
+
+test('the record grows only by reading, and the verdicts stay honest', () => {
+  const corrected = VERIFIED_CITATIONS.filter((v) => v.verdict === 'corrected')
+  const confirmed = VERIFIED_CITATIONS.filter((v) => v.verdict === 'confirmed')
+  // Both kinds must exist. A pass that only ever "corrects" is not reading the
+  // statute, it is rewriting the row to match whatever it just fetched.
+  assert.ok(corrected.length > 0 && confirmed.length > 0)
+  for (const v of confirmed) {
+    assert.match(v.finding, /match|exact/i, `${v.abbr} is confirmed without saying what matched`)
+  }
+})

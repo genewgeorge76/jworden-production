@@ -213,6 +213,110 @@ export const VERIFIED_CITATIONS = [
       'mechanics lien statutes and Superior Court filing procedures", which is a description of ' +
       'where to look rather than a statute. Both replaced with the section and its rule.',
   },
+  {
+    abbr: 'CA', topic: 'mechanicsLien', citation: 'Cal. Civ. Code §§ 8412, 8414',
+    source: 'https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8412',
+    checked: '2026-08-26',
+    heading: '§ 8412 (direct contractor); § 8414 (claimant other than direct contractor)',
+    quote:
+      'Before the earlier of the following times: (1) Ninety days after completion of the work of ' +
+      'improvement. (2) Sixty days after the owner records a notice of completion or cessation. ' +
+      '[§ 8412] … (2) Thirty days after the owner records a notice of completion or cessation. [§ 8414]',
+    verdict: 'corrected',
+    finding:
+      'The row had the two periods THE WRONG WAY ROUND — 30 days for general contractors and 60 ' +
+      'for subcontractors. The statute is the reverse. As a GC that understated the time, which ' +
+      'is merely wrong; as a subcontractor it promised sixty days where thirty are allowed, and a ' +
+      'lien filed on day 45 in reliance on it is lost.',
+  },
+  {
+    abbr: 'DE', topic: 'mechanicsLien', citation: '25 Del. C. § 2711',
+    source: 'https://delcode.delaware.gov/title25/c027/sc02/index.html',
+    checked: '2026-08-26', heading: '§ 2711. Statement of claim; time of filing.',
+    quote:
+      'within 180 days after the completion of such structure [contractor dealing directly with ' +
+      'the owner] … within 120 days from the date from the completion of the labor performed or ' +
+      'from the last delivery of materials furnished [all other claimants]',
+    verdict: 'corrected',
+    finding:
+      'Both figures in the old note were wrong: it said 60 days for original contractors and 90 ' +
+      'for subcontractors. The statute gives 180 days to a contractor dealing directly with the ' +
+      'owner and 120 to everyone else.',
+  },
+  {
+    abbr: 'NV', topic: 'mechanicsLien', citation: 'Nev. Rev. Stat. § 108.226',
+    source: 'https://www.leg.state.nv.us/nrs/nrs-108.html',
+    checked: '2026-08-26', heading: 'NRS 108.226 Perfection of lien: Time for recording notice of lien',
+    quote:
+      'Within 90 days after the date on which the latest of the following occurs: (1) The ' +
+      'completion of the work of improvement; (2) The last delivery of material or furnishing of ' +
+      'equipment by the lien claimant … or Within 40 days after the recording of a valid notice ' +
+      'of completion',
+    verdict: 'corrected',
+    finding:
+      'Ninety days was right but incomplete. A recorded and served notice of completion cuts the ' +
+      'window to forty days and the row said nothing about it.',
+  },
+  {
+    abbr: 'WI', topic: 'mechanicsLien', citation: 'Wis. Stat. § 779.06(1)',
+    source: 'https://docs.legis.wisconsin.gov/statutes/statutes/779/i/06',
+    checked: '2026-08-26', heading: '779.06 Lien claim; notice; foreclosure.',
+    quote:
+      'within 6 months from the date the lien claimant performed, furnished, or procured the last ' +
+      'labor, services, materials, plans, or specifications, a claim for the lien is filed … ' +
+      'within 2 years from the date of filing a claim for lien an action is brought',
+    verdict: 'corrected',
+    finding:
+      'Six calendar months stored as 180 days. The two-year enforcement window from filing was ' +
+      'correct at 730 days.',
+  },
+  {
+    abbr: 'OR', topic: 'mechanicsLien', citation: 'Or. Rev. Stat. §§ 87.035, 87.055',
+    source: 'https://www.oregonlegislature.gov/bills_laws/ors/ors087.html',
+    checked: '2026-08-26', heading: '87.035 Perfecting lien; 87.055 Duration of lien',
+    quote:
+      'not later than 75 days after the person has ceased to provide labor, rent equipment or ' +
+      'furnish materials or 75 days after completion of construction, whichever is earlier … ' +
+      'No lien … shall bind any improvement for a longer period than 120 days after the claim of ' +
+      'lien is filed unless suit is brought',
+    verdict: 'confirmed',
+    finding: 'Both figures exact — 75 days to file, 120 days from filing to sue.',
+  },
+  {
+    abbr: 'ID', topic: 'mechanicsLien', citation: 'Idaho Code § 45-507',
+    source: 'https://legislature.idaho.gov/statutesrules/idstat/Title45/T45CH5/SECT45-507/',
+    checked: '2026-08-26', heading: '45-507. Claim of lien — filing.',
+    quote: 'The claim shall be filed within ninety (90) days after the completion of the labor or services, or furnishing of materials.',
+    verdict: 'confirmed', finding: '90 days. Matches.',
+  },
+  {
+    abbr: 'ME', topic: 'mechanicsLien', citation: 'Me. Rev. Stat. tit. 10, § 3253',
+    source: 'https://legislature.maine.gov/statutes/10/title10sec3253.html',
+    checked: '2026-08-26', heading: '§3253. Dissolution of lien',
+    quote: 'The lien under section 3252 is dissolved unless the claimant, within 90 days after ceasing to labor, furnish materials or perform services',
+    verdict: 'confirmed', finding: '90 days from ceasing to labor. Matches.',
+  },
+  {
+    abbr: 'OH', topic: 'mechanicsLien', citation: 'Ohio Rev. Code § 1311.06',
+    source: 'https://codes.ohio.gov/ohio-revised-code/section-1311.06',
+    checked: '2026-08-26', heading: '1311.06 Affidavit for mechanics lien.',
+    quote: 'within seventy-five days from the date on which the last of the labor or work was performed or material was furnished by the person claiming the lien',
+    verdict: 'confirmed', finding: '75 days. Matches.',
+  },
+  {
+    abbr: 'WA', topic: 'mechanicsLien', citation: 'Wash. Rev. Code § 60.04.091',
+    source: 'https://app.leg.wa.gov/RCW/default.aspx?cite=60.04.091',
+    checked: '2026-08-26', heading: 'RCW 60.04.091 Claim of lien — Recording.',
+    quote: 'no action to foreclose a lien shall be maintained unless the claim of lien is filed for recording within the ninety-day period stated',
+    verdict: 'confirmed', finding: '90 days. Matches.',
+  },
+  {
+    abbr: 'NE', topic: 'mechanicsLien', citation: 'Neb. Rev. Stat. § 52-137',
+    source: 'https://nebraskalegislature.gov/laws/statutes.php?statute=52-137',
+    checked: '2026-08-26', heading: '52-137. Lien; recording; time.',
+    quote: "not later than one hundred twenty days after his or her final furnishing of services or materials, he or she has recorded a lien",
+    verdict: 'confirmed', finding: '120 days from final furnishing. Matches.',
+  },
 ]
 
 /**
