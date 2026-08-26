@@ -73,10 +73,30 @@ export const STATE_EVIDENCE = {
     detail: 'Twelve stores on the owner’s punch list, five more named in emails the crew sent to KBP area coaches with the work each describes, and the Big Chicken in Marietta (G135094). A further 23 Georgia stores sit in KBP’s 2017 tracker at Design or Permitting and are pipeline, not work.',
     sources: ['punch-list', 'area-coach-email', 'kbp-2017-tracker', 'kickserv'],
   },
+  /**
+   * TEXAS GAINED A JOB OF A DIFFERENT KIND, KEPT SEPARATE FROM THE TOTAL
+   * ───────────────────────────────────────────────────────────────────
+   * The $670,039 is a clean derivation from one file — the Project Red tracker,
+   * 23 rows carrying invoice evidence — and it is not touched here. Sulphur
+   * Springs is not one of those 23 rows; it is a separate job with its own
+   * invoice in invoiceRecord.js, and folding it into the total would corrupt a
+   * figure that currently reconciles to the cent.
+   *
+   * It matters because it is a different KIND of work. The 23 are paving. This
+   * one is a ground-up restaurant build where the budget workbook shows this
+   * company running the schedule of values and marking trades "self perform" —
+   * language only the general contractor writes. One state, two capabilities,
+   * separately evidenced.
+   *
+   * The project value stays unstated. The workbook totals and the invoice on
+   * file differ by an order of magnitude and nothing in hand reconciles them;
+   * see SULPHUR_SPRINGS_BUDGET in clientProgramDocuments.js.
+   */
   TX: {
     grade: WORK,
-    detail: '23 invoiced restaurant sites across 19 cities, $670,039, reconciled to the cent against the Project Red invoice tracker. Delivered with Rizo Paving of Mercedes, Texas as subcontractor.',
-    sources: ['invoice-tracker', 'kickserv'],
+    detail: '23 invoiced restaurant sites across 19 cities, $670,039, reconciled to the cent against the Project Red invoice tracker. Delivered with Rizo Paving of Mercedes, Texas as subcontractor. Separately, a ground-up KFC new build at Sulphur Springs, invoiced 13 August 2018, run by this company as general contractor.',
+    sources: ['invoice-tracker', 'kickserv', 'invoice-record', 'sulphur-springs-budget'],
+    valueNote: 'The $670,039 covers the 23 tracker rows only. Sulphur Springs is a separate job and its value is unreconciled, so no combined figure is stated.',
   },
   NJ: {
     grade: WORK,
@@ -136,10 +156,33 @@ export const STATE_EVIDENCE = {
     detail: 'A June 2018 DocuSign titled "KFC-Michigan and Ohio" places Ohio in the contracted programme. No completion evidence in the archive.',
     sources: ['kbp-correspondence'],
   },
+  /**
+   * TENNESSEE LOST ITS EVIDENCE ON 2026-08-26, AND THIS IS WHAT REMAINS
+   * ──────────────────────────────────────────────────────────────────
+   * This entry used to read "A TDOT permit for Sulphur Springs". Two things
+   * were wrong with it.
+   *
+   * The permit is Texan. The owner confirms only one Sulphur Springs job was
+   * ever done, and that job's own budget workbook is unambiguously Texas — 903
+   * area codes, Hopkins County, TX DOT named on its city-officials sheet. TDOT
+   * was TxDOT mis-keyed, and a single wrong letter had been standing up an
+   * entire state's grade.
+   *
+   * And the citation never checked out. The entry sourced itself to
+   * `kbp-correspondence`, and kbpCorrespondence.js contains no Sulphur Springs
+   * and no TDOT. A source list is not decoration; when nobody follows it, a
+   * claim can cite a file that does not support it for as long as it likes.
+   *
+   * What is actually left for Tennessee is one line in nationalProjects.json:
+   * Smyrna, 25 April 2017, "Site correspondence with client" — no store number,
+   * no address, no scope. That is thinner than a permit and it is graded
+   * accordingly. It is emphatically not work.
+   */
   TN: {
     grade: PIPELINE,
-    detail: 'A TDOT permit for Sulphur Springs. A permit is permission to work, not proof that work happened.',
+    detail: 'One site in Smyrna, documented 25 April 2017 as correspondence with the client — no store number, no address, no scope. The Sulphur Springs entrance permit previously cited here is Texan and has been moved to Texas.',
     sources: ['kbp-correspondence'],
+    citationNote: 'The former TDOT claim cited kbp-correspondence, which does not contain it. Corrected 2026-08-26 rather than left to be re-cited.',
   },
   AL: {
     grade: LICENSING,

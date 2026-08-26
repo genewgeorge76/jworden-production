@@ -378,7 +378,7 @@
         "sites": [
           { "city": "Leesville", "state": "LA", "note": "Ground-up KFC build" },
           { "city": "DeRidder", "state": "LA", "note": "Ground-up KFC build" },
-          { "city": "Sulphur Springs", "state": "TN", "note": "TDOT entrance permit obtained" }
+          { "city": "Sulphur Springs", "state": "TX", "note": "TxDOT entrance permit obtained", "stateCorrected": "Recorded as TN with a TDOT permit until 2026-08-26. The owner confirms only one Sulphur Springs job was ever done, and its own budget workbook is unambiguously Texas: 903 area codes, Hopkins County contacts, and TX DOT named on the project's city-officials sheet. TDOT was TxDOT mis-keyed." }
         ]
       }
     }

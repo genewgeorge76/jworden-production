@@ -188,22 +188,67 @@ export const SULPHUR_SPRINGS_BUDGET = {
 }
 
 /**
- * A SEPARATE SULPHUR SPRINGS PROBLEM, WORTH ONE LINE SO IT IS NOT LOST
- * ───────────────────────────────────────────────────────────────────
- * stateEvidence.js and nationalProjects.json both place a Sulphur Springs at a
- * TDOT — Tennessee — entrance permit. This budget is unambiguously Texas: 903
- * area codes, Hopkins County, TX DOT named on the city-officials sheet.
+ * THE SULPHUR SPRINGS STATE QUESTION, SETTLED BY THE OWNER
+ * ───────────────────────────────────────────────────────
+ * This file first recorded an unresolved conflict: stateEvidence.js and
+ * nationalProjects.json placed a Sulphur Springs against a Tennessee DOT
+ * permit, while this workbook is unambiguously Texas.
  *
- * There is a Sulphur Springs in both states, so this may be two projects, or it
- * may be TxDOT mis-keyed as TDOT once and propagated. Invoice 2472 carries no
- * state at all. Flagged rather than corrected, because guessing which record is
- * wrong is how a wrong record becomes permanent.
+ * The owner settled it on 2026-08-26 — only one Sulphur Springs job was ever
+ * done. One job cannot be in two states, and this workbook says which one:
+ * 903 area codes, Hopkins County contacts, and TX DOT named on the project's
+ * own city-officials sheet. TDOT was TxDOT mis-keyed, and both records have
+ * been corrected to Texas.
+ *
+ * WHY A SINGLE WRONG LETTER MATTERED THIS MUCH
+ * Tennessee's entire evidence grade rested on that one line. Correcting it
+ * left the state standing on a single 2017 correspondence entry for Smyrna
+ * with no store number, no address and no scope.
+ *
+ * And the citation had never been checked. The Tennessee entry sourced itself
+ * to kbp-correspondence; that file contains neither "Sulphur Springs" nor
+ * "TDOT". A claim can cite a file that does not support it indefinitely, as
+ * long as nobody follows the reference.
  */
-export const SULPHUR_SPRINGS_STATE_AMBIGUITY = {
+export const SULPHUR_SPRINGS_STATE_RESOLVED = {
+  state: 'TX',
+  resolvedOn: '2026-08-26',
+  resolvedBy: 'Owner confirmation that only one Sulphur Springs job was ever performed.',
   texasEvidence: 'This budget workbook: 903 area codes, Hopkins County contacts, TX DOT on the officials sheet.',
-  tennesseeEvidence: 'nationalProjects.json and stateEvidence.js both record a TDOT entrance permit for a Sulphur Springs.',
-  invoiceCarriesNoState: '2472, "KFC-Sulphur Springs"',
-  resolution: 'Unresolved. Either two projects in two states, or TxDOT recorded once as TDOT. Not corrected by guess.',
+  formerlyRecordedAs: 'Sulphur Springs, TN, with a TDOT entrance permit.',
+  recordsCorrected: ['src/data/nationalProjects.json', 'src/data/stateEvidence.js'],
+  knockOnEffect:
+    'Tennessee’s grade had rested entirely on that permit. It now rests on one 2017 Smyrna correspondence entry with no store number, address or scope.',
+  unsupportedCitationFound:
+    'The Tennessee entry cited kbp-correspondence, which contains neither "Sulphur Springs" nor "TDOT".',
+}
+
+/**
+ * THE JEFFERSON CITY SET FITS A PROGRAMME THIS REPOSITORY ALREADY DOCUMENTS
+ * ────────────────────────────────────────────────────────────────────────
+ * nationalProjects.json records a 2018 KFC new-build programme whose project
+ * team is Plaza Street Partners as developer, Davidson AE as architect, Burns
+ * & McDonnell as engineering, and Innovative Building Solutions as
+ * construction management.
+ *
+ * Burns & McDonnell engineered the Jefferson City set. "Davidson" is one of
+ * the eight trade-partner columns in the KFC responsibility matrix. The set is
+ * dated January 2018 and the programme's year is 2018.
+ *
+ * Three documents that arrived separately — a drawing set, a brand matrix and
+ * a programme record already in the repository — naming the same firms in the
+ * same year. That is real corroboration, and it is corroboration of the
+ * PROGRAMME, not of this company's role in Jefferson City specifically. The
+ * drawing set still names no contractor and still needs an invoice.
+ */
+export const NEW_BUILD_PROGRAMME_CROSSCHECK = {
+  programmeYear: '2018',
+  namedInRepositoryAlready: ['Plaza Street Partners', 'Davidson AE', 'Burns & McDonnell', 'Innovative Building Solutions LLC'],
+  jeffersonCityEngineer: 'Burns & McDonnell',
+  matrixTradePartnerColumns: ['KFC', 'KBP', 'GC', 'Worden', 'Champion', 'RSCS', 'Davidson', 'Fullerton'],
+  corroborates: 'That the drawing set belongs to the 2018 new-build programme already recorded, engineered by the firm already named.',
+  doesNotCorroborate:
+    'Any role for this company at Jefferson City. The set names no contractor and the invoice archive has no Jefferson City entry.',
 }
 
 export const CLIENT_DOCUMENTS = [

@@ -2,8 +2,10 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { CLIENT_DOCUMENTS, KFC_RESPONSIBILITY_MATRIX, JEFFERSON_CITY_CIVIL_SET, SULPHUR_SPRINGS_BUDGET }
+import { CLIENT_DOCUMENTS, KFC_RESPONSIBILITY_MATRIX, JEFFERSON_CITY_CIVIL_SET, SULPHUR_SPRINGS_BUDGET,
+  SULPHUR_SPRINGS_STATE_RESOLVED, NEW_BUILD_PROGRAMME_CROSSCHECK }
   from '../../src/data/clientProgramDocuments.js'
+import { STATE_EVIDENCE, WORK } from '../../src/data/stateEvidence.js'
 import { publishableFor, BRAND_JWORDEN, recordById } from '../../src/data/publicRecords.js'
 
 const PAGE_DIRS = ['src/pages', 'src/components']
@@ -115,4 +117,58 @@ test('the Aurora bond publishes as its own dated event', () => {
   assert.equal(aurora.addressWithheld, true)
   // It must reach the Virginia-brand pages alongside the other records.
   assert.ok(publishableFor(BRAND_JWORDEN).some((r) => r.id === 'aurora-performance-bond-2017'))
+})
+
+/**
+ * ONE JOB CANNOT BE IN TWO STATES
+ * ───────────────────────────────
+ * Sulphur Springs was recorded as Tennessee with a TDOT permit while its own
+ * budget workbook is Texan. The owner confirmed one job only, so both records
+ * were corrected. These assertions exist because a single mis-keyed letter had
+ * been holding up an entire state's evidence grade, and the same slip would be
+ * easy to reintroduce.
+ */
+test('Sulphur Springs is recorded in Texas and nowhere else', () => {
+  assert.equal(SULPHUR_SPRINGS_STATE_RESOLVED.state, 'TX')
+  const projects = JSON.parse(readFileSync('src/data/nationalProjects.json', 'utf8'))
+  const found = []
+  const walk = (o) => {
+    if (Array.isArray(o)) return o.forEach(walk)
+    if (o && typeof o === 'object') {
+      if (typeof o.city === 'string' && /sulph?[ue]r springs/i.test(o.city)) found.push(o)
+      Object.values(o).forEach(walk)
+    }
+  }
+  walk(projects)
+  assert.ok(found.length > 0, 'Sulphur Springs vanished from the project record')
+  for (const site of found) {
+    assert.equal(site.state, 'TX', 'a Sulphur Springs site is recorded outside Texas')
+  }
+})
+
+/** Tennessee may not silently regain a grade it lost with that permit. */
+test('Tennessee is not presented as a market served', () => {
+  assert.notEqual(STATE_EVIDENCE.TN.grade, WORK)
+  assert.equal(/TDOT/.test(STATE_EVIDENCE.TN.detail), false, 'the Texan permit is back on Tennessee')
+  assert.match(STATE_EVIDENCE.TN.detail, /Smyrna/)
+})
+
+/**
+ * The $670,039 reconciles to the cent against one file. Sulphur Springs is not
+ * one of its rows, and folding it in would break a clean derivation.
+ */
+test('the Texas total is not inflated by the new build', () => {
+  assert.match(STATE_EVIDENCE.TX.detail, /\$670,039/)
+  assert.match(STATE_EVIDENCE.TX.valueNote, /separate job/i)
+  assert.equal(
+    /\$948,716|\$786,001|\$783,943/.test(STATE_EVIDENCE.TX.detail + STATE_EVIDENCE.TX.valueNote),
+    false,
+    'an unreconciled workbook total reached the state evidence',
+  )
+})
+
+/** The cross-check corroborates the programme, never this company's role. */
+test('the Jefferson City cross-check does not overreach', () => {
+  assert.match(NEW_BUILD_PROGRAMME_CROSSCHECK.doesNotCorroborate, /names no contractor/i)
+  assert.equal(JEFFERSON_CITY_CIVIL_SET.namesWorden, false)
 })
