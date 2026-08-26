@@ -111,13 +111,26 @@ export const JEFFERSON_CITY_CIVIL_SET = {
   ],
   sealed: 'Missouri professional engineer seal on the general notes sheet.',
   namesWorden: false,
+  // RESOLVED BY THE OWNER, 2026-08-26
+  // This record previously said the set could not establish any role for this
+  // company, because it assigns every duty to "the Subcontractor" generically.
+  // That remains true of the DOCUMENT. It is no longer the state of knowledge:
+  // the owner confirms the company built this restaurant, demolishing an
+  // existing building on the site to do it.
+  ownerConfirmed: {
+    built: true,
+    confirmedOn: '2026-08-26',
+    scope: 'Ground-up KFC including demolition of an existing building on the site.',
+  },
   whatItProves: 'The project existed, was engineered by a national firm and reached permit stage.',
   whatItDoesNotProve:
-    'Any role for this company. The set assigns every duty to "the Subcontractor" generically and names no contractor. Possession of a permit set is consistent with bidding and with being awarded the job alike.',
+    'On its own, any role for this company — it names no contractor. The build is established by owner confirmation, which is owner-stated evidence and not the same grade as an invoice.',
   corroborationNeeded:
-    'An invoice, a contract or a purchase order naming Jefferson City. Nothing in the invoice archive currently does.',
-  status: 'unconfirmed',
+    'An invoice, contract or purchase order naming Jefferson City would raise this from owner-stated to documented. Nothing in the invoice archive currently does.',
+  status: 'owner-confirmed',
   publishable: false,
+  whyNotPublishable:
+    'Owner-stated work with no invoice behind it in this archive, on a site where a demolition drew an EPA enforcement action. Neither half belongs on a marketing page.',
   sourceVerified: '2026-08-26',
 }
 

@@ -6,6 +6,7 @@ import { CLIENT_DOCUMENTS, KFC_RESPONSIBILITY_MATRIX, JEFFERSON_CITY_CIVIL_SET, 
   SULPHUR_SPRINGS_STATE_RESOLVED, NEW_BUILD_PROGRAMME_CROSSCHECK }
   from '../../src/data/clientProgramDocuments.js'
 import { STATE_EVIDENCE, WORK } from '../../src/data/stateEvidence.js'
+import { JEFFERSON_CITY_EPA_MATTER } from '../../src/data/publicRecordsWithheld.js'
 import { publishableFor, BRAND_JWORDEN, recordById } from '../../src/data/publicRecords.js'
 
 const PAGE_DIRS = ['src/pages', 'src/components']
@@ -70,9 +71,14 @@ test('the KFC matrix scope is the eight sitework items and nothing more', () => 
 
 /** Possession of a permit set is not participation in the project. */
 test('the Jefferson City set does not claim a role it cannot support', () => {
+  // The DOCUMENT still names no contractor. The build is established by the
+  // owner, which is a different and weaker grade of evidence than an invoice,
+  // and the record must not quietly upgrade one into the other.
   assert.equal(JEFFERSON_CITY_CIVIL_SET.namesWorden, false)
-  assert.equal(JEFFERSON_CITY_CIVIL_SET.status, 'unconfirmed')
-  assert.match(JEFFERSON_CITY_CIVIL_SET.whatItDoesNotProve, /bidding/i)
+  assert.equal(JEFFERSON_CITY_CIVIL_SET.ownerConfirmed.built, true)
+  assert.equal(JEFFERSON_CITY_CIVIL_SET.status, 'owner-confirmed')
+  assert.match(JEFFERSON_CITY_CIVIL_SET.whatItDoesNotProve, /owner-stated/i)
+  assert.equal(JEFFERSON_CITY_CIVIL_SET.publishable, false)
 })
 
 /**
@@ -171,4 +177,44 @@ test('the Texas total is not inflated by the new build', () => {
 test('the Jefferson City cross-check does not overreach', () => {
   assert.match(NEW_BUILD_PROGRAMME_CROSSCHECK.doesNotCorroborate, /names no contractor/i)
   assert.equal(JEFFERSON_CITY_CIVIL_SET.namesWorden, false)
+})
+
+/**
+ * AN ENFORCEMENT ACTION IS RECORDED, NEVER RENDERED
+ * ────────────────────────────────────────────────
+ * The EPA matter is in the withheld register because it is already public at
+ * EPA ECHO and the company should not be the last to know what a stranger can
+ * read. That is precisely the kind of entry a bundler would happily ship to
+ * every browser if a page-facing module ever imported the file, which is the
+ * mistake this repository has already made twice with lesser material.
+ */
+test('the EPA matter is held, unpublishable, and out of page reach', () => {
+  assert.equal(JEFFERSON_CITY_EPA_MATTER.publishable, false)
+  assert.equal(JEFFERSON_CITY_EPA_MATTER.publiclySearchable, true)
+  assert.ok(JEFFERSON_CITY_EPA_MATTER.whyWithheld.length > 40)
+  // Particulars were not supplied and must not be invented later.
+  assert.ok(JEFFERSON_CITY_EPA_MATTER.particularsNotSupplied.includes('amount'))
+
+  const offenders = []
+  for (const dir of PAGE_DIRS) {
+    for (const file of sourceFiles(dir)) {
+      const src = readFileSync(file, 'utf8')
+      if (/publicRecordsWithheld|asbestos|EPA ECHO/i.test(src)) offenders.push(file)
+    }
+  }
+  assert.deepEqual(offenders, [], 'enforcement material reachable from page code:\n  ' + offenders.join('\n  '))
+})
+
+/**
+ * THE STANDARD THAT CAME OUT OF IT MUST STAY IN THE PROMPT
+ * A lesson held in one person's memory protects one job. In WORDEN_STANDARDS it
+ * reaches every answer the assistant gives about a demolition.
+ */
+test('the demolition standard is in the canonical standards block', () => {
+  const jarvis = readFileSync('app/services/jarvis.py', 'utf8')
+  const block = jarvis.slice(jarvis.indexOf('WORDEN_STANDARDS = ('), jarvis.indexOf('number ends up in a bid.'))
+  assert.match(block, /asbestos survey/i, 'the demolition standard is missing')
+  assert.match(block, /10-working-day|10 working day/i, 'the NESHAP notification period is missing')
+  assert.match(block, /Subpart M/, 'the governing rule is not cited')
+  assert.match(block, /Never on a developer|not.*developer/i, 'the standard does not say whose word is worthless here')
 })

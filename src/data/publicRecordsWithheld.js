@@ -741,3 +741,70 @@ export const SHAREHOLDERS_RESOLUTION_2015 = {
     'Internal minutes on a commercial template, held by no registrar and confirmable by nobody. Contains a named individual’s date of death and family members’ withdrawal, neither of which belongs on a marketing page.',
   sourceVerified: '2026-08-26',
 }
+
+/**
+ * THE JEFFERSON CITY EPA MATTER
+ * ─────────────────────────────
+ * An existing building was demolished to make room for the KFC at Jefferson
+ * City, Missouri. The developer did not disclose asbestos in it. This company
+ * was fined by the EPA.
+ *
+ * WHY THIS IS RECORDED AT ALL, WHEN PRIVATE DISPUTES ARE NOT
+ * ─────────────────────────────────────────────────────────
+ * This repository deliberately keeps private financial disputes out of the
+ * record — the Louisiana collections matter and the Lancaster dispute are both
+ * omitted, because they are between two parties and nobody else can see them.
+ *
+ * This one is different in the way that matters: EPA enforcement actions are
+ * PUBLIC. They are published in ECHO, the agency's Enforcement and Compliance
+ * History Online database, and they are searchable by facility and by company.
+ * A general contractor running due diligence, a franchisee vetting a bidder, or
+ * a competitor looking for something to use can all find it without asking.
+ *
+ * A company whose own system does not know about its own public record is the
+ * last party in the room to know. That is the entire reason this entry exists.
+ * It is not published, it is not marketing, and it is not a confession — it is
+ * the company being aware of what a stranger can already read.
+ *
+ * WHY THE NON-DISCLOSURE WAS NO SHIELD, WHICH IS THE USEFUL PART
+ * ─────────────────────────────────────────────────────────────
+ * 40 CFR 61.145(a) places the pre-demolition inspection duty on "the owner or
+ * operator of a demolition or renovation activity", requiring a thorough
+ * inspection of the affected facility BEFORE demolition commences. A demolition
+ * contractor is the operator. The duty therefore attaches directly and
+ * independently — it is not inherited from the developer, and a developer's
+ * assurance does not discharge it. Paragraph (b) separately requires notice at
+ * least 10 working days before the work begins.
+ *
+ * That is why a developer's silence produced a fine against this company rather
+ * than against the developer alone. It also means the protection is not asking
+ * better questions: it is commissioning the survey directly and filing the
+ * notification directly, every time. That is now a Worden Standard in
+ * app/services/jarvis.py rather than a lesson held in one person's memory.
+ *
+ * WHAT IS NOT RECORDED HERE
+ * The amount, the date, the docket number and the disposition are not stated,
+ * because they were not supplied and this file does not invent particulars. Any
+ * assessment of current exposure would need them.
+ */
+export const JEFFERSON_CITY_EPA_MATTER = {
+  site: 'KFC — Jefferson City, Missouri',
+  what: 'EPA fine following demolition of an existing building containing undisclosed asbestos.',
+  disclosureFailure: 'The developer did not disclose the asbestos prior to demolition.',
+  ownerStated: '2026-08-26',
+  // The regulator's own wording, read from 40 CFR 61.145 rather than recalled.
+  ruleThatApplied: '40 CFR Part 61 Subpart M, § 61.145',
+  dutyRestsOn: 'the owner or operator of a demolition or renovation activity',
+  whyDeveloperSilenceWasNoDefence:
+    'A demolition contractor is the operator. The inspection duty attaches independently and is not discharged by an owner’s or developer’s assurance.',
+  notificationRequirement: 'At least 10 working days before the work begins.',
+  publiclySearchable: true,
+  publicSource: 'EPA ECHO — Enforcement and Compliance History Online, searchable by facility and company.',
+  particularsNotSupplied: ['amount', 'date', 'docket number', 'disposition'],
+  standardAdopted:
+    'Demolition standard added to WORDEN_STANDARDS: no demolition without a written asbestos survey commissioned by this company and the 10-working-day NESHAP notification.',
+  status: HELD,
+  publishable: false,
+  whyWithheld:
+    'An enforcement action against this company. It is already public at EPA, so the company must know about it; that is not a reason to repeat it on a page that exists to win work.',
+}

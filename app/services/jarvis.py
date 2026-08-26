@@ -118,18 +118,39 @@ _ABILITY_SUMMARY = _measured_ability_summary()
 # without risking making up numbers — correct behaviour, and a gap: these
 # figures are in the repository's own documentation, and the model never saw
 # them. They belong in the prompt rather than in a retrieval step, because they
-# are four short constants that must be present in every answer that touches a
+# are five short constants that must be present in every answer that touches a
 # spec, not documents to be searched for.
+#
+# THE FIFTH ONE WAS BOUGHT AND PAID FOR
+# The demolition rule is here because of Jefferson City, Missouri. An existing
+# building was demolished to make room for the KFC, the developer did not
+# disclose asbestos in it, and this company was fined by the EPA.
+#
+# The reason the non-disclosure was no shield is worth stating plainly, because
+# it is counter-intuitive and it will come up again. 40 CFR 61.145(a) places the
+# pre-demolition inspection duty on "the owner or operator" of the demolition,
+# and a demolition contractor IS the operator. The duty attaches directly and
+# independently; it is not inherited from the developer, and a developer's
+# assurance does not discharge it. Paragraph (b) then requires notification at
+# least 10 working days before the work begins.
+#
+# So the protection is not asking better questions. It is commissioning the
+# survey yourself and filing the notice yourself, on every demolition, and
+# treating anyone else's word as worth nothing for this purpose.
 WORDEN_STANDARDS = (
     "WORDEN ENGINEERING STANDARDS — non-negotiable, state them exactly:\n"
     "- Compaction: 96% Marshall Unit Weight, minimum floor.\n"
     "- Base: VDOT Section 315 structural stone base.\n"
     "- Oil shield: a plus-or-minus $9 per ton liquid asphalt price buffer in every estimate.\n"
     "- Medical: Zero-Downtime DOT Medical compliance for crew scheduling.\n"
+    "- Demolition: no demolition begins without a written asbestos survey by a "
+    "licensed inspector, commissioned by this company, plus the 10-working-day "
+    "NESHAP notification. Never on a developer's or owner's word.\n"
     "Reference standards: VDOT Sec 315 (paving), ASTM C90/C270 (masonry), "
     "FM Global RoofNav (roofing), ACI 318 (concrete), AASHTO T99/T180 (compaction), "
-    "FAR 48 CFR and Davis-Bacon (federal work).\n"
-    "These four are facts about this company, not estimates. State them when relevant. "
+    "FAR 48 CFR and Davis-Bacon (federal work), 40 CFR Part 61 Subpart M "
+    "(asbestos NESHAP, demolition and renovation).\n"
+    "These five are facts about this company, not estimates. State them when relevant. "
     "Every OTHER number — a price, a quantity, a date, a density, a wage determination — "
     "must come from a tool call or from the operator. If you do not have it, say so. "
     "Do not produce a plausible figure to fill a gap; on this platform a fabricated "
