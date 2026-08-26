@@ -13,6 +13,8 @@ import DocumentedRecord from '../components/DocumentedRecord';
 import EstimateForm from '../components/EstimateForm';
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
+import PublicRecords from '../components/PublicRecords';
+import { BRAND_JWORDEN } from '@/data/publicRecords';
 
 const HERO_IMAGE = '/images/real_jobs/great big driveway paving photo.JPG';
 const RESIDENTIAL_IMAGE = '/images/real_jobs/asphalt driveways goochland va.jpg';
@@ -113,7 +115,7 @@ export default function Home() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 border border-[#ff7a00]/40 text-[#ff7a00] text-xs font-display uppercase tracking-[0.2em] px-4 py-2 mb-8">
               <Shield className="w-3.5 h-3.5" />
-              Virginia Class A Licensed · Family-Owned Since 1984
+              USDOT 2568168 · Family-Owned Since 1984
             </div>
             <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl uppercase leading-none tracking-tight mb-6">
               Asphalt Paving<br />
@@ -359,6 +361,8 @@ export default function Home() {
       </section>
 
       {/* ── PROJECT GALLERY ───────────────────────────────────────── */}
+      <PublicRecords brand={BRAND_JWORDEN} />
+
       <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-12">

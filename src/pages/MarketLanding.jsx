@@ -6,6 +6,8 @@ import Footer from '@/components/Footer'
 import AIConciergeBubble from '@/components/AIConciergeBubble'
 import EstimateForm from '@/components/EstimateForm'
 import LiveReviewBadges from '@/components/LiveReviewBadges'
+import PublicRecords from '@/components/PublicRecords'
+import { BRAND_JWORDEN } from '@/data/publicRecords'
 import { FEATURED_REVIEWS } from '@/lib/reviews'
 import { getRegionalMarketProfile } from '@/data/regionalMarketProfiles'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -161,7 +163,7 @@ export default function MarketLanding() {
           <div>
             <div className="flex items-center space-x-2">
               <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse"></span>
-              <p className="font-display text-[11px] uppercase tracking-[0.2em] text-orange-400 font-semibold">Class A Licensed Asphalt Operations</p>
+              <p className="font-display text-[11px] uppercase tracking-[0.2em] text-orange-400 font-semibold">USDOT 2568168 &middot; Registered Asphalt Operations</p>
             </div>
             <p className="font-display text-xl uppercase font-black text-white tracking-wide mt-0.5">{market.marketName}</p>
           </div>
@@ -324,7 +326,7 @@ export default function MarketLanding() {
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-slate-200 font-medium">
                   <CheckCircle2 className="w-5 h-5 text-orange-400 shrink-0" />
-                  <span>Class A licensed, bonded, and $5M insured</span>
+                  <span>USDOT-registered carrier, bonded, and $5M insured</span>
                 </div>
               </div>
             </div>
@@ -371,6 +373,8 @@ export default function MarketLanding() {
             </div>
           </div>
         </section>
+
+        <PublicRecords brand={market.brand || BRAND_JWORDEN} />
 
         {/* FIELD PROOF GALLERY (HIGH RES ZOOM-CORRECTED) */}
         <section id="proof" className="py-16 md:py-24 border-b border-slate-800/80 bg-[#0a0a0a]">

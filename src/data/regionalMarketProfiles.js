@@ -68,6 +68,10 @@ export const REGIONAL_MARKET_PROFILES = {
       'Full-depth reclamation where the existing base has failed',
       'Single point of contact across every location in the portfolio',
     ],
+    // Which set of government records this site may render. The SCDOT permit
+    // is South Carolina work performed under this name; it belongs here and
+    // nowhere else. See src/data/publicRecords.js.
+    brand: 'carolina',
     marketName: 'Carolina Blacktop',
     primaryRegion: 'North & South Carolina',
     primaryMetro: 'Charlotte, NC',
