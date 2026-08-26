@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Construction, MapPin, Trophy, Phone, Camera, ShieldCheck } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import QuoteBlock from '../components/QuoteBlock'
 import SEO from '../components/SEO'
 import { trackPhoneClick } from '../lib/analytics'
 import { AGGREGATE_RATING } from '../lib/reviews'
@@ -127,9 +128,9 @@ export default function RichmondPaving() {
               >
                 <Phone className="w-5 h-5" /> (804) 446-1296
               </a>
-              <Link to="/quote" className="btn-outline py-5 px-10 text-white text-lg font-black bg-white/5 backdrop-blur-sm border-white/20">
+              <a href="#quote" className="btn-outline py-5 px-10 text-white text-lg font-black bg-white/5 backdrop-blur-sm border-white/20">
                 Free Estimate
-              </Link>
+              </a>
             </div>
 
             {/* Stat bar */}
@@ -304,12 +305,18 @@ export default function RichmondPaving() {
             >
               <Phone className="w-6 h-6" /> (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-brand-navy/10 text-brand-navy py-5 px-10 rounded-full text-xl font-black transition-all active:scale-95 text-center flex items-center justify-center">
+            <a href="#quote" className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-brand-navy/10 text-brand-navy py-5 px-10 rounded-full text-xl font-black transition-all active:scale-95 text-center flex items-center justify-center">
               Request Your Free Quote
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_richmond"
+        heading="Request a Quote in Richmond"
+        intro="Tell us what the drive or lot looks like now and we will come and measure it. Free estimate, and a straight answer about what Richmond clay does to a base that was never built deep enough."
+      />
 
       <Footer />
     </div>

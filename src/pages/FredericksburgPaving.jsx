@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, TrendingUp, Phone, CheckCircle2, Truck, Construction } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 import { AGGREGATE_RATING } from '@/lib/reviews'
@@ -155,7 +156,7 @@ export default function FredericksburgPaving() {
                 >
                   <Phone className="w-4 h-4" /> (804) 446-1296
                 </a>
-                <Link to="/quote" className="btn-outline py-4 px-8 text-white font-black">Free Written Estimate</Link>
+                <a href="#quote" className="btn-outline py-4 px-8 text-white font-black">Free Written Estimate</a>
               </div>
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
                 {[
@@ -296,12 +297,18 @@ export default function FredericksburgPaving() {
             >
               Call (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Get Free Estimate
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_fredericksburg"
+        heading="Request a Quote in Fredericksburg"
+        intro="Tell us the job and we will come and look at it. Free estimate, and a plan that accounts for how the ground moves along the Rappahannock."
+      />
 
       <Footer />
     </div>

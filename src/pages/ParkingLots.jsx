@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ParkingSquare, ShieldCheck, Zap, Ruler, CheckCircle2, Car, Building2, Truck } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 import { legacyPortfolioImages } from '@/data/legacyPortfolio'
@@ -156,9 +157,9 @@ export default function ParkingLots() {
                 >
                   <Car className="w-4 h-4" /> Call (804) 446-1296
                 </a>
-                <Link to="/quote" className="btn-outline py-4 px-8 text-white text-base font-bold">
+                <a href="#quote" className="btn-outline py-4 px-8 text-white text-base font-bold">
                   Free Lot Assessment
-                </Link>
+                </a>
               </div>
 
               {/* Trust badges */}
@@ -346,12 +347,18 @@ export default function ParkingLots() {
             >
               Call (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Request Free Estimate
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_parking_lots"
+        heading="Get a Parking Lot Estimate"
+        intro="Send the lot and the hours it has to stay open. We phase commercial work so the doors never close, and the estimate says which nights we are on site."
+      />
 
       <Footer />
     </div>

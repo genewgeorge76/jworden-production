@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ShieldCheck, Zap, Construction, Trash2 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -57,7 +58,7 @@ export default function VirginiaShingles() {
               We leverage our planetary supply chain to provide roofing contractors and property managers with unbeatable material rates and professional-grade installation crews across the Commonwealth.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
-              <Link to="/quote" className="btn-primary py-4 px-8">Get Roofing Quote</Link>
+              <a href="#quote" className="btn-primary py-4 px-8">Get Roofing Quote</a>
               <button onClick={() => trackPhoneClick('shingle-page')} className="btn-outline py-4 px-8 text-white">Contact Deck Specialist</button>
             </div>
           </div>
@@ -92,6 +93,12 @@ export default function VirginiaShingles() {
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_shingles"
+        heading="Get a Roofing Estimate"
+        intro="Send the address and the age of the roof. Free estimate, with an honest call on whether it needs replacing this year or watching for another two."
+      />
 
       <Footer />
     </div>

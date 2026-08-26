@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { ShieldCheck, Construction, HardHat, Award } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import LiveReviewBadges from '@/components/LiveReviewBadges'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -130,9 +131,9 @@ export default function AsphaltPaving() {
               <Link to="/contact" className="border-2 border-primary/40 text-white px-10 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-primary/20 transition-all">
                 The Portfolio
               </Link>
-              <Link to="/quote" className="border-2 border-white/35 bg-white/10 text-white px-10 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-white/20 transition-all">
+              <a href="#quote" className="border-2 border-white/35 bg-white/10 text-white px-10 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-white/20 transition-all">
                 Request Estimate
-              </Link>
+              </a>
             </div>
           </motion.div>
         </div>
@@ -227,6 +228,12 @@ export default function AsphaltPaving() {
           </a>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_asphalt_paving"
+        heading="Get an Asphalt Paving Estimate"
+        intro="Tell us the square footage, or just the address and we will measure it ourselves. Every estimate is written to 96% Marshall unit weight over a VDOT Section 315 stone base."
+      />
 
       <Footer />
     </div>

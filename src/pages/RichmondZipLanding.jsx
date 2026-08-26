@@ -4,6 +4,7 @@ import { CheckCircle2, Phone, MapPin } from "lucide-react";
 import SEO from "@/components/SEO";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import QuoteBlock from '@/components/QuoteBlock'
 import SmartImage from "@/components/SmartImage";
 import { trackPhoneClick } from "@/lib/analytics";
 import { DEFAULT_RICHMOND_ZIP, RICHMOND_ZIP_PAGES } from "@/data/richmondZipPages";
@@ -114,12 +115,12 @@ export default function RichmondZipLanding() {
                     <Phone className="w-4 h-4" />
                     Call 804-446-1296
                   </a>
-                  <Link
-                    to="/quote"
+                  <a
+                    href="#quote"
                     className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
                   >
                     Request Free Estimate
-                  </Link>
+                  </a>
                 </div>
               </div>
               <figure className="border border-border bg-card p-3 shadow-[0_24px_60px_-36px_rgba(15,48,68,0.45)]">
@@ -161,6 +162,12 @@ export default function RichmondZipLanding() {
           </div>
         </section>
       </main>
+
+      <QuoteBlock
+        source={`zip_${data.zip}`}
+        heading={`Request a Quote in ${data.zip}`}
+        intro={`Tell us the job and we will come and look at it. Free estimate for ${data.titleArea} in ${data.city}, and a straight answer on price before anyone commits to anything.`}
+      />
 
       <Footer />
     </div>

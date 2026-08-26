@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, Construction, Home, Phone, Star } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 
@@ -112,7 +113,7 @@ export default function ChesterfieldPaving() {
                 >
                   <Phone className="w-4 h-4" /> (804) 446-1296
                 </a>
-                <Link to="/quote" className="btn-outline py-4 px-8 text-white font-black">Free Local Estimate</Link>
+                <a href="#quote" className="btn-outline py-4 px-8 text-white font-black">Free Local Estimate</a>
               </div>
 
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
@@ -209,12 +210,18 @@ export default function ChesterfieldPaving() {
             >
               Call (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Free Estimate
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_chesterfield"
+        heading="Request a Quote in Chesterfield County"
+        intro="Send the address and we will walk it. Free estimate, no obligation, and an honest read on whether the lot needs an overlay or a full rebuild."
+      />
 
       <Footer />
     </div>

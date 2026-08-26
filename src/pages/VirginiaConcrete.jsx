@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, Factory, Building2, Truck, Ruler, ShieldCheck, Phone } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -151,9 +152,9 @@ export default function VirginiaConcrete() {
                 >
                   <Phone className="w-4 h-4" /> Call 804-446-1296
                 </a>
-                <Link to="/quote" className="btn-outline py-4 px-8 text-white font-bold">
+                <a href="#quote" className="btn-outline py-4 px-8 text-white font-bold">
                   Free Estimate
-                </Link>
+                </a>
               </div>
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
                 <div className="text-center">
@@ -319,12 +320,18 @@ export default function VirginiaConcrete() {
             >
               Call (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Request Free Estimate
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_concrete"
+        heading="Get a Concrete Estimate"
+        intro="Tell us the pour and we will price the reinforcement with it. Free estimate written to ACI 318, including the joint spacing that decides where it cracks."
+      />
 
       <Footer />
     </div>

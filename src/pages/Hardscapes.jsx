@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, Construction, Layers, LandPlot } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 
@@ -52,12 +53,12 @@ export default function Hardscapes() {
             >
               Request Design Consultation
             </a>
-            <Link
-              to="/quote"
+            <a
+              href="#quote"
               className="border-2 border-white/30 bg-white/10 px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-white hover:bg-white/20 transition-all"
             >
               Request Estimate
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -162,6 +163,12 @@ export default function Hardscapes() {
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_hardscapes"
+        heading="Get a Hardscape Estimate"
+        intro="Tell us what you want built and roughly where. Free estimate covering base depth and drainage, which is where a patio either lasts twenty years or heaves in three."
+      />
 
       <Footer />
     </div>

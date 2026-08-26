@@ -4,10 +4,17 @@ import { readFileSync } from 'node:fs'
 import { sourceWithoutComments } from '../helpers/source.mjs'
 
 const CITY_PAGE = 'src/pages/CityPage.jsx'
-const QUOTE_BLOCK = 'src/components/CityQuoteBlock.jsx'
+// CityQuoteBlock now supplies only the wording that is genuinely about a city.
+// The form, the credentials gate, the #quote anchor and the error guard moved
+// into the shared QuoteBlock when the same section was needed on service and
+// regional pages, so the mechanics are asserted there and the city-specific
+// attribution is asserted here.
+const CITY_WORDING = 'src/components/CityQuoteBlock.jsx'
+const QUOTE_BLOCK = 'src/components/QuoteBlock.jsx'
 // sourceWithoutComments takes a PATH and reads the file itself. Passing it the
 // contents makes every assertion silently meaningless.
 const cityPage = () => sourceWithoutComments(CITY_PAGE)
+const cityWording = () => sourceWithoutComments(CITY_WORDING)
 const quoteBlock = () => sourceWithoutComments(QUOTE_BLOCK)
 
 /**
@@ -24,11 +31,10 @@ const quoteBlock = () => sourceWithoutComments(QUOTE_BLOCK)
 test('every city page carries an on-page quote form', () => {
   const src = cityPage()
   assert.match(src, /CityQuoteBlock/, 'the quote block is not rendered on city pages')
-  const block = quoteBlock()
-  assert.match(block, /EstimateForm/, 'the quote block renders no form')
+  assert.match(quoteBlock(), /EstimateForm/, 'the quote block renders no form')
   // The form must attribute the lead to the city it came from, or the whole
   // point of per-city pages is lost at the moment of conversion.
-  assert.match(block, /source=\{`city_\$\{slug\}`\}/)
+  assert.match(cityWording(), /source=\{`city_\$\{slug\}`\}/)
 })
 
 /** The CTAs should reach the form on the page, not navigate away from it. */
@@ -63,7 +69,7 @@ test('every phone link on a city page is tracked', () => {
  */
 test('the quote block draws credentials through the verified gate only', () => {
   const block = quoteBlock()
-  assert.match(block, /publishableFor\(BRAND_JWORDEN\)/)
+  assert.match(block, /publishableFor\(brand\)/)
   assert.equal(/PUBLIC_RECORDS/.test(block), false, 'the block reads the unfiltered list')
   assert.equal(/publicRecordsWithheld/.test(block), false, 'the block reaches into withheld records')
   // And it must not reintroduce the licence claim next to the strongest CTA.

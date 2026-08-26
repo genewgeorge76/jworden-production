@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Wrench, MapPin, AlertTriangle, Phone } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 
@@ -136,9 +137,9 @@ export default function CrackRepair() {
                 >
                   <Phone className="w-4 h-4" /> Emergency Response
                 </a>
-                <Link to="/quote" className="btn-outline py-4 px-8 text-white font-black">
+                <a href="#quote" className="btn-outline py-4 px-8 text-white font-black">
                   Get Free Assessment
-                </Link>
+                </a>
               </div>
               {/* Awards */}
               <div className="flex flex-wrap items-center gap-2 pt-4">
@@ -286,12 +287,18 @@ export default function CrackRepair() {
             >
               Call (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Free Inspection
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_crack_repair"
+        heading="Get a Crack Repair Estimate"
+        intro="Send a photograph of the worst of it. Crack repair is the cheapest work we do and the only work that stops the expensive kind, so we will tell you honestly if it is already too late for it."
+      />
 
       <Footer />
     </div>

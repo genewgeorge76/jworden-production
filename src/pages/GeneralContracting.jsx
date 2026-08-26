@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { BadgeDollarSign, Building2, CalendarClock, Camera, CheckCircle2, ClipboardCheck, Hammer, Home, Layers3, Palette, Phone, ScanLine, ShieldAlert, ShieldCheck, Sparkles } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -220,13 +221,13 @@ export default function GeneralContracting() {
             >
               Request GC Consultation
             </Link>
-            <Link
-              to="/quote"
+            <a
+              href="#quote"
               className="border border-border text-foreground px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-card transition-colors inline-flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               Request Design Review
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -277,13 +278,13 @@ export default function GeneralContracting() {
                 Customers should not have to imagine the whole remodel from a flat proposal. We can support kitchen remodels, additions, patios, hardscapes, exterior upgrades, and interior design by turning photos, measurements, materials, floor plans, budgets, and schedule phases into a clear decision packet.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  to="/quote"
+                <a
+                  href="#quote"
                   className="bg-foreground text-background px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-foreground/90 transition-colors inline-flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   Request Design Review
-                </Link>
+                </a>
                 <Link
                   to="/hardscapes"
                   className="border border-border text-foreground px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-card transition-colors inline-flex items-center gap-2"
@@ -331,20 +332,20 @@ export default function GeneralContracting() {
                 A focused property review gives the GC division a clean front-end offer: organize the visible evidence, explain risk, and help the owner decide whether they need repair, maintenance, engineering review, roof work, drainage correction, or a full GC-managed scope.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  to="/quote"
+                <a
+                  href="#quote"
                   className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
                 >
                   <Camera className="w-4 h-4" />
                   Request Property Review
-                </Link>
-                <Link
-                  to="/quote"
+                </a>
+                <a
+                  href="#quote"
                   className="border border-border text-foreground px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-background transition-colors inline-flex items-center gap-2"
                 >
                   <ScanLine className="w-4 h-4" />
                   Send Project Details
-                </Link>
+                </a>
               </div>
             </div>
 
@@ -489,6 +490,12 @@ export default function GeneralContracting() {
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_general_contracting"
+        heading="Request a Contracting Estimate"
+        intro="Send the scope, the drawings, or just the problem. We self-perform sitework and subcontract the rest under one contract, and the estimate says plainly which is which."
+      />
 
       <Footer />
     </div>

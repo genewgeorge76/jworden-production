@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, Building2, Phone, ShieldCheck, Globe } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 import { AGGREGATE_RATING } from '@/lib/reviews'
@@ -153,7 +154,7 @@ export default function NorthernVirginiaPaving() {
                 >
                   <Phone className="w-4 h-4" /> (804) 446-1296
                 </a>
-                <Link to="/quote" className="btn-outline py-4 px-8 text-white font-black">Commercial Quote</Link>
+                <a href="#quote" className="btn-outline py-4 px-8 text-white font-black">Commercial Quote</a>
               </div>
               <div className="grid grid-cols-4 gap-4 pt-6 border-t border-white/10">
                 {[
@@ -268,12 +269,18 @@ export default function NorthernVirginiaPaving() {
             >
               Call (804) 446-1296
             </a>
-            <Link to="/quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Request Proposal
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="service_northern_virginia"
+        heading="Request a Quote in Northern Virginia"
+        intro="Tell us the property and the access hours. Free estimate, phased so a working lot keeps working while we are on it."
+      />
 
       <Footer />
     </div>
