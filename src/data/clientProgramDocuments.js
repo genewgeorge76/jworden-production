@@ -525,7 +525,20 @@ export const RICHMOND_HAMILTON_ST_2026 = {
   assertedBy: 'owner',
   assertedOn: '2026-08-27',
   claim: 'Paved the lot at the N Hamilton St site, Richmond, VA 23221 in spring 2026',
-  evidence: 'document-corroborated (COI onboarding)',
+  evidence: 'quotation + COI documented',
+  // QUOTATION SUPPLIED 2026-08-27 (screenshot from the owner's phone):
+  // QUOT3099, dated 2026-02-24, to the organization at 201 N Hamilton St —
+  // confirming the owner's address over the COI's "210" typo. Scope: lot
+  // prep with tree removal and crush-and-run base (18 units @ $100), tack
+  // coat over 11,540 sq ft, wedge paving on 2,100 sq ft of alligatored
+  // area, 11,480 sq ft resurfaced with 12.5mm plant mix at 2.5", and
+  // ADA-compliant striping. Total $43,919; half deposit, balance on
+  // completion; one-year warranty; work supervised by the owner. The
+  // facility contact's name, email, and phone stay out of the repository.
+  // Evidence chain: quotation (Feb 24) -> COI naming them holder (Apr 3)
+  // -> owner-confirmed completion in spring. Contract amount is NOT
+  // published on the card - scope only.
+  quotation: { number: 'QUOT3099', date: '2026-02-24', total: 43919, resurfaceSqFt: 11480 },
   // 2026-08-27, morning: the owner answered the publication question with
   // "Planned parenthood" — publish the name. Now on the commercial client
   // authority card, first position.

@@ -7,7 +7,7 @@ export default function CommercialClientAuthority() {
     {
       name: "Planned Parenthood — Richmond Health Center",
       locations: "N Hamilton St, Richmond, VA",
-      services: "Full Parking Lot Repave, Spring 2026",
+      services: "11,480 sq ft Lot Resurface, Wedge Repair & ADA Striping — Spring 2026",
       badge: "Healthcare Facility",
       logoText: "Planned Parenthood",
       image: "/images/real_jobs/brick-alley-repave-taped.webp",
