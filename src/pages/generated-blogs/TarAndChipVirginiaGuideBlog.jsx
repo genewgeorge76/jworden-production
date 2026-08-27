@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react'
@@ -160,9 +161,9 @@ export default function TarAndChipVirginiaGuideBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Get a Tar and Chip Estimate — We'll Compare Both Options</h4>
             <p className="mb-6 text-sm">We'll assess your driveway, tell you honestly whether tar and chip or hot-mix asphalt is the better value for your property, and give you written numbers for both.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -177,6 +178,12 @@ export default function TarAndChipVirginiaGuideBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_tar_and_chip"
+        heading="Get Tar and Chip Priced for Your Property"
+        intro="Tar and chip suits long rural drives and suits almost nothing else. Send the length and the grade and we will tell you honestly whether it fits your property."
+      />
 
       <Footer />
     </div>

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react'
@@ -175,6 +176,12 @@ export default function HoaAsphaltPavingGuideBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_hoa_paving"
+        heading="Get a Proposal Your Board Can Actually Vote On"
+        intro="Send the community and we will write it the way a board needs it: scope, phasing, resident access, and a number that survives the reserve study."
+      />
 
       <Footer />
     </div>

@@ -19,6 +19,7 @@ import SEO from '../components/SEO'
 import SchemaMarkup, { LOCAL_BUSINESS_SCHEMA } from '../components/SchemaMarkup'
 import SmartImage from '../components/SmartImage'
 import { SITE_IMAGES } from '../lib/siteImages'
+import QuoteBlock from '@/components/QuoteBlock'
 
 // Lazy-load the heavy Three.js canvas so the rest of the page is fast
 const PropertyVisualizer = lazy(() => import('../components/PropertyVisualizer'))
@@ -273,12 +274,12 @@ function SuccessPanel({ result, onStartCheckout, paymentStatus, paymentMsg }) {
         >
           📞 Call (804) 446-1296
         </a>
-        <Link
-          to="/quote"
+        <a
+          href="#quote"
           className="flex-1 text-center bg-brand-navy text-white rounded-lg px-4 py-2.5 text-sm font-bold hover:bg-brand-navy/90 transition-colors"
         >
           Full Quote Form →
-        </Link>
+        </a>
       </div>
     </motion.div>
   )
@@ -599,6 +600,12 @@ export default function Visualizer() {
           )}
         </div>
       </div>
+      <QuoteBlock
+        source="visualizer"
+        heading="Like What You See? Have It Priced"
+        intro="The visualiser shows the finish. We will tell you what it takes underneath to make it last — send the address and we will measure the real thing."
+      />
+
     </>
   )
 }

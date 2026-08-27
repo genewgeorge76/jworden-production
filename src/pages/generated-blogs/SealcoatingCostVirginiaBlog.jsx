@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react'
@@ -146,9 +147,9 @@ export default function SealcoatingCostVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Schedule a Sealcoating Estimate</h4>
             <p className="mb-6 text-sm">We'll assess crack condition before we quote, tell you if filling is needed first, and give you a written price with the product name and coat count spelled out.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Get a Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -163,6 +164,12 @@ export default function SealcoatingCostVirginiaBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_sealcoating_cost"
+        heading="Get Your Sealcoating Priced"
+        intro="Send the square footage or the address. Sealcoating is the cheapest work we do and the only work that stops the expensive kind, and we will tell you if yours is past the point where it helps."
+      />
 
       <Footer />
     </div>

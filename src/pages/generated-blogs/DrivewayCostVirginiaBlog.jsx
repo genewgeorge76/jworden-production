@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react'
@@ -136,9 +137,9 @@ export default function DrivewayCostVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Get a Written Scope Before You Decide</h4>
             <p className="mb-6 text-sm">We'll walk the property, measure, assess the base, and give you a written breakdown — not just a number. No obligation.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Get a Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
@@ -173,6 +174,12 @@ export default function DrivewayCostVirginiaBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_driveway_cost"
+        heading="Get Your Own Driveway Priced, Not a Range"
+        intro="The numbers above are ranges. Send the address and we will measure the actual square footage, read the existing base, and give you a real figure instead of a bracket."
+      />
 
       <Footer />
     </div>

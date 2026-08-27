@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
@@ -206,9 +207,9 @@ export default function AsphaltVsConcreteVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">We Install Both. We'll Tell You Which Makes Sense for Your Property.</h4>
             <p className="mb-6 text-sm">Site walk, measurements, soil assessment, and written quote — no pressure, no obligation.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Schedule a Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -223,6 +224,12 @@ export default function AsphaltVsConcreteVirginiaBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_asphalt_vs_concrete"
+        heading="Have Both Priced Before You Choose"
+        intro="We install asphalt and concrete, so we have no reason to steer you. Send the job and we will price it both ways with the honest lifespan on each in Virginia freeze-thaw."
+      />
 
       <Footer />
     </div>

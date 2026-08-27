@@ -8,6 +8,7 @@ import SEO from '../components/SEO';
 import SmartImage from '../components/SmartImage';
 import { PRIMARY_DOMAIN } from '@/lib/locations';
 import { FALLBACK_BLOG_POSTS } from '@/lib/fallbackBlogPosts';
+import QuoteBlock from '../components/QuoteBlock'
 
 const BLOG_FAQS = [
   {
@@ -213,9 +214,9 @@ export default function Blog() {
             <Link to="/locations" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Service Areas
             </Link>
-            <Link to="/quote" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
+            <a href="#quote" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Request Free Estimate
-            </Link>
+            </a>
             <Link to="/blog" className="px-3 py-2 border border-border text-muted-foreground font-display text-[11px] tracking-wider hover:border-primary/40 hover:text-foreground transition-colors">
               Paving Knowledge Center
             </Link>
@@ -236,6 +237,12 @@ export default function Blog() {
           </div>
         </div>
       </section>
+
+      <QuoteBlock
+        source="blog_index"
+        heading="Reading Up Before You Buy? Ask Us Directly"
+        intro="The articles here answer the common questions. If yours is not among them, send the job and we will answer it about your property specifically."
+      />
 
       <Footer />
     </div>

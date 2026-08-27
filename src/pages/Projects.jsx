@@ -6,6 +6,7 @@ import SocialShare from '../components/SocialShare'
 import SmartImage from '../components/SmartImage'
 import KfcNationalProgram from '../components/KfcNationalProgram'
 import { trackEvent } from '../api/client'
+import QuoteBlock from '@/components/QuoteBlock'
 
 /**
  * All projects listed here reflect verified, real work completed by
@@ -712,13 +713,13 @@ export default function Projects() {
             Free estimates. Franchise-level standards on every job.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/quote"
+            <a
+              href="#quote"
               className="bg-brand-navy text-white font-bold px-8 py-4 rounded-lg hover:bg-brand-navy/90 transition-colors text-lg"
               onClick={() => trackEvent('cta_click', { location: 'projects_bottom' })}
             >
               Get a Free Quote
-            </Link>
+            </a>
             <a
               href="tel:+18044461296"
               className="border-2 border-brand-navy text-brand-navy font-bold px-8 py-4 rounded-lg hover:bg-brand-navy hover:text-white transition-colors text-lg"
@@ -729,6 +730,12 @@ export default function Projects() {
           </div>
         </div>
       </section>
+      <QuoteBlock
+        source="projects"
+        heading="Get Work Like This Priced"
+        intro="Everything on this page was somebody’s job before it was a photograph. Send yours and we will come and measure it."
+      />
+
     </>
   )
 }

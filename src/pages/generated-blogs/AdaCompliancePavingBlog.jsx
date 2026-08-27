@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft } from 'lucide-react'
@@ -77,12 +78,18 @@ export default function AdaCompliancePavingBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Ready to Upgrade Your Infrastructure?</h4>
             <p className="mb-6 text-sm">Join top-tier facility managers who have already maximized their property uptime and lowered maintenance intervals.</p>
-            <Link to="/quote" className="premium-cta inline-flex items-center gap-2 px-6 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase text-primary-foreground">
+            <a href="#quote" className="premium-cta inline-flex items-center gap-2 px-6 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase text-primary-foreground">
               Book Site Assessment <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_ada_compliance"
+        heading="Get Your Lot Measured for ADA Compliance"
+        intro="Send the address and we will measure the slopes, the aisle widths and the signage heights against the current standard, and tell you plainly which items are out and what it costs to bring them in."
+      />
 
       <Footer />
     </div>

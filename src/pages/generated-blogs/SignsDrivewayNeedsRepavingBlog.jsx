@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft } from 'lucide-react'
@@ -117,9 +118,9 @@ export default function SignsDrivewayNeedsRepavingBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Free Driveway Assessment — Richmond & Central Virginia</h4>
             <p className="mb-6 text-sm">We'll walk your driveway, assess the base condition, and give you an honest recommendation in writing — repair, overlay, or replace — with pricing for each option.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Get a Free Assessment <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -134,6 +135,12 @@ export default function SignsDrivewayNeedsRepavingBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_repaving_signs"
+        heading="Have Us Look Before You Decide"
+        intro="If you recognised your driveway in the list above, send a photograph of the worst of it. We will tell you whether it is a repair, an overlay or a rebuild, and we will tell you if it can wait."
+      />
 
       <Footer />
     </div>

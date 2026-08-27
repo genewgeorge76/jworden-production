@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react'
@@ -140,9 +141,9 @@ export default function DrivewaySurfacingVsReplacementBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Get an Honest Assessment Before You Decide</h4>
             <p className="mb-6 text-sm">We'll probe the base, walk the surface, and give you a written recommendation with cost for both options — no pressure toward the higher-cost choice if resurfacing is the right answer.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Free Assessment <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -157,6 +158,12 @@ export default function DrivewaySurfacingVsReplacementBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_resurface_vs_replace"
+        heading="Find Out Which One Yours Needs"
+        intro="Resurfacing a driveway that needs replacing wastes the money twice. Send photographs or the address and we will tell you which it is before anyone quotes anything."
+      />
 
       <Footer />
     </div>

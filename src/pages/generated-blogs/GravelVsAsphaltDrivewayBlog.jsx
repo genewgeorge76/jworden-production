@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react'
@@ -138,9 +139,9 @@ export default function GravelVsAsphaltDrivewayBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Not Sure Which Surface Is Right?</h4>
             <p className="mb-6 text-sm">We'll visit the property, look at the soil, grade, and traffic pattern, and give you straight numbers for gravel conversion, tar and chip, and full asphalt so you can compare all three before deciding.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -155,6 +156,12 @@ export default function GravelVsAsphaltDrivewayBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_gravel_vs_asphalt"
+        heading="Price Gravel and Asphalt Side by Side"
+        intro="Send the length and the grade and we will price both, including what gravel actually costs to maintain over ten years — which is the number that usually decides it."
+      />
 
       <Footer />
     </div>

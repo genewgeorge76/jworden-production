@@ -4,6 +4,7 @@ import SchemaMarkup, { LOCAL_BUSINESS_SCHEMA } from '../components/SchemaMarkup'
 import { SERVICE_AREAS } from '../data/serviceAreas'
 import { SITE_URL } from '../lib/schemas'
 import { trackEvent } from '../api/client'
+import QuoteBlock from '@/components/QuoteBlock'
 
 // Build an areaServed list schema for all service cities
 function serviceAreaListSchema() {
@@ -60,13 +61,13 @@ export default function ServiceAreas() {
             Commercial and residential asphalt work across Virginia and into the Southeast.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/quote"
+            <a
+              href="#quote"
               className="btn-primary text-lg px-8 py-4"
               onClick={() => trackEvent('cta_click', { location: 'service_areas_hero' })}
             >
               Get a Free Estimate
-            </Link>
+            </a>
             <a
               href="tel:+18044461296"
               className="btn-outline-light text-lg px-8 py-4"
@@ -183,15 +184,21 @@ export default function ServiceAreas() {
             Fill out the quick quote form or call us directly. We get back to every request —
             usually within a few hours.
           </p>
-          <Link
-            to="/quote"
+          <a
+            href="#quote"
             className="bg-brand-navy text-white font-bold px-8 py-4 rounded-lg hover:bg-brand-navy/90 transition-colors text-lg"
             onClick={() => trackEvent('cta_click', { location: 'service_areas_bottom' })}
           >
             Request a Free Quote
-          </Link>
+          </a>
         </div>
       </section>
+      <QuoteBlock
+        source="service_areas"
+        heading="We Work Across All of This"
+        intro="If your town is on the list above, send the job. If it is not, send it anyway — we have crews that travel and we will tell you honestly whether it is worth the mobilisation."
+      />
+
     </>
   )
 }

@@ -6,6 +6,7 @@ import SchemaMarkup, {
 } from '../components/SchemaMarkup'
 import SocialLinks from '../components/SocialLinks'
 import SocialShare from '../components/SocialShare'
+import QuoteBlock from '@/components/QuoteBlock'
 
 /**
  * All content in this file reflects the verified, real history of
@@ -549,14 +550,20 @@ export default function About() {
           <h2 className="font-display font-black text-brand-navy text-3xl mb-4">
             Ready to work with us?
           </h2>
-          <Link
-            to="/quote"
+          <a
+            href="#quote"
             className="bg-brand-navy text-white font-bold px-8 py-4 rounded-lg hover:bg-brand-navy/90 transition-colors inline-block"
           >
             Request a Free Quote
-          </Link>
+          </a>
         </div>
       </section>
+      <QuoteBlock
+        source="about"
+        heading="Four Generations. Put Us to Work."
+        intro="That is the history. The useful part is what we can do on your property this season — send the job and we will come and look at it."
+      />
+
     </>
   )
 }

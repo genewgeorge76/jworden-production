@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react'
@@ -139,9 +140,9 @@ export default function NewConstructionDrivewayVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Building in Virginia? Let's Get the Base Right First.</h4>
             <p className="mb-6 text-sm">We assess builder fill condition before quoting new construction driveways. If the fill needs more time or remediation, we'll tell you — we'd rather delay a project than deliver a driveway that fails in 18 months.</p>
-            <Link to="/quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
               Request New Construction Estimate <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            </a>
           </div>
 
           <div className="border-t border-border pt-8 mt-8">
@@ -156,6 +157,12 @@ export default function NewConstructionDrivewayVirginiaBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_new_construction"
+        heading="Get a New-Construction Driveway Quoted"
+        intro="Tell us where the build is and when it closes. New construction lives or dies on subgrade prep and timing against the rest of the trades, and we schedule around both."
+      />
 
       <Footer />
     </div>

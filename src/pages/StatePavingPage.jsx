@@ -3,6 +3,7 @@ import { Phone, Shield, MapPin, Calendar, CheckCircle2, ArrowRight, Camera } fro
 import SchemaMarkup, { serviceSchema, faqSchema } from '../components/SchemaMarkup'
 import { getStatePavingPageModel, STATE_PAGE_ROUTES, WORDEN_ACTIVE_STATES } from '../lib/states50'
 import NotFound from './NotFound'
+import QuoteBlock from '@/components/QuoteBlock'
 
 function statePavingSchema(model) {
   return [
@@ -76,9 +77,9 @@ export default function StatePavingPage() {
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-5">
-            <Link to="/quote" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 uppercase tracking-wide transition-colors">
+            <a href="#quote" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 uppercase tracking-wide transition-colors">
               Get Your {model.name} Estimate <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+            </a>
             <a href="tel:+18044461296" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white border-2 border-slate-600 hover:border-amber-500 hover:bg-slate-800 transition-colors uppercase tracking-wide">
               <Phone className="mr-2 w-5 h-5" /> (804) 446-1296
             </a>
@@ -202,6 +203,12 @@ export default function StatePavingPage() {
           </div>
         </section>
       )}
+      <QuoteBlock
+        source={`state_${model.abbr.toLowerCase()}`}
+        heading={`Get a Quote in ${model.name}`}
+        intro={`Send the job and we will price it against what ${model.name} weather and ${model.name} subgrade actually do to pavement, not against a national average.`}
+      />
+
     </>
   )
 }

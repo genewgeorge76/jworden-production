@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import SchemaMarkup, { serviceSchema, faqSchema, howToSchema } from '../components/SchemaMarkup'
 import FAQAccordion from '../components/FAQAccordion'
 import InspirationGallery from '../components/InspirationGallery'
+import QuoteBlock from '@/components/QuoteBlock'
 
 const SERVICES = [
   {
@@ -392,12 +393,12 @@ export default function Services() {
             >
               Call (804) 446-1296
             </a>
-            <Link
-              to="/quote"
+            <a
+              href="#quote"
               className="inline-flex min-h-[52px] items-center gap-2 rounded-md border border-white/45 px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/10"
             >
               Request Estimate
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -437,9 +438,9 @@ export default function Services() {
               <p className="text-xs text-brand-navy/40 mb-6">
                 <strong>Best for:</strong> {svc.ideal}
               </p>
-              <Link to="/quote" className="btn-primary">
+              <a href="#quote" className="btn-primary">
                 Get a Quote for {svc.title}
-              </Link>
+              </a>
             </div>
 
             {/* Visual placeholder */}
@@ -652,9 +653,9 @@ export default function Services() {
               Ready to see the difference? Get a free quote from Virginia&rsquo;s
               preservation-first paving contractor.
             </p>
-            <Link to="/quote" className="btn-primary">
+            <a href="#quote" className="btn-primary">
               Get Your Free Quote
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -695,14 +696,20 @@ export default function Services() {
             that&rsquo;s paving, masonry, a full GC engagement, or an interior design consultation.
             No pressure.
           </p>
-          <Link
-            to="/quote"
+          <a
+            href="#quote"
             className="bg-brand-navy text-white font-bold px-8 py-4 rounded-lg hover:bg-brand-navy/90 transition-colors"
           >
             Start Your Free Quote
-          </Link>
+          </a>
         </div>
       </section>
+      <QuoteBlock
+        source="services_index"
+        heading="Tell Us Which One and Where"
+        intro="Every service above starts the same way — we come and look at it. Free estimate, no obligation, and a straight answer about which of these your property actually needs."
+      />
+
     </>
   )
 }

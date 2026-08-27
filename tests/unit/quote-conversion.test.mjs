@@ -121,36 +121,28 @@ test('no two pages give the quote block the same heading or intro', () => {
 /**
  * A RATCHET ON THE PAGES STILL SENDING PEOPLE AWAY
  * ────────────────────────────────────────────────
- * The pages below still carry a <Link to="/quote">. Most are blog posts and
- * index pages where the redirect is defensible; some are simply not converted
- * yet. They are named so the count can only fall: convert one and delete its
- * line, and adding a NEW page that links away fails immediately.
+ * Started at 24. Now 4, and each of the four is a deliberate decision rather
+ * than a backlog item:
+ *
+ *   BlogPost.jsx     the template behind hand-written posts. It renders two
+ *                    <Footer /> blocks on different branches, so where the
+ *                    block belongs depends on which branch a post takes.
+ *                    Worth doing and worth doing carefully.
+ *   JwordenAI.jsx    the page about the software. A paving quote form on a
+ *                    software product page is off-topic, and off-topic forms
+ *                    convert nobody while diluting what the page is for.
+ *   AdvisoryHub.jsx  legal and regulatory advisory content. Attaching a sales
+ *                    form to advisory material changes what the material is.
+ *   PlansInbox.jsx   an internal operations surface. Not public.
+ *
+ * The rule still holds in both directions: convert one and delete its line, and
+ * a NEW page that links away fails immediately.
  */
 const STILL_LINKING_AWAY = new Set([
-  'src/pages/About.jsx',
-  'src/pages/Blog.jsx',
   'src/pages/BlogPost.jsx',
   'src/pages/JwordenAI.jsx',
   'src/pages/PlansInbox.jsx',
-  'src/pages/Projects.jsx',
-  'src/pages/ServiceAreas.jsx',
-  'src/pages/Services.jsx',
-  'src/pages/StatePavingPage.jsx',
-  'src/pages/Visualizer.jsx',
   'src/pages/advisory/AdvisoryHub.jsx',
-  'src/pages/generated-blogs/AdaCompliancePavingBlog.jsx',
-  'src/pages/generated-blogs/AsphaltMillingAndResurfacingBlog.jsx',
-  'src/pages/generated-blogs/AsphaltVsConcreteVirginiaBlog.jsx',
-  'src/pages/generated-blogs/CommercialAsphaltPavingBlog.jsx',
-  'src/pages/generated-blogs/DrivewayCostVirginiaBlog.jsx',
-  'src/pages/generated-blogs/DrivewaySurfacingVsReplacementBlog.jsx',
-  'src/pages/generated-blogs/GravelVsAsphaltDrivewayBlog.jsx',
-  'src/pages/generated-blogs/HeavyDutyConcreteFlatworkBlog.jsx',
-  'src/pages/generated-blogs/IndustrialParkingLotRepairBlog.jsx',
-  'src/pages/generated-blogs/NewConstructionDrivewayVirginiaBlog.jsx',
-  'src/pages/generated-blogs/SealcoatingCostVirginiaBlog.jsx',
-  'src/pages/generated-blogs/SignsDrivewayNeedsRepavingBlog.jsx',
-  'src/pages/generated-blogs/TarAndChipVirginiaGuideBlog.jsx',
 ])
 
 function linkingAway() {

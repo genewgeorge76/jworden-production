@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { premiumBlogPostingSchema } from '@/components/SchemaMarkup'
 import { Calendar, Clock, ArrowRight, ArrowLeft, AlertTriangle, CheckCircle } from 'lucide-react'
@@ -180,6 +181,12 @@ export default function ParkingLotRepairVsReplaceBlog() {
           </div>
         </div>
       </article>
+
+      <QuoteBlock
+        source="blog_repair_vs_replace"
+        heading="Have Us Settle Repair or Replace"
+        intro="Send the lot and we will walk it. Half the lots we look at can be repaired for years more service, and the other half are money already spent — we will say which yours is."
+      />
 
       <Footer />
     </div>
