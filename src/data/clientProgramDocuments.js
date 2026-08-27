@@ -587,6 +587,54 @@ export const TRACTOR_SUPPLY_RUCKERSVILLE_2026 = {
   publishable: false,
 }
 
+/**
+ * DIAMOND SOLUTIONS INVOICE PACKAGE — 27 AUGUST 2026
+ *
+ * Found in the sent mail the same day it went out: four invoices to
+ * accounting@thediamondsolutions.com, each against a Diamond Solutions
+ * subcontract PO, itemized in the email body and attached as PDFs. Rick
+ * Lapinsky (Senior PM) replied within five minutes confirming PO 26607 for
+ * Charleston ("that was a typo on my end"). Evidence grade:
+ * invoice-with-PO, acknowledged by the GC in writing — one step below
+ * remittance. Rick's reconciliation emails of 8/18-8/19 carry the
+ * deposit/cost breakdowns these net against.
+ */
+export const CAPITAL_ONE_ANNANDALE_2026 = {
+  id: 'capital-one-annandale-2026',
+  client: 'Diamond Solutions (GC)',
+  site: 'Capital One Bank #61458, Annandale, VA',
+  po: '26566 (+ change order 26566CO3)',
+  invoiced: '2026-08-27',
+  amount: 28300,
+  evidence: 'invoice with GC purchase order, receipt acknowledged',
+  publishable: true,
+}
+
+export const TARGET_STUARTS_DRAFT_2026 = {
+  id: 'target-stuarts-draft-2026',
+  client: 'Diamond Solutions (GC)',
+  site: 'Target, Stuarts Draft, VA',
+  po: '26581',
+  invoiced: '2026-08-27',
+  amount: 1500,
+  evidence: 'invoice with GC purchase order, receipt acknowledged',
+  publishable: true,
+}
+
+export const DOLLAR_TREE_CHARLESTON_2026 = {
+  id: 'dollar-tree-charleston-2026',
+  client: 'Diamond Solutions (GC)',
+  site: 'Dollar Tree #07604, Charleston, WV',
+  po: '26607',
+  invoiced: '2026-08-27',
+  amount: 1500,
+  evidence: 'invoice with GC purchase order; PO number confirmed by the GC in writing',
+  // FIRST WEST VIRGINIA JOB IN THE RECORD. West Virginia has no published
+  // pages and gets none from one store visit — but the state evidence is
+  // now documented at invoice grade.
+  publishable: true,
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
   LEESVILLE_CM_INVOICE,
