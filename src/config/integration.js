@@ -62,7 +62,25 @@ export const resolveRepoAlias = (repo) => {
   return repoAliases[normalized] || normalized
 }
 
-export const getApiBaseUrl = () => normalizeUrl(import.meta.env.VITE_API_BASE_URL, canonicalApiBaseUrl)
+/**
+ * In a browser on any deployed host, the API base is SAME-ORIGIN ('').
+ *
+ * vercel.json's first rewrite proxies /api/(.*) to the Fly backend, so a
+ * relative fetch('/api/v1/...') works on every attached domain and on every
+ * preview URL without the backend having to CORS-allowlist each origin. The
+ * absolute Fly URL is what broke Mr. Worden everywhere but the five
+ * allowlisted origins: the browser went cross-origin, preflight got 400, and
+ * the chat silently died. Localhost keeps the absolute base because the Vite
+ * dev server has no /api proxy (and Fly's CORS already allows localhost).
+ */
+export const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const h = window.location.hostname
+    const isLocal = h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local')
+    if (!isLocal) return ''
+  }
+  return normalizeUrl(import.meta.env.VITE_API_BASE_URL, canonicalApiBaseUrl)
+}
 export const getSiteSource = () => {
   const envSource = String(import.meta.env.VITE_WORDEN_SOURCE || '').trim().toLowerCase()
   return envSource || 'jwordenproduction'
