@@ -976,3 +976,30 @@ export const CURRENT_GL_POLICY_2026 = {
   insuredNameCaveat: 'issued to the owner personally, name misspelled; should be the LLC',
   custody: "owner's files",
 }
+
+/**
+ * CHARLOTTESVILLE CORRIDOR PROPOSAL, JUNE 2026 (customer name withheld)
+ *
+ * The owner supplied a written Grade & Pave proposal dated 2026-06-04 for a
+ * residential driveway on Broad Axe Rd, Charlottesville: grading in the
+ * existing footprint, base upgrade with a 20-ton 21A crush-and-run
+ * allowance, 3" hot mix up to 3,200 sq ft — $18,000, or $15,500 with an
+ * early-start discount for the week of 2026-06-08. Payment in thirds
+ * (acceptance / mobilization / completion) — consistent with the company's
+ * deposit-required practice. Includes the Virginia three-day right of
+ * rescission. This copy is unsigned; the customer's name and phone stay out
+ * of the repository.
+ *
+ * Why it matters: dated, priced evidence of residential activity in the
+ * Charlottesville corridor — the market the service-area expansion covers.
+ */
+export const CVILLE_PROPOSAL_2026 = {
+  id: 'cville-proposal-2026',
+  status: 'held',
+  date: '2026-06-04',
+  area: 'Broad Axe Rd, Charlottesville, VA',
+  scope: 'grade, 20-ton 21A base allowance, 3in hot mix, up to 3,200 sq ft',
+  price: { standard: 18000, earlyStart: 15500 },
+  evidence: 'unsigned proposal in owner custody',
+  custody: "owner's files",
+}
