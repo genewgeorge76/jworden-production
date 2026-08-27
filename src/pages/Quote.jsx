@@ -24,7 +24,6 @@ const SERVICES = [
   { value: 'driveway', label: '🏠 Driveway' },
   { value: 'maintenance', label: '🔄 Maintenance Plan' },
   { value: 'general_contracting', label: '🏗 General Contracting' },
-  { value: 'interior_design', label: '🎨 Interior Design & Decorating' },
   { value: 'cobblestone_pavers', label: 'Cobblestone / Brick Paver Patio' },
   { value: 'stone_masonry', label: '🧱 Stone Masonry' },
   { value: 'concrete', label: '⬜ Concrete (Slabs / Flatwork)' },

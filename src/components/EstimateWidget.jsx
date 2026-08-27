@@ -19,7 +19,6 @@ const SERVICES = [
   { value: 'driveway', label: 'Driveway' },
   { value: 'maintenance', label: 'Maintenance Plan' },
   { value: 'concrete', label: 'Concrete' },
-  { value: 'interior_design', label: 'Interior Design' },
   { value: 'civil_site_work', label: 'Civil Site Work' },
   { value: 'drone_survey', label: 'Drone Survey' },
 ]

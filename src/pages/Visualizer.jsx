@@ -592,7 +592,7 @@ export default function Visualizer() {
                   <div>✅ 4th-generation family company since 1984</div>
                   <div>✅ VA Class A General Contractor · Licensed &amp; Insured</div>
                   <div>✅ KFC · Arby&apos;s · Taco Bell national vendor</div>
-                  <div>✅ Best of Houzz — interior design award</div>
+                  <div>Best of Houzz Service award — multiple years</div>
                   <div>✅ Free on-site consultation always included</div>
                 </div>
               </div>

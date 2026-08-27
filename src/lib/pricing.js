@@ -57,12 +57,6 @@ const RATES = {
     commercial: { low: 75.0, high: 200.0 },
     default: { low: 80.0, high: 225.0 },
   },
-  // Interior Design — per sq ft of designed space (furnishings & materials excluded)
-  interior_design: {
-    residential: { low: 5.0, high: 18.0 },
-    commercial: { low: 8.0, high: 25.0 },
-    default: { low: 5.0, high: 20.0 },
-  },
   // Cobblestone & brick paver patios — installed sq ft
   cobblestone_pavers: {
     residential: { low: 15.0, high: 55.0 },

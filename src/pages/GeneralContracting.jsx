@@ -26,7 +26,7 @@ const GC_MARKETS = [
   'Industrial and logistics support builds',
   'Site-work coordinated paving and exterior scopes',
   'Roof, exterior, drainage, and visible building-damage triage',
-  'Kitchen remodel, additions, patios, hardscapes, and interior design planning',
+  'Kitchen remodels, additions, patios, hardscapes, and interior finish-out planning',
 ]
 
 const DESIGN_INTELLIGENCE_ITEMS = [
@@ -120,7 +120,7 @@ const GC_FAQS = [
     a: 'It can support triage by collecting evidence and flagging risks, but final roof, structural, safety, and code decisions should be reviewed by a qualified roofer, inspector, contractor, or structural engineer.',
   },
   {
-    q: 'Can this help with kitchen remodels, additions, patios, or interior design?',
+    q: 'Can this help with kitchen remodels, additions, patios, or interior finish-out?',
     a: 'Yes. The same scan-and-design workflow can organize photos, measurements, room layouts, finish ideas, hardscape options, budget ranges, and 4D phasing so owners understand the project before committing to a full remodel or build.',
   },
 ]
@@ -154,7 +154,7 @@ export default function GeneralContracting() {
           'Construction scheduling and subcontractor management',
           'Commercial project delivery',
           'Property photo review and damage triage packets',
-          '4D kitchen remodel, addition, patio, hardscape, and interior design planning',
+          '4D kitchen remodel, addition, patio, hardscape, and finish-out planning',
         ],
         url: 'https://www.jwordenasphaltpaving.com/general-contracting',
       },
