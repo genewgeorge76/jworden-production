@@ -234,7 +234,7 @@ export default function Quote() {
             {/* Confirmation card */}
             <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
               <div className="text-5xl mb-4">🎉</div>
-              <h2 className="font-display font-black text-3xl text-brand-navy mb-3">
+              <h2 className="font-display font-bold text-3xl text-brand-navy mb-3">
                 Quote Request Received!
               </h2>
               <p className="text-brand-navy/60 mb-6">
@@ -363,7 +363,7 @@ export default function Quote() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-16 text-white text-center">
         <div className="max-w-2xl mx-auto px-4">
-          <h1 className="font-display font-black text-4xl md:text-5xl mb-4">
+          <h1 className="font-display font-bold text-4xl md:text-5xl mb-4">
             Get Your <span className="text-brand-amber">Free Quote</span>
           </h1>
           <p className="text-white/70">No obligation. We respond within 24 hours.</p>
@@ -397,7 +397,7 @@ export default function Quote() {
                   window.gtag('event', 'quote_full_form_toggle', { opened: !showFullForm })
                 }
               }}
-              className="text-sm font-semibold uppercase tracking-widest text-brand-navy/70 underline-offset-4 hover:text-brand-navy hover:underline"
+              className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-navy/70 underline-offset-4 hover:text-brand-navy hover:underline"
               aria-expanded={showFullForm}
             >
               {showFullForm
@@ -500,10 +500,10 @@ export default function Quote() {
                     if (!est) return null
                     return (
                       <div className="mt-3 bg-brand-amber/10 border border-brand-amber/30 rounded-xl px-4 py-3">
-                        <p className="text-xs font-bold uppercase tracking-widest text-brand-amber mb-1">
+                        <p className="text-xs font-bold uppercase tracking-[0.08em] text-brand-amber mb-1">
                           Ballpark Estimate{form.state_code ? ` · ${form.state_code} Adjusted` : ''}
                         </p>
-                        <p className="font-display font-black text-brand-navy text-xl">
+                        <p className="font-display font-bold text-brand-navy text-xl">
                           {est.lowFmt} – {est.highFmt}
                         </p>
                         {est.stateNote && (

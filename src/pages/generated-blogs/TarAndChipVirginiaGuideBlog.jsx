@@ -30,18 +30,18 @@ export default function TarAndChipVirginiaGuideBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Paving Options</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 7 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Tar and Chip Paving in Virginia
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function TarAndChipVirginiaGuideBlog() {
             Tar and chip — also called chip seal, macadam, or road tar — is one of the most misunderstood paving surfaces in Virginia. Some contractors sell it as a cheap alternative to asphalt. Others refuse to offer it at all. The truth is more useful: it's the right surface for specific properties and a poor choice for others, and knowing which side of that line your driveway falls on is the only thing that matters.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What Tar and Chip Actually Is
           </h2>
           <p>
@@ -65,7 +65,7 @@ export default function TarAndChipVirginiaGuideBlog() {
             It's not loose gravel — when properly installed on a well-prepared base, tar and chip behaves like a low-maintenance bound surface. It's also not the same as standard hot-mix asphalt, which is a factory-batched mix of aggregate and bitumen laid as a finished black surface.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Tar and Chip Cost in Virginia (2026)
           </h2>
 
@@ -75,8 +75,8 @@ export default function TarAndChipVirginiaGuideBlog() {
               { surface: 'Standard Hot-Mix Asphalt', range: '$4.00 – $7.00 / sq ft', note: 'Installed on prepared base' },
             ].map((item) => (
               <div key={item.surface} className="bg-card border border-border p-5 rounded-sm">
-                <p className="font-display font-black text-primary text-sm uppercase tracking-wide mb-1">{item.surface}</p>
-                <p className="font-display font-black text-foreground text-xl mb-1">{item.range}</p>
+                <p className="font-display font-bold text-primary text-sm uppercase tracking-wide mb-1">{item.surface}</p>
+                <p className="font-display font-bold text-foreground text-xl mb-1">{item.range}</p>
                 <p className="text-xs text-muted-foreground">{item.note}</p>
               </div>
             ))}
@@ -86,7 +86,7 @@ export default function TarAndChipVirginiaGuideBlog() {
             The savings are real: tar and chip typically runs 30–40% less than full hot-mix asphalt on comparable driveway sizes. For a 1,000 sq ft rural driveway, that's a difference of $1,500–$2,500 in installed cost. The base preparation costs are similar for both surfaces — the savings come entirely from the surface material and application method.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Where Tar and Chip Makes Sense in Virginia
           </h2>
 
@@ -107,7 +107,7 @@ export default function TarAndChipVirginiaGuideBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Where Tar and Chip Is the Wrong Choice
           </h2>
 
@@ -128,7 +128,7 @@ export default function TarAndChipVirginiaGuideBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Lifespan and Maintenance
           </h2>
           <p>
@@ -138,7 +138,7 @@ export default function TarAndChipVirginiaGuideBlog() {
             The base lifespan is the same as asphalt: if the 6-inch compacted aggregate base is properly installed over stable, well-drained subgrade, it lasts 20–30 years. What wears out is the surface treatment, not the structure.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What a Quality Installation Looks Like
           </h2>
           <div className="space-y-3">
@@ -161,7 +161,7 @@ export default function TarAndChipVirginiaGuideBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Get a Tar and Chip Estimate — We'll Compare Both Options</h4>
             <p className="mb-6 text-sm">We'll assess your driveway, tell you honestly whether tar and chip or hot-mix asphalt is the better value for your property, and give you written numbers for both.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

@@ -58,13 +58,13 @@ function QuoteBlockBody({ heading, intro, source, brand = BRAND_JWORDEN }) {
         <aside className="lg:pt-24">
           {records.length > 0 && (
             <>
-              <p className="font-display text-[11px] uppercase tracking-[0.16em] text-brand-amber mb-4">
+              <p className="font-display text-[11px] uppercase tracking-[0.06em] text-brand-amber mb-4">
                 Records you can check yourself
               </p>
               <ul className="space-y-4">
                 {records.map((r) => (
                   <li key={r.id} className="border-l-2 border-brand-amber/60 pl-4">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/50">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-white/50">
                       {r.authorityShort} &middot; {r.year}
                     </p>
                     <p className="font-display text-sm font-bold uppercase tracking-tight text-white mt-0.5">

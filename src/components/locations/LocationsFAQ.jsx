@@ -71,12 +71,12 @@ export default function LocationsFAQ() {
     <section className="border-t border-border py-16 md:py-24">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-primary font-display font-black text-lg">//</span>
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+          <span className="text-primary font-display font-bold text-lg">//</span>
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
             Virginia Paving FAQ
           </p>
         </div>
-        <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight mb-8">
+        <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight mb-8">
           Common Questions About Virginia Asphalt Paving
         </h2>
 

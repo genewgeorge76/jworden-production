@@ -203,7 +203,7 @@ export default function EstimateWidget({ className = '' }) {
               <div className="text-brand-navy/60 text-sm font-medium uppercase tracking-wide mb-1">
                 Estimated Range
               </div>
-              <div className="font-display font-black text-brand-navy text-3xl">
+              <div className="font-display font-bold text-brand-navy text-3xl">
                 {result.lowFmt} – {result.highFmt}
               </div>
               {result.stateNote && (

@@ -19,8 +19,8 @@ export default function LocalBidComparison() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch">
           <div className="xl:col-span-2 premium-panel rounded-2xl p-6 md:p-8">
-            <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-3">Local Bid Comparison</p>
-            <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+            <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-3">Local Bid Comparison</p>
+            <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
               Comparing Richmond Paving Contractors?
             </h2>
             <p className="font-body text-muted-foreground text-base md:text-lg leading-relaxed mt-5 max-w-3xl">
@@ -41,8 +41,8 @@ export default function LocalBidComparison() {
 
           <div className="premium-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Need A Second Opinion?</p>
-              <h3 className="font-display font-black text-foreground text-2xl uppercase tracking-tight">Get A Clear Scope Review</h3>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Need A Second Opinion?</p>
+              <h3 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight">Get A Clear Scope Review</h3>
               <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
                 We will review your current quote, identify missing scope items, and give you a practical recommendation before you commit.
               </p>
@@ -51,7 +51,7 @@ export default function LocalBidComparison() {
             <div className="space-y-3 mt-6">
               <Link
                 to="/commercial/richmond-va"
-                className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
               >
                 Richmond Commercial Details
               </Link>
@@ -59,7 +59,7 @@ export default function LocalBidComparison() {
               <a
                 href="tel:+18044461296"
                 onClick={() => trackPhoneClick('local_bid_comparison')}
-                className="premium-cta w-full flex items-center justify-center gap-2 text-primary-foreground px-5 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase"
+                className="premium-cta w-full flex items-center justify-center gap-2 text-primary-foreground px-5 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase"
               >
                 <Phone className="w-4 h-4" />
                 Call 804-446-1296

@@ -134,7 +134,7 @@ export default function ProjectGallery() {
               viewport={{ once: true }}
               className="flex items-center gap-4 mb-6">
               <div className="h-px w-12 bg-primary/40" />
-              <p className="font-display text-primary text-xs tracking-[0.4em] uppercase">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 Portfolio of Mastery
               </p>
             </motion.div>
@@ -148,7 +148,7 @@ export default function ProjectGallery() {
           
           <div className="flex flex-col items-end gap-2 text-right">
             <span className="font-display text-primary text-5xl tracking-tighter">1,200+</span>
-            <span className="font-body text-foreground/30 text-[10px] uppercase tracking-[0.3em]">Successful Deployments</span>
+            <span className="font-body text-foreground/30 text-[10px] uppercase tracking-[0.1em]">Successful Deployments</span>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ export default function ProjectGallery() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-8 py-3 rounded-full font-display font-medium text-[11px] tracking-[0.25em] uppercase transition-all duration-500 flex items-center gap-3 ${
+                className={`px-8 py-3 rounded-full font-display font-medium text-[11px] tracking-[0.08em] uppercase transition-all duration-500 flex items-center gap-3 ${
                   active
                     ? 'bg-primary text-primary-foreground shadow-[0_15px_30px_-10px_rgba(255,166,35,0.4)]'
                     : 'bg-white/5 text-foreground/40 hover:bg-white/10 hover:text-foreground/60 border border-white/5 shadow-xl'
@@ -183,7 +183,7 @@ export default function ProjectGallery() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 glass-surface-premium rounded-[3rem]">
-            <p className="font-display text-muted-foreground text-sm tracking-widest uppercase italic">
+            <p className="font-display text-muted-foreground text-sm tracking-[0.08em] uppercase italic">
               Awaiting Next Field Capture
             </p>
           </div>
@@ -223,18 +223,18 @@ export default function ProjectGallery() {
                   {/* Info Overlay — Technical & Luxury */}
                   <figcaption className="absolute inset-0 z-10 flex flex-col justify-end p-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
                     <div className="flex items-center gap-3 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
-                      <span className="px-3 py-1 bg-primary text-primary-foreground font-display font-medium text-[9px] tracking-[0.2em] uppercase rounded-full">
+                      <span className="px-3 py-1 bg-primary text-primary-foreground font-display font-medium text-[9px] tracking-[0.08em] uppercase rounded-full">
                         {project.category}
                       </span>
                       {project.year && (
-                        <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-foreground font-display font-medium text-[9px] tracking-[0.2em] uppercase rounded-full border border-white/10">
+                        <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-foreground font-display font-medium text-[9px] tracking-[0.08em] uppercase rounded-full border border-white/10">
                           {project.year}
                         </span>
                       )}
                     </div>
 
                     <h3
-                      className="font-display font-black text-white text-3xl uppercase tracking-tight leading-none mb-3 group-hover:text-gold-gradient transition-colors"
+                      className="font-display font-bold text-white text-3xl uppercase tracking-tight leading-none mb-3 group-hover:text-gold-gradient transition-colors"
                       itemProp="name"
                     >
                       {project.title}
@@ -254,13 +254,13 @@ export default function ProjectGallery() {
                         {project.location && (
                           <div className="flex items-center gap-2 text-white/40">
                             <MapPin className="w-4 h-4 text-primary" />
-                            <span className="font-display text-[10px] tracking-[0.2em] uppercase">{project.location}</span>
+                            <span className="font-display text-[10px] tracking-[0.08em] uppercase">{project.location}</span>
                           </div>
                         )}
                         {project.sqft && (
                           <div className="flex items-center gap-2 text-white/40">
                             <Ruler className="w-4 h-4 text-primary" />
-                            <span className="font-display text-[10px] tracking-[0.2em] uppercase">{project.sqft.toLocaleString()} SQ FT</span>
+                            <span className="font-display text-[10px] tracking-[0.08em] uppercase">{project.sqft.toLocaleString()} SQ FT</span>
                           </div>
                         )}
                       </div>

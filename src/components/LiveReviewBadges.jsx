@@ -51,7 +51,7 @@ function LiveReviewBadgesContent({ compact = false }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 shadow-sm hover:bg-white/10 transition-colors backdrop-blur-md"
         >
-          <span className="text-[#4dbc15] font-black text-lg leading-none">h</span>
+          <span className="text-[#4dbc15] font-bold text-lg leading-none">h</span>
           <div className="text-left">
             <div className="text-xs font-bold text-white leading-none">Best of Houzz</div>
             <div className="text-[10px] text-gray-400 leading-none mt-0.5">Multiple Years</div>
@@ -64,7 +64,7 @@ function LiveReviewBadgesContent({ compact = false }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 shadow-sm hover:bg-white/10 transition-colors backdrop-blur-md"
         >
-          <span className="text-[#FF6153] font-black text-sm leading-none">Angi</span>
+          <span className="text-[#FF6153] font-bold text-sm leading-none">Angi</span>
           <div className="text-left">
             <div className="text-xs font-bold text-white leading-none">Super Service</div>
             <div className="text-[10px] text-gray-400 leading-none mt-0.5">Verified Contractor</div>
@@ -77,7 +77,7 @@ function LiveReviewBadgesContent({ compact = false }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 shadow-sm hover:bg-white/10 transition-colors backdrop-blur-md"
         >
-          <span className="text-blue-400 font-black text-sm leading-none">PM</span>
+          <span className="text-blue-400 font-bold text-sm leading-none">PM</span>
           <div className="text-left">
             <div className="text-xs font-bold text-white leading-none">Pavement Magazine</div>
             <div className="text-[10px] text-gray-400 leading-none mt-0.5">Top 75 Recognition</div>
@@ -106,7 +106,7 @@ function LiveReviewBadgesContent({ compact = false }) {
           <div className="flex justify-center gap-0.5 mb-1">
             {[1,2,3,4,5].map(s => <span key={s} className="text-[#FBBC05] text-xl">★</span>)}
           </div>
-          <div className="font-black text-lg text-white">Review us on Google</div>
+          <div className="font-bold text-lg text-white">Review us on Google</div>
           <div className="text-sm text-gray-400 mt-1">Share your experience</div>
         </div>
         <span className="text-xs font-bold text-[#4285F4] group-hover:underline mt-1">
@@ -122,10 +122,10 @@ function LiveReviewBadgesContent({ compact = false }) {
         className="flex flex-col items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-6 shadow-lg hover:bg-white/10 transition-all backdrop-blur-md group"
       >
         <div className="w-10 h-10 rounded-xl bg-[#4dbc15] flex items-center justify-center">
-          <span className="text-white font-black text-2xl leading-none">h</span>
+          <span className="text-white font-bold text-2xl leading-none">h</span>
         </div>
         <div className="text-center">
-          <div className="font-black text-lg text-white">Best of Houzz</div>
+          <div className="font-bold text-lg text-white">Best of Houzz</div>
           <div className="text-sm text-gray-400 mt-1">Design & Service Award</div>
           <div className="text-xs text-gray-500 mt-2">Multiple consecutive years</div>
         </div>
@@ -142,10 +142,10 @@ function LiveReviewBadgesContent({ compact = false }) {
         className="flex flex-col items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-6 shadow-lg hover:bg-white/10 transition-all backdrop-blur-md group"
       >
         <div className="w-10 h-10 rounded-xl bg-[#FF6153] flex items-center justify-center">
-          <span className="text-white font-black text-sm leading-none">Angi</span>
+          <span className="text-white font-bold text-sm leading-none">Angi</span>
         </div>
         <div className="text-center">
-          <div className="font-black text-lg text-white">Super Service Award</div>
+          <div className="font-bold text-lg text-white">Super Service Award</div>
           <div className="text-sm text-gray-400 mt-1">Angi Verified Contractor</div>
           <div className="text-xs text-gray-500 mt-2">Top-rated in Virginia</div>
         </div>
@@ -162,10 +162,10 @@ function LiveReviewBadgesContent({ compact = false }) {
         className="flex flex-col items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-6 shadow-lg hover:bg-white/10 transition-all backdrop-blur-md group"
       >
         <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-          <span className="text-blue-400 font-black text-sm leading-none">PM</span>
+          <span className="text-blue-400 font-bold text-sm leading-none">PM</span>
         </div>
         <div className="text-center">
-          <div className="font-black text-lg text-white">Pavement Magazine</div>
+          <div className="font-bold text-lg text-white">Pavement Magazine</div>
           <div className="text-sm text-gray-400 mt-1">Top 75 Contractor Recognition</div>
           <div className="text-xs text-gray-500 mt-2">Four paving categories</div>
         </div>

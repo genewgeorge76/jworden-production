@@ -39,8 +39,8 @@ export default function AboutSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
             
-            <p className="font-display text-primary text-sm tracking-[0.3em] uppercase mb-3">About Us</p>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight">THE JWORDEN & SONS STANDARD
+            <p className="font-display text-primary text-sm tracking-[0.1em] uppercase mb-3">About Us</p>
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight">THE JWORDEN & SONS STANDARD
 
             </h2>
             <p className="font-body text-muted-foreground text-lg leading-relaxed mt-6 max-w-lg">

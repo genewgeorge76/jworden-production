@@ -37,8 +37,8 @@ export default function Hardscapes() {
       <section className="relative pt-32 pb-20 bg-brand-navy text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/20 blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <p className="font-display text-primary text-xs tracking-widest uppercase mb-4">Luxury Residential & Commercial Division</p>
-          <h1 className="font-display font-black text-5xl md:text-8xl uppercase tracking-tighter leading-[0.9] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">Luxury Residential & Commercial Division</p>
+          <h1 className="font-display font-bold text-5xl md:text-8xl uppercase tracking-tighter leading-[0.9] mb-8">
             Hardscaping & Paver <br /> <span className="text-primary italic">Installation</span> in Virginia
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 max-w-3xl leading-relaxed mb-10">
@@ -49,13 +49,13 @@ export default function Hardscapes() {
             <a 
               href="tel:+18044461296" 
               onClick={() => trackPhoneClick('hardscapes_hero')}
-              className="premium-cta px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-primary-foreground"
+              className="premium-cta px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase text-primary-foreground"
             >
               Request Design Consultation
             </a>
             <a
               href="#quote"
-              className="border-2 border-white/30 bg-white/10 px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-white hover:bg-white/20 transition-all"
+              className="border-2 border-white/30 bg-white/10 px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase text-white hover:bg-white/20 transition-all"
             >
               Request Estimate
             </a>
@@ -67,8 +67,8 @@ export default function Hardscapes() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Design Planning</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Design Planning</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
                 See The Patio, Pavers, Drainage, And Finish Before Construction Starts
               </h2>
               <p className="text-muted-foreground text-base leading-relaxed mt-5 max-w-3xl">
@@ -83,7 +83,7 @@ export default function Hardscapes() {
               ].map((item) => (
                 <div key={item} className="border border-border bg-card p-5">
                   <CheckCircle2 className="w-5 h-5 text-primary mb-3" />
-                  <p className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">{item}</p>
+                  <p className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">{item}</p>
                 </div>
               ))}
             </div>
@@ -97,7 +97,7 @@ export default function Hardscapes() {
             {HARDSCAPE_TYPES.map((type, idx) => (
               <div key={idx} className="premium-panel p-10 rounded-2xl bg-black/5 hover:border-primary transition-all">
                 <div className="text-primary mb-6">{type.icon}</div>
-                <h3 className="font-display font-black text-2xl uppercase mb-4">{type.title}</h3>
+                <h3 className="font-display font-bold text-2xl uppercase mb-4">{type.title}</h3>
                 <p className="text-muted-foreground text-lg leading-relaxed">{type.description}</p>
               </div>
             ))}
@@ -107,7 +107,7 @@ export default function Hardscapes() {
 
       <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6 text-center">
-            <h2 className="font-display font-black text-4xl md:text-6xl uppercase tracking-tight mb-8">Engineered For Performance</h2>
+            <h2 className="font-display font-bold text-4xl md:text-6xl uppercase tracking-tight mb-8">Engineered For Performance</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-16">
                 Unlike landscaping crews, we build with a paving-first mindset. Every hardscape includes a fully compacted 
                 road-base and integrated drainage systems to prevent shifting and settling.
@@ -120,8 +120,8 @@ export default function Hardscapes() {
                     { label: 'Warranty', value: 'Lifetime*' }
                 ].map((stat, i) => (
                     <div key={i} className="p-6 border border-border rounded-xl">
-                        <p className="text-primary font-display font-black text-3xl mb-1">{stat.value}</p>
-                        <p className="text-xs uppercase tracking-widest text-muted-foreground">{stat.label}</p>
+                        <p className="text-primary font-display font-bold text-3xl mb-1">{stat.value}</p>
+                        <p className="text-xs uppercase tracking-[0.08em] text-muted-foreground">{stat.label}</p>
                     </div>
                 ))}
             </div>
@@ -131,7 +131,7 @@ export default function Hardscapes() {
       {/* Houzz Credentials */}
       <section className="py-10 bg-[#111] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-white/40 mb-6">Houzz Awards &amp; Recognition</p>
+          <p className="text-center text-xs font-bold uppercase tracking-[0.08em] text-white/40 mb-6">Houzz Awards &amp; Recognition</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <a
               href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
@@ -139,9 +139,9 @@ export default function Hardscapes() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 group"
             >
-              <span className="w-9 h-9 bg-[#4dbc15] flex items-center justify-center rounded font-black text-white text-xl">h</span>
+              <span className="w-9 h-9 bg-[#4dbc15] flex items-center justify-center rounded font-bold text-white text-xl">h</span>
               <div>
-                <p className="font-display font-black text-white text-sm tracking-widest uppercase leading-tight group-hover:text-[#4dbc15] transition-colors">Houzz Pro Certified</p>
+                <p className="font-display font-bold text-white text-sm tracking-[0.08em] uppercase leading-tight group-hover:text-[#4dbc15] transition-colors">Houzz Pro Certified</p>
                 <p className="text-white/50 text-xs">Recommended on Houzz · 4.8★ · 12 Reviews · 500+ Saves</p>
               </div>
             </a>
@@ -155,8 +155,8 @@ export default function Hardscapes() {
                   rel="noopener noreferrer"
                   className="flex flex-col items-center border border-[#4dbc15]/40 hover:border-[#4dbc15] bg-black px-4 py-2 transition-colors"
                 >
-                  <span className="text-[#4dbc15] font-black text-[10px] tracking-widest uppercase">Best of Houzz</span>
-                  <span className="text-white font-display font-black text-xl leading-tight">{year}</span>
+                  <span className="text-[#4dbc15] font-bold text-[10px] tracking-[0.08em] uppercase">Best of Houzz</span>
+                  <span className="text-white font-display font-bold text-xl leading-tight">{year}</span>
                 </a>
               ))}
             </div>

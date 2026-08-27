@@ -48,10 +48,10 @@ export default function VirginiaShingles() {
       <section className="relative pt-32 pb-20 px-4">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
           <div className="lg:w-1/2 space-y-6">
-            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
               Paving & Roofing Integrated Logic
             </span>
-            <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight">
+            <h1 className="font-display font-bold text-5xl md:text-7xl text-white leading-tight">
               Roofing & <span className="text-brand-amber">Shingle</span> Services in Virginia.
             </h1>
             <p className="text-white/70 text-lg md:text-xl max-w-xl">
@@ -77,7 +77,7 @@ export default function VirginiaShingles() {
       <section className="py-24 bg-white/5 border-y border-white/10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-4">Total Property Enclosure.</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-4">Total Property Enclosure.</h2>
             <p className="text-white/40 max-w-2xl mx-auto">From the shingles on your roof to the asphalt on your driveway, our team can help organize the right maintenance plan.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -86,7 +86,7 @@ export default function VirginiaShingles() {
                 <div className="bg-brand-amber/10 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
                   {service.icon}
                 </div>
-                <h3 className="text-white font-black text-xl mb-3 tracking-tight">{service.title}</h3>
+                <h3 className="text-white font-bold text-xl mb-3 tracking-tight">{service.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{service.description}</p>
               </div>
             ))}

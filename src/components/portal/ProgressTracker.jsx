@@ -17,8 +17,8 @@ export default function ProgressTracker({ job }) {
     <div className="border border-border bg-card p-6 md:p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-1">Project Progress</p>
-          <p className="font-display font-black text-foreground text-3xl">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-1">Project Progress</p>
+          <p className="font-display font-bold text-foreground text-3xl">
             {isCancelled ? '—' : `${percent}%`}
           </p>
         </div>

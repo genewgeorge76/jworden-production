@@ -18,7 +18,7 @@ export default function AdminSlackSettings() {
           <div className="w-16 h-16 bg-destructive/10 border border-destructive/40 flex items-center justify-center mx-auto mb-6">
             <ShieldOff className="w-8 h-8 text-destructive" />
           </div>
-          <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight mb-3">
+          <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight mb-3">
             Admin Access Required
           </h1>
           <p className="font-body text-muted-foreground text-base">
@@ -43,11 +43,11 @@ export default function AdminSlackSettings() {
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-3">
             <Slack className="w-5 h-5 text-primary" />
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
               // Admin Tools
             </p>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight">
             Slack Alerts
           </h1>
           <p className="font-body text-muted-foreground text-base mt-3">
@@ -64,7 +64,7 @@ export default function AdminSlackSettings() {
 
           {/* Help card */}
           <div className="mt-6 border border-primary/30 bg-primary/5 p-6">
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Setup Guide</p>
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Setup Guide</p>
             <ol className="space-y-2 font-body text-foreground text-sm leading-relaxed list-decimal list-inside">
               <li>Enter your Slack channel (e.g. <code>#leads</code>) above.</li>
               <li>For <strong>public channels</strong>: works immediately — the bot posts without an invite.</li>

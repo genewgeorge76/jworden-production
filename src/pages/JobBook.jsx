@@ -60,8 +60,8 @@ function Tile({ label, value, sub, tone = 'slate' }) {
   }
   return (
     <div className={`rounded-xl border p-4 ${tones[tone]}`}>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</div>
-      <div className="mt-1.5 text-2xl font-black text-white tabular-nums tracking-tight">{value}</div>
+      <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400">{label}</div>
+      <div className="mt-1.5 text-2xl font-bold text-white tabular-nums tracking-tight">{value}</div>
       {sub && <div className="mt-1 text-xs text-slate-400">{sub}</div>}
     </div>
   )
@@ -119,12 +119,12 @@ export default function JobBook() {
       {/* ── Rail ─────────────────────────────────────────────────────────── */}
       <aside className="w-full md:w-60 bg-black/40 border-r border-slate-800/80 shrink-0 flex flex-col">
         <div className="p-5 border-b border-slate-800/60 flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 font-black">
+          <div className="w-8 h-8 rounded bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 font-bold">
             W
           </div>
           <div>
-            <div className="font-black text-white text-sm tracking-widest uppercase leading-none">Job Book</div>
-            <div className="text-[10px] text-amber-400 font-bold tracking-widest uppercase mt-0.5">J. Worden &amp; Sons</div>
+            <div className="font-bold text-white text-sm tracking-[0.08em] uppercase leading-none">Job Book</div>
+            <div className="text-[10px] text-amber-400 font-bold tracking-[0.08em] uppercase mt-0.5">J. Worden &amp; Sons</div>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ export default function JobBook() {
 
         {nav === 'dashboard' && (
           <section>
-            <h1 className="text-2xl font-black text-white uppercase tracking-tight">The job book</h1>
+            <h1 className="text-2xl font-bold text-white uppercase tracking-tight">The job book</h1>
             <p className="mt-1 text-sm text-slate-400 max-w-2xl">
               {summary.data?.total_jobs?.toLocaleString() ?? '—'} jobs. Each figure sits against the
               evidence behind it, and they are never added together — a combined total would
@@ -203,7 +203,7 @@ export default function JobBook() {
 
                 <div className="mt-7 grid gap-5 lg:grid-cols-2">
                   <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-                    <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">Commercial and residential</h2>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Commercial and residential</h2>
                     <div className="mt-3 space-y-2">
                       {Object.entries(summary.data.by_kind || {}).map(([kind, n]) => (
                         <div key={kind} className="flex items-center justify-between text-sm">
@@ -221,7 +221,7 @@ export default function JobBook() {
                   </div>
 
                   <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-                    <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">Where the work is</h2>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Where the work is</h2>
                     <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5">
                       {(summary.data.by_state || []).slice(0, 12).map((s) => (
                         <div key={s.state} className="flex items-center justify-between text-sm">
@@ -244,7 +244,7 @@ export default function JobBook() {
         {nav === 'jobs' && !selectedId && (
           <section>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-black text-white uppercase tracking-tight mr-auto">Jobs</h1>
+              <h1 className="text-2xl font-bold text-white uppercase tracking-tight mr-auto">Jobs</h1>
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
@@ -327,7 +327,7 @@ export default function JobBook() {
         {selectedId && (
           <section>
             <button onClick={() => setSelectedId(null)}
-                    className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-amber-300">
+                    className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400 hover:text-amber-300">
               ← Back to jobs
             </button>
 
@@ -340,7 +340,7 @@ export default function JobBook() {
             {job && (
               <>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <h1 className="text-2xl font-black text-white uppercase tracking-tight">
+                  <h1 className="text-2xl font-bold text-white uppercase tracking-tight">
                     {job.client || job.address || job.city || 'Job'}
                   </h1>
                   <Grade value={job.evidence} />
@@ -352,7 +352,7 @@ export default function JobBook() {
                 <div className="mt-5 flex gap-1 border-b border-slate-800">
                   {['overview', 'scope', 'evidence'].map((t) => (
                     <button key={t} onClick={() => setTab(t)}
-                      className={`px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+                      className={`px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] transition ${
                         tab === t ? 'text-amber-300 border-b-2 border-amber-400'
                                   : 'text-slate-500 hover:text-slate-300'
                       }`}>
@@ -388,7 +388,7 @@ export default function JobBook() {
                 {tab === 'scope' && (
                   <div className="mt-5 max-w-3xl space-y-4 text-sm">
                     <div>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">What was done</h3>
+                      <h3 className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">What was done</h3>
                       <p className="mt-2 text-slate-200 leading-relaxed whitespace-pre-line">
                         {job.scope || 'No scope is recorded. Nothing is inferred from the job next to it.'}
                       </p>
@@ -397,7 +397,7 @@ export default function JobBook() {
                       )}
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Our role</h3>
+                      <h3 className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Our role</h3>
                       <p className="mt-2 text-slate-200">{job.role || 'Not recorded.'}</p>
                       {job.role_source && (
                         <p className="mt-1 text-[11px] text-slate-500">Established by: {job.role_source}</p>
@@ -405,7 +405,7 @@ export default function JobBook() {
                     </div>
                     {job.outstanding_issues && (
                       <div>
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Outstanding</h3>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">Outstanding</h3>
                         <p className="mt-2 text-slate-200 whitespace-pre-line">{job.outstanding_issues}</p>
                       </div>
                     )}
@@ -443,7 +443,7 @@ export default function JobBook() {
 
         {nav === 'map' && (
           <section>
-            <h1 className="text-2xl font-black text-white uppercase tracking-tight">Map</h1>
+            <h1 className="text-2xl font-bold text-white uppercase tracking-tight">Map</h1>
             <p className="mt-1 text-sm text-slate-400 max-w-2xl">
               {pins.data?.count?.toLocaleString() ?? '—'} commercial jobs with a real coordinate.
               A job without one is left off rather than dropped on its town centre — a pin in the
@@ -473,41 +473,41 @@ export default function JobBook() {
             className="w-full max-w-lg rounded-2xl border border-slate-800 bg-[#0d1424] p-6 space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-black text-white uppercase tracking-tight">New job</h2>
+              <h2 className="text-lg font-bold text-white uppercase tracking-tight">New job</h2>
               <button type="button" onClick={() => setCreating(false)} className="text-slate-500 hover:text-slate-300">
                 <X size={18} />
               </button>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400 sm:col-span-2">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400 sm:col-span-2">
                 Client
                 <input name="client" className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal normal-case tracking-normal text-slate-100" />
               </label>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">
                 Kind
                 <select name="category" defaultValue="commercial" className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal normal-case tracking-normal text-slate-100">
                   <option value="commercial">Commercial</option>
                   <option value="residential">Residential</option>
                 </select>
               </label>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">
                 Amount
                 <input name="amount" inputMode="decimal" placeholder="25589.39" className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal normal-case tracking-normal text-slate-100" />
               </label>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400 sm:col-span-2">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400 sm:col-span-2">
                 Address <span className="normal-case font-normal text-slate-500">(commercial only — a residential street is never stored)</span>
                 <input name="address" className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal normal-case tracking-normal text-slate-100" />
               </label>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">
                 Town
                 <input name="city" className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal normal-case tracking-normal text-slate-100" />
               </label>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400">
                 State
                 <input name="state" maxLength={2} className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal uppercase tracking-normal text-slate-100" />
               </label>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400 sm:col-span-2">
+              <label className="text-xs font-bold uppercase tracking-[0.08em] text-slate-400 sm:col-span-2">
                 Scope
                 <textarea name="scope" rows={3} className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm font-normal normal-case tracking-normal text-slate-100" />
               </label>

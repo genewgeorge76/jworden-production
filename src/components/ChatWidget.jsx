@@ -212,7 +212,7 @@ function getPageHelp(pathname) {
 function HeaderAvatar() {
   return (
     <div
-      className="h-10 w-10 flex-shrink-0 rounded-full bg-brand-amber text-brand-navy flex items-center justify-center font-display font-black text-sm tracking-wide shadow-sm"
+      className="h-10 w-10 flex-shrink-0 rounded-full bg-brand-amber text-brand-navy flex items-center justify-center font-display font-bold text-sm tracking-wide shadow-sm"
       aria-hidden="true"
     >
       JW
@@ -1146,7 +1146,7 @@ export default function ChatWidget() {
                               value={verifyCode}
                               onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, ''))}
                               placeholder="123456"
-                              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono tracking-widest text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-amber/50"
+                              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.08em] text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-amber/50"
                             />
                             <button
                               type="button"

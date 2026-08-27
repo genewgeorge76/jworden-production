@@ -136,14 +136,14 @@ export default function ParkingLots() {
           <div className="flex flex-col lg:flex-row gap-12 items-start">
             <div className="lg:w-1/2 space-y-6">
               <div className="flex flex-wrap gap-2">
-                <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                   Commercial Parking Lots
                 </span>
-                <span className="inline-block bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="inline-block bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                   KFC • Taco Bell • Arby's Proof
                 </span>
               </div>
-              <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
+              <h1 className="font-display font-bold text-5xl md:text-7xl text-white leading-tight tracking-tight">
                 Commercial<br /><span className="text-brand-amber">Parking Lot Paving</span><br />in Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
@@ -165,21 +165,21 @@ export default function ParkingLots() {
               {/* Trust badges */}
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
                 <div className="text-center">
-                  <p className="text-brand-amber font-black text-2xl">40+</p>
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Years in the trade</p>
+                  <p className="text-brand-amber font-bold text-2xl">40+</p>
+                  <p className="text-white/40 text-xs uppercase tracking-[0.08em]">Years in the trade</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-brand-amber font-black text-2xl">500+</p>
-                  <p className="text-white/40 text-xs uppercase tracking-widest">QSR photos on file</p>
+                  <p className="text-brand-amber font-bold text-2xl">500+</p>
+                  <p className="text-white/40 text-xs uppercase tracking-[0.08em]">QSR photos on file</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-brand-amber font-black text-2xl">ADA</p>
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Code Certified</p>
+                  <p className="text-brand-amber font-bold text-2xl">ADA</p>
+                  <p className="text-white/40 text-xs uppercase tracking-[0.08em]">Code Certified</p>
                 </div>
               </div>
               {/* Awards */}
               <div className="flex flex-wrap items-center gap-2 pt-4">
-                <span className="text-white/30 text-xs uppercase tracking-widest font-bold">Proof:</span>
+                <span className="text-white/30 text-xs uppercase tracking-[0.08em] font-bold">Proof:</span>
                 <span className="bg-brand-amber/10 text-brand-amber text-xs font-bold px-3 py-1.5 rounded-full">KFC program photos</span>
                 <span className="bg-white/10 text-white/80 text-xs font-bold px-3 py-1.5 rounded-full">Restaurant drive-thru lanes</span>
                 <span className="bg-white/10 text-white/80 text-xs font-bold px-3 py-1.5 rounded-full">Retail parking lots</span>
@@ -205,8 +205,8 @@ export default function ParkingLots() {
                 </video>
               </div>
               <div className="absolute -bottom-6 -left-6 bg-brand-amber rounded-2xl p-6 shadow-xl">
-                <p className="text-brand-navy font-black text-4xl leading-none">20yr</p>
-                <p className="text-brand-navy/70 text-xs font-bold uppercase tracking-widest mt-1">Life Expectancy<br />When Done Right</p>
+                <p className="text-brand-navy font-bold text-4xl leading-none">20yr</p>
+                <p className="text-brand-navy/70 text-xs font-bold uppercase tracking-[0.08em] mt-1">Life Expectancy<br />When Done Right</p>
               </div>
             </div>
           </div>
@@ -217,8 +217,8 @@ export default function ParkingLots() {
       <section className="py-20 bg-white/5 border-y border-white/10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Commercial Proof</span>
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight">Restaurant And Retail Work Is Our Proof.</h2>
+            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">Commercial Proof</span>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight">Restaurant And Retail Work Is Our Proof.</h2>
             <p className="text-white/40 mt-4 max-w-2xl mx-auto">KFC, Taco Bell, Arby's, CVS/Rite Aid-style retail, and local commercial lots all require the same discipline: clear scope, safe access, durable sections, and a finish that represents the business well.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -228,7 +228,7 @@ export default function ParkingLots() {
                   <CheckCircle2 className="w-5 h-5 text-brand-amber flex-shrink-0 mt-1" />
                   <div>
                     <p className="text-white font-bold text-sm">{acct.name}</p>
-                    <p className="text-brand-amber/70 text-xs font-semibold uppercase tracking-widest mt-1">{acct.region}</p>
+                    <p className="text-brand-amber/70 text-xs font-semibold uppercase tracking-[0.08em] mt-1">{acct.region}</p>
                     <p className="text-white/40 text-xs mt-2 leading-relaxed">{acct.note}</p>
                   </div>
                 </div>
@@ -242,7 +242,7 @@ export default function ParkingLots() {
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-4">Commercial Lot Services That Keep Sites Open.</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-4">Commercial Lot Services That Keep Sites Open.</h2>
             <p className="text-white/40 max-w-2xl mx-auto">Repair the failed areas, preserve the good pavement, resurface when it makes sense, and rebuild when the base is gone.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -251,7 +251,7 @@ export default function ParkingLots() {
                 <div className="bg-brand-amber/10 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   {svc.icon}
                 </div>
-                <h3 className="text-white font-black text-xl mb-3 tracking-tight">{svc.title}</h3>
+                <h3 className="text-white font-bold text-xl mb-3 tracking-tight">{svc.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{svc.desc}</p>
               </div>
             ))}
@@ -263,7 +263,7 @@ export default function ParkingLots() {
       <section className="py-20 bg-white/5 border-t border-white/10 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight">Virginia Parking Lot FAQs.</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight">Virginia Parking Lot FAQs.</h2>
           </div>
           <div className="space-y-6">
             {FAQS.map((faq, i) => (
@@ -281,8 +281,8 @@ export default function ParkingLots() {
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
-              <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Virginia Commercial Pavement Science</span>
-              <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-6">
+              <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">Virginia Commercial Pavement Science</span>
+              <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-6">
                 Why Virginia Parking Lots Fail — And What We Do Differently.
               </h2>
               <div className="space-y-4 text-white/60 text-sm leading-relaxed">
@@ -294,7 +294,7 @@ export default function ParkingLots() {
             </div>
             <div className="space-y-4">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <p className="text-white font-black text-base uppercase tracking-widest mb-4">Commercial Markets We Serve</p>
+                <p className="text-white font-bold text-base uppercase tracking-[0.08em] mb-4">Commercial Markets We Serve</p>
                 <div className="grid grid-cols-2 gap-2 text-sm text-white/60">
                   {[
                     'Richmond City', 'Chester & Chesterfield',
@@ -312,16 +312,16 @@ export default function ParkingLots() {
                 </div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <p className="text-white font-black text-base uppercase tracking-widest mb-3">Related Services</p>
+                <p className="text-white font-bold text-base uppercase tracking-[0.08em] mb-3">Related Services</p>
                 <div className="flex flex-wrap gap-2">
-                  <Link to="/sealcoating" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Sealcoating</Link>
-                  <Link to="/crack-repair" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Crack Repair</Link>
-                  <Link to="/paving" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Asphalt Paving</Link>
-                  <Link to="/residential" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Driveway Paving</Link>
+                  <Link to="/sealcoating" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Sealcoating</Link>
+                  <Link to="/crack-repair" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Crack Repair</Link>
+                  <Link to="/paving" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Asphalt Paving</Link>
+                  <Link to="/residential" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Driveway Paving</Link>
                 </div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <p className="text-white font-black text-base uppercase tracking-widest mb-2">4th Generation. Since 1984.</p>
+                <p className="text-white font-bold text-base uppercase tracking-[0.08em] mb-2">4th Generation. Since 1984.</p>
                 <p className="text-white/50 text-sm leading-relaxed">Family-owned and operated out of Chester, Virginia. No project management layers, no subcontracted crews, no national franchise pricing. The owner reviews your scope, your crew knows the layout, and your lot is treated like it belongs to someone who cares.</p>
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function ParkingLots() {
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto bg-brand-amber rounded-[2.5rem] p-12 md:p-16 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10"><ParkingSquare size={140} /></div>
-          <h2 className="text-brand-navy font-black text-3xl md:text-5xl leading-tight mb-6">
+          <h2 className="text-brand-navy font-bold text-3xl md:text-5xl leading-tight mb-6">
             Ready for a Free Parking Lot Assessment?
           </h2>
           <p className="text-brand-navy/60 text-lg mb-8 max-w-2xl mx-auto">
@@ -343,11 +343,11 @@ export default function ParkingLots() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('parking-lot-cta')}
-              className="bg-brand-navy text-white font-black py-4 px-8 rounded-full hover:bg-brand-navy/80 transition-colors"
+              className="bg-brand-navy text-white font-bold py-4 px-8 rounded-full hover:bg-brand-navy/80 transition-colors"
             >
               Call (804) 446-1296
             </a>
-            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-bold py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Request Free Estimate
             </a>
           </div>

@@ -73,10 +73,10 @@ export default function CrewEta() {
       {/* Hero */}
       <div className="border-b border-border bg-obsidian py-10 px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-2">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-2">
             J. Worden & Sons · Live Crew Tracker
           </p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95]">
             Good morning, {firstName}.
           </h1>
           <p className="font-body text-muted-foreground text-base md:text-lg mt-4 max-w-xl">
@@ -89,19 +89,19 @@ export default function CrewEta() {
         {/* Status card */}
         <div className={`border-2 ${statusConfig.border} ${statusConfig.bg} p-6`}>
           <div className="flex items-center justify-between mb-4">
-            <p className="font-display text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+            <p className="font-display text-[10px] tracking-[0.1em] uppercase text-muted-foreground">
               Current Status
             </p>
             {job.status === 'completed' && <CheckCircle2 className="w-6 h-6 text-green-500" />}
           </div>
-          <p className={`font-display font-black text-4xl uppercase tracking-tight ${statusConfig.color}`}>
+          <p className={`font-display font-bold text-4xl uppercase tracking-tight ${statusConfig.color}`}>
             {statusConfig.label}
           </p>
           {job.progress_percent > 0 && job.status === 'in_progress' && (
             <div className="mt-5">
               <div className="flex justify-between mb-2">
                 <p className="font-display text-muted-foreground text-[10px] tracking-wider uppercase">Progress</p>
-                <p className="font-display font-black text-foreground text-sm">{job.progress_percent}%</p>
+                <p className="font-display font-bold text-foreground text-sm">{job.progress_percent}%</p>
               </div>
               <div className="h-2 bg-muted overflow-hidden">
                 <div
@@ -132,10 +132,10 @@ export default function CrewEta() {
 
         {/* Contact card */}
         <div className="border border-border bg-card p-6">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-3">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-3">
             Questions? Concerns?
           </p>
-          <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight mb-4">
+          <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight mb-4">
             We're a phone call away.
           </h3>
           <a
@@ -160,9 +160,9 @@ function InfoCard({ icon: Icon, label, value, sub }) {
     <div className="border border-border bg-card p-5">
       <div className="flex items-center gap-2 mb-3">
         <Icon className="w-4 h-4 text-primary" />
-        <p className="font-display text-muted-foreground text-[10px] tracking-[0.25em] uppercase">{label}</p>
+        <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase">{label}</p>
       </div>
-      <p className="font-display font-black text-foreground text-lg uppercase tracking-tight leading-tight">
+      <p className="font-display font-bold text-foreground text-lg uppercase tracking-tight leading-tight">
         {value}
       </p>
       {sub && <p className="font-body text-muted-foreground text-sm mt-1">{sub}</p>}

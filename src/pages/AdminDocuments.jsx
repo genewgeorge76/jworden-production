@@ -93,10 +93,10 @@ function AdminOpsPanel({ isAdmin, selectedJob, documents, onChanged }) {
       <div className="border border-primary/30 bg-primary/5 p-5 md:p-6">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-2">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-2">
               // Operations
             </p>
-            <h2 className="font-display font-black text-foreground text-2xl uppercase tracking-tight">
+            <h2 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight">
               Job Operations
             </h2>
             <p className="font-body text-muted-foreground text-sm mt-2 max-w-2xl">
@@ -107,7 +107,7 @@ function AdminOpsPanel({ isAdmin, selectedJob, documents, onChanged }) {
 
         {selectedJob ? (
           <div className="mt-5 border-t border-primary/20 pt-4">
-            <p className="font-display text-muted-foreground text-xs tracking-[0.25em] uppercase mb-3">
+            <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mb-3">
               Selected Job Actions
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
@@ -144,7 +144,7 @@ function AdminOpsPanel({ isAdmin, selectedJob, documents, onChanged }) {
       <div className="border border-border bg-card p-5 md:p-6">
         <div className="flex items-center gap-2 mb-4">
           <Activity className="w-4 h-4 text-primary" />
-          <h2 className="font-display font-black text-foreground text-lg uppercase tracking-tight">
+          <h2 className="font-display font-bold text-foreground text-lg uppercase tracking-tight">
             Monitoring Alerts
           </h2>
         </div>
@@ -214,7 +214,7 @@ export default function AdminDocuments() {
           <div className="w-16 h-16 bg-destructive/10 border border-destructive/40 flex items-center justify-center mx-auto mb-6">
             <ShieldOff className="w-8 h-8 text-destructive" />
           </div>
-          <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight mb-3">
+          <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight mb-3">
             Admin Access Required
           </h1>
           <p className="font-body text-muted-foreground text-base">
@@ -237,10 +237,10 @@ export default function AdminDocuments() {
 
       <section className="pt-32 pb-10 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
             // Admin Tools
           </p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
             Customer Documents
           </h1>
           <p className="font-body text-muted-foreground text-base mt-3 max-w-2xl">
@@ -274,7 +274,7 @@ export default function AdminDocuments() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
               <aside>
-                <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase mb-4">
+                <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase mb-4">
                   Select Job ({jobs.length})
                 </p>
                 <JobPicker
@@ -291,10 +291,10 @@ export default function AdminDocuments() {
                     <div className="border border-border bg-card p-6">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-2">
+                          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-2">
                             Editing
                           </p>
-                          <p className="font-display font-black text-foreground text-2xl uppercase tracking-tight truncate">
+                          <p className="font-display font-bold text-foreground text-2xl uppercase tracking-tight truncate">
                             {selectedJob.title}
                           </p>
                           <p className="font-body text-muted-foreground text-sm mt-1">

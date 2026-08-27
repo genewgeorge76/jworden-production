@@ -10,10 +10,10 @@ export default function MarketFAQ({ faqs, city }) {
   return (
     <section className="border-t border-border py-16 md:py-20">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+        <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
           {city} Paving FAQs
         </p>
-        <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight mb-10">
+        <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight mb-10">
           Common Questions
         </h2>
 

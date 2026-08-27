@@ -77,12 +77,12 @@ export default function HiringOnboardingAIPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-display tracking-[0.2em] uppercase mb-8"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-display tracking-[0.08em] uppercase mb-8"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             AI SYNDICATE
           </motion.div>
-          <h1 className="font-display font-black text-foreground text-5xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.9] flex flex-col gap-2">
+          <h1 className="font-display font-bold text-foreground text-5xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.9] flex flex-col gap-2">
             Hiring & Onboarding Protocols
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl mt-8 max-w-3xl leading-relaxed">
@@ -91,7 +91,7 @@ export default function HiringOnboardingAIPage() {
           <div className="mt-12 flex flex-wrap items-center gap-4 justify-center md:justify-start">
             <Link
               to={'/careers'}
-              className="group relative inline-flex items-center justify-center px-8 py-5 font-display font-bold text-sm tracking-[0.2em] uppercase text-primary-foreground bg-primary overflow-hidden transition-all hover:scale-[1.02] active:scale-95"
+              className="group relative inline-flex items-center justify-center px-8 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase text-primary-foreground bg-primary overflow-hidden transition-all hover:scale-[1.02] active:scale-95"
             >
               <span className="absolute inset-0 w-full h-full -mt-1 opacity-20 bg-gradient-to-b from-transparent via-transparent to-black" />
               <span className="relative flex items-center gap-2">
@@ -119,11 +119,11 @@ export default function HiringOnboardingAIPage() {
             >
               <div className="absolute top-0 left-0 w-1 h-full bg-primary/0 group-hover:bg-primary transition-colors duration-500" />
               <div className="flex flex-col md:flex-row items-start gap-6 md:gap-10">
-                <span className="font-display text-5xl md:text-6xl text-primary/10 group-hover:text-primary/20 transition-colors font-black hidden md:block">
+                <span className="font-display text-5xl md:text-6xl text-primary/10 group-hover:text-primary/20 transition-colors font-bold hidden md:block">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <div>
-                  <h2 className="font-display font-black text-foreground text-2xl md:text-4xl uppercase tracking-tight mb-4">
+                  <h2 className="font-display font-bold text-foreground text-2xl md:text-4xl uppercase tracking-tight mb-4">
                     {section.heading}
                   </h2>
                   <p className="text-base md:text-lg text-muted-foreground leading-relaxed">

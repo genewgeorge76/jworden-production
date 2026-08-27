@@ -316,7 +316,7 @@ export default function MarketingHome() {
               <div>
                 <motion.div
                   {...rise(0)}
-                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-amber-400/90"
+                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.08em] text-amber-400/90"
                 >
                   <span className="h-px w-8 bg-amber-400/60" aria-hidden="true" />
                   Built on a jobsite, not in a boardroom
@@ -367,7 +367,7 @@ export default function MarketingHome() {
                     <span className="font-display uppercase tracking-[0.18em] text-xs text-slate-400">
                       Job book — verified
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
                       Completed
                     </span>
                   </div>
@@ -430,7 +430,7 @@ export default function MarketingHome() {
             includes 66 jobs marked lost. */}
         <section id="proof" className="py-24 bg-[#050810] scroll-mt-20">
           <div className="max-w-7xl mx-auto px-6">
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-amber-400/90">
+            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-amber-400/90">
               The job book, 2013&ndash;2022
             </p>
             <h2 className="mt-4 font-display uppercase text-white leading-[0.9] tracking-wide text-[clamp(2.25rem,5vw,3.75rem)] max-w-3xl text-balance">
@@ -534,7 +534,7 @@ export default function MarketingHome() {
             is accurate as a software capability, not a services overclaim. */}
         <section className="py-16 border-b border-white/5 bg-[#050810]">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500 mb-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-amber-500 mb-3">
               Works wherever you contract
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-balance">
@@ -611,7 +611,7 @@ export default function MarketingHome() {
                     {tier.name}
                   </h3>
                   <div className="flex items-baseline gap-2 mb-6">
-                    <span className="text-5xl font-black text-white">{tier.price}</span>
+                    <span className="text-5xl font-bold text-white">{tier.price}</span>
                     <span className="text-slate-500">/mo</span>
                   </div>
                   <p className="text-slate-400 mb-8 min-h-[3rem]">{tier.blurb}</p>

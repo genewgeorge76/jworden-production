@@ -107,7 +107,7 @@ export default function ConsoleNav() {
     >
       <div className="flex items-center justify-between gap-4 px-4 py-2 border-b border-white/5">
         <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-amber-500/80">
+          <p className="text-[10px] uppercase tracking-[0.08em] text-amber-500/80">
             {isOwner ? 'Operations' : `${String(tier || 'no plan').toUpperCase()} plan`}
           </p>
           <p className="truncate text-sm text-slate-300">
@@ -117,7 +117,7 @@ export default function ConsoleNav() {
         <button
           type="button"
           onClick={logout}
-          className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-slate-500 hover:text-amber-500"
+          className="shrink-0 text-[10px] uppercase tracking-[0.08em] text-slate-500 hover:text-amber-500"
         >
           Sign out
         </button>
@@ -141,8 +141,8 @@ export default function ConsoleNav() {
                       aria-current={active ? 'page' : undefined}
                       className={
                         active
-                          ? 'block whitespace-nowrap rounded px-3 py-2 text-xs font-semibold uppercase tracking-widest text-[#070b14] bg-amber-500'
-                          : 'block whitespace-nowrap rounded px-3 py-2 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-amber-400 hover:bg-white/5'
+                          ? 'block whitespace-nowrap rounded px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-[#070b14] bg-amber-500'
+                          : 'block whitespace-nowrap rounded px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-slate-400 hover:text-amber-400 hover:bg-white/5'
                       }
                     >
                       {tab.label}

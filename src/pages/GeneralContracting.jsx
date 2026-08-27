@@ -197,8 +197,8 @@ export default function GeneralContracting() {
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,10,0.95)_0%,rgba(5,7,10,0.82)_48%,rgba(5,7,10,0.42)_100%)]" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">General Contracting Division</p>
-          <h1 className="font-display font-black text-white text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">General Contracting Division</p>
+          <h1 className="font-display font-bold text-white text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
             General Contracting Under One Accountable Team
           </h1>
           <p className="text-white/72 text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -210,20 +210,20 @@ export default function GeneralContracting() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('gc_page_hero')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Phone className="w-4 h-4" />
               Call 804-446-1296
             </a>
             <Link
               to="/#quote"
-              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Request GC Consultation
             </Link>
             <a
               href="#quote"
-              className="border border-border text-foreground px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-card transition-colors inline-flex items-center gap-2"
+              className="border border-border text-foreground px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-card transition-colors inline-flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               Request Design Review
@@ -242,9 +242,9 @@ export default function GeneralContracting() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 group"
             >
-              <span className="w-9 h-9 bg-[#4dbc15] flex items-center justify-center rounded font-black text-white text-xl">h</span>
+              <span className="w-9 h-9 bg-[#4dbc15] flex items-center justify-center rounded font-bold text-white text-xl">h</span>
               <div>
-                <p className="font-display font-black text-white text-sm tracking-widest uppercase leading-tight group-hover:text-[#4dbc15] transition-colors">Houzz Pro Certified</p>
+                <p className="font-display font-bold text-white text-sm tracking-[0.08em] uppercase leading-tight group-hover:text-[#4dbc15] transition-colors">Houzz Pro Certified</p>
                 <p className="text-white/50 text-xs mt-0.5">4.8 ★ · 12 Reviews · Recommended on Houzz · 500+ Ideabook Saves</p>
               </div>
             </a>
@@ -257,8 +257,8 @@ export default function GeneralContracting() {
                   rel="noopener noreferrer"
                   className="flex flex-col items-center border border-[#4dbc15]/40 hover:border-[#4dbc15] bg-black px-4 py-2 transition-colors group"
                 >
-                  <span className="text-[#4dbc15] font-black text-[10px] tracking-widest uppercase">Best of Houzz</span>
-                  <span className="text-white font-display font-black text-xl leading-tight">{year}</span>
+                  <span className="text-[#4dbc15] font-bold text-[10px] tracking-[0.08em] uppercase">Best of Houzz</span>
+                  <span className="text-white font-display font-bold text-xl leading-tight">{year}</span>
                 </a>
               ))}
             </div>
@@ -270,8 +270,8 @@ export default function GeneralContracting() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-8 items-start">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Design Planning</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Design Planning</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
                 Houzz-Style Design Power, Built For Real Construction Decisions
               </h2>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed mt-5 max-w-3xl">
@@ -280,21 +280,21 @@ export default function GeneralContracting() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href="#quote"
-                  className="bg-foreground text-background px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-foreground/90 transition-colors inline-flex items-center gap-2"
+                  className="bg-foreground text-background px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-foreground/90 transition-colors inline-flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   Request Design Review
                 </a>
                 <Link
                   to="/hardscapes"
-                  className="border border-border text-foreground px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-card transition-colors inline-flex items-center gap-2"
+                  className="border border-border text-foreground px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-card transition-colors inline-flex items-center gap-2"
                 >
                   <Layers3 className="w-4 h-4" />
                   Hardscape Design
                 </Link>
                 <Link
                   to="/hardscapes"
-                  className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
+                  className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
                 >
                   <Hammer className="w-4 h-4" />
                   Patio & Hardscape Design
@@ -308,7 +308,7 @@ export default function GeneralContracting() {
                 return (
                   <article key={item.title} className="border border-border bg-card p-5 shadow-sm">
                     <Icon className="w-5 h-5 text-primary mb-4" />
-                    <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">
+                    <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">
                       {item.title}
                     </h3>
                     <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.body}</p>
@@ -324,8 +324,8 @@ export default function GeneralContracting() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Photo Review Decision Support</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Photo Review Decision Support</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
                 Review The Property, Then Help Customers Make Better Decisions
               </h2>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed mt-5 max-w-3xl">
@@ -334,14 +334,14 @@ export default function GeneralContracting() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href="#quote"
-                  className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
+                  className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
                 >
                   <Camera className="w-4 h-4" />
                   Request Property Review
                 </a>
                 <a
                   href="#quote"
-                  className="border border-border text-foreground px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-background transition-colors inline-flex items-center gap-2"
+                  className="border border-border text-foreground px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-background transition-colors inline-flex items-center gap-2"
                 >
                   <ScanLine className="w-4 h-4" />
                   Send Project Details
@@ -355,7 +355,7 @@ export default function GeneralContracting() {
                 return (
                   <article key={item.title} className="border border-border bg-background p-5">
                     <Icon className="w-5 h-5 text-primary mb-4" />
-                    <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">
+                    <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">
                       {item.title}
                     </h3>
                     <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.body}</p>
@@ -370,8 +370,8 @@ export default function GeneralContracting() {
       <section className="py-14 md:py-18 border-b border-border bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-8 max-w-4xl">
-            <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Revenue-first service design</p>
-            <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+            <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Revenue-first service design</p>
+            <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
               Turn Knowledge Into Paid Assessment Products
             </h2>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed mt-5 max-w-3xl">
@@ -382,8 +382,8 @@ export default function GeneralContracting() {
             {PREMIUM_REVENUE_OFFERS.map((offer) => (
               <article key={offer.title} className="border border-border bg-card p-6 shadow-sm">
                 <div className="flex items-start justify-between gap-4">
-                  <h3 className="font-display font-black text-foreground text-2xl uppercase tracking-tight leading-none">{offer.title}</h3>
-                  <span className="rounded-lg bg-primary/10 px-3 py-1.5 font-display text-sm font-black text-primary whitespace-nowrap">{offer.price}</span>
+                  <h3 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight leading-none">{offer.title}</h3>
+                  <span className="rounded-lg bg-primary/10 px-3 py-1.5 font-display text-sm font-bold text-primary whitespace-nowrap">{offer.price}</span>
                 </div>
                 <p className="mt-5 text-sm text-muted-foreground leading-relaxed">{offer.body}</p>
               </article>
@@ -396,7 +396,7 @@ export default function GeneralContracting() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Core GC Services
               </h2>
               <div className="space-y-3">
@@ -410,7 +410,7 @@ export default function GeneralContracting() {
             </div>
 
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Where We Deliver Best
               </h2>
               <div className="space-y-3">
@@ -432,8 +432,8 @@ export default function GeneralContracting() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Commercial Alignment</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Commercial Alignment</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Need Paving Plus Full Project Oversight?
           </h2>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-3xl mb-8">
@@ -442,7 +442,7 @@ export default function GeneralContracting() {
           </p>
           <Link
             to="/commercial/richmond-va"
-            className="border border-primary/40 text-primary px-6 py-4 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
+            className="border border-primary/40 text-primary px-6 py-4 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors inline-flex items-center gap-2"
           >
             <Building2 className="w-4 h-4" />
             View Commercial Paving Division
@@ -452,14 +452,14 @@ export default function GeneralContracting() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Common Questions</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Common Questions</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             General Contracting FAQ
           </h2>
           <div className="space-y-4">
             {GC_FAQS.map((item) => (
               <article key={item.q} className="border border-border bg-card p-5 md:p-6">
-                <h3 className="font-display font-black text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
                   {item.q}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.a}</p>
@@ -473,8 +473,8 @@ export default function GeneralContracting() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Start Your Project</p>
-              <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Book A GC Planning Call</h2>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Start Your Project</p>
+              <h2 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">Book A GC Planning Call</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
                 We will map permitting, timeline, major risks, and delivery strategy before construction begins.
               </p>
@@ -482,7 +482,7 @@ export default function GeneralContracting() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('gc_page_footer_cta')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Building2 className="w-4 h-4" />
               Talk To GC Team

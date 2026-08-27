@@ -52,10 +52,10 @@ export default class ErrorBoundary extends React.Component {
           <div className="w-16 h-16 bg-destructive/10 border border-destructive/40 flex items-center justify-center mx-auto mb-6">
             <AlertTriangle className="w-8 h-8 text-destructive" />
           </div>
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
             {kicker}
           </p>
-          <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight mb-3">
+          <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight mb-3">
             {title}
           </h1>
           <p className="font-body text-muted-foreground text-sm leading-relaxed mb-6">

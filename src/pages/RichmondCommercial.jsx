@@ -89,8 +89,8 @@ export default function RichmondCommercial() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Richmond Commercial Division</p>
-              <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Richmond Commercial Division</p>
+              <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
                 Richmond Commercial Asphalt With Documented Multi-Site Proof
               </h1>
               <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -103,14 +103,14 @@ export default function RichmondCommercial() {
                 <a
                   href="tel:+18044461296"
                   onClick={() => trackPhoneClick('richmond_commercial_page')}
-                  className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+                  className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
                 >
                   <Phone className="w-4 h-4" />
                   Call 804-446-1296
                 </a>
                 <Link
                   to="/#quote"
-                  className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                  className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
                 >
                   Request Commercial Quote
                 </Link>
@@ -138,7 +138,7 @@ export default function RichmondCommercial() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 What We Scope Before Work Starts
               </h2>
               <div className="space-y-3">
@@ -152,7 +152,7 @@ export default function RichmondCommercial() {
             </div>
 
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Richmond Commercial Focus
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">
@@ -174,14 +174,14 @@ export default function RichmondCommercial() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-8">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Richmond Proof</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Richmond Proof</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
                 Commercial Proof From Real Project Photos
               </h2>
             </div>
             <Link
               to="/#projects"
-              className="border border-border px-4 py-3 text-xs uppercase tracking-[0.14em] font-display font-bold text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+              className="border border-border px-4 py-3 text-xs uppercase tracking-[0.06em] font-display font-bold text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
             >
               View Full Gallery
             </Link>
@@ -200,8 +200,8 @@ export default function RichmondCommercial() {
                   className="w-full aspect-[4/3] object-cover quality-premium"
                 />
                 <div className="p-5">
-                  <p className="font-display text-primary text-[10px] tracking-[0.2em] uppercase mb-2">{project.location}</p>
-                  <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">{project.title}</h3>
+                  <p className="font-display text-primary text-[10px] tracking-[0.08em] uppercase mb-2">{project.location}</p>
+                  <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">{project.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed mt-3">{project.description}</p>
                 </div>
               </article>
@@ -214,8 +214,8 @@ export default function RichmondCommercial() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Next Step</p>
-              <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Request Your Richmond Site Review</h2>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Next Step</p>
+              <h2 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">Request Your Richmond Site Review</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
                 Get a practical recommendation, budget-aware scope options, and a clear timeline before you commit. We will tell you whether repair, preservation, resurfacing, or replacement is the right move.
               </p>
@@ -223,7 +223,7 @@ export default function RichmondCommercial() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('richmond_commercial_footer_cta')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Building2 className="w-4 h-4" />
               Talk To Commercial Team

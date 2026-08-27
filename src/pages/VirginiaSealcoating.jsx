@@ -169,19 +169,19 @@ export default function VirginiaSealcoating() {
               href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-primary/20 border border-primary/50 text-primary px-4 py-2 text-xs font-display font-black uppercase tracking-widest hover:bg-primary/30 transition-colors"
+              className="inline-flex items-center gap-2 bg-primary/20 border border-primary/50 text-primary px-4 py-2 text-xs font-display font-bold uppercase tracking-[0.08em] hover:bg-primary/30 transition-colors"
             >
               <Trophy className="w-3.5 h-3.5" />
               Houzz Pro — Multiple Best Of Awards
             </a>
-            <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-4 py-2 text-xs font-display font-black uppercase tracking-widest">
+            <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-4 py-2 text-xs font-display font-bold uppercase tracking-[0.08em]">
               <Star className="w-3.5 h-3.5 text-primary" />
               Pavement Magazine Top 75 — 4 Categories
             </span>
           </div>
 
-          <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-4">Virginia Statewide Sealcoating Authority</p>
-          <h1 className="font-display font-black text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.88] max-w-5xl mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Virginia Statewide Sealcoating Authority</p>
+          <h1 className="font-display font-bold text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.88] max-w-5xl mb-8">
             Asphalt Sealcoating <br />
             <span className="text-primary italic">in Central</span><br />
             Virginia.
@@ -195,13 +195,13 @@ export default function VirginiaSealcoating() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('sealcoating_hero')}
-              className="premium-cta inline-flex items-center gap-2 px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase text-primary-foreground"
             >
               Call 804-446-1296
             </a>
             <Link
               to="/#quote"
-              className="border-2 border-primary/50 text-white px-10 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-primary/20 transition-all"
+              className="border-2 border-primary/50 text-white px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase hover:bg-primary/20 transition-all"
             >
               Get a Free Quote
             </Link>
@@ -213,8 +213,8 @@ export default function VirginiaSealcoating() {
       <section className="py-24 bg-card border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Material Science</p>
-            <h2 className="font-display font-black text-4xl md:text-6xl uppercase tracking-tight mb-4">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Material Science</p>
+            <h2 className="font-display font-bold text-4xl md:text-6xl uppercase tracking-tight mb-4">
               Every Sealer. Compared.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -226,10 +226,10 @@ export default function VirginiaSealcoating() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left py-4 pr-6 font-display font-black uppercase tracking-wider text-xs text-muted-foreground">Material</th>
-                  <th className="text-left py-4 pr-6 font-display font-black uppercase tracking-wider text-xs text-muted-foreground">Best For</th>
-                  <th className="text-left py-4 pr-6 font-display font-black uppercase tracking-wider text-xs text-muted-foreground">Life Extension</th>
-                  <th className="text-left py-4 font-display font-black uppercase tracking-wider text-xs text-muted-foreground">Cost Tier</th>
+                  <th className="text-left py-4 pr-6 font-display font-bold uppercase tracking-wider text-xs text-muted-foreground">Material</th>
+                  <th className="text-left py-4 pr-6 font-display font-bold uppercase tracking-wider text-xs text-muted-foreground">Best For</th>
+                  <th className="text-left py-4 pr-6 font-display font-bold uppercase tracking-wider text-xs text-muted-foreground">Life Extension</th>
+                  <th className="text-left py-4 font-display font-bold uppercase tracking-wider text-xs text-muted-foreground">Cost Tier</th>
                 </tr>
               </thead>
               <tbody>
@@ -251,8 +251,8 @@ export default function VirginiaSealcoating() {
       <section className="py-24 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Step 1 Is Always This</p>
-            <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tight mb-4">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Step 1 Is Always This</p>
+            <h2 className="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight mb-4">
               Crack Filling Systems
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -263,7 +263,7 @@ export default function VirginiaSealcoating() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {CRACK_FILLERS.map((c, i) => (
               <div key={i} className="premium-panel p-6 rounded-2xl hover:border-primary transition-all">
-                <p className="font-display font-black text-lg uppercase mb-2">{c.name}</p>
+                <p className="font-display font-bold text-lg uppercase mb-2">{c.name}</p>
                 <div className="space-y-1.5 text-sm text-muted-foreground">
                   <p><span className="text-primary font-bold">Temp:</span> {c.temp}</p>
                   <p><span className="text-primary font-bold">Type:</span> {c.type}</p>
@@ -280,8 +280,8 @@ export default function VirginiaSealcoating() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Our Advantage</p>
-              <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tight mb-8">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Our Advantage</p>
+              <h2 className="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight mb-8">
                 Six Seal Systems. <br />One Standard.
               </h2>
               <div className="grid md:grid-cols-3 gap-8">
@@ -290,7 +290,7 @@ export default function VirginiaSealcoating() {
                     <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center mb-4 shadow-md">
                       {adv.icon}
                     </div>
-                    <h3 className="font-display font-black text-base uppercase tracking-wide mb-3">{adv.title}</h3>
+                    <h3 className="font-display font-bold text-base uppercase tracking-wide mb-3">{adv.title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{adv.description}</p>
                   </div>
                 ))}
@@ -299,7 +299,7 @@ export default function VirginiaSealcoating() {
 
             {/* Awards + Social Proof */}
             <div className="space-y-6">
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Industry Recognition</p>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Industry Recognition</p>
               {AWARDS.map((award, i) => (
                 <a
                   key={i}
@@ -312,14 +312,14 @@ export default function VirginiaSealcoating() {
                     <Trophy className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-display font-black text-lg uppercase tracking-wide">{award.label}</p>
+                    <p className="font-display font-bold text-lg uppercase tracking-wide">{award.label}</p>
                     <p className="text-muted-foreground text-sm">{award.detail}</p>
                   </div>
                 </a>
               ))}
               <div className="premium-panel p-6 rounded-2xl border-primary/40">
-                <p className="font-display font-black text-3xl text-primary mb-1">40+</p>
-                <p className="text-sm uppercase tracking-widest text-muted-foreground font-display font-bold">Years Sealing Virginia Asphalt</p>
+                <p className="font-display font-bold text-3xl text-primary mb-1">40+</p>
+                <p className="text-sm uppercase tracking-[0.08em] text-muted-foreground font-display font-bold">Years Sealing Virginia Asphalt</p>
                 <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
                   Every crew member is trained on material compatibility, cure time, and application thickness. 
                   No spray-and-go jobs. We do it right or we don't do it.
@@ -335,8 +335,8 @@ export default function VirginiaSealcoating() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Why Virginia Asphalt Oxidizes Faster</p>
-              <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tight mb-6">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Why Virginia Asphalt Oxidizes Faster</p>
+              <h2 className="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight mb-6">
                 Sealcoating in Virginia's Climate Is Not Optional.
               </h2>
               <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
@@ -348,7 +348,7 @@ export default function VirginiaSealcoating() {
             </div>
             <div className="space-y-4">
               <div className="border border-border bg-background p-6">
-                <p className="font-display font-black text-foreground text-lg uppercase tracking-tight mb-4">Where We Sealcoat</p>
+                <p className="font-display font-bold text-foreground text-lg uppercase tracking-tight mb-4">Where We Sealcoat</p>
                 <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
                   {[
                     'Chester & Chesterfield', 'Richmond City', 'Henrico & Short Pump',
@@ -364,7 +364,7 @@ export default function VirginiaSealcoating() {
                 </div>
               </div>
               <div className="border border-primary/40 bg-primary/5 p-6">
-                <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-3">Related Services</p>
+                <p className="font-display font-bold text-foreground text-base uppercase tracking-tight mb-3">Related Services</p>
                 <div className="flex flex-wrap gap-2">
                   <Link to="/crack-repair" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Crack Repair</Link>
                   <Link to="/residential" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Driveway Paving</Link>
@@ -381,8 +381,8 @@ export default function VirginiaSealcoating() {
       <section className="py-24 bg-background border-b border-border">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           <div className="mb-12">
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Common Questions</p>
-            <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tight">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Common Questions</p>
+            <h2 className="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight">
               Sealcoating FAQ — Virginia
             </h2>
           </div>
@@ -410,7 +410,7 @@ export default function VirginiaSealcoating() {
               },
             ].map((faq) => (
               <article key={faq.q} className="border border-border bg-card p-6">
-                <h3 className="font-display font-black text-foreground text-lg uppercase tracking-tight leading-tight mb-3">{faq.q}</h3>
+                <h3 className="font-display font-bold text-foreground text-lg uppercase tracking-tight leading-tight mb-3">{faq.q}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
               </article>
             ))}
@@ -421,8 +421,8 @@ export default function VirginiaSealcoating() {
       {/* ── Competitor Crusher CTA ───────────────────────────────────────── */}
       <section className="py-20 bg-primary">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <p className="font-display font-black text-primary-foreground/70 text-xs tracking-widest uppercase mb-4">Protect Your Investment</p>
-          <h2 className="font-display font-black text-4xl md:text-7xl text-primary-foreground uppercase tracking-tighter leading-[0.9] mb-8">
+          <p className="font-display font-bold text-primary-foreground/70 text-xs tracking-[0.08em] uppercase mb-4">Protect Your Investment</p>
+          <h2 className="font-display font-bold text-4xl md:text-7xl text-primary-foreground uppercase tracking-tighter leading-[0.9] mb-8">
             Stop Oxidation.<br />Start Today.
           </h2>
           <p className="text-primary-foreground/80 text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -433,13 +433,13 @@ export default function VirginiaSealcoating() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('sealcoating_bottom')}
-              className="bg-black text-white px-12 py-5 font-display font-black text-sm tracking-widest uppercase hover:opacity-90 transition-all shadow-2xl"
+              className="bg-black text-white px-12 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase hover:opacity-90 transition-all shadow-2xl"
             >
               804-446-1296
             </a>
             <Link
               to="/#quote"
-              className="border-2 border-black/30 text-primary-foreground px-12 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-black/10 transition-all"
+              className="border-2 border-black/30 text-primary-foreground px-12 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase hover:bg-black/10 transition-all"
             >
               Request Free Estimate
             </Link>

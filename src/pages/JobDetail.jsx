@@ -114,7 +114,7 @@ export default function JobDetail() {
             <ArrowLeft className="w-5 h-5 text-muted-foreground" />
           </button>
           <div>
-            <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+            <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">
               {job.title}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">

@@ -8,7 +8,7 @@ export default function PhotoGallery({ photos }) {
   if (photos.length === 0) {
     return (
       <div className="border border-border bg-card p-6">
-        <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-5">Progress Photos</p>
+        <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-5">Progress Photos</p>
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <ImageIcon className="w-10 h-10 text-muted-foreground mb-3" />
           <p className="font-body text-muted-foreground text-sm italic">
@@ -23,7 +23,7 @@ export default function PhotoGallery({ photos }) {
     <>
       <div className="border border-border bg-card p-6">
         <div className="flex items-center justify-between mb-5">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">Progress Photos</p>
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">Progress Photos</p>
           <span className="font-display text-muted-foreground text-xs tracking-wider uppercase">
             {photos.length} photo{photos.length !== 1 ? 's' : ''}
           </span>

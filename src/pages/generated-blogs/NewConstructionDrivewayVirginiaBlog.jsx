@@ -30,18 +30,18 @@ export default function NewConstructionDrivewayVirginiaBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">New Construction</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 7 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             New Construction Driveway Paving in Virginia
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function NewConstructionDrivewayVirginiaBlog() {
             New construction driveways in Virginia fail for one reason more than any other: the asphalt goes down too soon over fill that hasn't had time to consolidate, or over fill that was never properly compacted in the first place. The surface looks fine for 12–24 months, and then it starts to crack and settle in patterns that match the fill zones underneath. By then, the builder is often out of the picture. Here's how to avoid that outcome.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             The Builder Fill Problem
           </h2>
           <p>
@@ -81,7 +81,7 @@ export default function NewConstructionDrivewayVirginiaBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What To Insist On Before Paving a New Construction Driveway
           </h2>
 
@@ -102,7 +102,7 @@ export default function NewConstructionDrivewayVirginiaBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             New Construction Driveway Cost in Virginia (2026)
           </h2>
 
@@ -113,14 +113,14 @@ export default function NewConstructionDrivewayVirginiaBlog() {
               { scope: 'Custom estate or rural (long run)', range: '$4.50 – $7.00 / sq ft', note: 'Volume discount on longer footage' },
             ].map((item) => (
               <div key={item.scope} className="bg-card border border-border p-5 rounded-sm">
-                <p className="font-display font-black text-primary text-sm uppercase tracking-wide mb-1">{item.scope}</p>
-                <p className="font-display font-black text-foreground text-xl mb-1">{item.range}</p>
+                <p className="font-display font-bold text-primary text-sm uppercase tracking-wide mb-1">{item.scope}</p>
+                <p className="font-display font-bold text-foreground text-xl mb-1">{item.range}</p>
                 <p className="text-xs text-muted-foreground">{item.note}</p>
               </div>
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Timing: When Should New Construction Asphalt Go Down?
           </h2>
           <p>
@@ -130,7 +130,7 @@ export default function NewConstructionDrivewayVirginiaBlog() {
             If your builder offers a single-pour option and the lot has significant fill, push for the two-phase approach or negotiate an extended warranty for fill-settlement cracks. The conversation is worth having before the closing, not after.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Virginia Localities With High-Growth Builder Fill Risk
           </h2>
           <p>
@@ -140,7 +140,7 @@ export default function NewConstructionDrivewayVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Building in Virginia? Let's Get the Base Right First.</h4>
             <p className="mb-6 text-sm">We assess builder fill condition before quoting new construction driveways. If the fill needs more time or remediation, we'll tell you — we'd rather delay a project than deliver a driveway that fails in 18 months.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Request New Construction Estimate <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

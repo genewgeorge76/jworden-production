@@ -69,7 +69,7 @@ export default function DocumentUploader({ job, onUploaded }) {
 
   return (
     <div className="border border-border bg-card p-6">
-      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-5">Upload Document</p>
+      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-5">Upload Document</p>
 
       {!job.client_email && (
         <div className="border border-destructive/40 bg-destructive/10 text-destructive font-body text-sm p-3 mb-4">

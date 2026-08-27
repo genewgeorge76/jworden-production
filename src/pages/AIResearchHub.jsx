@@ -64,20 +64,20 @@ export default function AIResearchHub() {
           <div className="max-w-5xl">
             <div className="inline-flex items-center gap-3 border border-primary/45 bg-primary/10 px-4 py-2 text-primary">
               <BrainCircuit className="h-4 w-4" />
-              <span className="font-display text-sm uppercase tracking-[0.22em]">Repo-wide research engine</span>
+              <span className="font-display text-sm uppercase tracking-[0.08em]">Repo-wide research engine</span>
             </div>
-            <h1 className="mt-6 font-display text-6xl font-black uppercase leading-[0.86] tracking-normal md:text-8xl lg:text-9xl">
+            <h1 className="mt-6 font-display text-6xl font-bold uppercase leading-[0.86] tracking-normal md:text-8xl lg:text-9xl">
               A live AI radar for the whole repo.
             </h1>
             <p className="mt-8 max-w-3xl text-xl leading-relaxed text-zinc-300 md:text-2xl">
               This hub turns new AI launches, preprint signals, infrastructure updates, and innovation changes into a website-facing intelligence stream. The ingest runs automatically, the site can refresh automatically, and the output is shaped for real contractor operations rather than generic tech news.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link to="/jwordenai" className="inline-flex min-h-[52px] items-center gap-3 bg-primary px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
+              <Link to="/jwordenai" className="inline-flex min-h-[52px] items-center gap-3 bg-primary px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
                 Open JWordenAI
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <a href="#research-feed" className="inline-flex min-h-[52px] items-center gap-3 border border-white/20 px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-white transition-colors hover:border-primary hover:text-primary">
+              <a href="#research-feed" className="inline-flex min-h-[52px] items-center gap-3 border border-white/20 px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-white transition-colors hover:border-primary hover:text-primary">
                 View live feed
               </a>
             </div>
@@ -88,7 +88,7 @@ export default function AIResearchHub() {
       <section className="border-b border-border bg-background py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-10 max-w-4xl">
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">What this engine does</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">What this engine does</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               Ingest, rank, publish, and keep learning.
             </h2>
@@ -115,7 +115,7 @@ export default function AIResearchHub() {
       <section className="border-b border-border bg-background py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Publishing guardrails</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Publishing guardrails</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               Automatic updates need boundaries.
             </h2>

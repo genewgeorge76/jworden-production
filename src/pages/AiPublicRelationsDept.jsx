@@ -32,7 +32,7 @@ export default function AiPublicRelationsDept() {
         
         {/* Header */}
         <div className="bg-blue-900 border-b border-blue-950 px-6 py-6">
-          <h1 className="text-2xl font-black text-white uppercase tracking-wider flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-white uppercase tracking-wider flex items-center gap-3">
             <span>🎙️</span> AI Public Relations Dept
           </h1>
           <p className="text-blue-200 text-sm mt-2">
@@ -87,7 +87,7 @@ export default function AiPublicRelationsDept() {
         {/* Output Console */}
         <div className="p-6 bg-slate-900 border-t border-slate-700 rounded-b-lg">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-blue-400 font-mono text-sm tracking-widest uppercase">Output Console</h3>
+            <h3 className="text-blue-400 font-mono text-sm tracking-[0.08em] uppercase">Output Console</h3>
             <Button variant="outline" size="sm" className="text-xs h-8 bg-slate-800 text-slate-300 border-slate-600 hover:bg-slate-700" onClick={() => {navigator.clipboard.writeText(generatedContent)}}>
               Copy to Clipboard
             </Button>

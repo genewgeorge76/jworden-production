@@ -12,7 +12,7 @@ export default function WordenStandardHub() {
   const renderCatalog = () => (
     <div className="max-w-4xl mx-auto px-6 py-20">
       <div className="mb-16">
-        <h1 className="font-display text-4xl md:text-5xl font-black uppercase text-foreground mb-4">
+        <h1 className="font-display text-4xl md:text-5xl font-bold uppercase text-foreground mb-4">
           The Worden Standard <span className="text-primary">Library</span>
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
@@ -39,7 +39,7 @@ export default function WordenStandardHub() {
                 {course.desc}
               </p>
               
-              <div className="flex items-center gap-4 text-xs font-bold tracking-widest uppercase text-muted-foreground">
+              <div className="flex items-center gap-4 text-xs font-bold tracking-[0.08em] uppercase text-muted-foreground">
                 <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4 text-primary" /> {course.modules.length} Chapters</span>
                 <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" /> {course.hours} Hours</span>
               </div>
@@ -54,7 +54,7 @@ export default function WordenStandardHub() {
     <div className="max-w-4xl mx-auto px-6 py-20">
       <button 
         onClick={() => setSelectedCourse(null)}
-        className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-12"
+        className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-12"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Library
@@ -63,7 +63,7 @@ export default function WordenStandardHub() {
       <div className="mb-16">
         <div className="flex items-center gap-4 mb-4">
           <span className="text-4xl">{selectedCourse.icon}</span>
-          <h1 className="font-display text-3xl md:text-4xl font-black uppercase text-foreground">
+          <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-foreground">
             {selectedCourse.title}
           </h1>
         </div>

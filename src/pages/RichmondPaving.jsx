@@ -107,14 +107,14 @@ export default function RichmondPaving() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-3xl">
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className="inline-flex items-center gap-2 bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+              <span className="inline-flex items-center gap-2 bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                 <MapPin className="w-3 h-3" /> Chester, VA — Serving All of Richmond Metro
               </span>
-              <span className="inline-flex items-center gap-2 bg-yellow-400/10 text-yellow-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+              <span className="inline-flex items-center gap-2 bg-yellow-400/10 text-yellow-400 text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                 <Trophy className="w-3 h-3" /> 4th Generation Since 1984
               </span>
             </div>
-            <h1 className="font-display font-black text-6xl md:text-8xl text-white leading-[0.9] tracking-tighter mb-8">
+            <h1 className="font-display font-bold text-6xl md:text-8xl text-white leading-[0.9] tracking-tighter mb-8">
               ASPHALT PAVING<br /><span className="text-brand-amber">IN RICHMOND,</span><br />VIRGINIA.
             </h1>
             <p className="text-white/70 text-xl max-w-2xl mb-10 leading-relaxed">
@@ -124,11 +124,11 @@ export default function RichmondPaving() {
               <a
                 href="tel:+18044461296"
                 onClick={() => trackPhoneClick('richmond-paving-hero')}
-                className="btn-primary py-5 px-10 text-lg font-black flex items-center gap-2"
+                className="btn-primary py-5 px-10 text-lg font-bold flex items-center gap-2"
               >
                 <Phone className="w-5 h-5" /> (804) 446-1296
               </a>
-              <a href="#quote" className="btn-outline py-5 px-10 text-white text-lg font-black bg-white/5 backdrop-blur-sm border-white/20">
+              <a href="#quote" className="btn-outline py-5 px-10 text-white text-lg font-bold bg-white/5 backdrop-blur-sm border-white/20">
                 Free Estimate
               </a>
             </div>
@@ -142,8 +142,8 @@ export default function RichmondPaving() {
                 { val: 'VDOT', label: 'Prequalified' },
               ].map(stat => (
                 <div key={stat.label}>
-                  <p className="text-brand-amber font-black text-3xl md:text-4xl">{stat.val}</p>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mt-1 font-bold">{stat.label}</p>
+                  <p className="text-brand-amber font-bold text-3xl md:text-4xl">{stat.val}</p>
+                  <p className="text-white/30 text-xs uppercase tracking-[0.08em] mt-1 font-bold">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -158,7 +158,7 @@ export default function RichmondPaving() {
             <div>
               <div className="flex items-center gap-4 mb-6">
                 <ShieldCheck className="w-8 h-8 text-brand-amber" />
-                <h2 className="text-3xl font-black text-white tracking-tight">Licensed Class A VA Contractor</h2>
+                <h2 className="text-3xl font-bold text-white tracking-tight">Licensed Class A VA Contractor</h2>
               </div>
               <p className="text-white/60 text-lg leading-relaxed mb-6">
                 We're insured for both residential and heavy commercial scope throughout the Commonwealth of Virginia, and licensed to the requirements of the work in hand.
@@ -199,10 +199,10 @@ export default function RichmondPaving() {
       <section className="py-24 bg-brand-navy border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-black/40 text-brand-amber rounded-full text-xs font-bold uppercase tracking-widest mb-4 border border-white/5">
+            <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-black/40 text-brand-amber rounded-full text-xs font-bold uppercase tracking-[0.08em] mb-4 border border-white/5">
                <Camera className="w-4 h-4" /> Live Project Intel
             </div>
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
               Recent Paving Work
             </h2>
             <p className="text-white/60 text-lg">
@@ -216,7 +216,7 @@ export default function RichmondPaving() {
                    className="group relative aspect-square md:aspect-video bg-black overflow-hidden rounded-2xl bg-cover bg-center cursor-pointer border border-white/5"
                    style={{ backgroundImage: `url('${imgSrc}')` }}>
                 <div className="absolute inset-0 bg-brand-navy/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0">
-                   <p className="text-brand-amber font-bold uppercase tracking-widest text-xs mb-1">Richmond Job</p>
+                   <p className="text-brand-amber font-bold uppercase tracking-[0.08em] text-xs mb-1">Richmond Job</p>
                    <p className="text-white font-bold text-lg leading-tight md:text-xl">Completed Paving</p>
                 </div>
               </div>
@@ -229,7 +229,7 @@ export default function RichmondPaving() {
       <section className="py-24 px-4 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-4">Richmond Service Areas.</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-4">Richmond Service Areas.</h2>
             <p className="text-white/50 text-lg max-w-2xl mx-auto">
               From historic downtown alleys to massive industrial parks south of the river. We have the logistics and the local knowledge to handle it anywhere in RVA.
             </p>
@@ -250,13 +250,13 @@ export default function RichmondPaving() {
       <section className="py-24 px-4 bg-brand-navy border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-4">Everything Asphalt.</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-4">Everything Asphalt.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {SERVICES.map((svc, i) => (
               <div key={i} className="bg-black/50 border border-white/5 rounded-3xl p-8 hover:border-brand-amber/30 hover:bg-black transition-all group">
                 <Construction className="w-8 h-8 text-brand-amber mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform" />
-                <h3 className="text-white font-black text-xl mb-3 tracking-tight">{svc.title}</h3>
+                <h3 className="text-white font-bold text-xl mb-3 tracking-tight">{svc.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{svc.desc}</p>
               </div>
             ))}
@@ -268,7 +268,7 @@ export default function RichmondPaving() {
       <section className="py-24 px-4 bg-black border-t border-white/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-4">Richmond Paving FAQs</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-4">Richmond Paving FAQs</h2>
             <p className="text-white/50 text-lg">Straight answers to common Central Virginia asphalt questions.</p>
           </div>
           <div className="space-y-6" itemScope itemType="https://schema.org/FAQPage">
@@ -290,8 +290,8 @@ export default function RichmondPaving() {
           <div className="absolute top-0 right-0 p-8 opacity-10 blur-sm mix-blend-overlay pointer-events-none transform rotate-12 scale-150">
             <Trophy size={400} />
           </div>
-          <p className="text-brand-navy/60 font-black uppercase tracking-widest text-sm mb-4">The Richmond Standard</p>
-          <h2 className="text-brand-navy font-black text-4xl md:text-6xl leading-tight mb-6 tracking-tighter">
+          <p className="text-brand-navy/60 font-bold uppercase tracking-[0.08em] text-sm mb-4">The Richmond Standard</p>
+          <h2 className="text-brand-navy font-bold text-4xl md:text-6xl leading-tight mb-6 tracking-tighter">
             40 Years. One Standard.<br />No Shortcuts.
           </h2>
           <p className="text-brand-navy/70 text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-medium">
@@ -301,11 +301,11 @@ export default function RichmondPaving() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('richmond-cta')}
-              className="bg-brand-navy hover:bg-black text-brand-amber py-5 px-10 rounded-full text-xl font-black flex items-center justify-center gap-3 transition-colors shadow-2xl shadow-brand-navy/20 active:scale-95"
+              className="bg-brand-navy hover:bg-black text-brand-amber py-5 px-10 rounded-full text-xl font-bold flex items-center justify-center gap-3 transition-colors shadow-2xl shadow-brand-navy/20 active:scale-95"
             >
               <Phone className="w-6 h-6" /> (804) 446-1296
             </a>
-            <a href="#quote" className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-brand-navy/10 text-brand-navy py-5 px-10 rounded-full text-xl font-black transition-all active:scale-95 text-center flex items-center justify-center">
+            <a href="#quote" className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-brand-navy/10 text-brand-navy py-5 px-10 rounded-full text-xl font-bold transition-all active:scale-95 text-center flex items-center justify-center">
               Request Your Free Quote
             </a>
           </div>

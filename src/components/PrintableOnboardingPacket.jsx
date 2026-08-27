@@ -27,7 +27,7 @@ export default function PrintableOnboardingPacket() {
         {/* PAGE 1: Handbook Acknowledgment */}
         <div className="print:page-break-after-always mb-16">
           <div className="text-center mb-10 border-b-2 border-black pb-4">
-            <h1 className="text-3xl font-black uppercase tracking-widest">The Worden Standard</h1>
+            <h1 className="text-3xl font-bold uppercase tracking-[0.08em]">The Worden Standard</h1>
             <h2 className="text-xl font-semibold mt-2">Employee Handbook & Safety Acknowledgment</h2>
           </div>
           
@@ -69,7 +69,7 @@ export default function PrintableOnboardingPacket() {
         {/* PAGE 2: FMCSA & DMV Consent Placeholder */}
         <div className="print:page-break-after-always mb-16">
           <div className="text-center mb-10 border-b-2 border-black pb-4">
-            <h1 className="text-2xl font-black uppercase">FMCSA Clearinghouse & MVR Consent</h1>
+            <h1 className="text-2xl font-bold uppercase">FMCSA Clearinghouse & MVR Consent</h1>
             <h2 className="text-lg font-semibold mt-2">Motor Vehicle Record & Background Pull Authorization</h2>
           </div>
           
@@ -99,7 +99,7 @@ export default function PrintableOnboardingPacket() {
         {/* PAGE 3: Emergency Contact & Medical Alert Form */}
         <div className="print:page-break-after-always mb-16">
           <div className="text-center mb-10 border-b-2 border-black pb-4">
-            <h1 className="text-2xl font-black uppercase">Emergency Contact & Medical Alert Form</h1>
+            <h1 className="text-2xl font-bold uppercase">Emergency Contact & Medical Alert Form</h1>
             <h2 className="text-lg font-semibold mt-2">Confidential HR Record</h2>
           </div>
           <div className="space-y-6">
@@ -129,7 +129,7 @@ export default function PrintableOnboardingPacket() {
         {/* PAGE 4: Direct Deposit Authorization */}
         <div className="print:page-break-after-always mb-16">
           <div className="text-center mb-10 border-b-2 border-black pb-4">
-            <h1 className="text-2xl font-black uppercase">Direct Deposit Authorization</h1>
+            <h1 className="text-2xl font-bold uppercase">Direct Deposit Authorization</h1>
             <h2 className="text-lg font-semibold mt-2">Payroll Processing Form</h2>
           </div>
           <div className="space-y-6 text-justify leading-relaxed">
@@ -146,7 +146,7 @@ export default function PrintableOnboardingPacket() {
             </div>
 
             <div className="mt-8 p-4 border-2 border-dashed border-gray-400 flex items-center justify-center h-32 bg-gray-50">
-              <p className="text-gray-500 font-bold tracking-widest uppercase">Attach Voided Check Here</p>
+              <p className="text-gray-500 font-bold tracking-[0.08em] uppercase">Attach Voided Check Here</p>
             </div>
             
             <div className="mt-12 flex justify-between items-end">
@@ -165,7 +165,7 @@ export default function PrintableOnboardingPacket() {
         {/* PAGE 5: Zero-Tolerance Drug & Alcohol Policy Consent */}
         <div className="print:page-break-after-always mb-16">
           <div className="text-center mb-10 border-b-2 border-black pb-4">
-            <h1 className="text-2xl font-black uppercase">Zero-Tolerance Drug & Alcohol Policy</h1>
+            <h1 className="text-2xl font-bold uppercase">Zero-Tolerance Drug & Alcohol Policy</h1>
             <h2 className="text-lg font-semibold mt-2">Pre-Employment & Random Screening Consent</h2>
           </div>
           

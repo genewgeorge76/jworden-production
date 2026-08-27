@@ -79,7 +79,7 @@ export default function LeadCaptureForm() {
   if (status === 'success') {
     return (
       <div className="text-center py-12">
-        <p className="font-display font-black text-primary text-4xl uppercase tracking-tighter mb-4">Request Received.</p>
+        <p className="font-display font-bold text-primary text-4xl uppercase tracking-tighter mb-4">Request Received.</p>
         <p className="text-muted-foreground text-lg mb-2">We'll be in touch within one business day.</p>
         <p className="text-muted-foreground">
           Need it faster?{' '}
@@ -95,7 +95,7 @@ export default function LeadCaptureForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label htmlFor="name" className="block text-xs font-display uppercase tracking-widest text-muted-foreground mb-1">
+          <label htmlFor="name" className="block text-xs font-display uppercase tracking-[0.08em] text-muted-foreground mb-1">
             Full Name *
           </label>
           <input
@@ -107,7 +107,7 @@ export default function LeadCaptureForm() {
           />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-xs font-display uppercase tracking-widest text-muted-foreground mb-1">
+          <label htmlFor="phone" className="block text-xs font-display uppercase tracking-[0.08em] text-muted-foreground mb-1">
             Phone *
           </label>
           <input
@@ -122,7 +122,7 @@ export default function LeadCaptureForm() {
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-xs font-display uppercase tracking-widest text-muted-foreground mb-1">
+        <label htmlFor="email" className="block text-xs font-display uppercase tracking-[0.08em] text-muted-foreground mb-1">
           Email *
         </label>
         <input
@@ -136,7 +136,7 @@ export default function LeadCaptureForm() {
       </div>
 
       <div>
-        <label htmlFor="service" className="block text-xs font-display uppercase tracking-widest text-muted-foreground mb-1">
+        <label htmlFor="service" className="block text-xs font-display uppercase tracking-[0.08em] text-muted-foreground mb-1">
           Service Needed *
         </label>
         <select
@@ -154,7 +154,7 @@ export default function LeadCaptureForm() {
       </div>
 
       <div>
-        <label htmlFor="projectDetails" className="block text-xs font-display uppercase tracking-widest text-muted-foreground mb-1">
+        <label htmlFor="projectDetails" className="block text-xs font-display uppercase tracking-[0.08em] text-muted-foreground mb-1">
           Project Details
         </label>
         <textarea
@@ -167,7 +167,7 @@ export default function LeadCaptureForm() {
       </div>
 
       <div>
-        <label htmlFor="timing" className="block text-xs font-display uppercase tracking-widest text-muted-foreground mb-1">
+        <label htmlFor="timing" className="block text-xs font-display uppercase tracking-[0.08em] text-muted-foreground mb-1">
           Timeline
         </label>
         <select
@@ -190,7 +190,7 @@ export default function LeadCaptureForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full bg-primary text-primary-foreground font-display font-black uppercase tracking-widest py-4 rounded hover:bg-primary/90 disabled:opacity-60 transition-all text-sm"
+        className="w-full bg-primary text-primary-foreground font-display font-bold uppercase tracking-[0.08em] py-4 rounded hover:bg-primary/90 disabled:opacity-60 transition-all text-sm"
       >
         {status === 'submitting' ? 'Sending…' : 'Submit Request'}
       </button>

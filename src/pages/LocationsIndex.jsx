@@ -132,10 +132,10 @@ export default function LocationsIndex() {
 
       <section className="border-t border-border py-12 bg-muted/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
             // Richmond Core Cluster
           </p>
-          <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+          <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
             Cities Within {RICHMOND_RADIUS_MILES} Miles Of Richmond, VA
           </h2>
           <p className="font-body text-muted-foreground text-sm leading-relaxed max-w-3xl mb-6">
@@ -157,10 +157,10 @@ export default function LocationsIndex() {
 
       <section className="border-t border-border py-12 bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
             // Strategic Coverage Corridor
           </p>
-          <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+          <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
             Virginia Beach → Harrisonburg → Fairfax → Outer Banks
           </h2>
           <p className="font-body text-muted-foreground text-sm leading-relaxed max-w-4xl mb-6">
@@ -191,8 +191,8 @@ export default function LocationsIndex() {
               <div className="flex items-start justify-between gap-6 mb-6 flex-col md:flex-row">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-primary font-display font-black text-lg">//</span>
-                    <h2 className="font-display font-black text-foreground text-2xl md:text-3xl tracking-tight uppercase">
+                    <span className="text-primary font-display font-bold text-lg">//</span>
+                    <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl tracking-tight uppercase">
                       {region}
                     </h2>
                   </div>
@@ -202,7 +202,7 @@ export default function LocationsIndex() {
                     </p>
                   )}
                 </div>
-                <span className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase shrink-0">
+                <span className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase shrink-0">
                   {locs.length} {locs.length === 1 ? 'city' : 'cities'}
                 </span>
               </div>
@@ -226,14 +226,14 @@ export default function LocationsIndex() {
                         <ArrowUpRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                       {loc.isHeadquarters && (
-                        <span className="inline-block px-2 py-0.5 bg-primary text-primary-foreground font-display font-bold text-[9px] tracking-[0.2em] uppercase mb-3">
+                        <span className="inline-block px-2 py-0.5 bg-primary text-primary-foreground font-display font-bold text-[9px] tracking-[0.08em] uppercase mb-3">
                           HQ · Chester, VA
                         </span>
                       )}
-                      <h3 className="font-display font-black text-foreground text-2xl uppercase tracking-tight leading-tight">
+                      <h3 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight leading-tight">
                         Asphalt Paving in {loc.city}
                       </h3>
-                      <p className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase mt-1">
+                      <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mt-1">
                         {loc.stateAbbr} · {loc.region}
                       </p>
                       <p className="font-body text-muted-foreground text-sm leading-relaxed mt-4 line-clamp-3">
@@ -246,7 +246,7 @@ export default function LocationsIndex() {
                             {REVIEW_RATING} · {REVIEW_COUNT} reviews
                           </span>
                         </div>
-                        <span className="font-display text-primary text-[10px] tracking-[0.2em] uppercase group-hover:underline">
+                        <span className="font-display text-primary text-[10px] tracking-[0.08em] uppercase group-hover:underline">
                           View →
                         </span>
                       </div>
@@ -262,7 +262,7 @@ export default function LocationsIndex() {
       {/* Internal linking block — boosts crawlability & long-tail keyword coverage */}
       <section className="border-t border-border py-12 bg-muted/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
             // Popular Virginia Searches
           </p>
           <div className="flex flex-wrap gap-2">

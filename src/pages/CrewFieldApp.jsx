@@ -166,8 +166,8 @@ export default function CrewFieldApp() {
             <div className="w-20 h-20 bg-brand-amber rounded-full flex items-center justify-center mb-4 shadow-lg shadow-brand-amber/20">
               <HardHat className="w-10 h-10 text-brand-navy" />
             </div>
-            <h1 className="text-white font-display font-black text-2xl uppercase tracking-tight">Crew Login</h1>
-            <p className="text-white/50 text-xs uppercase tracking-widest mt-1">Field Intelligence Link</p>
+            <h1 className="text-white font-display font-bold text-2xl uppercase tracking-tight">Crew Login</h1>
+            <p className="text-white/50 text-xs uppercase tracking-[0.08em] mt-1">Field Intelligence Link</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -175,7 +175,7 @@ export default function CrewFieldApp() {
               <div className="text-red-300 text-xs bg-red-500/10 border border-red-400/30 rounded-lg p-2 text-center">{loginError}</div>
             )}
             <div>
-              <label className="block text-white/60 text-[10px] uppercase font-black tracking-widest mb-2 ml-1">Username</label>
+              <label className="block text-white/60 text-[10px] uppercase font-bold tracking-[0.08em] mb-2 ml-1">Username</label>
               <input
                 type="text"
                 autoComplete="username"
@@ -186,7 +186,7 @@ export default function CrewFieldApp() {
               />
             </div>
             <div>
-              <label className="block text-white/60 text-[10px] uppercase font-black tracking-widest mb-2 ml-1">Password</label>
+              <label className="block text-white/60 text-[10px] uppercase font-bold tracking-[0.08em] mb-2 ml-1">Password</label>
               <input
                 type="password"
                 autoComplete="current-password"
@@ -199,7 +199,7 @@ export default function CrewFieldApp() {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full bg-brand-amber hover:bg-brand-amber/90 text-brand-navy font-black py-4 rounded-2xl uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-brand-amber/10 disabled:opacity-60"
+              className="w-full bg-brand-amber hover:bg-brand-amber/90 text-brand-navy font-bold py-4 rounded-2xl uppercase tracking-[0.08em] transition-all active:scale-95 shadow-lg shadow-brand-amber/10 disabled:opacity-60"
             >
               {loginLoading ? 'Signing in…' : 'Enter Field Mode'}
             </button>
@@ -218,7 +218,7 @@ export default function CrewFieldApp() {
             <User className="w-4 h-4 text-brand-navy" />
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase text-white/50 leading-none">{user?.role || 'Crew'}</p>
+            <p className="text-[10px] font-bold uppercase text-white/50 leading-none">{user?.role || 'Crew'}</p>
             <p className="text-xs font-bold leading-none mt-1">{user?.username || 'Field'}</p>
           </div>
         </div>
@@ -232,12 +232,12 @@ export default function CrewFieldApp() {
         <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h2 className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Work Engagement</h2>
-              <p className="text-brand-navy font-display font-black text-xl uppercase mt-1">
+              <h2 className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.08em]">Work Engagement</h2>
+              <p className="text-brand-navy font-display font-bold text-xl uppercase mt-1">
                 {status === 'idle' ? 'Ready for Deployment' : status === 'clocked_in' ? 'On Site / Prep' : 'Active Ops'}
               </p>
             </div>
-            <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${
+            <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
               status === 'idle' ? 'bg-slate-100 text-slate-500' : 'bg-green-100 text-green-700 animate-pulse'
             }`}>
               {status === 'idle' ? 'Offline' : 'Live Tracking'}
@@ -252,7 +252,7 @@ export default function CrewFieldApp() {
               }`}
             >
               <Clock className="w-6 h-6" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Clock In</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em]">Clock In</span>
             </button>
             <button 
               onClick={() => setStatus('working')}
@@ -261,7 +261,7 @@ export default function CrewFieldApp() {
               }`}
             >
               <CheckCircle2 className="w-6 h-6" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Start Pave</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em]">Start Pave</span>
             </button>
           </div>
         </section>
@@ -273,7 +273,7 @@ export default function CrewFieldApp() {
                <Truck className="w-4 h-4 text-white" />
              </div>
              <div>
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none">Logistics Control</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400 leading-none">Logistics Control</h3>
                 <p className="font-bold text-brand-navy text-sm">Transport & Hauling</p>
              </div>
           </div>
@@ -287,7 +287,7 @@ export default function CrewFieldApp() {
                  }`}
                >
                  <Package className="w-4 h-4" />
-                 <span className="text-[8px] font-black uppercase tracking-widest">Dump Truck</span>
+                 <span className="text-[8px] font-bold uppercase tracking-[0.08em]">Dump Truck</span>
                </button>
                <button 
                  onClick={() => setLogistics(prev => ({ ...prev, activeVehicle: 'hauler' }))}
@@ -296,7 +296,7 @@ export default function CrewFieldApp() {
                  }`}
                >
                  <Settings className="w-4 h-4" />
-                 <span className="text-[8px] font-black uppercase tracking-widest">Eq. Hauler</span>
+                 <span className="text-[8px] font-bold uppercase tracking-[0.08em]">Eq. Hauler</span>
                </button>
             </div>
 
@@ -308,7 +308,7 @@ export default function CrewFieldApp() {
               >
                 <div className="flex justify-between items-center text-white">
                   <div>
-                    <p className="text-[8px] font-black uppercase text-white/50">Current Transit</p>
+                    <p className="text-[8px] font-bold uppercase text-white/50">Current Transit</p>
                     <p className="text-xs font-bold">{logistics.activeVehicle === 'dump_truck' ? 'Asphalt Mix / Millings' : 'Roller / Paver'}</p>
                   </div>
                   <Navigation className="w-4 h-4 text-brand-amber animate-pulse" />
@@ -321,12 +321,12 @@ export default function CrewFieldApp() {
                       setLogistics(prev => ({ ...prev, startTime: new Date().toLocaleTimeString() }));
                       // In real app, POST to /api/operations/logistics/start
                     }}
-                    className="flex-1 bg-brand-amber text-brand-navy font-black text-[10px] py-2 rounded-lg uppercase tracking-widest"
+                    className="flex-1 bg-brand-amber text-brand-navy font-bold text-[10px] py-2 rounded-lg uppercase tracking-[0.08em]"
                   >
                     Set Origin
                   </button>
                   <button 
-                    className="flex-1 border border-white/20 text-white font-black text-[10px] py-2 rounded-lg uppercase tracking-widest"
+                    className="flex-1 border border-white/20 text-white font-bold text-[10px] py-2 rounded-lg uppercase tracking-[0.08em]"
                   >
                     Mark Arrival
                   </button>
@@ -334,7 +334,7 @@ export default function CrewFieldApp() {
 
                 {status === 'transit' && (
                   <div className="border-t border-white/10 pt-3">
-                    <p className="text-[8px] font-black uppercase text-brand-amber text-center tracking-[0.2em]">En Route to Job Site</p>
+                    <p className="text-[8px] font-bold uppercase text-brand-amber text-center tracking-[0.08em]">En Route to Job Site</p>
                     <p className="text-[10px] text-white/60 text-center mt-1 italic">Started: {logistics.startTime}</p>
                   </div>
                 )}
@@ -355,34 +355,34 @@ export default function CrewFieldApp() {
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                 <Zap className={`w-4 h-4 ${biometrics.safetyStatus === 'warning' ? 'text-red-600' : 'text-blue-600'}`} />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Wearable Vital Link</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500">Wearable Vital Link</span>
               </div>
               {biometrics.safetyStatus === 'warning' && (
                 <div className="flex items-center gap-1 bg-red-600 px-2 py-0.5 rounded-full">
                   <ShieldAlert className="w-3 h-3 text-white" />
-                  <span className="text-[8px] font-black text-white uppercase">Heat Advisory</span>
+                  <span className="text-[8px] font-bold text-white uppercase">Heat Advisory</span>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
-                <p className="text-[8px] font-black text-slate-400 uppercase">Heart Rate</p>
-                <p className={`text-xl font-display font-black ${biometrics.safetyStatus === 'warning' ? 'text-red-700' : 'text-brand-navy'}`}>
+                <p className="text-[8px] font-bold text-slate-400 uppercase">Heart Rate</p>
+                <p className={`text-xl font-display font-bold ${biometrics.safetyStatus === 'warning' ? 'text-red-700' : 'text-brand-navy'}`}>
                   {biometrics.heartRate}<span className="text-[10px] ml-0.5">BPM</span>
                 </p>
               </div>
               <div className="text-center border-x border-slate-200">
-                <p className="text-[8px] font-black text-slate-400 uppercase">Body Temp</p>
-                <p className="text-xl font-display font-black text-brand-navy">
+                <p className="text-[8px] font-bold text-slate-400 uppercase">Body Temp</p>
+                <p className="text-xl font-display font-bold text-brand-navy">
                   {biometrics.bodyTemp}<span className="text-[10px] ml-0.5">°F</span>
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-[8px] font-black text-slate-400 uppercase">Environment</p>
+                <p className="text-[8px] font-bold text-slate-400 uppercase">Environment</p>
                 <div className="flex items-center justify-center gap-1">
                   <Thermometer className="w-3 h-3 text-orange-500" />
-                  <p className="text-xl font-display font-black text-brand-navy">
+                  <p className="text-xl font-display font-bold text-brand-navy">
                     {biometrics.ambientTemp}<span className="text-[10px] ml-0.5">°F</span>
                   </p>
                 </div>
@@ -400,11 +400,11 @@ export default function CrewFieldApp() {
         {/* Current Job Info */}
         <section className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
           <div className="bg-slate-50 px-6 py-3 border-b border-slate-100 flex justify-between items-center">
-             <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Assigned Target</span>
+             <span className="text-[10px] font-bold uppercase text-slate-400 tracking-[0.08em]">Assigned Target</span>
              <MapPin className="w-3 h-3 text-brand-amber" />
           </div>
           <div className="p-6">
-            <h3 className="font-display font-black text-brand-navy text-lg leading-tight uppercase">Residential Overlay</h3>
+            <h3 className="font-display font-bold text-brand-navy text-lg leading-tight uppercase">Residential Overlay</h3>
             <p className="text-slate-500 text-sm mt-1">1284 Westbury Lane, Richmond VA</p>
             <div className="mt-4 flex gap-2">
               <span className="bg-brand-navy/5 text-brand-navy text-[10px] font-bold px-2 py-1 rounded uppercase">3,200 SQ FT</span>
@@ -416,7 +416,7 @@ export default function CrewFieldApp() {
         {/* Field Media Upload */}
         <section className="space-y-4">
           <div className="flex justify-between items-end px-2">
-            <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Site Intelligence Media</h3>
+            <h3 className="text-[10px] font-bold uppercase text-slate-400 tracking-[0.08em]">Site Intelligence Media</h3>
             <span className="text-[10px] font-bold text-brand-navy">{photos.length} Captured</span>
           </div>
           
@@ -439,13 +439,13 @@ export default function CrewFieldApp() {
               className="aspect-square bg-brand-navy rounded-3xl flex flex-col items-center justify-center gap-3 text-white active:scale-95 transition-all shadow-lg shadow-brand-navy/20 disabled:opacity-70"
             >
               {isAnalyzing ? <Loader2 className="w-8 h-8 animate-spin" /> : <Eye className="w-8 h-8" />}
-              <span className="text-[10px] font-black uppercase tracking-widest">
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em]">
                 {isAnalyzing ? 'Analyzing...' : 'AI Pave Scan'}
               </span>
             </button>
              <button className="aspect-square bg-white border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center gap-3 text-slate-400 active:scale-95 transition-all">
               <Camera className="w-8 h-8" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Capture Photo</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em]">Capture Photo</span>
             </button>
           </div>
 
@@ -461,7 +461,7 @@ export default function CrewFieldApp() {
               >
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 <div>
-                   <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-orange-600">Vision Analysis</p>
+                   <p className="text-[10px] font-bold uppercase tracking-[0.08em] leading-none mb-1 text-orange-600">Vision Analysis</p>
                    <p className="text-xs font-bold leading-tight">{aiAnalysis.message}</p>
                 </div>
               </motion.div>
@@ -473,7 +473,7 @@ export default function CrewFieldApp() {
         <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 text-center">
            <AlertCircle className="w-6 h-6 text-brand-amber mx-auto mb-3" />
            <p className="text-xs font-bold text-brand-navy uppercase mb-4">Site Safety Verified?</p>
-           <button className="w-full py-3 border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50">
+           <button className="w-full py-3 border border-slate-200 rounded-xl text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500 hover:bg-slate-50">
              Sign Off Safety Log
            </button>
         </section>
@@ -489,7 +489,7 @@ export default function CrewFieldApp() {
           <button
             onClick={submitShiftReport}
             disabled={submitState === 'submitting'}
-            className={`w-full font-black py-5 rounded-2xl uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-3 transition-all ${
+            className={`w-full font-bold py-5 rounded-2xl uppercase tracking-[0.08em] shadow-2xl flex items-center justify-center gap-3 transition-all ${
               submitState === 'submitted' ? 'bg-emerald-600 text-white shadow-emerald-200'
               : submitState === 'error' ? 'bg-red-600 text-white shadow-red-200'
               : 'bg-green-600 text-white shadow-green-200 disabled:opacity-70'

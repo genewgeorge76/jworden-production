@@ -30,18 +30,18 @@ export default function GravelVsAsphaltDrivewayBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Driveway Options</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 6 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Gravel vs Asphalt Driveway in Virginia
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function GravelVsAsphaltDrivewayBlog() {
             Gravel is cheaper up front. Asphalt is more durable and lower-maintenance long-term. That's the short version — but neither of those facts fully answers the question for your specific driveway. The right choice depends on traffic volume, drainage conditions, lot size, soil type, and how much time you want to spend on annual maintenance. Here's the comparison that actually helps you decide.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Cost Comparison: Gravel vs Asphalt in Virginia (2026)
           </h2>
 
@@ -88,7 +88,7 @@ export default function GravelVsAsphaltDrivewayBlog() {
             </table>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             When Gravel Is the Right Choice
           </h2>
 
@@ -108,7 +108,7 @@ export default function GravelVsAsphaltDrivewayBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             When Asphalt Is the Right Choice
           </h2>
 
@@ -129,7 +129,7 @@ export default function GravelVsAsphaltDrivewayBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             The Middle Option: Tar and Chip
           </h2>
           <p>
@@ -139,7 +139,7 @@ export default function GravelVsAsphaltDrivewayBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Not Sure Which Surface Is Right?</h4>
             <p className="mb-6 text-sm">We'll visit the property, look at the soil, grade, and traffic pattern, and give you straight numbers for gravel conversion, tar and chip, and full asphalt so you can compare all three before deciding.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

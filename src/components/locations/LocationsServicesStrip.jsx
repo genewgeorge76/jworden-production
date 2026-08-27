@@ -18,7 +18,7 @@ export default function LocationsServicesStrip() {
   return (
     <section className="border-b border-border py-12 bg-muted/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-6 text-center">
+        <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-6 text-center">
           // Services Available in Every Virginia Market
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">

@@ -149,10 +149,10 @@ export default function KfcNationalProgram() {
       {/* Header */}
       <div className="border-b border-border px-6 py-10">
         <div className="mx-auto max-w-7xl">
-          <p className="font-display text-primary text-xs uppercase tracking-[0.3em]">
+          <p className="font-display text-primary text-xs uppercase tracking-[0.1em]">
             QSR / Franchise Programme
           </p>
-          <h2 className="font-display mt-2 text-3xl font-black uppercase tracking-tight text-foreground">
+          <h2 className="font-display mt-2 text-3xl font-bold uppercase tracking-tight text-foreground">
             KFC National Program
           </h2>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
@@ -164,19 +164,19 @@ export default function KfcNationalProgram() {
 
           <div className="mt-6 flex flex-wrap gap-8">
             <div>
-              <div className="font-display text-2xl font-black text-primary">{sites.length}</div>
+              <div className="font-display text-2xl font-bold text-primary">{sites.length}</div>
               <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 sites with a dated record
               </div>
             </div>
             <div>
-              <div className="font-display text-2xl font-black text-primary">{byState.length}</div>
+              <div className="font-display text-2xl font-bold text-primary">{byState.length}</div>
               <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 states
               </div>
             </div>
             <div>
-              <div className="font-display text-2xl font-black text-primary">{program?.years}</div>
+              <div className="font-display text-2xl font-bold text-primary">{program?.years}</div>
               <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 programme span
               </div>
@@ -339,7 +339,7 @@ export default function KfcNationalProgram() {
               <button
                 type="button"
                 onClick={() => setShown((n) => Math.min(n + PAGE, PHOTO_COUNT))}
-                className="border border-primary px-6 py-3 font-display text-xs font-bold uppercase tracking-[0.2em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                className="border border-primary px-6 py-3 font-display text-xs font-bold uppercase tracking-[0.08em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 Show more work
               </button>

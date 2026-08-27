@@ -381,7 +381,7 @@ export default function CategoryHub() {
           <Link to="/advisory" className="text-brand-amber text-sm hover:underline">
             ← Advisory Board
           </Link>
-          <h1 className="font-display font-black text-5xl mt-3 mb-3">
+          <h1 className="font-display font-bold text-5xl mt-3 mb-3">
             {config.emoji} <span className="text-brand-amber">{config.title}</span>
           </h1>
           <p className="text-white/70 text-lg max-w-3xl mx-auto">{config.desc}</p>

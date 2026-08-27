@@ -34,12 +34,12 @@ export default function BeforeAfterGallery() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-primary font-display font-black text-lg">//</span>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+              <span className="text-primary font-display font-bold text-lg">//</span>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 The Transformation
               </p>
             </div>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95]">
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95]">
               Drag to See
               <br />
               <span className="text-primary">The Difference</span>
@@ -72,10 +72,10 @@ export default function BeforeAfterGallery() {
 
               {/* Meta */}
               <div className="lg:pt-4">
-                <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-3">
+                <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-3">
                   Project #{String(i + 1).padStart(2, '0')}
                 </p>
-                <h3 className="font-display font-black text-foreground text-3xl uppercase tracking-tight leading-[0.95] mb-4">
+                <h3 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight leading-[0.95] mb-4">
                   {item.title}
                 </h3>
                 {item.description && (
@@ -87,7 +87,7 @@ export default function BeforeAfterGallery() {
                   {item.location && (
                     <div className="flex items-center gap-3">
                       <MapPin className="w-4 h-4 text-primary shrink-0" />
-                      <span className="font-display text-foreground text-xs tracking-[0.2em] uppercase">
+                      <span className="font-display text-foreground text-xs tracking-[0.08em] uppercase">
                         {item.location}
                       </span>
                     </div>
@@ -95,7 +95,7 @@ export default function BeforeAfterGallery() {
                   {item.sqft && (
                     <div className="flex items-center gap-3">
                       <Ruler className="w-4 h-4 text-primary shrink-0" />
-                      <span className="font-display text-foreground text-xs tracking-[0.2em] uppercase">
+                      <span className="font-display text-foreground text-xs tracking-[0.08em] uppercase">
                         {Math.round(item.sqft).toLocaleString()} sq ft
                       </span>
                     </div>
@@ -103,7 +103,7 @@ export default function BeforeAfterGallery() {
                   {item.duration_days && (
                     <div className="flex items-center gap-3">
                       <Calendar className="w-4 h-4 text-primary shrink-0" />
-                      <span className="font-display text-foreground text-xs tracking-[0.2em] uppercase">
+                      <span className="font-display text-foreground text-xs tracking-[0.08em] uppercase">
                         {item.duration_days} day{item.duration_days === 1 ? '' : 's'} on-site
                       </span>
                     </div>

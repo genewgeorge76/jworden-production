@@ -155,8 +155,8 @@ export default function ResidentialAsphalt() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Residential Driveway Division</p>
-              <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Residential Driveway Division</p>
+              <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
                 Asphalt Driveway Paving in Virginia
               </h1>
               <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -168,14 +168,14 @@ export default function ResidentialAsphalt() {
                 <a
                   href="tel:+18044461296"
                   onClick={() => trackPhoneClick('residential_page_hero')}
-                  className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+                  className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
                 >
                   <Phone className="w-4 h-4" />
                   Call 804-446-1296
                 </a>
                 <Link
                   to="/#quote"
-                  className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                  className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
                 >
                   Request Free Estimate
                 </Link>
@@ -203,8 +203,8 @@ export default function ResidentialAsphalt() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-8">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Residential Services</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Residential Services</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
                 High-Quality Home Asphalt Work
               </h2>
             </div>
@@ -213,7 +213,7 @@ export default function ResidentialAsphalt() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {RESIDENTIAL_SERVICES.map((service) => (
               <article key={service.title} className="border border-border bg-card p-6">
-                <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">
                   {service.title}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{service.detail}</p>
@@ -226,8 +226,8 @@ export default function ResidentialAsphalt() {
       <section className="py-14 md:py-18 border-b border-border bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-8 max-w-3xl">
-            <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Real Residential Work</p>
-            <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+            <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Real Residential Work</p>
+            <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95]">
               Clean Edges, Smooth Finish, Proper Fit To The Home
             </h2>
             <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -245,7 +245,7 @@ export default function ResidentialAsphalt() {
                   sizes="(max-width: 768px) 100vw, 25vw"
                   className="aspect-[4/3] w-full object-cover quality-premium"
                 />
-                <figcaption className="border-t border-border px-4 py-3 font-display text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                <figcaption className="border-t border-border px-4 py-3 font-display text-xs uppercase tracking-[0.06em] text-muted-foreground">
                   {image.label}
                 </figcaption>
               </figure>
@@ -258,7 +258,7 @@ export default function ResidentialAsphalt() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Why Homeowners Call Us
               </h2>
               <div className="space-y-3">
@@ -278,7 +278,7 @@ export default function ResidentialAsphalt() {
             </div>
 
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Insured And Accountable
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">
@@ -298,8 +298,8 @@ export default function ResidentialAsphalt() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Virginia Driveway Science</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-6">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Virginia Driveway Science</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-6">
                 Why Virginia Driveways Fail — And How We Build Against It
               </h2>
               <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
@@ -311,7 +311,7 @@ export default function ResidentialAsphalt() {
             </div>
             <div className="space-y-4">
               <div className="border border-border bg-background p-6">
-                <p className="font-display font-black text-foreground text-lg uppercase tracking-tight mb-4">Every Estimate Includes</p>
+                <p className="font-display font-bold text-foreground text-lg uppercase tracking-tight mb-4">Every Estimate Includes</p>
                 <ul className="space-y-2.5">
                   {[
                     'Written scope with asphalt section specification',
@@ -330,11 +330,11 @@ export default function ResidentialAsphalt() {
                 </ul>
               </div>
               <div className="border border-primary/40 bg-primary/5 p-6">
-                <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-2">4th Generation. Since 1984.</p>
+                <p className="font-display font-bold text-foreground text-base uppercase tracking-tight mb-2">4th Generation. Since 1984.</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">J. Worden &amp; Sons has paved driveways across Central Virginia for forty years. The same owner answers the phone, reviews your scope, and stands behind the result. No subcontracting, no bait-and-switch crews. The people who give you the estimate are the people who pour the asphalt.</p>
               </div>
               <div className="border border-border bg-background p-5">
-                <p className="font-display font-black text-foreground text-sm uppercase tracking-tight mb-3">Related Services</p>
+                <p className="font-display font-bold text-foreground text-sm uppercase tracking-tight mb-3">Related Services</p>
                 <div className="flex flex-wrap gap-2">
                   <Link to="/sealcoating" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Sealcoating</Link>
                   <Link to="/crack-repair" className="border border-border text-primary text-xs font-display font-bold tracking-wide uppercase px-3 py-1.5 hover:bg-primary/10 transition-colors">Crack Repair</Link>
@@ -349,8 +349,8 @@ export default function ResidentialAsphalt() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Service Coverage</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Service Coverage</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Residential Paving Within A {RICHMOND_RADIUS_MILES}-Mile Radius Of Richmond
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-3xl mb-8">
@@ -373,14 +373,14 @@ export default function ResidentialAsphalt() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Common Questions</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Common Questions</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Residential Paving FAQ
           </h2>
           <div className="space-y-4">
             {RESIDENTIAL_FAQS.map((item) => (
               <article key={item.q} className="border border-border bg-card p-5 md:p-6">
-                <h3 className="font-display font-black text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
                   {item.q}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.a}</p>
@@ -394,8 +394,8 @@ export default function ResidentialAsphalt() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Start Here</p>
-              <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Get A Residential Driveway Plan</h2>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Start Here</p>
+              <h2 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">Get A Residential Driveway Plan</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
                 We will review your driveway, explain the right scope, and give you a clear estimate with no pressure.
               </p>
@@ -403,7 +403,7 @@ export default function ResidentialAsphalt() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('residential_page_footer_cta')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Home className="w-4 h-4" />
               Talk To Residential Team

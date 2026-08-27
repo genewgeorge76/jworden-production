@@ -135,14 +135,14 @@ export default function HamptonRoadsPaving() {
                 <span className="text-white/60">Hampton Roads</span>
               </nav>
               <div className="flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                   <Waves className="w-3 h-3" /> Coastal Specialist
                 </span>
-                <span className="inline-flex items-center gap-1.5 bg-white/10 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-white/10 text-white text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                   <ShieldCheck className="w-3 h-3" /> Military Base Cleared
                 </span>
               </div>
-              <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
+              <h1 className="font-display font-bold text-5xl md:text-7xl text-white leading-tight tracking-tight">
                 Asphalt Paving<br /><span className="text-brand-amber">in Hampton</span><br />Roads, VA.
               </h1>
               <p className="text-white/70 text-xl max-w-2xl">
@@ -152,11 +152,11 @@ export default function HamptonRoadsPaving() {
                 <a
                   href="tel:+18044461296"
                   onClick={() => trackPhoneClick('hampton-roads-hero')}
-                  className="btn-primary py-4 px-8 font-black flex items-center gap-2"
+                  className="btn-primary py-4 px-8 font-bold flex items-center gap-2"
                 >
                   <Phone className="w-4 h-4" /> (804) 446-1296
                 </a>
-                <a href="#quote" className="btn-outline py-4 px-8 text-white font-black">Free Commercial Quote</a>
+                <a href="#quote" className="btn-outline py-4 px-8 text-white font-bold">Free Commercial Quote</a>
               </div>
               <div className="grid grid-cols-4 gap-4 pt-6 border-t border-white/10">
                 {[
@@ -166,14 +166,14 @@ export default function HamptonRoadsPaving() {
                   { val: 'VDOT', label: 'Prequalified' },
                 ].map(s => (
                   <div key={s.label} className="text-center">
-                    <p className="text-brand-amber font-black text-xl">{s.val}</p>
-                    <p className="text-white/40 text-xs uppercase tracking-widest mt-1">{s.label}</p>
+                    <p className="text-brand-amber font-bold text-xl">{s.val}</p>
+                    <p className="text-white/40 text-xs uppercase tracking-[0.08em] mt-1">{s.label}</p>
                   </div>
                 ))}
               </div>
               {/* Awards */}
               <div className="flex flex-wrap items-center gap-2 pt-4">
-                <span className="text-white/30 text-xs uppercase tracking-widest font-bold">Awards:</span>
+                <span className="text-white/30 text-xs uppercase tracking-[0.08em] font-bold">Awards:</span>
                 <span className="bg-brand-amber/10 text-brand-amber text-xs font-bold px-3 py-1.5 rounded-full">🏆 Pavement Mag Top 75</span>
                 <span className="bg-white/10 text-white/80 text-xs font-bold px-3 py-1.5 rounded-full">⭐ Best of Houzz</span>
                 <span className="bg-white/10 text-white/80 text-xs font-bold px-3 py-1.5 rounded-full">🎖 2026 Top Contractor Nominee</span>
@@ -183,7 +183,7 @@ export default function HamptonRoadsPaving() {
             {/* Coastal challenge cards */}
             <div className="lg:w-2/5">
               <div className="bg-white/5 border border-white/10 rounded-3xl p-8 space-y-5">
-                <h2 className="text-white font-black text-lg">Why Coastal Paving Is Different.</h2>
+                <h2 className="text-white font-bold text-lg">Why Coastal Paving Is Different.</h2>
                 <p className="text-white/40 text-xs">Virginia Beach asphalt faces threats inland paving never sees.</p>
                 {COASTAL_CHALLENGES.map((c, i) => (
                   <div key={i} className="border-l-2 border-brand-amber/40 pl-4">
@@ -201,8 +201,8 @@ export default function HamptonRoadsPaving() {
       <section className="py-24 bg-white/5 border-y border-white/10 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Active Commercial Coverage</span>
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight">We Know These Roads.<br />Not Just the ZIP Code.</h2>
+            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">Active Commercial Coverage</span>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight">We Know These Roads.<br />Not Just the ZIP Code.</h2>
             <p className="text-white/40 mt-4 max-w-2xl mx-auto">
               Decades of commercial paving across every major corridor in Hampton Roads. This is real experience — not a service-area map we drew to grab clicks.
             </p>
@@ -212,7 +212,7 @@ export default function HamptonRoadsPaving() {
               <div key={i} className="bg-brand-navy border border-white/10 rounded-2xl p-7 hover:border-brand-amber/30 transition-all group">
                 <div className="flex items-center gap-2 mb-4">
                   <MapPin className="w-4 h-4 text-brand-amber flex-shrink-0" />
-                  <h3 className="text-white font-black text-base">{c.area}</h3>
+                  <h3 className="text-white font-bold text-base">{c.area}</h3>
                 </div>
                 <p className="text-white/50 text-sm leading-relaxed">{c.detail}</p>
               </div>
@@ -225,7 +225,7 @@ export default function HamptonRoadsPaving() {
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight">Hampton Roads Paving FAQs.</h2>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight">Hampton Roads Paving FAQs.</h2>
           </div>
           <div className="space-y-6">
             {FAQS.map((faq, i) => (
@@ -241,7 +241,7 @@ export default function HamptonRoadsPaving() {
       {/* INTERNAL LINKS — SEO signal */}
       <section className="py-12 px-4 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
-          <p className="text-white/30 text-xs uppercase tracking-widest font-bold mb-5">Related Services</p>
+          <p className="text-white/30 text-xs uppercase tracking-[0.08em] font-bold mb-5">Related Services</p>
           <div className="flex flex-wrap gap-3">
             {[
               { label: 'Parking Lot Paving', to: '/parking-lots' },
@@ -262,8 +262,8 @@ export default function HamptonRoadsPaving() {
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto bg-brand-amber rounded-[2.5rem] p-12 md:p-16 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10"><Building2 size={140} /></div>
-          <p className="text-brand-navy/50 font-bold uppercase tracking-widest text-sm mb-3">Hampton Roads Commercial Paving</p>
-          <h2 className="text-brand-navy font-black text-3xl md:text-5xl leading-tight mb-6">
+          <p className="text-brand-navy/50 font-bold uppercase tracking-[0.08em] text-sm mb-3">Hampton Roads Commercial Paving</p>
+          <h2 className="text-brand-navy font-bold text-3xl md:text-5xl leading-tight mb-6">
             Virginia Beach to Newport News.<br />One Contractor. 40 Years.
           </h2>
           <p className="text-brand-navy/60 text-lg mb-8 max-w-2xl mx-auto">
@@ -273,11 +273,11 @@ export default function HamptonRoadsPaving() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('hampton-roads-cta')}
-              className="bg-brand-navy text-white font-black py-4 px-8 rounded-full hover:bg-brand-navy/80 transition-colors"
+              className="bg-brand-navy text-white font-bold py-4 px-8 rounded-full hover:bg-brand-navy/80 transition-colors"
             >
               Call (804) 446-1296
             </a>
-            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-bold py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Request Commercial Quote
             </a>
           </div>

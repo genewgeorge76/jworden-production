@@ -89,10 +89,10 @@ export default function CandidatePortal() {
         >
           <div className="bg-slate-900 px-8 py-6 text-white">
             <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-black uppercase tracking-tight">CDL & Candidate Application</h1>
+              <h1 className="text-3xl font-bold uppercase tracking-tight">CDL & Candidate Application</h1>
               <div className="text-right">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Powered By</span>
-                <span className="text-lg font-black text-green-400 tracking-tight">TENSTREET</span>
+                <span className="text-lg font-bold text-green-400 tracking-tight">TENSTREET</span>
               </div>
             </div>
             <p className="text-slate-300 mt-2">The Worden Standard requires strict adherence to Federal & State DOT regulations.</p>

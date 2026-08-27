@@ -513,10 +513,10 @@ export default function Projects() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-4 py-1.5 rounded-full mb-5">
             Verified Work · {STATES_SERVED.length}+ States
           </span>
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Our <span className="text-brand-amber">Projects</span>
           </h1>
           <p className="text-white/70 text-xl max-w-2xl mx-auto">
@@ -544,7 +544,7 @@ export default function Projects() {
               { stat: '2026', label: 'Top Contractor Nominee' },
             ].map(({ stat, label }) => (
               <div key={label}>
-                <div className="font-display font-black text-brand-navy text-3xl">{stat}</div>
+                <div className="font-display font-bold text-brand-navy text-3xl">{stat}</div>
                 <div className="text-brand-navy/60 text-sm mt-1">{label}</div>
               </div>
             ))}
@@ -555,7 +555,7 @@ export default function Projects() {
       {/* States served strip */}
       <section className="bg-brand-navy py-6">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-white/40 text-xs uppercase tracking-widest mb-3">States Worked In</p>
+          <p className="text-white/40 text-xs uppercase tracking-[0.08em] mb-3">States Worked In</p>
           <div className="flex flex-wrap justify-center gap-2">
             {STATES_SERVED.map((state) => (
               <span
@@ -630,7 +630,7 @@ export default function Projects() {
                   <div className="text-4xl flex-shrink-0">{project.emoji}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap gap-2 mb-1">
-                      <span className="text-xs font-bold uppercase tracking-widest text-brand-amber">
+                      <span className="text-xs font-bold uppercase tracking-[0.08em] text-brand-amber">
                         {project.yearDisplay}
                       </span>
                       <span
@@ -685,7 +685,7 @@ export default function Projects() {
       <section className="py-16 bg-brand-navy text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="text-4xl mb-4">📸</div>
-          <h2 className="font-display font-black text-3xl mb-4">
+          <h2 className="font-display font-bold text-3xl mb-4">
             Every Major Project Is <span className="text-brand-amber">Documented</span>
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
@@ -706,7 +706,7 @@ export default function Projects() {
 
       <section className="py-16 bg-brand-amber text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="font-display font-black text-brand-navy text-4xl mb-4">
+          <h2 className="font-display font-bold text-brand-navy text-4xl mb-4">
             Ready to be our next project?
           </h2>
           <p className="text-brand-navy/70 text-lg mb-8">

@@ -9,10 +9,10 @@ export default function MarketCityList({ city, state: _state, neighborhoods, lan
     <section className="border-t border-border py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-primary font-display font-black text-lg">//</span>
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">Service Area</p>
+          <span className="text-primary font-display font-bold text-lg">//</span>
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">Service Area</p>
         </div>
-        <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight max-w-3xl mb-10">
+        <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight max-w-3xl mb-10">
           Neighborhoods We Pave In {city}
         </h2>
 
@@ -32,7 +32,7 @@ export default function MarketCityList({ city, state: _state, neighborhoods, lan
 
         {hasLandmarks && (
           <div className="border-t border-border pt-8">
-            <p className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase mb-4">
+            <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mb-4">
               Local Landmarks We've Worked Around
             </p>
             <div className="flex flex-wrap gap-2">

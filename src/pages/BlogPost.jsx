@@ -82,7 +82,7 @@ export default function BlogPost() {
       <div className="min-h-screen bg-background font-body">
         <Navbar />
         <div className="pt-32 pb-20 max-w-3xl mx-auto px-6 text-center">
-          <h1 className="font-display font-black text-foreground text-4xl uppercase">Article Not Found</h1>
+          <h1 className="font-display font-bold text-foreground text-4xl uppercase">Article Not Found</h1>
           <Link to="/blog" className="inline-flex items-center gap-2 mt-6 text-primary font-display tracking-wider uppercase text-sm">
             <ArrowLeft className="w-4 h-4" /> Back to Blog
           </Link>
@@ -149,11 +149,11 @@ export default function BlogPost() {
               <ArrowLeft className="w-3 h-3" /> All Articles
             </Link>
             {post.category && (
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">
                 // {post.category.replace('-', ' ')}
               </p>
             )}
-            <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95]">
+            <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95]">
               {post.title}
             </h1>
             <p className="font-body text-muted-foreground text-lg md:text-xl mt-6 leading-relaxed">
@@ -195,7 +195,7 @@ export default function BlogPost() {
         <div className="py-12 md:py-16">
           <div className="max-w-3xl mx-auto px-6 lg:px-8">
             <div className="prose prose-invert prose-lg max-w-none
-              prose-headings:font-display prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-headings:text-foreground
+              prose-headings:font-display prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-tight prose-headings:text-foreground
               prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-t prose-h2:border-border prose-h2:pt-10
               prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
               prose-p:font-body prose-p:text-foreground/85 prose-p:leading-relaxed
@@ -210,7 +210,7 @@ export default function BlogPost() {
             {post.tags?.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-border">
                 {post.tags.map((tag) => (
-                  <span key={tag} className="px-3 py-1 border border-border text-muted-foreground font-display text-[10px] tracking-[0.15em] uppercase">
+                  <span key={tag} className="px-3 py-1 border border-border text-muted-foreground font-display text-[10px] tracking-[0.06em] uppercase">
                     {tag}
                   </span>
                 ))}
@@ -223,7 +223,7 @@ export default function BlogPost() {
       {/* CTA */}
       <section className="border-t border-border bg-primary py-12">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
-          <h3 className="font-display font-black text-primary-foreground text-2xl md:text-3xl uppercase tracking-tight">
+          <h3 className="font-display font-bold text-primary-foreground text-2xl md:text-3xl uppercase tracking-tight">
             Need a paving estimate?
           </h3>
           <p className="font-body text-primary-foreground/80 mt-2 mb-6">
@@ -231,7 +231,7 @@ export default function BlogPost() {
           </p>
           <Link
             to="/quote"
-            className="inline-flex items-center gap-2 bg-background text-foreground px-6 py-3 font-display font-bold text-xs tracking-[0.2em] uppercase hover:bg-foreground hover:text-background transition-colors"
+            className="inline-flex items-center gap-2 bg-background text-foreground px-6 py-3 font-display font-bold text-xs tracking-[0.08em] uppercase hover:bg-foreground hover:text-background transition-colors"
           >
             Request Estimate <ArrowRight className="w-4 h-4" />
           </Link>
@@ -240,7 +240,7 @@ export default function BlogPost() {
 
       <section className="border-t border-border py-10 bg-muted/20">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
             // Related Service Paths
           </p>
           <div className="flex flex-wrap gap-2">
@@ -264,7 +264,7 @@ export default function BlogPost() {
       {related.length > 0 && (
         <section className="py-16 border-t border-border">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <h3 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-8">
+            <h3 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-8">
               More Articles
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -274,7 +274,7 @@ export default function BlogPost() {
                   to={`/blog/${p.slug}`}
                   className="group border border-border bg-card overflow-hidden hover:border-primary/40 transition-colors p-6"
                 >
-                  <h4 className="font-display font-black text-foreground text-base uppercase tracking-tight leading-tight mb-2 group-hover:text-primary transition-colors">
+                  <h4 className="font-display font-bold text-foreground text-base uppercase tracking-tight leading-tight mb-2 group-hover:text-primary transition-colors">
                     {p.title}
                   </h4>
                   <p className="font-body text-muted-foreground text-sm leading-relaxed line-clamp-2">

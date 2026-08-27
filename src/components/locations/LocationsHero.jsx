@@ -11,10 +11,10 @@ export default function LocationsHero({ cityCount }) {
   return (
     <section className="pt-32 pb-16 border-b border-border">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+        <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
           // Virginia Service Areas
         </p>
-        <h1 className="font-display font-black text-foreground text-4xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+        <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-[0.95] max-w-5xl">
           Asphalt Paving Across{' '}
           <span className="text-primary">All of Virginia</span>
         </h1>
@@ -36,7 +36,7 @@ export default function LocationsHero({ cityCount }) {
                 <Shield className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-display font-black text-foreground text-xs tracking-wider uppercase">
+                <p className="font-display font-bold text-foreground text-xs tracking-wider uppercase">
                   Fourth-Generation Contractor
                 </p>
                 <p className="font-display text-muted-foreground text-[10px] tracking-wider uppercase mt-0.5">
@@ -47,7 +47,7 @@ export default function LocationsHero({ cityCount }) {
             <div className="flex items-center gap-3 pb-4 border-b border-border">
               <Star className="w-5 h-5 text-primary fill-primary" />
               <div>
-                <p className="font-display font-black text-foreground text-xs tracking-wider uppercase">
+                <p className="font-display font-bold text-foreground text-xs tracking-wider uppercase">
                   {REVIEW_RATING} / 5 · {REVIEW_COUNT} Reviews
                 </p>
                 <p className="font-display text-muted-foreground text-[10px] tracking-wider uppercase mt-0.5">

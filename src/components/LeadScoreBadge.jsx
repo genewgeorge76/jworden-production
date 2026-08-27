@@ -39,7 +39,7 @@ const TIER_CONFIG = {
 export default function LeadScoreBadge({ score, tier, size = 'md', showScore = true }) {
   if (score == null && !tier) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-[0.2em] uppercase">
+      <span className="inline-flex items-center gap-1 px-2 py-1 border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-[0.08em] uppercase">
         Unscored
       </span>
     );
@@ -56,13 +56,13 @@ export default function LeadScoreBadge({ score, tier, size = 'md', showScore = t
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 border ${config.bgClass} ${sizing.pad} font-display tracking-[0.2em] uppercase`}
+      className={`inline-flex items-center gap-1.5 border ${config.bgClass} ${sizing.pad} font-display tracking-[0.08em] uppercase`}
       title={`AI lead score: ${score}/100`}
     >
       <Icon className={`${sizing.iconSize} ${config.iconClass}`} />
       <span className={`${config.textClass} ${sizing.text} font-bold`}>{config.label}</span>
       {showScore && score != null && (
-        <span className={`${config.textClass} ${sizing.scoreText} font-black`}>
+        <span className={`${config.textClass} ${sizing.scoreText} font-bold`}>
           {score}
         </span>
       )}

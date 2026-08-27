@@ -17,7 +17,7 @@ const Metric = ({ label, value, unit, note }) => {
   const measured = value !== null && value !== undefined;
   return (
     <div className="border border-white/10 bg-[#0a0f1c] rounded-lg p-4">
-      <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">{label}</p>
+      <p className="text-[10px] uppercase tracking-[0.08em] text-slate-500">{label}</p>
       {measured ? (
         <p className="mt-1 text-2xl font-bold text-white tabular-nums">
           {typeof value === 'number' ? value.toLocaleString() : value}
@@ -58,8 +58,8 @@ export default function Telemetry() {
     <div className="min-h-screen bg-[#050810] text-slate-200 px-4 py-8 md:px-8">
       <header className="max-w-5xl mx-auto mb-8 flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-amber-500/80">Pro plan</p>
-          <h1 className="font-display text-3xl font-black text-white flex items-center gap-2">
+          <p className="text-[10px] uppercase tracking-[0.08em] text-amber-500/80">Pro plan</p>
+          <h1 className="font-display text-3xl font-bold text-white flex items-center gap-2">
             <Activity className="w-6 h-6 text-amber-500" /> Telemetry
           </h1>
           {snapshot?.generated_at && (
@@ -91,7 +91,7 @@ export default function Telemetry() {
               <button
                 type="button"
                 onClick={load}
-                className="mt-2 text-xs uppercase tracking-widest text-red-300 hover:text-red-200 underline underline-offset-4"
+                className="mt-2 text-xs uppercase tracking-[0.08em] text-red-300 hover:text-red-200 underline underline-offset-4"
               >
                 Try again
               </button>

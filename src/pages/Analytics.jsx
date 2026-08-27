@@ -43,7 +43,7 @@ function Tile({ icon: Icon, label, value, sub, accent = 'amber' }) {
         <span className={`grid h-8 w-8 place-items-center rounded-lg ${ring}`}><Icon className="h-4 w-4" /></span>
         <span className="text-[11px] uppercase tracking-wider text-slate-400">{label}</span>
       </div>
-      <div className="text-2xl font-black tabular-nums text-white">{value}</div>
+      <div className="text-2xl font-bold tabular-nums text-white">{value}</div>
       {sub && <div className="mt-0.5 text-xs text-slate-500">{sub}</div>}
     </div>
   );
@@ -125,8 +125,8 @@ export default function Analytics() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Command Center</p>
-            <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Analytics</h1>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-amber-400">Command Center</p>
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Analytics</h1>
             <p className="mt-1 text-sm text-slate-400">Pipeline funnel, revenue forecast, and 12-month volume — live from your lead data.</p>
           </div>
           <button type="button" onClick={load} className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm font-medium text-slate-200 hover:bg-white/[0.07]">

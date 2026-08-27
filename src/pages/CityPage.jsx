@@ -140,10 +140,10 @@ export default function CityPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="text-brand-amber text-xs font-bold uppercase tracking-widest">
+            <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
               📍 {area.county}
             </span>
-            <h1 className="font-display font-black text-4xl md:text-5xl mt-3 mb-4 leading-tight">
+            <h1 className="font-display font-bold text-4xl md:text-5xl mt-3 mb-4 leading-tight">
               {area.headline}
             </h1>
             <p className="text-white/70 text-xl max-w-2xl mb-8">{area.tagline}</p>
@@ -232,7 +232,7 @@ export default function CityPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-display font-black text-2xl text-brand-navy mb-4">
+              <h2 className="font-display font-bold text-2xl text-brand-navy mb-4">
                 Why {area.city} Homeowners &amp; Businesses Choose J Worden &amp; Sons
               </h2>
               <p className="text-brand-navy/70 leading-relaxed mb-6">{area.description}</p>
@@ -254,7 +254,7 @@ export default function CityPage() {
               </ul>
             </div>
             <div className="bg-brand-navy rounded-2xl p-8 text-white">
-              <div className="text-brand-amber text-xs font-bold uppercase tracking-widest mb-4">
+              <div className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em] mb-4">
                 Serving {area.city}
               </div>
               <div className="space-y-3 text-white/80 text-sm">
@@ -301,7 +301,7 @@ export default function CityPage() {
       <section className="py-16 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
-            <span className="text-brand-amber text-xs font-bold uppercase tracking-widest">
+            <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
               Local paving proof for {area.city}
             </span>
             <h2 className="section-heading mt-2 mb-3">
@@ -452,7 +452,7 @@ export default function CityPage() {
       {/* ── Bottom CTA ── */}
       <section className="py-16 bg-brand-amber">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="font-display font-black text-brand-navy text-3xl mb-3">
+          <h2 className="font-display font-bold text-brand-navy text-3xl mb-3">
             Ready to Get Started in {area.city}?
           </h2>
           <p className="text-brand-navy/70 mb-6 text-lg">

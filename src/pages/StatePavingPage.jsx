@@ -63,12 +63,12 @@ export default function StatePavingPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-slate-900/40" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          <div className="flex items-center gap-2 text-amber-500 mb-6 font-display uppercase tracking-widest text-sm">
+          <div className="flex items-center gap-2 text-amber-500 mb-6 font-display uppercase tracking-[0.08em] text-sm">
             <MapPin className="w-5 h-5" />
             <span>Serving {model.name} Region</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black text-white font-display tracking-tight max-w-4xl leading-[1.05]">
+          <h1 className="text-5xl md:text-7xl font-bold text-white font-display tracking-tight max-w-4xl leading-[1.05]">
             PREMIUM ASPHALT PAVING IN <span className="text-amber-500">{model.name.toUpperCase()}</span>
           </h1>
           
@@ -92,7 +92,7 @@ export default function StatePavingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-black text-slate-900 font-display mb-6 tracking-tight">
+              <h2 className="text-3xl font-bold text-slate-900 font-display mb-6 tracking-tight">
                 Engineered for {model.name}'s Climate & Traffic
               </h2>
               <p className="text-slate-600 text-lg leading-relaxed mb-6">
@@ -118,7 +118,7 @@ export default function StatePavingPage() {
             </div>
 
             <div className="bg-white p-8 sm:p-10 shadow-2xl border-t-4 border-amber-500 rounded-xl relative">
-              <h3 className="font-black text-2xl text-slate-900 font-display mb-6 border-b pb-4">
+              <h3 className="font-bold text-2xl text-slate-900 font-display mb-6 border-b pb-4">
                 Available Services in {model.name}
               </h3>
               <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
@@ -143,10 +143,10 @@ export default function StatePavingPage() {
       <section className="py-24 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-amber-500 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+            <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-amber-500 rounded-full text-xs font-bold uppercase tracking-[0.08em] mb-4">
                <Camera className="w-4 h-4" /> Live Project Intel
             </div>
-            <h2 className="text-4xl font-black font-display tracking-tight mb-4">
+            <h2 className="text-4xl font-bold font-display tracking-tight mb-4">
               Recent Paving Work in {model.name}
             </h2>
             <p className="text-slate-400 text-lg">
@@ -167,7 +167,7 @@ export default function StatePavingPage() {
                    className="group relative aspect-video bg-slate-800 overflow-hidden rounded-xl bg-cover bg-center cursor-pointer"
                    style={{ backgroundImage: `url('${imgSrc}')` }}>
                 <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                   <p className="text-amber-500 font-bold uppercase tracking-widest text-xs mb-1">{model.name} Job Details</p>
+                   <p className="text-amber-500 font-bold uppercase tracking-[0.08em] text-xs mb-1">{model.name} Job Details</p>
                    <p className="text-white font-bold text-lg">Completed Paving Project</p>
                 </div>
               </div>
@@ -186,7 +186,7 @@ export default function StatePavingPage() {
       {nearbyStates.length > 0 && (
         <section className="py-16 bg-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h3 className="font-display font-bold text-lg text-slate-400 uppercase tracking-widest mb-8">
+            <h3 className="font-display font-bold text-lg text-slate-400 uppercase tracking-[0.08em] mb-8">
               Also Serving Neighboring Regions
             </h3>
             <div className="flex flex-wrap justify-center gap-3">

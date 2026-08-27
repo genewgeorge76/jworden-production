@@ -147,12 +147,12 @@ export default function MaintenanceCalculator() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-primary font-display font-black text-lg">//</span>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+              <span className="text-primary font-display font-bold text-lg">//</span>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 Maintenance Planner
               </p>
             </div>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
               Sealcoat &
               <br />
               <span className="text-primary">Savings Calculator</span>
@@ -267,12 +267,12 @@ export default function MaintenanceCalculator() {
                   {/* Urgency bar */}
                   <div className="flex items-center gap-3 mb-4">
                     <div className={`h-1.5 w-10 ${URGENCY_STYLES[recommendation.urgency].bar}`} />
-                    <p className={`font-display text-xs tracking-[0.3em] uppercase ${URGENCY_STYLES[recommendation.urgency].text}`}>
+                    <p className={`font-display text-xs tracking-[0.1em] uppercase ${URGENCY_STYLES[recommendation.urgency].text}`}>
                       {URGENCY_STYLES[recommendation.urgency].label}
                     </p>
                   </div>
 
-                  <h3 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight leading-tight mb-3">
+                  <h3 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight leading-tight mb-3">
                     {recommendation.headline}
                   </h3>
                   <p className="font-body text-muted-foreground text-sm leading-relaxed mb-6">
@@ -299,11 +299,11 @@ export default function MaintenanceCalculator() {
                   <div className="mt-auto border border-primary/30 bg-primary/5 p-5">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingDown className="w-4 h-4 text-primary" />
-                      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+                      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                         Estimated Savings
                       </p>
                     </div>
-                    <p className="font-display font-black text-foreground text-4xl leading-none">
+                    <p className="font-display font-bold text-foreground text-4xl leading-none">
                       ${estimatedSavings.toLocaleString()}
                     </p>
                     <p className="font-body text-muted-foreground text-xs mt-2 leading-relaxed">

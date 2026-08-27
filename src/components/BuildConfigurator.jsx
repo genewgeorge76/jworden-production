@@ -319,7 +319,7 @@ export default function BuildConfigurator({ config, onChange }) {
         </div>
         {estimate ? (
           <>
-            <div className="font-display font-black text-brand-navy text-2xl text-center">
+            <div className="font-display font-bold text-brand-navy text-2xl text-center">
               {estimate.lowFmt} – {estimate.highFmt}
             </div>
             {estimate.stateNote && (

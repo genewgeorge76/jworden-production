@@ -20,11 +20,11 @@ export default function MarketAuthority({ entry, city }) {
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-3">
           <ShieldCheck className="w-5 h-5 text-primary" aria-hidden="true" />
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
             Project Verification — Equipment &amp; Execution
           </p>
         </div>
-        <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight max-w-3xl mb-6">
+        <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight max-w-3xl mb-6">
           {city} Site Spec — Verified by J. Worden | Authority
         </h2>
         <p className="font-body text-foreground text-lg leading-relaxed">

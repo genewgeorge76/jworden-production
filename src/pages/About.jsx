@@ -203,10 +203,10 @@ export default function About() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-4 py-1.5 rounded-full mb-5">
             Est. 1984 · Chester, Virginia · Family Owned
           </span>
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Our <span className="text-brand-amber">Story</span>
           </h1>
           <p className="text-white/70 text-xl max-w-2xl mx-auto">
@@ -234,7 +234,7 @@ export default function About() {
               { stat: '4', label: 'Pavement Mag Top 75 Categories' },
             ].map(({ stat, label }) => (
               <div key={label}>
-                <div className="font-display font-black text-brand-navy text-3xl">{stat}</div>
+                <div className="font-display font-bold text-brand-navy text-3xl">{stat}</div>
                 <div className="text-brand-navy/60 text-sm mt-1">{label}</div>
               </div>
             ))}
@@ -294,7 +294,7 @@ export default function About() {
                 className="w-full h-full object-cover brightness-95 hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
-                <span className="text-amber-400 font-display font-bold text-sm tracking-widest uppercase bg-slate-900/80 px-4 py-1.5 rounded-full border border-amber-500/30">
+                <span className="text-amber-400 font-display font-bold text-sm tracking-[0.08em] uppercase bg-slate-900/80 px-4 py-1.5 rounded-full border border-amber-500/30">
                   EST. 1984 — 40+ YEARS OF EXCELLENCE
                 </span>
               </div>
@@ -371,7 +371,7 @@ export default function About() {
                     }`}
                   >
                     <div className="card p-5">
-                      <div className="font-display font-black text-brand-amber text-lg mb-0.5">
+                      <div className="font-display font-bold text-brand-amber text-lg mb-0.5">
                         {item.year}
                       </div>
                       <div className="font-bold text-brand-navy text-sm mb-2">{item.headline}</div>
@@ -409,7 +409,7 @@ export default function About() {
                   <div className="text-4xl flex-shrink-0">{p.emoji}</div>
                   <div>
                     <div className="flex flex-wrap gap-2 mb-2">
-                      <span className="text-xs font-bold uppercase tracking-widest text-brand-amber">
+                      <span className="text-xs font-bold uppercase tracking-[0.08em] text-brand-amber">
                         {p.year}
                       </span>
                       <span className="text-xs text-brand-navy/30">·</span>
@@ -438,7 +438,7 @@ export default function About() {
       {/* The Owner */}
       <section className="py-20 bg-brand-navy text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display font-black text-4xl text-center mb-12">
+          <h2 className="font-display font-bold text-4xl text-center mb-12">
             The <span className="text-brand-amber">People</span>
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -513,7 +513,7 @@ export default function About() {
       {/* Credentials */}
       <section className="py-16 bg-brand-navy text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display font-black text-3xl text-center mb-10">
+          <h2 className="font-display font-bold text-3xl text-center mb-10">
             Licensed, Insured, &amp; <span className="text-brand-amber">Documented</span>
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
@@ -536,7 +536,7 @@ export default function About() {
       {/* Social follow */}
       <section className="py-14 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="font-display font-black text-brand-navy text-2xl mb-3">Follow the Work</h2>
+          <h2 className="font-display font-bold text-brand-navy text-2xl mb-3">Follow the Work</h2>
           <p className="text-brand-navy/60 mb-6">
             Before &amp; afters, job site updates, and real paving content across every platform.
           </p>
@@ -547,7 +547,7 @@ export default function About() {
       {/* CTA */}
       <section className="py-16 bg-brand-amber text-center">
         <div className="max-w-2xl mx-auto px-4">
-          <h2 className="font-display font-black text-brand-navy text-3xl mb-4">
+          <h2 className="font-display font-bold text-brand-navy text-3xl mb-4">
             Ready to work with us?
           </h2>
           <a

@@ -131,8 +131,8 @@ export default function HomeServices() {
       <section className="relative border-b border-border pt-32 pb-16 md:pb-20 overflow-hidden">
         <div className="absolute -top-16 right-0 w-72 h-72 rounded-full bg-primary/12 blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Home Services</p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Home Services</p>
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
             Proactive Asphalt Home Services That Protect Your Driveway
           </h1>
           <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -144,14 +144,14 @@ export default function HomeServices() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('home_services_hero')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Phone className="w-4 h-4" />
               Call 804-446-1296
             </a>
             <Link
               to="/#quote"
-              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Book Home Service Visit
             </Link>
@@ -161,15 +161,15 @@ export default function HomeServices() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Service Menu</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Service Menu</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Residential Maintenance And Repair Scope
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {HOME_SERVICE_ITEMS.map((item) => (
               <article key={item.title} className="border border-border bg-card p-6">
-                <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">
                   {item.title}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.detail}</p>
@@ -181,8 +181,8 @@ export default function HomeServices() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Richmond Radius Coverage</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Richmond Radius Coverage</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Home Services Within {RICHMOND_RADIUS_MILES} Miles Of Richmond
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -204,7 +204,7 @@ export default function HomeServices() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Preventive Home Asphalt Strategy
               </h2>
               <div className="space-y-3">
@@ -224,7 +224,7 @@ export default function HomeServices() {
             </div>
 
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Build The Full Plan
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">
@@ -233,14 +233,14 @@ export default function HomeServices() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   to="/residential"
-                  className="premium-cta inline-flex items-center gap-2 px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase text-primary-foreground"
+                  className="premium-cta inline-flex items-center gap-2 px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase text-primary-foreground"
                 >
                   <House className="w-4 h-4" />
                   Residential Paving Page
                 </Link>
                 <Link
                   to="/locations/richmond-va"
-                  className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                  className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
                 >
                   Richmond Service Area
                 </Link>
@@ -252,8 +252,8 @@ export default function HomeServices() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Virginia's Climate</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Virginia's Climate</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Virginia's Climate Makes Driveway Maintenance Non-Negotiable
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
@@ -273,7 +273,7 @@ export default function HomeServices() {
                 We have been paving and maintaining driveways in the Richmond and Chester area since 1984 — four generations watching what Virginia's climate does to asphalt year over year. Our maintenance recommendations are built on that observation, not generic national schedules that don't account for local freeze-thaw patterns or Piedmont clay behavior.
               </p>
               <div className="border border-border bg-card p-6">
-                <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-4">Every Home Service Estimate Includes</p>
+                <p className="font-display font-bold text-foreground text-base uppercase tracking-tight mb-4">Every Home Service Estimate Includes</p>
                 <ul className="space-y-2">
                   {[
                     'Surface condition assessment with distress mapping',
@@ -294,18 +294,18 @@ export default function HomeServices() {
             </div>
           </div>
           <div className="border-t border-border pt-8">
-            <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-4">Related Services</p>
+            <p className="font-display font-bold text-foreground text-base uppercase tracking-tight mb-4">Related Services</p>
             <div className="flex flex-wrap gap-3">
-              <Link to="/sealcoating" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/sealcoating" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Sealcoating
               </Link>
-              <Link to="/crack-repair" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/crack-repair" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Crack Repair
               </Link>
-              <Link to="/residential" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/residential" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Residential Driveway Paving
               </Link>
-              <Link to="/concrete" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/concrete" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Concrete Services
               </Link>
             </div>
@@ -315,14 +315,14 @@ export default function HomeServices() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Common Questions</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Common Questions</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Home Services FAQ
           </h2>
           <div className="space-y-4">
             {HOME_SERVICE_FAQS.map((item) => (
               <article key={item.q} className="border border-border bg-card p-5 md:p-6">
-                <h3 className="font-display font-black text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
                   {item.q}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.a}</p>
@@ -336,8 +336,8 @@ export default function HomeServices() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Homeowner Support</p>
-              <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Book Your Driveway Condition Review</h2>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Homeowner Support</p>
+              <h2 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">Book Your Driveway Condition Review</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
                 We will assess current condition, explain priorities, and map out the next best step for your property.{' '}
                 <span className="text-foreground font-medium">4th Generation. Since 1984. Written warranty on every job.</span>
@@ -346,7 +346,7 @@ export default function HomeServices() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('home_services_footer_cta')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Wrench className="w-4 h-4" />
               Talk To Home Services

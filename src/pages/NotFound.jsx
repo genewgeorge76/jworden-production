@@ -12,10 +12,10 @@ export default function NotFound() {
       />
       <div className="min-h-screen bg-brand-navy flex items-center justify-center px-4 pt-16">
         <div className="max-w-lg w-full text-center">
-          <div className="font-display font-black text-brand-amber text-[8rem] leading-none select-none">
+          <div className="font-display font-bold text-brand-amber text-[8rem] leading-none select-none">
             404
           </div>
-          <h1 className="font-display font-black text-white text-3xl mt-4 mb-3">Page Not Found</h1>
+          <h1 className="font-display font-bold text-white text-3xl mt-4 mb-3">Page Not Found</h1>
           <p className="text-white/60 mb-10 text-lg">
             Looks like this road doesn&apos;t exist — yet. Let us pave the way back.
           </p>

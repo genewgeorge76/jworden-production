@@ -701,7 +701,7 @@ export default function TaxComplianceAdvisory() {
       {/* Hero */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-5 pointer-events-none select-none" aria-hidden="true">
-          <div className="text-[20rem] font-black leading-none tracking-tighter text-white text-center mt-8 opacity-30">
+          <div className="text-[20rem] font-bold leading-none tracking-tighter text-white text-center mt-8 opacity-30">
             TAX
           </div>
         </div>

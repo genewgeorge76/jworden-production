@@ -33,10 +33,10 @@ export default function FeaturedProjectBanner() {
                 transition={{ duration: 0.8 }}
                 className="max-w-2xl"
               >
-                <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+                <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
                   // Featured Project · QSR Combo New Build
                 </p>
-                <h2 className="font-display font-black text-foreground text-3xl md:text-5xl lg:text-6xl uppercase tracking-tight leading-[0.95]">
+                <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl lg:text-6xl uppercase tracking-tight leading-[0.95]">
                   KFC · Taco Bell<br />
                   <span className="text-primary">Combo Build</span>
                 </h2>
@@ -62,7 +62,7 @@ export default function FeaturedProjectBanner() {
 
                 <button
                   onClick={scrollToFootprint}
-                  className="mt-7 md:mt-8 bg-primary text-primary-foreground px-6 py-3 font-display font-bold text-xs tracking-[0.2em] uppercase hover:bg-primary/90 transition-colors"
+                  className="mt-7 md:mt-8 bg-primary text-primary-foreground px-6 py-3 font-display font-bold text-xs tracking-[0.08em] uppercase hover:bg-primary/90 transition-colors"
                 >
                   View National Footprint →
                 </button>

@@ -136,7 +136,7 @@ function EdgeSketch({ points, onPointsChange, widthFt, lengthFt, surfaceLabel })
       <div className="flex items-center justify-between gap-3 mb-3">
         <div>
           <p className="font-display text-primary text-xs tracking-[0.18em] uppercase">{surfaceLabel} Edges</p>
-          <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight">Customer Sketch</h3>
+          <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight">Customer Sketch</h3>
         </div>
         <div className="flex gap-2">
           <button
@@ -208,8 +208,8 @@ function ScoreRing({ score }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-display text-4xl font-black text-foreground">{score}</span>
-        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">score</span>
+        <span className="font-display text-4xl font-bold text-foreground">{score}</span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-muted-foreground">score</span>
       </div>
     </div>
   )
@@ -336,8 +336,8 @@ export default function DrivewayAI() {
                     <div className="p-4 sm:p-5 lg:p-6">
                       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                     <div>
-                      <p className="font-display text-primary text-xs tracking-[0.24em] uppercase mb-2">Driveway + Small Lot AI Estimate Studio</p>
-                      <h1 className="font-display font-black text-foreground text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight leading-[0.95] max-w-4xl">
+                      <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Driveway + Small Lot AI Estimate Studio</p>
+                      <h1 className="font-display font-bold text-foreground text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight leading-[0.95] max-w-4xl">
                         Draw The Pavement. Upload The Damage. Get A Premium Review.
                       </h1>
                       <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-3xl leading-relaxed">
@@ -347,7 +347,7 @@ export default function DrivewayAI() {
                     <a
                       href="tel:+18044461296"
                       onClick={() => trackPhoneClick('driveway_ai_header')}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-3 font-display text-xs font-bold uppercase tracking-[0.14em] text-background hover:bg-foreground/90"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-3 font-display text-xs font-bold uppercase tracking-[0.06em] text-background hover:bg-foreground/90"
                     >
                       <Phone className="h-4 w-4" />
                       Call Office
@@ -362,8 +362,8 @@ export default function DrivewayAI() {
                           { label: 'Price range', value: price ? `${price.lowFmt} - ${price.highFmt}` : 'Pending' },
                         ].map((item) => (
                           <div key={item.label} className="rounded-xl border border-border bg-background px-3 py-3">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">{item.label}</p>
-                            <p className="mt-1 font-display text-lg font-black text-foreground leading-tight">{item.value}</p>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.06em] text-muted-foreground">{item.label}</p>
+                            <p className="mt-1 font-display text-lg font-bold text-foreground leading-tight">{item.value}</p>
                           </div>
                         ))}
                       </div>
@@ -397,7 +397,7 @@ export default function DrivewayAI() {
                   <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
                     <div className="flex items-center gap-2 mb-3">
                       <Camera className="h-4 w-4 text-primary" />
-                      <h2 className="font-display font-black text-foreground text-xl uppercase tracking-tight">Phone Capture</h2>
+                      <h2 className="font-display font-bold text-foreground text-xl uppercase tracking-tight">Phone Capture</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <label className="rounded-xl border border-dashed border-primary/50 bg-primary/5 p-4 cursor-pointer hover:bg-primary/10">
@@ -432,7 +432,7 @@ export default function DrivewayAI() {
                   <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
                     <div className="flex items-center gap-2 mb-3">
                       <ClipboardCheck className="h-4 w-4 text-primary" />
-                      <h2 className="font-display font-black text-foreground text-xl uppercase tracking-tight">Site Signals</h2>
+                      <h2 className="font-display font-bold text-foreground text-xl uppercase tracking-tight">Site Signals</h2>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       {ISSUE_OPTIONS.map((issue) => {
@@ -457,7 +457,7 @@ export default function DrivewayAI() {
                 <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-4">
                     <MapPin className="h-4 w-4 text-primary" />
-                    <h2 className="font-display font-black text-foreground text-xl uppercase tracking-tight">Estimate Review</h2>
+                    <h2 className="font-display font-bold text-foreground text-xl uppercase tracking-tight">Estimate Review</h2>
                   </div>
 
                   <div className="space-y-3">
@@ -497,7 +497,7 @@ export default function DrivewayAI() {
                   {submitError ? <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">{submitError}</p> : null}
                   {submitted ? <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">Received. An estimator can review this AI packet before final pricing.</p> : null}
 
-                  <button type="submit" disabled={submitting} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-display text-xs font-black uppercase tracking-[0.14em] text-primary-foreground disabled:opacity-50">
+                  <button type="submit" disabled={submitting} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-display text-xs font-bold uppercase tracking-[0.06em] text-primary-foreground disabled:opacity-50">
                     {submitting ? 'Sending Review' : 'Request Scan Review'}
                     <ArrowRight className="h-4 w-4" />
                   </button>
@@ -508,7 +508,7 @@ export default function DrivewayAI() {
                     <ScoreRing score={conditionScore} />
                     <div>
                       <p className="font-display text-primary text-xs tracking-[0.18em] uppercase">AI Pavement Health</p>
-                      <h3 className="font-display font-black text-foreground text-2xl uppercase tracking-tight leading-none mt-1">{conditionLabel(conditionScore)}</h3>
+                      <h3 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight leading-none mt-1">{conditionLabel(conditionScore)}</h3>
                       <p className="text-xs text-muted-foreground mt-2">Estimator review confidence: {confidence}%</p>
                     </div>
                   </div>
@@ -516,9 +516,9 @@ export default function DrivewayAI() {
                   <div className="mt-5 rounded-xl border border-border bg-background p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CircleDollarSign className="h-4 w-4 text-primary" />
-                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Draft price range</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.06em] text-muted-foreground">Draft price range</p>
                     </div>
-                    <p className="font-display text-3xl font-black text-foreground">{price ? `${price.lowFmt} - ${price.highFmt}` : 'Pending'}</p>
+                    <p className="font-display text-3xl font-bold text-foreground">{price ? `${price.lowFmt} - ${price.highFmt}` : 'Pending'}</p>
                     <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{price?.disclaimer}</p>
                   </div>
 
@@ -544,8 +544,8 @@ export default function DrivewayAI() {
         <section className="border-b border-border bg-card py-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-6 max-w-4xl">
-              <p className="font-display text-primary text-xs tracking-[0.24em] uppercase mb-2">Paid assessment products</p>
-              <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-none">
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Paid assessment products</p>
+              <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-none">
                 Free Intake Starts The Conversation. Paid Scan Packets Create Better Decisions.
               </h2>
               <p className="mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -556,12 +556,12 @@ export default function DrivewayAI() {
               {PAID_SCAN_PACKAGES.map((item) => (
                 <article key={item.name} className="rounded-2xl border border-border bg-background p-5 shadow-sm">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="font-display font-black text-foreground text-2xl uppercase tracking-tight leading-none">{item.name}</h3>
-                    <span className="rounded-lg bg-primary/10 px-3 py-1.5 font-display text-sm font-black text-primary">{item.price}</span>
+                    <h3 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight leading-none">{item.name}</h3>
+                    <span className="rounded-lg bg-primary/10 px-3 py-1.5 font-display text-sm font-bold text-primary">{item.price}</span>
                   </div>
-                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Best for</p>
+                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.06em] text-muted-foreground">Best for</p>
                   <p className="mt-1 text-sm text-foreground/85 leading-relaxed">{item.bestFor}</p>
-                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Customer receives</p>
+                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.06em] text-muted-foreground">Customer receives</p>
                   <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{item.deliverable}</p>
                 </article>
               ))}
@@ -574,7 +574,7 @@ export default function DrivewayAI() {
               ].map((item) => (
                 <div key={item.title} className="rounded-2xl border border-border bg-background p-5">
                   <item.icon className="h-5 w-5 text-primary mb-3" />
-                  <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight">{item.title}</h3>
+                  <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight">{item.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.text}</p>
                 </div>
               ))}

@@ -138,10 +138,10 @@ export default function Estimators() {
     <div className="min-h-screen bg-[#070a10] px-4 py-8 text-slate-200 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-6">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Command Center</p>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-amber-400">Command Center</p>
           <div className="flex items-center gap-2">
             <Calculator className="h-6 w-6 text-amber-400" />
-            <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">AI Estimators</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">AI Estimators</h1>
           </div>
           <p className="mt-1 text-sm text-slate-400">Pavement condition, cost, maintenance timing, and lead quality — computed by the math-ai engines. Results are exactly what the models return.</p>
         </div>

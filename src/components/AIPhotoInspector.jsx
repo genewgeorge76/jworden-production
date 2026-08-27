@@ -136,9 +136,9 @@ export default function AIPhotoInspector() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 border border-primary/40 bg-primary/10 px-4 py-2 mb-4">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="font-display text-primary text-xs tracking-[0.3em] uppercase">Photo Review</span>
+            <span className="font-display text-primary text-xs tracking-[0.1em] uppercase">Photo Review</span>
           </div>
-          <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+          <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
             Pavement Photo Review
           </h2>
           <p className="font-body text-muted-foreground text-lg mt-4 max-w-xl mx-auto leading-relaxed">
@@ -231,7 +231,7 @@ export default function AIPhotoInspector() {
 
             {previewUrl && (
               <div className="mt-4 border border-border bg-muted/30 p-4 space-y-3">
-                <p className="font-display text-muted-foreground text-[11px] tracking-[0.25em] uppercase">
+                <p className="font-display text-muted-foreground text-[11px] tracking-[0.08em] uppercase">
                   Property Markup (Phone-Friendly)
                 </p>
                 <p className="font-body text-muted-foreground text-xs leading-relaxed">
@@ -329,15 +329,15 @@ export default function AIPhotoInspector() {
                     <GradeIcon className={`w-7 h-7 ${gradeStyle.text}`} />
                   </div>
                   <div>
-                    <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase">Condition Grade</p>
-                    <p className={`font-display font-black text-3xl uppercase tracking-tight ${gradeStyle.text}`}>
+                    <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase">Condition Grade</p>
+                    <p className={`font-display font-bold text-3xl uppercase tracking-tight ${gradeStyle.text}`}>
                       {gradeStyle.label}
                     </p>
                   </div>
                   {analysis.estimated_age_years && (
                     <div className="ml-auto text-right">
-                      <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase">Est. Age</p>
-                      <p className="font-display font-black text-foreground text-2xl">
+                      <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase">Est. Age</p>
+                      <p className="font-display font-bold text-foreground text-2xl">
                         ~{analysis.estimated_age_years} yrs
                       </p>
                     </div>
@@ -347,7 +347,7 @@ export default function AIPhotoInspector() {
 
               {/* Professional summary */}
               <div className="border border-border bg-card p-6">
-                <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Professional Summary</p>
+                <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Professional Summary</p>
                 <p className="font-body text-foreground text-base leading-relaxed">
                   {analysis.professional_summary}
                 </p>
@@ -356,7 +356,7 @@ export default function AIPhotoInspector() {
               {/* Issues */}
               {analysis.primary_issues?.length > 0 && (
                 <div className="border border-border bg-card p-6">
-                  <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Issues Identified</p>
+                  <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Issues Identified</p>
                   <ul className="space-y-2">
                     {analysis.primary_issues.map((issue, i) => (
                       <li key={i} className="flex items-start gap-3 font-body text-foreground text-sm">
@@ -372,7 +372,7 @@ export default function AIPhotoInspector() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {analysis.recommended_action && (
                   <div className="border border-border bg-card p-5">
-                    <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase mb-2">Recommended</p>
+                    <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase mb-2">Recommended</p>
                     <p className="font-display font-bold text-foreground text-sm uppercase tracking-wider">
                       {analysis.recommended_action.replace(/_/g, ' ')}
                     </p>
@@ -380,7 +380,7 @@ export default function AIPhotoInspector() {
                 )}
                 {analysis.urgency && (
                   <div className="border border-border bg-card p-5">
-                    <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase mb-2">Urgency</p>
+                    <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase mb-2">Urgency</p>
                     <p className="font-display font-bold text-foreground text-sm uppercase tracking-wider">
                       {analysis.urgency.replace(/_/g, ' ')}
                     </p>
@@ -388,7 +388,7 @@ export default function AIPhotoInspector() {
                 )}
                 {analysis.estimated_cost_range && (
                   <div className="border border-primary/30 bg-primary/5 p-5">
-                    <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-2">Est. Cost</p>
+                    <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-2">Est. Cost</p>
                     <p className="font-display font-bold text-foreground text-sm">
                       {analysis.estimated_cost_range}
                     </p>
@@ -399,7 +399,7 @@ export default function AIPhotoInspector() {
               {/* Technical notes */}
               {analysis.technical_notes && (
                 <div className="border border-border bg-muted/30 p-6">
-                  <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase mb-3">Technical Notes</p>
+                  <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase mb-3">Technical Notes</p>
                   <p className="font-body text-muted-foreground text-sm leading-relaxed italic">
                     {analysis.technical_notes}
                   </p>
@@ -409,7 +409,7 @@ export default function AIPhotoInspector() {
               {(analysis.required_prep_before_paving?.length > 0 || analysis.prep_notes) && (
                 <div className="border border-brand-navy/20 bg-brand-navy/5 p-6 space-y-4">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-display text-brand-navy text-xs tracking-[0.3em] uppercase">Required Prep Before Paving</p>
+                    <p className="font-display text-brand-navy text-xs tracking-[0.1em] uppercase">Required Prep Before Paving</p>
                     {analysis.prep_priority && (
                       <span className="font-display font-bold text-[11px] uppercase tracking-wider text-brand-navy/80 border border-brand-navy/30 px-2 py-1">
                         Priority: {String(analysis.prep_priority).replace(/_/g, ' ')}
@@ -444,7 +444,7 @@ export default function AIPhotoInspector() {
 
               {/* CTA */}
               <div className="border border-primary bg-primary/5 p-6 md:p-8 text-center">
-                <p className="font-display font-black text-foreground text-xl md:text-2xl uppercase tracking-tight mb-2">
+                <p className="font-display font-bold text-foreground text-xl md:text-2xl uppercase tracking-tight mb-2">
                   Want a precise written quote?
                 </p>
                 <p className="font-body text-muted-foreground text-sm mb-5 max-w-md mx-auto">

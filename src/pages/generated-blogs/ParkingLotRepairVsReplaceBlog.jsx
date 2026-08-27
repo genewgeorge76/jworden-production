@@ -30,18 +30,18 @@ export default function ParkingLotRepairVsReplaceBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Commercial</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 7 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Parking Lot Repair vs. Full Replacement: How to Decide
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function ParkingLotRepairVsReplaceBlog() {
             Every commercial property manager eventually faces this decision. The lot looks rough. Bids range wildly. One contractor says patch it, another says tear it out. The truth is that both answers can be right — it depends on where the failure lives and how much of the surface is affected. Here's how to think through it.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             The 40% Rule
           </h2>
           <p>
@@ -65,7 +65,7 @@ export default function ParkingLotRepairVsReplaceBlog() {
             Below 40% failure, targeted repairs — crack sealing, infrared patching, skin patching, mill-and-fill in isolated areas — are the right call. Above 40%, you're chasing failures. You repair one section and the adjacent section fails the next season because the underlying base has been compromised.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Surface Failure vs. Base Failure: The Critical Distinction
           </h2>
           <p>
@@ -109,7 +109,7 @@ export default function ParkingLotRepairVsReplaceBlog() {
             </div>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Cost Benchmarks: Virginia Commercial Lots (2026)
           </h2>
 
@@ -141,7 +141,7 @@ export default function ParkingLotRepairVsReplaceBlog() {
             </table>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             The 3-Year Maintenance Window Trap
           </h2>
           <p>
@@ -151,7 +151,7 @@ export default function ParkingLotRepairVsReplaceBlog() {
             The smarter model: get a written pavement condition assessment with a 5-year maintenance schedule. Budget sealcoating and crack sealing as a line item. Do an overlay before base failure sets in. This approach reduces total lifecycle cost by 30–40% compared to reactive repair.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Liability: The Factor Property Managers Overlook
           </h2>
           <p>
@@ -164,7 +164,7 @@ export default function ParkingLotRepairVsReplaceBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Free Parking Lot Assessment</h4>
             <p className="mb-6 text-sm">We'll walk your lot, rate the condition by zone, give you an honest repair vs. replace recommendation in writing, and show you the cost difference over a 10-year horizon.</p>
-            <Link to="/parking-lots" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <Link to="/parking-lots" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Lot Assessment <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
           </div>

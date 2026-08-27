@@ -106,9 +106,9 @@ export default function LeadInbox() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Sparkles className="w-4 h-4 text-primary" />
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">AI Priority Inbox</p>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">AI Priority Inbox</p>
             </div>
-            <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+            <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">
               Lead Scoring
             </h1>
             <p className="text-muted-foreground text-sm mt-2">
@@ -142,10 +142,10 @@ export default function LeadInbox() {
             </button>
           </div>
           <div className="border border-primary/30 bg-primary/5 px-5 py-3">
-            <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase">
+            <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase">
               Active Pipeline Value
             </p>
-            <p className="font-display font-black text-primary text-2xl">
+            <p className="font-display font-bold text-primary text-2xl">
               ${totalValue.toLocaleString()}
             </p>
             <p className="font-body text-muted-foreground text-[11px] mt-0.5">
@@ -165,7 +165,7 @@ export default function LeadInbox() {
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
-                className={`px-4 py-2 border font-display font-bold text-xs tracking-[0.2em] uppercase transition-all min-h-[40px] flex items-center gap-2 ${
+                className={`px-4 py-2 border font-display font-bold text-xs tracking-[0.08em] uppercase transition-all min-h-[40px] flex items-center gap-2 ${
                   active
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
@@ -218,7 +218,7 @@ export default function LeadInbox() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-2 flex-wrap">
                       <LeadScoreBadge score={lead.score} tier={lead.score_tier} size="md" />
-                      <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight">
+                      <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight">
                         {lead.name || 'Unknown'}
                       </h3>
                       {lead.estimated_value ? (
@@ -238,7 +238,7 @@ export default function LeadInbox() {
                           {lead.gross_margin_band} margin
                         </span>
                       ) : null}
-                      <span className="px-2 py-0.5 border border-border text-muted-foreground font-display text-[10px] tracking-[0.2em] uppercase">
+                      <span className="px-2 py-0.5 border border-border text-muted-foreground font-display text-[10px] tracking-[0.08em] uppercase">
                         {lead.status || 'new'}
                       </span>
                     </div>
@@ -293,7 +293,7 @@ export default function LeadInbox() {
 
                     {lead.score_reasoning && (
                       <div className="border-l-2 border-primary/40 pl-3 mt-3">
-                        <p className="font-display text-primary text-[9px] tracking-[0.3em] uppercase mb-1">
+                        <p className="font-display text-primary text-[9px] tracking-[0.1em] uppercase mb-1">
                           AI Reasoning
                         </p>
                         <p className="font-body text-muted-foreground text-sm leading-relaxed">

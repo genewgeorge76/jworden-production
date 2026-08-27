@@ -131,14 +131,14 @@ export default function VirginiaConcrete() {
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             <div className="lg:w-1/2 space-y-6">
               <div className="flex flex-wrap gap-2">
-                <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                   Concrete Division
                 </span>
-                <span className="inline-block bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                <span className="inline-block bg-white/10 text-white/80 text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full">
                   4th Generation Since 1984
                 </span>
               </div>
-              <h1 className="font-display font-black text-5xl md:text-7xl text-white leading-tight tracking-tight">
+              <h1 className="font-display font-bold text-5xl md:text-7xl text-white leading-tight tracking-tight">
                 Concrete Contractor in Central Virginia.
               </h1>
               <p className="text-white/70 text-lg md:text-xl max-w-xl">
@@ -158,16 +158,16 @@ export default function VirginiaConcrete() {
               </div>
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
                 <div className="text-center">
-                  <p className="text-brand-amber font-black text-2xl">4,000+</p>
-                  <p className="text-white/40 text-xs uppercase tracking-widest">PSI Minimum</p>
+                  <p className="text-brand-amber font-bold text-2xl">4,000+</p>
+                  <p className="text-white/40 text-xs uppercase tracking-[0.08em]">PSI Minimum</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-brand-amber font-black text-2xl">40+</p>
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Years in Trade</p>
+                  <p className="text-brand-amber font-bold text-2xl">40+</p>
+                  <p className="text-white/40 text-xs uppercase tracking-[0.08em]">Years in Trade</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-brand-amber font-black text-2xl">ADA</p>
-                  <p className="text-white/40 text-xs uppercase tracking-widest">Code Compliant</p>
+                  <p className="text-brand-amber font-bold text-2xl">ADA</p>
+                  <p className="text-white/40 text-xs uppercase tracking-[0.08em]">Code Compliant</p>
                 </div>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function VirginiaConcrete() {
                   alt="Concrete work in Richmond Virginia by J. Worden and Sons"
                 />
                 <div className="bg-brand-amber p-6 rounded-2xl">
-                  <p className="text-brand-navy font-black text-3xl">Written</p>
+                  <p className="text-brand-navy font-bold text-3xl">Written</p>
                   <p className="text-brand-navy/80 font-bold uppercase text-xs tracking-tighter">5-Year Workmanship Warranty</p>
                 </div>
               </div>
@@ -204,8 +204,8 @@ export default function VirginiaConcrete() {
       <section className="py-24 bg-white/5 border-y border-white/10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-14">
-            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Concrete Services</span>
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight">
+            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">Concrete Services</span>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight">
               Concrete Contractor Services in Virginia.
             </h2>
             <p className="text-white/40 mt-4 max-w-2xl mx-auto">Aprons to industrial slabs — every scope gets a proper mix specification, base evaluation, and written scope before work begins.</p>
@@ -216,7 +216,7 @@ export default function VirginiaConcrete() {
                 <div className="bg-brand-amber/10 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}
                 </div>
-                <h3 className="text-white font-black text-xl mb-3 tracking-tight">{service.title}</h3>
+                <h3 className="text-white font-bold text-xl mb-3 tracking-tight">{service.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{service.description}</p>
               </div>
             ))}
@@ -229,8 +229,8 @@ export default function VirginiaConcrete() {
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
-              <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Virginia Concrete Expertise</span>
-              <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight mb-6">
+              <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">Virginia Concrete Expertise</span>
+              <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight mb-6">
                 Concrete Work in Virginia Requires Virginia Knowledge.
               </h2>
               <div className="space-y-4 text-white/60 text-sm leading-relaxed">
@@ -242,7 +242,7 @@ export default function VirginiaConcrete() {
             </div>
             <div className="space-y-4">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <p className="text-white font-black text-base uppercase tracking-widest mb-4">Every Concrete Estimate Includes</p>
+                <p className="text-white font-bold text-base uppercase tracking-[0.08em] mb-4">Every Concrete Estimate Includes</p>
                 <ul className="space-y-2.5">
                   {[
                     'Written scope with mix specification (PSI and air content)',
@@ -260,16 +260,16 @@ export default function VirginiaConcrete() {
                 </ul>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <p className="text-white font-black text-base uppercase tracking-widest mb-3">Related Services</p>
+                <p className="text-white font-bold text-base uppercase tracking-[0.08em] mb-3">Related Services</p>
                 <div className="flex flex-wrap gap-2">
-                  <Link to="/paving" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Asphalt Paving</Link>
-                  <Link to="/residential" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Driveway Paving</Link>
-                  <Link to="/parking-lots" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Parking Lots</Link>
-                  <Link to="/hardscapes" className="border border-white/20 text-brand-amber text-xs font-bold tracking-widest uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Hardscapes</Link>
+                  <Link to="/paving" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Asphalt Paving</Link>
+                  <Link to="/residential" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Driveway Paving</Link>
+                  <Link to="/parking-lots" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Parking Lots</Link>
+                  <Link to="/hardscapes" className="border border-white/20 text-brand-amber text-xs font-bold tracking-[0.08em] uppercase px-3 py-1.5 hover:bg-white/10 transition-colors rounded-full">Hardscapes</Link>
                 </div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <p className="text-white font-black text-base uppercase tracking-widest mb-2">Chester, VA — Serving Central Virginia</p>
+                <p className="text-white font-bold text-base uppercase tracking-[0.08em] mb-2">Chester, VA — Serving Central Virginia</p>
                 <div className="grid grid-cols-2 gap-1.5 text-sm text-white/50 mt-3">
                   {['Richmond City', 'Chesterfield', 'Henrico', 'Midlothian', 'Mechanicsville', 'Colonial Heights', 'Petersburg', 'Glen Allen'].map((c) => (
                     <div key={c} className="flex items-center gap-1.5">
@@ -288,8 +288,8 @@ export default function VirginiaConcrete() {
       <section className="py-24 bg-white/5 border-b border-white/10 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">Common Questions</span>
-            <h2 className="text-white font-black text-3xl md:text-5xl tracking-tight">Virginia Concrete FAQ.</h2>
+            <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">Common Questions</span>
+            <h2 className="text-white font-bold text-3xl md:text-5xl tracking-tight">Virginia Concrete FAQ.</h2>
           </div>
           <div className="space-y-6">
             {CONCRETE_FAQS.map((faq) => (
@@ -306,7 +306,7 @@ export default function VirginiaConcrete() {
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto bg-brand-amber rounded-[2.5rem] p-12 md:p-16 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10"><Building2 size={140} /></div>
-          <h2 className="text-brand-navy font-black text-3xl md:text-5xl leading-tight mb-6">
+          <h2 className="text-brand-navy font-bold text-3xl md:text-5xl leading-tight mb-6">
             Get a Written Concrete Estimate.
           </h2>
           <p className="text-brand-navy/60 text-lg mb-8 max-w-2xl mx-auto">
@@ -316,11 +316,11 @@ export default function VirginiaConcrete() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('concrete-cta')}
-              className="bg-brand-navy text-white font-black py-4 px-8 rounded-full hover:bg-brand-navy/80 transition-colors"
+              className="bg-brand-navy text-white font-bold py-4 px-8 rounded-full hover:bg-brand-navy/80 transition-colors"
             >
               Call (804) 446-1296
             </a>
-            <a href="#quote" className="bg-white/20 text-brand-navy font-black py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
+            <a href="#quote" className="bg-white/20 text-brand-navy font-bold py-4 px-8 rounded-full hover:bg-white/30 transition-colors">
               Request Free Estimate
             </a>
           </div>

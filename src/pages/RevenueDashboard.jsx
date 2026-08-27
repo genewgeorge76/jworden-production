@@ -96,9 +96,9 @@ export default function RevenueDashboard() {
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="w-4 h-4 text-primary" />
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">Revenue Attribution</p>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">Revenue Attribution</p>
             </div>
-            <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+            <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">
               Where The Money Comes From
             </h1>
           </div>
@@ -126,9 +126,9 @@ export default function RevenueDashboard() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="w-4 h-4 text-primary" />
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">Revenue Attribution</p>
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">Revenue Attribution</p>
           </div>
-          <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+          <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">
             Where The Money Comes From
           </h1>
           <p className="text-muted-foreground text-sm mt-2">
@@ -228,9 +228,9 @@ function KPI({ label, value, icon: Icon, highlight }) {
     <div className={`border p-5 ${highlight ? 'border-primary/40 bg-primary/5' : 'border-border bg-card'}`}>
       <div className="flex items-center gap-2 mb-2">
         {Icon && <Icon className={`w-4 h-4 ${highlight ? 'text-primary' : 'text-muted-foreground'}`} />}
-        <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase">{label}</p>
+        <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase">{label}</p>
       </div>
-      <p className={`font-display font-black text-2xl ${highlight ? 'text-primary' : 'text-foreground'}`}>{value}</p>
+      <p className={`font-display font-bold text-2xl ${highlight ? 'text-primary' : 'text-foreground'}`}>{value}</p>
     </div>
   );
 }

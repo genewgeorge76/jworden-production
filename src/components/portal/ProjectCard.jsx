@@ -36,7 +36,7 @@ export default function ProjectCard({ job, isActive, onSelect }) {
       </div>
 
       <div className="flex items-center gap-3 flex-wrap">
-        <span className={`inline-block px-2 py-0.5 border ${s.border} ${s.bg} ${s.text} font-display text-[10px] tracking-[0.2em] uppercase`}>
+        <span className={`inline-block px-2 py-0.5 border ${s.border} ${s.bg} ${s.text} font-display text-[10px] tracking-[0.08em] uppercase`}>
           {s.label}
         </span>
         {job.scheduled_date && (

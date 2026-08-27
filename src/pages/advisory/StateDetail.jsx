@@ -113,7 +113,7 @@ export default function StateDetail() {
   if (!stateInfo) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-32 text-center">
-        <h1 className="font-display font-black text-3xl text-brand-navy mb-4">State Not Found</h1>
+        <h1 className="font-display font-bold text-3xl text-brand-navy mb-4">State Not Found</h1>
         <p className="text-brand-navy/60 mb-6">No data found for &quot;{stateCode}&quot;.</p>
         <Link to="/advisory" className="btn-primary">
           Back to Advisory Board
@@ -147,7 +147,7 @@ export default function StateDetail() {
           <Link to="/advisory" className="text-brand-amber text-sm hover:underline">
             ← Advisory Board
           </Link>
-          <h1 className="font-display font-black text-5xl mt-3 mb-2">{stateInfo.state}</h1>
+          <h1 className="font-display font-bold text-5xl mt-3 mb-2">{stateInfo.state}</h1>
           <p className="text-white/60 text-sm">
             {stateInfo.region} · Capital: {stateInfo.capital} · Last Verified: 2026-01-01
           </p>

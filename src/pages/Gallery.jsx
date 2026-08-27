@@ -336,10 +336,10 @@ export default function Gallery() {
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="py-16 px-4 text-center">
         <div className="max-w-3xl mx-auto">
-          <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+          <span className="inline-block bg-brand-amber/10 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">
             Our Work
           </span>
-          <h1 className="font-display font-black text-4xl md:text-5xl text-white mb-4">
+          <h1 className="font-display font-bold text-4xl md:text-5xl text-white mb-4">
             Project Photo Gallery
           </h1>
           <p className="text-white/60 text-lg">
@@ -355,7 +355,7 @@ export default function Gallery() {
             { n: '2', label: 'Project Phases' },
           ].map(s => (
             <div key={s.label} className="text-center">
-              <div className="text-brand-amber font-black text-2xl">{s.n}</div>
+              <div className="text-brand-amber font-bold text-2xl">{s.n}</div>
               <div className="text-white/40 text-xs uppercase tracking-wider">{s.label}</div>
             </div>
           ))}
@@ -389,7 +389,7 @@ export default function Gallery() {
             <button
               key={key}
               onClick={() => changeType(key)}
-              className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+              className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-[0.08em] transition-all ${
                 activeType === key
                   ? 'bg-brand-amber text-brand-navy shadow-lg shadow-brand-amber/20 scale-105'
                   : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
@@ -462,7 +462,7 @@ export default function Gallery() {
       {/* ── Featured hero strip (All + no sub-filters) ─────────────────────── */}
       {isAllClean && featuredMapped.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <p className="text-brand-amber text-xs font-bold uppercase tracking-widest mb-4">Featured Projects</p>
+          <p className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em] mb-4">Featured Projects</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {featuredMapped.slice(0, 6).map((img, i) => (
               <PhotoCard

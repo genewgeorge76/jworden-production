@@ -151,8 +151,8 @@ export default function Customers() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Command Center</p>
-            <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Customers</h1>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-amber-400">Command Center</p>
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Customers</h1>
             <p className="mt-1 text-sm text-slate-400">Your customer database — accounts, service history, lifetime value, and churn risk.</p>
           </div>
           <div className="flex gap-2">

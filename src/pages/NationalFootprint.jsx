@@ -145,10 +145,10 @@ export default function NationalFootprint() {
       />
       <div className="border-b border-border px-6 py-10">
         <div className="mx-auto max-w-7xl">
-          <p className="font-display text-primary text-xs uppercase tracking-[0.3em]">
+          <p className="font-display text-primary text-xs uppercase tracking-[0.1em]">
             Documented Coverage
           </p>
-          <h1 className="font-display mt-2 text-3xl font-black uppercase tracking-tight text-foreground">
+          <h1 className="font-display mt-2 text-3xl font-bold uppercase tracking-tight text-foreground">
             National Footprint
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
@@ -161,13 +161,13 @@ export default function NationalFootprint() {
           {sites.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-8">
               <div>
-                <div className="font-display text-2xl font-black text-primary">{stats.count}</div>
+                <div className="font-display text-2xl font-bold text-primary">{stats.count}</div>
                 <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                   documented sites
                 </div>
               </div>
               <div>
-                <div className="font-display text-2xl font-black text-primary">
+                <div className="font-display text-2xl font-bold text-primary">
                   {stats.commercial}
                 </div>
                 <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -175,7 +175,7 @@ export default function NationalFootprint() {
                 </div>
               </div>
               <div>
-                <div className="font-display text-2xl font-black text-primary">
+                <div className="font-display text-2xl font-bold text-primary">
                   {stats.states.length}
                 </div>
                 <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -183,7 +183,7 @@ export default function NationalFootprint() {
                 </div>
               </div>
               <div>
-                <div className="font-display text-2xl font-black text-primary">
+                <div className="font-display text-2xl font-bold text-primary">
                   {stats.photos.toLocaleString()}
                 </div>
                 <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -373,7 +373,7 @@ export default function NationalFootprint() {
             <div className="mt-5 flex flex-wrap gap-3">
               {residentialByState.map(([state, n]) => (
                 <div key={state} className="border border-border bg-card px-4 py-3">
-                  <div className="font-display text-xl font-black text-primary">{n}</div>
+                  <div className="font-display text-xl font-bold text-primary">{n}</div>
                   <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                     {state}
                   </div>

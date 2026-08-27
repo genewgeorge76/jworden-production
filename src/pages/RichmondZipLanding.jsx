@@ -93,10 +93,10 @@ export default function RichmondZipLanding() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
               <div>
-                <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">
+                <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">
                   Richmond Zip Code Landing • {data.zip}
                 </p>
-                <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+                <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
                   {data.heroTitle}
                 </h1>
                 <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -110,14 +110,14 @@ export default function RichmondZipLanding() {
                   <a
                     href={PHONE_HREF}
                     onClick={() => trackPhoneClick(`zip_${data.zip}_hero`)}
-                    className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+                    className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
                   >
                     <Phone className="w-4 h-4" />
                     Call 804-446-1296
                   </a>
                   <a
                     href="#quote"
-                    className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                    className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
                   >
                     Request Free Estimate
                   </a>
@@ -143,7 +143,7 @@ export default function RichmondZipLanding() {
 
         <section className="py-12 border-b border-border">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+            <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
               Local Service Focus For {data.zip}
             </h2>
             <p className="text-base text-muted-foreground leading-relaxed max-w-4xl mb-8">

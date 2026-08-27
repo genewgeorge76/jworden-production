@@ -114,8 +114,8 @@ export default function TarAndChip() {
       <section className="relative border-b border-border pt-32 pb-16 md:pb-20 overflow-hidden">
         <div className="absolute -top-16 right-0 w-72 h-72 rounded-full bg-primary/12 blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Tar And Chip Division</p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Tar And Chip Division</p>
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
             Tar And Chip Driveway Paving in Virginia
           </h1>
           <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -126,14 +126,14 @@ export default function TarAndChip() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('tar_chip_page_hero')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Phone className="w-4 h-4" />
               Call 804-446-1296
             </a>
             <Link
               to="/#quote"
-              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Request Tar And Chip Quote
             </Link>
@@ -143,8 +143,8 @@ export default function TarAndChip() {
 
       <section className="py-12 md:py-16 border-b border-border bg-card/40">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">See It In Action</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-6">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">See It In Action</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-6">
             Tar And Chip Installation Video
           </h2>
           <div className="relative overflow-hidden rounded-2xl border border-border bg-black aspect-video shadow-xl">
@@ -172,7 +172,7 @@ export default function TarAndChip() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Installation Process
               </h2>
               <div className="space-y-3">
@@ -186,7 +186,7 @@ export default function TarAndChip() {
             </div>
 
             <div className="premium-panel rounded-2xl p-6 md:p-8">
-              <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+              <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
                 Why Owners Choose Tar And Chip
               </h2>
               <div className="space-y-3">
@@ -208,8 +208,8 @@ export default function TarAndChip() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Virginia-Specific Knowledge</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Virginia-Specific Knowledge</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Why Tar And Chip Works In Virginia
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
@@ -232,24 +232,24 @@ export default function TarAndChip() {
                 Along the I-81 corridor in Roanoke, Harrisonburg, and Winchester, mountain weather patterns add freeze-thaw pressure beyond what central Virginia sees. Chip seal's flexible bonding tolerates thermal movement better than rigid hot-mix in these environments, making it a practical long-term surface option for properties in those markets.
               </p>
               <div className="border border-border bg-card p-5 mt-2">
-                <p className="font-display font-black text-foreground text-sm uppercase tracking-tight mb-1">4th Generation. Since 1984.</p>
+                <p className="font-display font-bold text-foreground text-sm uppercase tracking-tight mb-1">4th Generation. Since 1984.</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">Written warranty on every tar and chip installation. Site-specific aggregate and binder recommendations — not a one-spec-fits-all system.</p>
               </div>
             </div>
           </div>
           <div className="border-t border-border pt-8">
-            <p className="font-display font-black text-foreground text-base uppercase tracking-tight mb-4">Related Services</p>
+            <p className="font-display font-bold text-foreground text-base uppercase tracking-tight mb-4">Related Services</p>
             <div className="flex flex-wrap gap-3">
-              <Link to="/residential" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/residential" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Residential Asphalt Paving
               </Link>
-              <Link to="/sealcoating" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/sealcoating" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Sealcoating
               </Link>
-              <Link to="/crack-repair" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/crack-repair" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Crack Repair
               </Link>
-              <Link to="/paving" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors">
+              <Link to="/paving" className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors">
                 Commercial Paving
               </Link>
             </div>
@@ -259,14 +259,14 @@ export default function TarAndChip() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Common Questions</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Common Questions</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Tar And Chip FAQ
           </h2>
           <div className="space-y-4">
             {FAQS.map((item) => (
               <article key={item.q} className="border border-border bg-card p-5 md:p-6">
-                <h3 className="font-display font-black text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
                   {item.q}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.a}</p>
@@ -278,8 +278,8 @@ export default function TarAndChip() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Coastal Service Areas</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Coastal Service Areas</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Virginia Beach And Outer Banks Tar And Chip Coverage
           </h2>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-3xl mb-6">
@@ -288,13 +288,13 @@ export default function TarAndChip() {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/locations/virginia-beach-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Virginia Beach Service Page
             </Link>
             <Link
               to="/locations/outer-banks-nc"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Outer Banks Service Page
             </Link>
@@ -304,8 +304,8 @@ export default function TarAndChip() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Rural Coverage</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Rural Coverage</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Chip And Tar Is A Strong Match For Rural Areas Too
           </h2>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-4xl mb-6">
@@ -315,19 +315,19 @@ export default function TarAndChip() {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/locations/chester-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Chester And Rural Corridor
             </Link>
             <Link
               to="/locations/fredericksburg-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Fredericksburg Corridor
             </Link>
             <Link
               to="/locations/harrisonburg-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Shenandoah Valley Rural Areas
             </Link>
@@ -337,8 +337,8 @@ export default function TarAndChip() {
 
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">I-81 Corridor Focus</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">I-81 Corridor Focus</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Chip And Tar Plus Sealcoating Are Major Factors In I-81 Markets
           </h2>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-4xl mb-6">
@@ -348,19 +348,19 @@ export default function TarAndChip() {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/locations/roanoke-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Roanoke Service Page
             </Link>
             <Link
               to="/locations/harrisonburg-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Harrisonburg Service Page
             </Link>
             <Link
               to="/locations/winchester-va"
-              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               Winchester Service Page
             </Link>
@@ -372,8 +372,8 @@ export default function TarAndChip() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Next Step</p>
-              <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Book A Tar And Chip Site Review</h2>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Next Step</p>
+              <h2 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">Book A Tar And Chip Site Review</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
                 We will review your property and confirm the best chip size, binder strategy, and surface design for your goals.
               </p>
@@ -381,7 +381,7 @@ export default function TarAndChip() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('tar_chip_page_footer_cta')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Layers className="w-4 h-4" />
               Talk To Tar And Chip Team

@@ -92,7 +92,7 @@ export default function EstimateForm({ source = 'homepage' }) {
       className="border border-gray-200 bg-white"
     >
       <div className="bg-[#0f0f0f] px-8 py-6">
-        <h3 className="font-display text-white text-xl uppercase tracking-[0.12em]">
+        <h3 className="font-display text-white text-xl uppercase tracking-[0.06em]">
           Request a Free Estimate
         </h3>
         <p className="text-gray-400 text-sm mt-1">
@@ -104,7 +104,7 @@ export default function EstimateForm({ source = 'homepage' }) {
         {/* Row 1 — Name + Phone */}
         <div className="grid sm:grid-cols-2 gap-5">
           <div>
-            <label htmlFor="ef-name" className="block font-display text-xs uppercase tracking-[0.14em] text-gray-600 mb-1.5">
+            <label htmlFor="ef-name" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
               Name <span className="text-[#ff7a00]">*</span>
             </label>
             <input
@@ -119,7 +119,7 @@ export default function EstimateForm({ source = 'homepage' }) {
             />
           </div>
           <div>
-            <label htmlFor="ef-phone" className="block font-display text-xs uppercase tracking-[0.14em] text-gray-600 mb-1.5">
+            <label htmlFor="ef-phone" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
               Phone <span className="text-[#ff7a00]">*</span>
             </label>
             <input
@@ -139,7 +139,7 @@ export default function EstimateForm({ source = 'homepage' }) {
         {/* Row 2 — Email + Service */}
         <div className="grid sm:grid-cols-2 gap-5">
           <div>
-            <label htmlFor="ef-email" className="block font-display text-xs uppercase tracking-[0.14em] text-gray-600 mb-1.5">
+            <label htmlFor="ef-email" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
               Email
             </label>
             <input
@@ -153,7 +153,7 @@ export default function EstimateForm({ source = 'homepage' }) {
             />
           </div>
           <div>
-            <label htmlFor="ef-service" className="block font-display text-xs uppercase tracking-[0.14em] text-gray-600 mb-1.5">
+            <label htmlFor="ef-service" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
               Service Needed
             </label>
             <select
@@ -171,7 +171,7 @@ export default function EstimateForm({ source = 'homepage' }) {
 
         {/* Row 3 — Message */}
         <div>
-          <label htmlFor="ef-message" className="block font-display text-xs uppercase tracking-[0.14em] text-gray-600 mb-1.5">
+          <label htmlFor="ef-message" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
             Project Details
           </label>
           <textarea
@@ -196,7 +196,7 @@ export default function EstimateForm({ source = 'homepage' }) {
         <button
           type="submit"
           disabled={busy}
-          className="w-full inline-flex items-center justify-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.14em] px-8 py-4 hover:bg-[#ff9a30] disabled:opacity-60 transition-colors"
+          className="w-full inline-flex items-center justify-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:bg-[#ff9a30] disabled:opacity-60 transition-colors"
         >
           {busy ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>

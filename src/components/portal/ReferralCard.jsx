@@ -61,10 +61,10 @@ export default function ReferralCard({ userEmail }) {
             <Gift className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-1">
+            <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-1">
               Referral Program
             </p>
-            <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">
+            <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">
               Earn $100 Per Referral
             </h3>
             <p className="font-body text-muted-foreground text-sm mt-1">
@@ -139,7 +139,7 @@ export default function ReferralCard({ userEmail }) {
       {/* Recent referrals */}
       {myReferrals.length > 0 && (
         <div className="mt-6 pt-5 border-t border-primary/30">
-          <p className="font-display text-muted-foreground text-[10px] tracking-[0.3em] uppercase mb-3 flex items-center gap-2">
+          <p className="font-display text-muted-foreground text-[10px] tracking-[0.1em] uppercase mb-3 flex items-center gap-2">
             <Users className="w-3.5 h-3.5" /> Your Referrals
           </p>
           <div className="space-y-2">
@@ -165,10 +165,10 @@ export default function ReferralCard({ userEmail }) {
 function Stat({ label, value, highlight }) {
   return (
     <div className="text-center">
-      <p className={`font-display font-black text-2xl leading-none ${highlight ? 'text-primary' : 'text-foreground'}`}>
+      <p className={`font-display font-bold text-2xl leading-none ${highlight ? 'text-primary' : 'text-foreground'}`}>
         {value}
       </p>
-      <p className="font-display text-muted-foreground text-[9px] tracking-[0.2em] uppercase mt-1.5">
+      <p className="font-display text-muted-foreground text-[9px] tracking-[0.08em] uppercase mt-1.5">
         {label}
       </p>
     </div>

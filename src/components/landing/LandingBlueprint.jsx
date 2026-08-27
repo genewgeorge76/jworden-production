@@ -33,10 +33,10 @@ export default function LandingBlueprint({ page }) {
       <section className="border-b border-border pt-32 pb-16 md:pb-20 relative overflow-hidden">
         <div className="absolute -top-20 right-0 w-72 h-72 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-4">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">
             {page.serviceArea} // {page.primaryKeyword}
           </p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
             {page.headline}
           </h1>
           <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -45,7 +45,7 @@ export default function LandingBlueprint({ page }) {
           <div className="flex flex-wrap gap-3 mt-8">
             <Link
               to={page.cta.href}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
               onClick={() => {
                 trackLandingPrimaryCta(page, 'hero_primary')
                 trackQualifiedLeadSignal(page, 'site_assessment_click')
@@ -55,7 +55,7 @@ export default function LandingBlueprint({ page }) {
             </Link>
             <a
               href="tel:+18044461296"
-              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
               onClick={() => trackLandingPrimaryCta(page, 'hero_phone')}
             >
               Call 804-446-1296
@@ -73,7 +73,7 @@ export default function LandingBlueprint({ page }) {
         <div className="max-w-6xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           {page.trustPoints.map((item) => (
             <article key={item} className="border border-border bg-card p-5">
-              <h2 className="font-display font-black text-foreground text-lg uppercase tracking-tight">
+              <h2 className="font-display font-bold text-foreground text-lg uppercase tracking-tight">
                 Proof Signal
               </h2>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{item}</p>
@@ -84,11 +84,11 @@ export default function LandingBlueprint({ page }) {
 
       <section className="py-12 md:py-14 border-b border-border bg-muted/20">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-4">Outcome Targets</p>
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">Outcome Targets</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {page.outcomes.map((item) => (
               <article key={item} className="border border-border bg-card p-5">
-                <h3 className="font-display font-black text-foreground text-base uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-base uppercase tracking-tight leading-tight">
                   {item}
                 </h3>
               </article>
@@ -99,7 +99,7 @@ export default function LandingBlueprint({ page }) {
 
       <section className="py-12 md:py-14 border-b border-border">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-4">Authority References</p>
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">Authority References</p>
           <div className="flex flex-wrap gap-2">
             {page.citations.map((c) => (
               <a
@@ -118,9 +118,9 @@ export default function LandingBlueprint({ page }) {
 
       <section className="py-12 md:py-14 border-b border-border bg-muted/20">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-4">Backlink Asset</p>
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">Backlink Asset</p>
           <article className="border border-border bg-card p-6">
-            <h2 className="font-display font-black text-foreground text-2xl uppercase tracking-tight">
+            <h2 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight">
               {page.backlinkAsset.title}
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed mt-3">
@@ -135,11 +135,11 @@ export default function LandingBlueprint({ page }) {
 
       <section className="py-12 md:py-14 border-b border-border">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-4">FAQ</p>
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">FAQ</p>
           <div className="space-y-4">
             {page.faq.map((item) => (
               <article key={item.q} className="border border-border bg-card p-5">
-                <h3 className="font-display font-black text-foreground text-lg uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-lg uppercase tracking-tight leading-tight">
                   {item.q}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.a}</p>
@@ -151,7 +151,7 @@ export default function LandingBlueprint({ page }) {
 
       <section className="py-14 md:py-18 bg-primary">
         <div className="max-w-6xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="font-display font-black text-primary-foreground text-3xl md:text-4xl uppercase tracking-tight">
+          <h2 className="font-display font-bold text-primary-foreground text-3xl md:text-4xl uppercase tracking-tight">
             Ready For A Precision Site Plan?
           </h2>
           <p className="text-primary-foreground/80 text-sm md:text-base mt-3 max-w-2xl mx-auto leading-relaxed">
@@ -159,7 +159,7 @@ export default function LandingBlueprint({ page }) {
           </p>
           <Link
             to={page.cta.href}
-            className="inline-flex items-center gap-2 mt-6 bg-background text-foreground px-6 py-4 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-foreground hover:text-background transition-colors"
+            className="inline-flex items-center gap-2 mt-6 bg-background text-foreground px-6 py-4 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-foreground hover:text-background transition-colors"
             onClick={() => trackLandingPrimaryCta(page, 'footer_primary')}
           >
             {page.cta.label}

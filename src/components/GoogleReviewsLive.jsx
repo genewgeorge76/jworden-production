@@ -35,12 +35,12 @@ export default function GoogleReviewsLive() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-primary font-display font-black text-lg">//</span>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+              <span className="text-primary font-display font-bold text-lg">//</span>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 Live from Google
               </p>
             </div>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95]">
               What Neighbors
               <br />
               <span className="text-primary">Are Saying</span>
@@ -54,7 +54,7 @@ export default function GoogleReviewsLive() {
           >
             <StarRow rating={data.rating || 5} size="w-5 h-5" />
             <div>
-              <p className="font-display font-black text-foreground text-2xl leading-none">
+              <p className="font-display font-bold text-foreground text-2xl leading-none">
                 {data.rating?.toFixed(1) || '5.0'} / 5
               </p>
               <p className="font-display text-muted-foreground text-[11px] tracking-wider uppercase mt-1">

@@ -38,7 +38,7 @@ export default function ExistingDocuments({ documents, onChange }) {
 
   return (
     <div className="border border-border bg-card p-6">
-      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-5">
+      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-5">
         Shared Documents ({documents.length})
       </p>
 

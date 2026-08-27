@@ -22,10 +22,10 @@ export default function BeatAnyQuoteBadge() {
           <div className="relative shrink-0">
             <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-primary flex flex-col items-center justify-center border-4 border-background shadow-2xl">
               <Percent className="w-6 h-6 md:w-8 md:h-8 text-primary-foreground" strokeWidth={3} />
-              <p className="font-display font-black text-primary-foreground text-3xl md:text-4xl leading-none mt-1">
+              <p className="font-display font-bold text-primary-foreground text-3xl md:text-4xl leading-none mt-1">
                 5%
               </p>
-              <p className="font-display font-black text-primary-foreground text-[9px] md:text-[10px] tracking-[0.2em] uppercase mt-1">
+              <p className="font-display font-bold text-primary-foreground text-[9px] md:text-[10px] tracking-[0.08em] uppercase mt-1">
                 Beat Rate
               </p>
             </div>
@@ -35,11 +35,11 @@ export default function BeatAnyQuoteBadge() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <ShieldCheck className="w-4 h-4 text-primary" />
-              <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase">
+              <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase">
                 Written Guarantee
               </p>
             </div>
-            <h3 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-3">
+            <h3 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[0.95] mb-3">
               Beat Any Written Quote by 5%
             </h3>
             <p className="font-body text-muted-foreground text-base leading-relaxed max-w-xl">

@@ -29,12 +29,12 @@ export default function CommercialCapabilities() {
       <div className="absolute -top-20 right-0 w-72 h-72 rounded-full bg-primary/14 blur-3xl pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-primary font-display font-black text-lg">//</span>
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+          <span className="text-primary font-display font-bold text-lg">//</span>
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
             Commercial Capabilities
           </p>
         </div>
-        <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] max-w-3xl mb-8">
+        <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] max-w-3xl mb-8">
           From Single-Location Projects<br />
           <span className="text-primary">To Multi-Site Contracts</span>
         </h2>
@@ -65,8 +65,8 @@ export default function CommercialCapabilities() {
 
         <div className="mt-10 grid grid-cols-1 xl:grid-cols-3 gap-5">
           <div className="xl:col-span-2 premium-panel rounded-2xl p-6 md:p-7">
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Commercial Services</p>
-            <h3 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Commercial Services</p>
+            <h3 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight mb-4">
               Need Something Paved Around Richmond?
             </h3>
             <p className="font-body text-muted-foreground text-sm md:text-base leading-relaxed mb-6 max-w-2xl">
@@ -85,8 +85,8 @@ export default function CommercialCapabilities() {
 
           <div className="premium-panel rounded-2xl p-6 md:p-7 flex flex-col justify-between">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Free Evaluation</p>
-              <h4 className="font-display font-black text-foreground text-2xl uppercase tracking-tight">Talk To Our Team</h4>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Free Evaluation</p>
+              <h4 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight">Talk To Our Team</h4>
               <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
                 No pressure. No vague pricing. Just a clear assessment and practical next step.
               </p>
@@ -95,7 +95,7 @@ export default function CommercialCapabilities() {
             <div className="space-y-3 mt-6">
               <Link
                 to="/commercial/richmond-va"
-                className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
               >
                 View Richmond Commercial Page
               </Link>
@@ -103,7 +103,7 @@ export default function CommercialCapabilities() {
               <a
                 href="tel:+18044461296"
                 onClick={() => trackPhoneClick('commercial_capabilities')}
-                className="premium-cta w-full flex items-center justify-center gap-2 text-primary-foreground px-5 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase"
+                className="premium-cta w-full flex items-center justify-center gap-2 text-primary-foreground px-5 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase"
               >
                 <Phone className="w-4 h-4" />
                 Call 804-446-1296

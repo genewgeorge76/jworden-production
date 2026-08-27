@@ -238,7 +238,7 @@ export default function SatelliteMap() {
 
       <div className="mx-auto max-w-[1600px] px-4 py-6">
         <header className="mb-4">
-          <h1 className="font-display text-3xl font-black uppercase tracking-tight">Satellite Map</h1>
+          <h1 className="font-display text-3xl font-bold uppercase tracking-tight">Satellite Map</h1>
           <p className="mt-1 text-sm text-zinc-500">
             Scope property and job sites. Toggle layers, search any address, read coordinates off the cursor.
           </p>

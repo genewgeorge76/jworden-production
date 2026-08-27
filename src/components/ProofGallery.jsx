@@ -63,8 +63,8 @@ export default function ProofGallery() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <p className="font-display text-primary text-sm tracking-[0.3em] uppercase mb-3">Our Work</p>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+            <p className="font-display text-primary text-sm tracking-[0.1em] uppercase mb-3">Our Work</p>
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
               Proof Gallery
             </h2>
           </div>
@@ -106,7 +106,7 @@ export default function ProofGallery() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">{project.scope}</p>
+                <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">{project.scope}</p>
                 <h3 className="font-display font-bold text-foreground text-xl mt-1">{project.title}</h3>
                 <p className="font-body text-muted-foreground text-sm mt-1">{project.location}</p>
               </div>

@@ -72,10 +72,10 @@ export default function CustomerPortal() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
                 // Customer Portal
               </p>
-              <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+              <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
                 {/* "Client" was the fallback for a missing name, so the
                     operator — correctly signed in, is_owner true — was greeted
                     as a customer on his own platform. Name first, then who the
@@ -109,7 +109,7 @@ export default function CustomerPortal() {
               <div className="w-16 h-16 bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto mb-6">
                 <FolderOpen className="w-8 h-8 text-primary" />
               </div>
-              <h2 className="font-display font-black text-foreground text-2xl uppercase tracking-tight mb-3">
+              <h2 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight mb-3">
                 No Projects Yet
               </h2>
               <p className="font-body text-muted-foreground text-base leading-relaxed mb-6 max-w-md mx-auto">
@@ -134,7 +134,7 @@ export default function CustomerPortal() {
             <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-8">
               {/* Sidebar — project list */}
               <aside>
-                <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase mb-4">
+                <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase mb-4">
                   Your Projects ({jobs.length})
                 </p>
                 <div className="space-y-3">
@@ -155,10 +155,10 @@ export default function CustomerPortal() {
                   <>
                     {/* Project header */}
                     <div className="border border-border bg-card p-6 md:p-8">
-                      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+                      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
                         Project Details
                       </p>
-                      <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight mb-4">
+                      <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight mb-4">
                         {selectedJob.title}
                       </h2>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -169,7 +169,7 @@ export default function CustomerPortal() {
                           { label: 'Area', value: selectedJob.sqft ? `${Math.round(selectedJob.sqft).toLocaleString()} sq ft` : '—' },
                         ].map(({ label, value }) => (
                           <div key={label}>
-                            <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mb-1">{label}</p>
+                            <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mb-1">{label}</p>
                             <p className="font-display font-bold text-foreground text-sm">{value}</p>
                           </div>
                         ))}
@@ -209,7 +209,7 @@ export default function CustomerPortal() {
 
                     {/* Support card */}
                     <div className="border border-primary/30 bg-primary/5 p-6 md:p-8">
-                      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">Need Help?</p>
+                      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">Need Help?</p>
                       <p className="font-body text-foreground text-base mb-5 leading-relaxed">
                         Questions about your project? Our team is a phone call away.
                       </p>

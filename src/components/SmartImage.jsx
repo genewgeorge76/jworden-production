@@ -96,7 +96,7 @@ export default function SmartImage({
               </div>
             )}
             {sublabel && (
-              <div className="font-display tracking-[0.4em] uppercase text-primary text-[10px] mt-2 brightness-75">{sublabel}</div>
+              <div className="font-display tracking-[0.1em] uppercase text-primary text-[10px] mt-2 brightness-75">{sublabel}</div>
             )}
           </div>
         )}

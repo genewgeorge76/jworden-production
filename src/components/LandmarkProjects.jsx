@@ -48,12 +48,12 @@ export default function LandmarkProjects() {
         {/* Header */}
         <div className="mb-12 md:mb-16">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-primary font-display font-black text-lg">//</span>
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+            <span className="text-primary font-display font-bold text-lg">//</span>
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
               Landmark Projects
             </p>
           </div>
-          <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
+          <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
             When National Brands
             <br />
             <span className="text-primary">Needed It Right</span>
@@ -88,7 +88,7 @@ export default function LandmarkProjects() {
                   loading="lazy"
                   className="w-full h-full object-cover"
                 />
-                <span className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground font-display font-bold text-[10px] tracking-[0.2em] uppercase">
+                <span className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground font-display font-bold text-[10px] tracking-[0.08em] uppercase">
                   <Star className="w-3 h-3 fill-current" />
                   {project.badge}
                 </span>
@@ -100,10 +100,10 @@ export default function LandmarkProjects() {
                   i % 2 === 1 ? 'lg:order-1' : ''
                 }`}
               >
-                <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-3">
+                <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-3">
                   {project.subtitle}
                 </p>
-                <h3 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight leading-tight mb-4">
+                <h3 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight leading-tight mb-4">
                   {project.title}
                 </h3>
                 <div className="font-body text-muted-foreground text-sm md:text-base leading-relaxed mb-6 space-y-3">
@@ -114,7 +114,7 @@ export default function LandmarkProjects() {
                 <div className="grid grid-cols-2 gap-3 pt-5 border-t border-border">
                   {project.details.map((d) => (
                     <div key={d.label}>
-                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mb-1">
+                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mb-1">
                         {d.label}
                       </p>
                       <p className="font-display font-bold text-foreground text-xs tracking-wider uppercase">

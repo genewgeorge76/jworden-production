@@ -34,12 +34,12 @@ export default function SafetyCompliance() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
           <div className="lg:col-span-7">
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-primary font-display font-black text-lg">//</span>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+              <span className="text-primary font-display font-bold text-lg">//</span>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 Safety & Compliance
               </p>
             </div>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95]">
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95]">
               Proof of Daily<br />
               <span className="text-primary">Safety Compliance</span>
             </h2>
@@ -62,16 +62,16 @@ export default function SafetyCompliance() {
                   <FileCheck2 className="w-7 h-7 text-primary-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-display text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">
+                  <p className="font-display text-xs tracking-[0.08em] uppercase text-muted-foreground mb-1">
                     Official Document · PDF
                   </p>
-                  <h3 className="font-display font-black text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
+                  <h3 className="font-display font-bold text-foreground text-lg md:text-xl uppercase tracking-tight leading-tight">
                     Tool Box Talks / Tailgate Safety Meeting Form
                   </h3>
                   <p className="font-body text-muted-foreground text-sm mt-2 leading-relaxed">
                     The exact form our supervisors complete on every site, every day.
                   </p>
-                  <span className="inline-flex items-center gap-2 mt-4 text-primary font-display font-bold text-xs tracking-[0.2em] uppercase group-hover:gap-3 transition-all">
+                  <span className="inline-flex items-center gap-2 mt-4 text-primary font-display font-bold text-xs tracking-[0.08em] uppercase group-hover:gap-3 transition-all">
                     <Download className="w-4 h-4" />
                     View / Download PDF
                   </span>

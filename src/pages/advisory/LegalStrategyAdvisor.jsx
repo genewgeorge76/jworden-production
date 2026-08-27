@@ -180,10 +180,10 @@ export default function LegalStrategyAdvisor() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-4 py-1.5 rounded-full mb-6">
             Legal Strategy Advisor · All 50 States
           </span>
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Negotiation &amp; <span className="text-brand-amber">Legal Strategy</span>
           </h1>
           <p className="text-white/70 text-xl max-w-3xl mx-auto">
@@ -275,7 +275,7 @@ export default function LegalStrategyAdvisor() {
                 </h3>
                 <div className="text-center py-4">
                   <div
-                    className={`text-5xl font-black mb-1 ${
+                    className={`text-5xl font-bold mb-1 ${
                       recommendation.strengthColor === 'green'
                         ? 'text-green-600'
                         : recommendation.strengthColor === 'yellow'
@@ -398,7 +398,7 @@ export default function LegalStrategyAdvisor() {
 
         {/* Bottom CTA */}
         <section className="bg-brand-navy rounded-2xl p-8 text-center text-white">
-          <h2 className="font-display font-black text-2xl mb-3">Need a Contractor Ranking Tool?</h2>
+          <h2 className="font-display font-bold text-2xl mb-3">Need a Contractor Ranking Tool?</h2>
           <p className="text-white/70 mb-6 max-w-xl mx-auto">
             Compare and rank contractor bids by price, licensing, bonding, and experience to make
             confident hiring decisions.

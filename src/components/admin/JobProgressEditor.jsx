@@ -35,7 +35,7 @@ export default function JobProgressEditor({ job, onSaved }) {
 
   return (
     <div className="border border-border bg-card p-6">
-      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-5">Update Project Progress</p>
+      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-5">Update Project Progress</p>
 
       <div className="space-y-4">
         <div>
@@ -64,7 +64,7 @@ export default function JobProgressEditor({ job, onSaved }) {
             <label className="font-display text-muted-foreground text-xs tracking-wider uppercase">
               Completion %
             </label>
-            <span className="font-display font-black text-primary text-lg">{percent}%</span>
+            <span className="font-display font-bold text-primary text-lg">{percent}%</span>
           </div>
           <input
             type="range"

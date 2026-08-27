@@ -106,8 +106,8 @@ export default function ContractorAIPlatform() {
       <section className="relative border-b border-border pt-32 pb-16 md:pb-20 overflow-hidden">
         <div className="absolute -top-16 right-0 w-72 h-72 rounded-full bg-primary/12 blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-4">Serving Virginia For Over 40 Years</p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">Serving Virginia For Over 40 Years</p>
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-5xl">
             Local Asphalt Planning And Delivery You Can Trust
           </h1>
           <p className="text-muted-foreground text-base md:text-lg mt-6 max-w-3xl leading-relaxed">
@@ -119,14 +119,14 @@ export default function ContractorAIPlatform() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('contractor_ai_hero')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Phone className="w-4 h-4" />
               Call 804-446-1296
             </a>
             <Link
               to="/general-contracting"
-              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+              className="border border-primary/50 text-primary px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
             >
               View Local Services
             </Link>
@@ -145,7 +145,7 @@ export default function ContractorAIPlatform() {
                   className={`w-full h-56 object-cover ${idx === 0 ? 'rotate-90 scale-[1.28] origin-center' : ''}`}
                   loading="lazy"
                 />
-                <div className="absolute left-3 bottom-3 bg-brand-navy/85 text-white text-[11px] uppercase tracking-[0.14em] px-3 py-1.5 rounded-full border border-white/20">
+                <div className="absolute left-3 bottom-3 bg-brand-navy/85 text-white text-[11px] uppercase tracking-[0.06em] px-3 py-1.5 rounded-full border border-white/20">
                   {image.segment}
                 </div>
               </div>
@@ -156,8 +156,8 @@ export default function ContractorAIPlatform() {
 
       <section className="py-14 md:py-18 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Service Priorities</p>
-          <h2 className="font-display font-black text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Service Priorities</p>
+          <h2 className="font-display font-bold text-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-8">
             Five Local-Focused Commitments
           </h2>
 
@@ -167,7 +167,7 @@ export default function ContractorAIPlatform() {
                 <div className="w-11 h-11 border border-primary/30 bg-primary/5 flex items-center justify-center mb-4">
                   <pillar.icon className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight">
                   {pillar.title}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{pillar.body}</p>
@@ -180,8 +180,8 @@ export default function ContractorAIPlatform() {
       <section className="py-14 md:py-16 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10">
-            <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">How We Measure Quality</p>
-            <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight mb-5">
+            <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">How We Measure Quality</p>
+            <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight mb-5">
               Every Project Gets A Prep-First Standard
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -199,8 +199,8 @@ export default function ContractorAIPlatform() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="premium-panel rounded-2xl p-7 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-2">Next Move</p>
-              <h2 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">Get A Local Paving Plan</h2>
+              <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-2">Next Move</p>
+              <h2 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">Get A Local Paving Plan</h2>
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
                 Tell us your property goals and we will recommend the best scope for your driveway
                 or lot, including any required prep before paving.
@@ -209,7 +209,7 @@ export default function ContractorAIPlatform() {
             <a
               href="tel:+18044461296"
               onClick={() => trackPhoneClick('contractor_ai_footer')}
-              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.14em] uppercase text-primary-foreground"
+              className="premium-cta inline-flex items-center gap-2 px-6 py-4 font-display font-bold text-sm tracking-[0.06em] uppercase text-primary-foreground"
             >
               <Bot className="w-4 h-4" />
               Start Your Free Quote

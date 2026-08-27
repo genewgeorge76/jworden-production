@@ -47,7 +47,7 @@ const ErrorNote = ({ error, onRetry }) => (
         <button
           type="button"
           onClick={onRetry}
-          className="mt-2 text-xs uppercase tracking-widest text-red-300 hover:text-red-200 underline underline-offset-4"
+          className="mt-2 text-xs uppercase tracking-[0.08em] text-red-300 hover:text-red-200 underline underline-offset-4"
         >
           Try again
         </button>
@@ -180,8 +180,8 @@ export default function MarketSites() {
   return (
     <div className="min-h-screen bg-[#050810] text-slate-200 px-4 py-8 md:px-8">
       <header className="max-w-6xl mx-auto mb-8">
-        <p className="text-[10px] uppercase tracking-[0.25em] text-amber-500/80">Pro plan</p>
-        <h1 className="font-display text-3xl font-black text-white">Site Factory</h1>
+        <p className="text-[10px] uppercase tracking-[0.08em] text-amber-500/80">Pro plan</p>
+        <h1 className="font-display text-3xl font-bold text-white">Site Factory</h1>
         <p className="mt-2 text-sm text-slate-400 max-w-2xl">
           Launch a local market site, then write for it. Generated posts are saved as
           drafts — nothing reaches a live domain until you publish it here.
@@ -193,7 +193,7 @@ export default function MarketSites() {
         <div className="space-y-6">
           <Panel className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
+              <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-slate-300">
                 <Globe className="w-4 h-4 text-amber-500" /> Your sites
               </h2>
               <button
@@ -247,7 +247,7 @@ export default function MarketSites() {
           </Panel>
 
           <Panel className="p-5">
-            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-slate-300 mb-4">
+            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-slate-300 mb-4">
               <Plus className="w-4 h-4 text-amber-500" /> Launch a site
             </h2>
             <form onSubmit={submitSite} className="space-y-3">
@@ -280,7 +280,7 @@ export default function MarketSites() {
               <button
                 type="submit"
                 disabled={creating}
-                className="w-full rounded bg-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#050810] hover:bg-amber-400 disabled:opacity-50"
+                className="w-full rounded bg-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#050810] hover:bg-amber-400 disabled:opacity-50"
               >
                 {creating ? 'Launching…' : 'Launch site'}
               </button>
@@ -291,7 +291,7 @@ export default function MarketSites() {
         {/* ── Content ───────────────────────────────────────────────────── */}
         <div className="space-y-6">
           <Panel className="p-5">
-            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-slate-300 mb-4">
+            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-slate-300 mb-4">
               <Sparkles className="w-4 h-4 text-amber-500" /> Write a post
               {selectedHost && <span className="text-slate-500 normal-case tracking-normal">for {selectedHost}</span>}
             </h2>
@@ -330,7 +330,7 @@ export default function MarketSites() {
                 <button
                   type="submit"
                   disabled={generating}
-                  className="w-full rounded bg-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#050810] hover:bg-amber-400 disabled:opacity-50"
+                  className="w-full rounded bg-amber-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#050810] hover:bg-amber-400 disabled:opacity-50"
                 >
                   {generating ? 'Writing…' : 'Write draft'}
                 </button>
@@ -339,7 +339,7 @@ export default function MarketSites() {
           </Panel>
 
           <Panel className="p-5">
-            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-slate-300 mb-4">
+            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-slate-300 mb-4">
               <FileText className="w-4 h-4 text-amber-500" /> Posts
             </h2>
 
@@ -356,7 +356,7 @@ export default function MarketSites() {
                       <p className="text-xs text-slate-500 truncate">{post.excerpt}</p>
                     </div>
                     <span
-                      className={`shrink-0 rounded border px-2 py-0.5 text-[10px] uppercase tracking-widest ${
+                      className={`shrink-0 rounded border px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] ${
                         STATUS_STYLES[post.status] || 'bg-white/5 text-slate-400 border-white/10'
                       }`}
                     >
@@ -365,7 +365,7 @@ export default function MarketSites() {
                     <button
                       type="button"
                       onClick={() => review(post.id)}
-                      className="shrink-0 text-xs uppercase tracking-widest text-slate-400 hover:text-amber-500"
+                      className="shrink-0 text-xs uppercase tracking-[0.08em] text-slate-400 hover:text-amber-500"
                     >
                       Review
                     </button>
@@ -382,13 +382,13 @@ export default function MarketSites() {
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 md:p-10">
           <div className="w-full max-w-3xl rounded-lg border border-white/10 bg-[#0a0f1c]">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-slate-300">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.08em] text-slate-300">
                 Review before publishing
               </h3>
               <button
                 type="button"
                 onClick={() => setOpenPost(null)}
-                className="text-xs uppercase tracking-widest text-slate-500 hover:text-white"
+                className="text-xs uppercase tracking-[0.08em] text-slate-500 hover:text-white"
               >
                 Close
               </button>
@@ -418,7 +418,7 @@ export default function MarketSites() {
                       type="button"
                       onClick={() => publish(openPost.id)}
                       disabled={publishingId === openPost.id}
-                      className="mt-6 flex items-center gap-2 rounded bg-emerald-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#050810] hover:bg-emerald-400 disabled:opacity-50"
+                      className="mt-6 flex items-center gap-2 rounded bg-emerald-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#050810] hover:bg-emerald-400 disabled:opacity-50"
                     >
                       <Send className="w-3.5 h-3.5" />
                       {publishingId === openPost.id ? 'Publishing…' : 'Publish to the site'}

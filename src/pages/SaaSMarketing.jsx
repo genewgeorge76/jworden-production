@@ -30,7 +30,7 @@ export default function SaaSMarketing() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-mono tracking-widest"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-mono tracking-[0.08em]"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -43,7 +43,7 @@ export default function SaaSMarketing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-display font-black text-white leading-tight"
+            className="text-5xl md:text-7xl font-display font-bold text-white leading-tight"
           >
             The Ultimate Operating System for <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Specialty Contractors</span>
           </motion.h1>
@@ -123,7 +123,7 @@ export default function SaaSMarketing() {
               <h3 className="text-2xl font-bold text-white">Lite</h3>
               <p className="text-slate-400 mt-2 h-12">Perfect for independent owner-operators.</p>
               <div className="my-6">
-                <span className="text-4xl font-black text-white">$199</span><span className="text-slate-400">/mo</span>
+                <span className="text-4xl font-bold text-white">$199</span><span className="text-slate-400">/mo</span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 {['1 Market Site', 'Operations Cockpit', 'Lead Tracking', 'Standard Support'].map((feature, i) => (
@@ -146,7 +146,7 @@ export default function SaaSMarketing() {
               <h3 className="text-2xl font-bold text-white">Pro</h3>
               <p className="text-slate-400 mt-2 h-12">For growing fleets needing territorial dominance.</p>
               <div className="my-6">
-                <span className="text-4xl font-black text-white">$499</span><span className="text-slate-400">/mo</span>
+                <span className="text-4xl font-bold text-white">$499</span><span className="text-slate-400">/mo</span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 {['Unlimited Market Sites', 'AI Content Engine', 'Advanced Estimating', 'Priority Support', 'Custom Branding'].map((feature, i) => (
@@ -166,7 +166,7 @@ export default function SaaSMarketing() {
               <h3 className="text-2xl font-bold text-white">Max</h3>
               <p className="text-slate-400 mt-2 h-12">Enterprise multi-state operations.</p>
               <div className="my-6">
-                <span className="text-4xl font-black text-white">$999</span><span className="text-slate-400">/mo</span>
+                <span className="text-4xl font-bold text-white">$999</span><span className="text-slate-400">/mo</span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 {['Everything in Pro', 'Custom AI Voice Agent', 'Automated Dispatch', 'API Access', 'Dedicated Account Rep'].map((feature, i) => (

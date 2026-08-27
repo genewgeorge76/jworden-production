@@ -160,24 +160,24 @@ export default function JwordenAI() {
           <div className="max-w-5xl">
             <div className="mb-7 inline-flex items-center gap-3 border border-primary/45 bg-primary/10 px-4 py-2 text-primary">
               <ScanLine className="h-4 w-4" />
-              <span className="font-display text-sm uppercase tracking-[0.22em]">Driveway + Lot AI Scan</span>
+              <span className="font-display text-sm uppercase tracking-[0.08em]">Driveway + Lot AI Scan</span>
             </div>
-            <h1 className="font-display text-6xl font-black uppercase leading-[0.86] tracking-normal text-foreground md:text-8xl lg:text-9xl">
+            <h1 className="font-display text-6xl font-bold uppercase leading-[0.86] tracking-normal text-foreground md:text-8xl lg:text-9xl">
               Scan pavement. Get a better estimate.
             </h1>
             <p className="mt-8 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl">
               JWORDENAI helps customers show J. Worden & Sons what is happening on the pavement before the estimate. Upload iPhone photos, sketch the driveway or lot, flag cracks and water problems, add drone views when needed, and request a human-reviewed asphalt paving estimate.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link to="/quote" className="inline-flex min-h-[52px] items-center gap-3 bg-primary px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
+              <Link to="/quote" className="inline-flex min-h-[52px] items-center gap-3 bg-primary px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
                 Request Estimate
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <Link to="/ai-research" className="inline-flex min-h-[52px] items-center gap-3 border border-primary/45 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:border-primary hover:text-primary">
+              <Link to="/ai-research" className="inline-flex min-h-[52px] items-center gap-3 border border-primary/45 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-primary hover:text-primary">
                 View AI Radar
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <a href="tel:+18044461296" onClick={() => trackPhoneClick('jwordenai_hero')} className="inline-flex min-h-[52px] items-center gap-3 border border-primary/45 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:border-primary hover:text-primary">
+              <a href="tel:+18044461296" onClick={() => trackPhoneClick('jwordenai_hero')} className="inline-flex min-h-[52px] items-center gap-3 border border-primary/45 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-primary hover:text-primary">
                 <Phone className="h-5 w-5" />
                 Call 804.446.1296
               </a>
@@ -189,7 +189,7 @@ export default function JwordenAI() {
       <section className="border-y border-border bg-[#0b0b0b] py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">What the scan collects</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">What the scan collects</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-white md:text-7xl">
               Photos, drone views, sketches, and repair notes in one clean packet.
             </h2>
@@ -215,7 +215,7 @@ export default function JwordenAI() {
       <section className="border-b border-border bg-background py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-10 max-w-4xl">
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Pavement maintenance scan coverage</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Pavement maintenance scan coverage</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               Built around the services property owners already search for.
             </h2>
@@ -241,7 +241,7 @@ export default function JwordenAI() {
       <section className="border-b border-border bg-[#111111] py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-2 lg:px-8">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Who it helps</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Who it helps</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-white md:text-7xl">
               Residential, commercial, HOA, industrial, and public-facing pavement work.
             </h2>
@@ -262,7 +262,7 @@ export default function JwordenAI() {
       <section className="border-b border-border bg-white py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-10 max-w-4xl">
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Virginia locations</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Virginia locations</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               Local content for J. Worden service areas.
             </h2>
@@ -283,7 +283,7 @@ export default function JwordenAI() {
       <section className="border-b border-border bg-background py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Why customers should use it</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Why customers should use it</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               Better information makes a better estimate request.
             </h2>
@@ -291,11 +291,11 @@ export default function JwordenAI() {
               A clear scan helps the office and estimator understand what you need before the first call. That can help separate urgent repairs from future maintenance, compare service options, and prepare the right questions for your property.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/quote" className="inline-flex min-h-[52px] items-center gap-3 bg-primary px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
+              <Link to="/quote" className="inline-flex min-h-[52px] items-center gap-3 bg-primary px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
                 Fill Out Estimate Form
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <a href="tel:+18044461296" onClick={() => trackPhoneClick('jwordenai_middle_cta')} className="inline-flex min-h-[52px] items-center gap-3 border border-primary/45 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:border-primary hover:text-primary">
+              <a href="tel:+18044461296" onClick={() => trackPhoneClick('jwordenai_middle_cta')} className="inline-flex min-h-[52px] items-center gap-3 border border-primary/45 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-primary hover:text-primary">
                 <Phone className="h-5 w-5" />
                 Call Now
               </a>
@@ -314,7 +314,7 @@ export default function JwordenAI() {
       <section className="border-b border-border bg-[#0b0b0b] py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-10 max-w-4xl">
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Coming next from J. Worden & Sons</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Coming next from J. Worden & Sons</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-white md:text-7xl">
               The scan pattern can grow beyond pavement with the right review boundaries.
             </h2>
@@ -342,7 +342,7 @@ export default function JwordenAI() {
       <section className="border-b border-border bg-background py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Public boundary</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Public boundary</p>
             <h2 className="mt-4 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               Brochure outside. Company intelligence inside.
             </h2>
@@ -363,17 +363,17 @@ export default function JwordenAI() {
       <section className="bg-primary py-16 text-black">
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.22em]">Ready to show us the pavement?</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em]">Ready to show us the pavement?</p>
             <h2 className="mt-2 font-display text-4xl uppercase leading-none md:text-6xl">
               Send photos, sketch the surface, or schedule a drone review.
             </h2>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/quote" className="inline-flex min-h-[52px] items-center gap-3 bg-black px-7 py-4 font-display text-lg uppercase tracking-[0.12em] text-white">
+            <Link to="/quote" className="inline-flex min-h-[52px] items-center gap-3 bg-black px-7 py-4 font-display text-lg uppercase tracking-[0.06em] text-white">
               <Camera className="h-5 w-5" />
               Request Estimate
             </Link>
-            <a href="tel:+18044461296" onClick={() => trackPhoneClick('jwordenai_scan_cta')} className="inline-flex min-h-[52px] items-center gap-3 border border-black/30 px-7 py-4 font-display text-lg uppercase tracking-[0.12em] text-black">
+            <a href="tel:+18044461296" onClick={() => trackPhoneClick('jwordenai_scan_cta')} className="inline-flex min-h-[52px] items-center gap-3 border border-black/30 px-7 py-4 font-display text-lg uppercase tracking-[0.06em] text-black">
               <Phone className="h-5 w-5" />
               Call 804.446.1296
             </a>

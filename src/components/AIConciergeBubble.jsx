@@ -687,7 +687,7 @@ export default function AIConciergeBubble() {
                 )}
               </div>
               <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-black shadow-[0_0_8px_rgba(34,197,94,.9)]" />
-              <div className="absolute -bottom-0.5 bg-primary text-black px-1.5 py-0.2 rounded-full text-[8px] font-display font-black tracking-tighter uppercase">
+              <div className="absolute -bottom-0.5 bg-primary text-black px-1.5 py-0.2 rounded-full text-[8px] font-display font-bold tracking-tighter uppercase">
                 AI
               </div>
             </button>
@@ -742,7 +742,7 @@ export default function AIConciergeBubble() {
                       className="w-24 h-7 object-contain"
                     />
                   </div>
-                  <p className="font-display font-black text-foreground text-sm uppercase tracking-wider">
+                  <p className="font-display font-bold text-foreground text-sm uppercase tracking-wider">
                     Mr. Worden · Founder
                   </p>
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -793,7 +793,7 @@ export default function AIConciergeBubble() {
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 overflow-x-auto">
                   {TRUST_SIGNALS.map((item) => (
-                    <span key={item} className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-[10px] font-display tracking-[0.12em] uppercase border border-primary/30 text-foreground/90 bg-black/25 rounded-full">
+                    <span key={item} className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-[10px] font-display tracking-[0.06em] uppercase border border-primary/30 text-foreground/90 bg-black/25 rounded-full">
                       <ShieldCheck className="w-3 h-3 text-primary" />
                       {item}
                     </span>
@@ -801,7 +801,7 @@ export default function AIConciergeBubble() {
                 </div>
                 <a
                   href="tel:+18044461296"
-                  className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-display font-bold tracking-[0.12em] uppercase bg-primary text-primary-foreground rounded-md"
+                  className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-display font-bold tracking-[0.06em] uppercase bg-primary text-primary-foreground rounded-md"
                   aria-label="Call now"
                 >
                   <Phone className="w-3 h-3" />
@@ -809,10 +809,10 @@ export default function AIConciergeBubble() {
                 </a>
               </div>
               <div className="mt-2.5 flex items-center gap-2 overflow-x-auto">
-                <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-[9px] font-display tracking-[0.12em] uppercase border border-primary/30 bg-black/25 text-foreground rounded-full">
+                <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-[9px] font-display tracking-[0.06em] uppercase border border-primary/30 bg-black/25 text-foreground rounded-full">
                   Typical reply in under 60s
                 </span>
-                <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-[9px] font-display tracking-[0.12em] uppercase border border-primary/30 bg-black/25 text-foreground rounded-full">
+                <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-[9px] font-display tracking-[0.06em] uppercase border border-primary/30 bg-black/25 text-foreground rounded-full">
                   Free guidance · no obligation
                 </span>
               </div>
@@ -826,7 +826,7 @@ export default function AIConciergeBubble() {
                     type="button"
                     onClick={() => handleQuickPrompt(action.prompt)}
                     disabled={sending || booting}
-                    className="shrink-0 px-3 py-2 text-[11px] font-display tracking-[0.12em] uppercase border border-primary/40 bg-primary/10 text-foreground hover:bg-primary/20 hover:border-primary/60 transition-colors disabled:opacity-50"
+                    className="shrink-0 px-3 py-2 text-[11px] font-display tracking-[0.06em] uppercase border border-primary/40 bg-primary/10 text-foreground hover:bg-primary/20 hover:border-primary/60 transition-colors disabled:opacity-50"
                   >
                     {action.label}
                   </button>

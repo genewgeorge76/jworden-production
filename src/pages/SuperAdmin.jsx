@@ -62,7 +62,7 @@ export default function SuperAdmin() {
       <div className="max-w-7xl mx-auto">
         <header className="flex items-center justify-between mb-12">
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
               <Shield className="w-8 h-8 text-amber-500" />
               J. WORDEN HQ
             </h1>
@@ -86,7 +86,7 @@ export default function SuperAdmin() {
               <DollarSign className="w-5 h-5 text-green-500" />
               <span className="text-sm font-bold text-slate-400">Total MRR</span>
             </div>
-            <div className="text-4xl font-black text-white">${(telemetry?.total_mrr || 0).toLocaleString()}</div>
+            <div className="text-4xl font-bold text-white">${(telemetry?.total_mrr || 0).toLocaleString()}</div>
           </div>
           
           <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-2xl">
@@ -94,7 +94,7 @@ export default function SuperAdmin() {
               <Users className="w-5 h-5 text-blue-500" />
               <span className="text-sm font-bold text-slate-400">Active Tenants</span>
             </div>
-            <div className="text-4xl font-black text-white">{telemetry?.active_tenants || 0}</div>
+            <div className="text-4xl font-bold text-white">{telemetry?.active_tenants || 0}</div>
           </div>
           
           <div className="p-6 bg-slate-900/50 border border-red-500/30 rounded-2xl relative overflow-hidden">
@@ -103,7 +103,7 @@ export default function SuperAdmin() {
               <AlertCircle className="w-5 h-5 text-red-500" />
               <span className="text-sm font-bold text-slate-400">Churn Risk</span>
             </div>
-            <div className="text-4xl font-black text-white relative z-10">{telemetry?.churn_risk_count || 0}</div>
+            <div className="text-4xl font-bold text-white relative z-10">{telemetry?.churn_risk_count || 0}</div>
           </div>
         </div>
 
@@ -112,11 +112,11 @@ export default function SuperAdmin() {
            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
            <div className="flex items-center justify-between mb-8">
               <div>
-                 <h2 className="text-2xl font-black text-white tracking-widest uppercase flex items-center gap-3">
+                 <h2 className="text-2xl font-bold text-white tracking-[0.08em] uppercase flex items-center gap-3">
                     <Rocket className="w-6 h-6 text-slate-300" />
                     J. Worden University
                  </h2>
-                 <p className="text-slate-400 font-mono text-sm mt-1 uppercase tracking-widest">Starbase Campus • Training & Certification</p>
+                 <p className="text-slate-400 font-mono text-sm mt-1 uppercase tracking-[0.08em]">Starbase Campus • Training & Certification</p>
               </div>
               <div className="text-right">
                  <p className="text-slate-500 font-mono text-xs mb-1">UNIVERSITY INCOME (YTD)</p>
@@ -128,7 +128,7 @@ export default function SuperAdmin() {
               <div className="bg-[#111] border border-slate-800 rounded-lg p-5 hover:border-slate-600 transition-colors">
                  <div className="flex items-center gap-3 mb-3">
                     <Users className="w-4 h-4 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Active Recruits</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.08em]">Active Recruits</span>
                  </div>
                  <div className="text-2xl font-mono text-white">128</div>
                  <div className="text-xs text-emerald-500 mt-2">↑ 12 this week</div>
@@ -137,7 +137,7 @@ export default function SuperAdmin() {
               <div className="bg-[#111] border border-slate-800 rounded-lg p-5 hover:border-slate-600 transition-colors">
                  <div className="flex items-center gap-3 mb-3">
                     <GraduationCap className="w-4 h-4 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Course Completions</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.08em]">Course Completions</span>
                  </div>
                  <div className="text-2xl font-mono text-white">845</div>
                  <div className="text-xs text-slate-500 mt-2">Starship Class Subcontractors</div>
@@ -146,7 +146,7 @@ export default function SuperAdmin() {
               <div className="bg-[#111] border border-slate-800 rounded-lg p-5 hover:border-slate-600 transition-colors">
                  <div className="flex items-center gap-3 mb-3">
                     <FileCheck className="w-4 h-4 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Certifications Issued</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.08em]">Certifications Issued</span>
                  </div>
                  <div className="text-2xl font-mono text-white">342</div>
                  <div className="text-xs text-slate-500 mt-2">OSHA & Advanced Paving</div>

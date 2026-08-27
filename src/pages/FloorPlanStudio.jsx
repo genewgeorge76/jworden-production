@@ -317,7 +317,7 @@ function DesignPacketPanel({ rooms }) {
   return (
     <form onSubmit={handleSubmit} className="rounded bg-amber-400/10 border border-amber-400/30 p-3 space-y-3">
       <div>
-        <h3 className="text-xs font-black uppercase tracking-wider text-amber-300">Paid 4D Design Packet</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-amber-300">Paid 4D Design Packet</h3>
         <p className="mt-1 text-[11px] leading-relaxed text-zinc-400">
           Turn this room model into a reviewed kitchen, addition, remodel, or interior planning packet.
         </p>
@@ -354,7 +354,7 @@ function DesignPacketPanel({ rooms }) {
       <button
         type="submit"
         disabled={status === 'submitting' || status === 'checkout'}
-        className="w-full rounded bg-amber-400 hover:bg-amber-300 text-zinc-950 text-xs font-black uppercase tracking-[0.12em] py-2.5 transition-colors disabled:opacity-60"
+        className="w-full rounded bg-amber-400 hover:bg-amber-300 text-zinc-950 text-xs font-bold uppercase tracking-[0.06em] py-2.5 transition-colors disabled:opacity-60"
       >
         {status === 'submitting' ? 'Saving Design...' : status === 'checkout' ? 'Starting Checkout...' : 'Reserve Design Packet'}
       </button>
@@ -398,8 +398,8 @@ export default function FloorPlanStudio() {
       <header className="border-b border-zinc-800 bg-black/40 px-4 py-4 md:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-4xl">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-amber-400">JWORDENAI interior design source layer</p>
-            <h1 className="mt-2 font-display text-3xl font-black uppercase leading-none tracking-tight text-white md:text-5xl">
+            <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-amber-400">JWORDENAI interior design source layer</p>
+            <h1 className="mt-2 font-display text-3xl font-bold uppercase leading-none tracking-tight text-white md:text-5xl">
               4D Interior Design Studio
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400 md:text-base">
@@ -407,10 +407,10 @@ export default function FloorPlanStudio() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link to="/general-contracting" className="rounded-lg border border-zinc-700 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-zinc-300 hover:border-amber-400 hover:text-white">
+            <Link to="/general-contracting" className="rounded-lg border border-zinc-700 px-4 py-2 text-xs font-bold uppercase tracking-[0.06em] text-zinc-300 hover:border-amber-400 hover:text-white">
               GC Services
             </Link>
-            <Link to="/visualizer" className="rounded-lg border border-amber-400/50 bg-amber-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-amber-300 hover:bg-amber-400 hover:text-black">
+            <Link to="/visualizer" className="rounded-lg border border-amber-400/50 bg-amber-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.06em] text-amber-300 hover:bg-amber-400 hover:text-black">
               3D Build Visualizer
             </Link>
           </div>
@@ -426,7 +426,7 @@ export default function FloorPlanStudio() {
             ['4D Phasing', 'Design, permits, demo, rough-in, finishes, inspection, and handoff.'],
           ].map(([title, body]) => (
             <div key={title} className="rounded-xl border border-zinc-800 bg-black/30 p-4">
-              <p className="font-display text-lg font-black uppercase leading-tight text-white">{title}</p>
+              <p className="font-display text-lg font-bold uppercase leading-tight text-white">{title}</p>
               <p className="mt-2 text-xs leading-relaxed text-zinc-500">{body}</p>
             </div>
           ))}

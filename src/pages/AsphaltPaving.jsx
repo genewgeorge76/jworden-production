@@ -111,8 +111,8 @@ export default function AsphaltPaving() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-6 drop-shadow-md">Virginia Statewide Division</p>
-            <h1 className="font-display font-black text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.85] max-w-5xl mb-8">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-6 drop-shadow-md">Virginia Statewide Division</p>
+            <h1 className="font-display font-bold text-white text-5xl md:text-8xl uppercase tracking-tighter leading-[0.85] max-w-5xl mb-8">
               Asphalt Paving <span className="text-primary italic">Across</span><br />
               Virginia.
             </h1>
@@ -124,14 +124,14 @@ export default function AsphaltPaving() {
               <a 
                 href="tel:+18044461296" 
                 onClick={() => trackPhoneClick('paving_hero')}
-                className="premium-cta px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-primary-foreground"
+                className="premium-cta px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase text-primary-foreground"
               >
                 Start My Project
               </a>
-              <Link to="/contact" className="border-2 border-primary/40 text-white px-10 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-primary/20 transition-all">
+              <Link to="/contact" className="border-2 border-primary/40 text-white px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase hover:bg-primary/20 transition-all">
                 The Portfolio
               </Link>
-              <a href="#quote" className="border-2 border-white/35 bg-white/10 text-white px-10 py-5 font-display font-bold text-sm tracking-widest uppercase hover:bg-white/20 transition-all">
+              <a href="#quote" className="border-2 border-white/35 bg-white/10 text-white px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase hover:bg-white/20 transition-all">
                 Request Estimate
               </a>
             </div>
@@ -142,7 +142,7 @@ export default function AsphaltPaving() {
       {/* Trust signals — verified review platforms */}
       <section className="border-b border-border bg-white py-10">
         <div className="max-w-4xl mx-auto px-6">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground mb-6">
             Verified Reviews On
           </p>
           <LiveReviewBadges />
@@ -153,7 +153,7 @@ export default function AsphaltPaving() {
       <section className="py-24 bg-card">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="font-display font-black text-4xl md:text-6xl uppercase tracking-tight mb-4">Asphalt Paving Services Across Central Virginia</h2>
+            <h2 className="font-display font-bold text-4xl md:text-6xl uppercase tracking-tight mb-4">Asphalt Paving Services Across Central Virginia</h2>
             <div className="w-24 h-1 bg-primary mx-auto mb-6" />
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Driveways, commercial parking lots, overlays, and private roads — installed by a 4th-generation crew that grades, bases, and compacts every job to spec.
@@ -166,7 +166,7 @@ export default function AsphaltPaving() {
                 <div className="mb-6 p-4 rounded-xl bg-primary/10 inline-block group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                   {s.icon}
                 </div>
-                <h3 className="font-display font-black text-xl mb-4 uppercase tracking-wide">{s.title}</h3>
+                <h3 className="font-display font-bold text-xl mb-4 uppercase tracking-wide">{s.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{s.description}</p>
               </div>
             ))}
@@ -177,7 +177,7 @@ export default function AsphaltPaving() {
       {/* SEO content — Asphalt paving in Virginia */}
       <section className="py-24 bg-background">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 space-y-6 text-lg leading-relaxed text-muted-foreground">
-          <h2 className="font-display font-black text-3xl md:text-5xl uppercase tracking-tight text-foreground mb-4">
+          <h2 className="font-display font-bold text-3xl md:text-5xl uppercase tracking-tight text-foreground mb-4">
             Asphalt Paving Built for Virginia's Climate
           </h2>
           <p>
@@ -189,7 +189,7 @@ export default function AsphaltPaving() {
           <p>
             Not sure whether asphalt or concrete is right for your property? Read our honest comparison of <Link to="/blog/info/asphalt-vs-concrete-driveway-virginia" className="text-primary hover:underline">asphalt vs. concrete driveways in Virginia</Link>, or see real 2026 numbers in our <Link to="/blog/info/driveway-paving-cost-virginia" className="text-primary hover:underline">Virginia driveway paving cost guide</Link>.
           </p>
-          <h3 className="font-display font-black text-2xl uppercase tracking-tight text-foreground pt-6">
+          <h3 className="font-display font-bold text-2xl uppercase tracking-tight text-foreground pt-6">
             Where We Pave
           </h3>
           <p>
@@ -201,7 +201,7 @@ export default function AsphaltPaving() {
       {/* FAQ — asphalt paving */}
       <section className="py-24 bg-card border-t border-border">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <h2 className="font-display font-black text-3xl md:text-5xl uppercase tracking-tight text-center mb-14">
+          <h2 className="font-display font-bold text-3xl md:text-5xl uppercase tracking-tight text-center mb-14">
             Virginia Asphalt Paving FAQs
           </h2>
           <div className="space-y-8">
@@ -218,11 +218,11 @@ export default function AsphaltPaving() {
       {/* Call to Action Bar */}
       <section className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-          <h2 className="font-display font-black text-2xl md:text-4xl text-primary-foreground uppercase tracking-tight">Get a Written Asphalt Paving Estimate</h2>
+          <h2 className="font-display font-bold text-2xl md:text-4xl text-primary-foreground uppercase tracking-tight">Get a Written Asphalt Paving Estimate</h2>
           <a 
             href="tel:+18044461296" 
             onClick={() => trackPhoneClick('paving_bottom')}
-            className="bg-black text-white px-12 py-5 font-display font-bold text-sm tracking-widest uppercase hover:opacity-90 transition-all shadow-2xl"
+            className="bg-black text-white px-12 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase hover:opacity-90 transition-all shadow-2xl"
           >
             804.446.1296
           </a>

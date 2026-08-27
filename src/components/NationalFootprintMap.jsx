@@ -34,10 +34,10 @@ export default function NationalFootprintMap() {
           transition={{ duration: 0.8 }}
           className="mb-16"
         >
-          <p className="font-display text-primary text-sm tracking-[0.4em] uppercase mb-4">
+          <p className="font-display text-primary text-sm tracking-[0.1em] uppercase mb-4">
             // LOGISTICS FOOTPRINT
           </p>
-          <h2 className="font-display font-black text-foreground text-5xl md:text-7xl uppercase tracking-tight leading-[0.9] max-w-4xl">
+          <h2 className="font-display font-bold text-foreground text-5xl md:text-7xl uppercase tracking-tight leading-[0.9] max-w-4xl">
             REGIONAL AUTHORITY.<br />
             <span className="text-primary">NATIONAL CAPABILITIES.</span>
           </h2>
@@ -82,11 +82,11 @@ export default function NationalFootprintMap() {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-primary rounded-full shadow-[0_0_8px_#C5A059]"></div>
-                <span className="text-zinc-400 text-xs uppercase tracking-widest font-display">Active Industrial Project</span>
+                <span className="text-zinc-400 text-xs uppercase tracking-[0.08em] font-display">Active Industrial Project</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-px bg-zinc-700"></div>
-                <span className="text-zinc-500 text-[10px] uppercase tracking-widest font-display">National Logistics Route</span>
+                <span className="text-zinc-500 text-[10px] uppercase tracking-[0.08em] font-display">National Logistics Route</span>
               </div>
             </div>
           </div>

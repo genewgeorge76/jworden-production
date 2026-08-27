@@ -60,7 +60,7 @@ export default function PublicResearchFeed({ limit = 4 }) {
           <div>
             <div className="inline-flex items-center gap-3 border border-primary/35 bg-primary/10 px-4 py-2 text-primary">
               <BrainCircuit className="h-4 w-4" />
-              <span className="font-display text-sm uppercase tracking-[0.22em]">Live research engine</span>
+              <span className="font-display text-sm uppercase tracking-[0.08em]">Live research engine</span>
             </div>
             <h2 className="mt-5 font-display text-5xl uppercase leading-none text-foreground md:text-7xl">
               The site can ingest new AI research and update itself automatically.
@@ -119,13 +119,13 @@ export default function PublicResearchFeed({ limit = 4 }) {
                     {signal.priority} · {getPrimaryDomain(signal)}
                   </p>
                   <h3 className="mt-3 font-display text-3xl uppercase leading-none text-foreground">{signal.title}</h3>
-                  <p className="mt-4 text-sm uppercase tracking-[0.16em] text-muted-foreground">
+                  <p className="mt-4 text-sm uppercase tracking-[0.06em] text-muted-foreground">
                     {signal.source_name} · {formatTimestamp(signal.published_at)}
                   </p>
                   {Array.isArray(signal.capability_tags) && signal.capability_tags.length > 0 && (
                     <div className="mt-5 flex flex-wrap gap-2">
                       {signal.capability_tags.slice(0, 4).map((tag) => (
-                        <span key={tag} className="border border-border bg-background px-3 py-2 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                        <span key={tag} className="border border-border bg-background px-3 py-2 text-[11px] uppercase tracking-[0.06em] text-muted-foreground">
                           {tag.replace(/-/g, ' ')}
                         </span>
                       ))}
@@ -136,7 +136,7 @@ export default function PublicResearchFeed({ limit = 4 }) {
                       href={signal.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-6 inline-flex items-center gap-2 font-display text-sm uppercase tracking-[0.14em] text-primary"
+                      className="mt-6 inline-flex items-center gap-2 font-display text-sm uppercase tracking-[0.06em] text-primary"
                     >
                       Read source
                       <ArrowUpRight className="h-4 w-4" />

@@ -30,18 +30,18 @@ export default function SignsDrivewayNeedsRepavingBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Homeowner Guide</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 5 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             7 Signs Your Driveway Needs Repaving in Virginia
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -95,17 +95,17 @@ export default function SignsDrivewayNeedsRepavingBlog() {
             ].map(({ number, title, body }) => (
               <div key={number} className="flex gap-6 border-b border-border pb-8">
                 <div className="shrink-0">
-                  <span className="font-display font-black text-primary text-3xl leading-none">{number}</span>
+                  <span className="font-display font-bold text-primary text-3xl leading-none">{number}</span>
                 </div>
                 <div>
-                  <h2 className="font-display font-black text-foreground text-xl uppercase tracking-wide mb-3">{title}</h2>
+                  <h2 className="font-display font-bold text-foreground text-xl uppercase tracking-wide mb-3">{title}</h2>
                   <p className="text-sm leading-relaxed">{body}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What to Do If You See These Signs
           </h2>
           <p>
@@ -118,7 +118,7 @@ export default function SignsDrivewayNeedsRepavingBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Free Driveway Assessment — Richmond & Central Virginia</h4>
             <p className="mb-6 text-sm">We'll walk your driveway, assess the base condition, and give you an honest recommendation in writing — repair, overlay, or replace — with pricing for each option.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Get a Free Assessment <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

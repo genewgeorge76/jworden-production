@@ -112,7 +112,7 @@ export default function Home() {
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 pb-20 pt-40">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 border border-[#ff7a00]/40 text-[#ff7a00] text-xs font-display uppercase tracking-[0.2em] px-4 py-2 mb-8">
+            <div className="inline-flex items-center gap-2 border border-[#ff7a00]/40 text-[#ff7a00] text-xs font-display uppercase tracking-[0.08em] px-4 py-2 mb-8">
               <Shield className="w-3.5 h-3.5" />
               USDOT 2568168 · Family-Owned Since 1984
             </div>
@@ -128,14 +128,14 @@ export default function Home() {
               <a
                 href={`tel:${PHONE_E164}`}
                 onClick={() => trackPhoneClick('homepage_hero')}
-                className="inline-flex items-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.12em] px-8 py-4 hover:bg-[#ff9a30] transition-colors"
+                className="inline-flex items-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:bg-[#ff9a30] transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call {PHONE_DISPLAY}
               </a>
               <a
                 href="/quote"
-                className="inline-flex items-center gap-3 border border-white/30 text-white font-display font-bold text-sm uppercase tracking-[0.12em] px-8 py-4 hover:border-white/60 hover:bg-white/5 transition-colors"
+                className="inline-flex items-center gap-3 border border-white/30 text-white font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:border-white/60 hover:bg-white/5 transition-colors"
               >
                 Free Estimate
                 <ArrowRight className="w-4 h-4" />
@@ -152,7 +152,7 @@ export default function Home() {
             {STATS.map((s) => (
               <div key={s.label} className="py-8 px-6 border-r border-black/10 last:border-r-0 text-center">
                 <p className="font-display text-black text-4xl md:text-5xl font-bold">{s.value}</p>
-                <p className="text-black/70 text-sm font-display uppercase tracking-[0.14em] mt-1">{s.label}</p>
+                <p className="text-black/70 text-sm font-display uppercase tracking-[0.06em] mt-1">{s.label}</p>
               </div>
             ))}
           </div>
@@ -174,7 +174,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,122,0,0.05),transparent_50%)]" />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-14">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">What We Do</p>
+            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">What We Do</p>
             <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
               Paving Services Across Virginia
             </h2>
@@ -198,7 +198,7 @@ export default function Home() {
                 <p className="text-gray-400 group-hover:text-gray-300 text-sm leading-relaxed transition-colors flex-1">
                   {svc.desc}
                 </p>
-                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-display text-xs uppercase tracking-[0.16em] group-hover:gap-3 transition-all">
+                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-display text-xs uppercase tracking-[0.06em] group-hover:gap-3 transition-all">
                   Learn More <ChevronRight className="w-3.5 h-3.5" />
                 </span>
               </a>
@@ -212,7 +212,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
-              <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Residential</p>
+              <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Residential</p>
               <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
                 Your Driveway<br />Done Right
               </h2>
@@ -228,10 +228,10 @@ export default function Home() {
                 ))}
               </div>
               <div className="flex flex-wrap gap-4">
-                <a href="/residential" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
+                <a href="/residential" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
                   Residential Paving <ArrowRight className="w-4 h-4" />
                 </a>
-                <a href="/blog/info/driveway-paving-cost-virginia" className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors">
+                <a href="/blog/info/driveway-paving-cost-virginia" className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors">
                   2026 Cost Guide
                 </a>
               </div>
@@ -267,7 +267,7 @@ export default function Home() {
               </div>
             </div>
             <div className="order-1 lg:order-2">
-              <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Commercial</p>
+              <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Commercial</p>
               <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
                 Commercial Lots<br />That Stay Open
               </h2>
@@ -282,7 +282,7 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <a href="/parking-lots" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
+              <a href="/parking-lots" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
                 Commercial Paving <ArrowRight className="w-4 h-4" />
               </a>
             </div>
@@ -296,7 +296,7 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Why J. Worden & Sons</p>
+              <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Why J. Worden & Sons</p>
               <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
                 Licensed.<br />Insured.<br />Family-Owned.
               </h2>
@@ -334,7 +334,7 @@ export default function Home() {
       <section className="py-20 md:py-28 border-t border-white/10 relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <div className="mb-14">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Customer Reviews</p>
+            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Customer Reviews</p>
             <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
               What Virginia Homeowners Say
             </h2>
@@ -365,7 +365,7 @@ export default function Home() {
       <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-12">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Our Work</p>
+            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Our Work</p>
             <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
               Recent Projects
             </h2>
@@ -381,7 +381,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,122,0,0.08),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-10">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Free Estimate</p>
+            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Free Estimate</p>
             <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight mb-4">
               Get a Written Quote
             </h2>
@@ -392,13 +392,13 @@ export default function Home() {
               <a
                 href={`tel:${PHONE_E164}`}
                 onClick={() => trackPhoneClick('homepage_quote')}
-                className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:bg-[#ff9a30] transition-colors"
+                className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:bg-[#ff9a30] transition-colors"
               >
                 <Phone className="w-4 h-4" /> {PHONE_DISPLAY}
               </a>
               <a
                 href={`sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`}
-                className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.12em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors"
+                className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors"
               >
                 <MessageSquare className="w-4 h-4" /> Text Us
               </a>
@@ -417,7 +417,7 @@ export default function Home() {
       {/* ── FAQ ──────────────────────────────────────────────────── */}
       <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <p className="text-[#ff7a00] font-display uppercase tracking-[0.22em] text-sm mb-3">Common Questions</p>
+          <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Common Questions</p>
           <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
           <div className="space-y-0 divide-y divide-white/10">
             {[
@@ -465,14 +465,14 @@ export default function Home() {
             <a
               href={`tel:${PHONE_E164}`}
               onClick={() => trackPhoneClick('homepage_bottom')}
-              className="inline-flex items-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.12em] px-10 py-4 hover:bg-[#ff9a30] transition-colors"
+              className="inline-flex items-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-10 py-4 hover:bg-[#ff9a30] transition-colors"
             >
               <Phone className="w-4 h-4" />
               Call {PHONE_DISPLAY}
             </a>
             <a
               href="/locations"
-              className="inline-flex items-center gap-3 border border-white/20 text-white font-display text-sm uppercase tracking-[0.12em] px-10 py-4 hover:border-white/50 hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-3 border border-white/20 text-white font-display text-sm uppercase tracking-[0.06em] px-10 py-4 hover:border-white/50 hover:bg-white/5 transition-colors"
             >
               View Service Areas
               <ArrowRight className="w-4 h-4" />

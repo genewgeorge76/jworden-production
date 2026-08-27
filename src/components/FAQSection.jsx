@@ -115,8 +115,8 @@ export default function FAQSection() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
           <div>
-            <p className="font-display text-primary text-sm tracking-[0.3em] uppercase mb-3">FAQ</p>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+            <p className="font-display text-primary text-sm tracking-[0.1em] uppercase mb-3">FAQ</p>
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
               Common Questions
             </h2>
           </div>

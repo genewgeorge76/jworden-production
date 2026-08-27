@@ -30,18 +30,18 @@ export default function SealcoatingCostVirginiaBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Pricing</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 5 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             How Much Does Sealcoating Cost in Virginia?
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function SealcoatingCostVirginiaBlog() {
             Sealcoating is the single most cost-effective maintenance decision for an asphalt surface. A $250–$600 driveway sealcoat applied on schedule blocks UV oxidation, water penetration, and chemical wear — the three things that turn a 25-year driveway into a 12-year one. Here's what it actually costs in Virginia in 2026, and how to tell whether you're getting a professional job or a spray-and-go operation.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Sealcoating Cost in Virginia (2026)
           </h2>
 
@@ -66,8 +66,8 @@ export default function SealcoatingCostVirginiaBlog() {
               { type: 'With Crack Sealing', range: '+$3 – $8 / linear ft', note: 'Cracks filled before sealing' },
             ].map((item) => (
               <div key={item.type} className="bg-card border border-border p-5 rounded-sm">
-                <p className="font-display font-black text-primary text-sm uppercase tracking-wide mb-1">{item.type}</p>
-                <p className="font-display font-black text-foreground text-xl mb-1">{item.range}</p>
+                <p className="font-display font-bold text-primary text-sm uppercase tracking-wide mb-1">{item.type}</p>
+                <p className="font-display font-bold text-foreground text-xl mb-1">{item.range}</p>
                 <p className="text-xs text-muted-foreground">{item.note}</p>
               </div>
             ))}
@@ -77,7 +77,7 @@ export default function SealcoatingCostVirginiaBlog() {
             Minimum job charges typically run $150–$250 for residential driveways regardless of size. Very small driveways (under 400 sq ft) often hit the minimum charge rather than paying per square foot.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What Affects the Price
           </h2>
 
@@ -99,7 +99,7 @@ export default function SealcoatingCostVirginiaBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             When To Sealcoat in Virginia
           </h2>
           <p>
@@ -109,7 +109,7 @@ export default function SealcoatingCostVirginiaBlog() {
             Virginia's sealcoating season runs roughly May through October. Application requires ambient temperatures above 50°F and a 24-hour window free of rain. Peak demand is May–June and September — scheduling in April or late October often gets faster availability and sometimes off-season pricing.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Signs Your Asphalt Needs Sealcoating Now
           </h2>
           <div className="space-y-3">
@@ -127,7 +127,7 @@ export default function SealcoatingCostVirginiaBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             How To Spot a Low-Quality Sealcoating Job
           </h2>
           <p>
@@ -147,7 +147,7 @@ export default function SealcoatingCostVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Schedule a Sealcoating Estimate</h4>
             <p className="mb-6 text-sm">We'll assess crack condition before we quote, tell you if filling is needed first, and give you a written price with the product name and coat count spelled out.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Get a Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

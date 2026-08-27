@@ -135,9 +135,9 @@ export default function PlansInbox() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
             <div className="flex items-center gap-2 mb-3">
               <Mail className="w-4 h-4 text-brand-amber" />
-              <span className="font-display text-xs uppercase tracking-[0.22em] text-brand-amber">Plans Inbox</span>
+              <span className="font-display text-xs uppercase tracking-[0.08em] text-brand-amber">Plans Inbox</span>
             </div>
-            <h1 className="font-display font-black text-3xl md:text-5xl leading-tight">
+            <h1 className="font-display font-bold text-3xl md:text-5xl leading-tight">
               Email or drop your plans. Get a priced estimate in minutes.
             </h1>
             <p className="text-white/70 max-w-2xl mt-4 text-base md:text-lg">
@@ -234,7 +234,7 @@ export default function PlansInbox() {
             <button
               type="submit"
               disabled={submitting || files.length === 0}
-              className="w-full bg-brand-amber text-brand-navy font-black py-4 rounded-xl uppercase tracking-widest hover:bg-brand-amber/90 disabled:opacity-60 flex items-center justify-center gap-2"
+              className="w-full bg-brand-amber text-brand-navy font-bold py-4 rounded-xl uppercase tracking-[0.08em] hover:bg-brand-amber/90 disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
               {submitting ? `Parsing ${files.length} file${files.length === 1 ? '' : 's'}…` : 'Generate priced estimate'}
@@ -267,30 +267,30 @@ export default function PlansInbox() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span className="text-xs font-bold uppercase tracking-widest text-emerald-700">Estimate ready</span>
+                      <span className="text-xs font-bold uppercase tracking-[0.08em] text-emerald-700">Estimate ready</span>
                     </div>
-                    <h2 className="font-display font-black text-3xl text-brand-navy">
+                    <h2 className="font-display font-bold text-3xl text-brand-navy">
                       {fmtMoney(estimate.low)} – {fmtMoney(estimate.high)}
                     </h2>
                     <p className="text-sm text-slate-500 mt-1">
                       Mid: {fmtMoney(estimate.mid)} • {estimate.estimated_total_sqft.toLocaleString()} sqft
                     </p>
                   </div>
-                  <button onClick={downloadEstimate} className="text-xs font-bold uppercase tracking-widest text-brand-navy bg-brand-amber/20 hover:bg-brand-amber/30 px-3 py-2 rounded-lg flex items-center gap-1">
+                  <button onClick={downloadEstimate} className="text-xs font-bold uppercase tracking-[0.08em] text-brand-navy bg-brand-amber/20 hover:bg-brand-amber/30 px-3 py-2 rounded-lg flex items-center gap-1">
                     <Download className="w-3 h-3" /> .txt
                   </button>
                 </div>
 
                 {estimate.scope_summary && (
                   <div className="rounded-xl bg-slate-50 border border-slate-200 p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Scope detected</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500 mb-1">Scope detected</p>
                     <p className="text-sm text-slate-700">{estimate.scope_summary}</p>
                   </div>
                 )}
 
                 {estimate.line_items?.length > 0 && (
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Line items</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500 mb-2">Line items</p>
                     <div className="border border-slate-200 rounded-xl overflow-hidden">
                       <table className="w-full text-xs">
                         <thead className="bg-slate-50">
@@ -314,7 +314,7 @@ export default function PlansInbox() {
                         <tfoot className="bg-slate-50">
                           <tr>
                             <td colSpan={3} className="px-3 py-2 text-right font-bold text-slate-700">Subtotal</td>
-                            <td className="px-3 py-2 text-right font-black text-brand-navy">{fmtMoney(estimate.subtotal)}</td>
+                            <td className="px-3 py-2 text-right font-bold text-brand-navy">{fmtMoney(estimate.subtotal)}</td>
                           </tr>
                         </tfoot>
                       </table>
@@ -324,7 +324,7 @@ export default function PlansInbox() {
 
                 {estimate.notes?.length > 0 && (
                   <div className="rounded-xl bg-amber-50 border border-amber-200 p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-amber-800 mb-1">Notes</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-amber-800 mb-1">Notes</p>
                     <ul className="text-xs text-amber-900 space-y-1 list-disc list-inside">
                       {estimate.notes.map((n, i) => <li key={i}>{n}</li>)}
                     </ul>
@@ -332,10 +332,10 @@ export default function PlansInbox() {
                 )}
 
                 <div className="flex gap-2 pt-2">
-                  <Link to="/quote" className="flex-1 text-center bg-brand-navy text-white font-bold py-3 rounded-xl text-sm uppercase tracking-widest hover:bg-brand-navy/90">
+                  <Link to="/quote" className="flex-1 text-center bg-brand-navy text-white font-bold py-3 rounded-xl text-sm uppercase tracking-[0.08em] hover:bg-brand-navy/90">
                     Request site walk
                   </Link>
-                  <button onClick={() => { setEstimate(null); setFiles([]); }} className="flex-1 text-center border border-slate-300 text-slate-700 font-bold py-3 rounded-xl text-sm uppercase tracking-widest hover:bg-slate-50">
+                  <button onClick={() => { setEstimate(null); setFiles([]); }} className="flex-1 text-center border border-slate-300 text-slate-700 font-bold py-3 rounded-xl text-sm uppercase tracking-[0.08em] hover:bg-slate-50">
                     New batch
                   </button>
                 </div>

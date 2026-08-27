@@ -105,11 +105,11 @@ export default function DiamondPortal() {
         <div className="p-5 flex items-center justify-between border-b border-slate-800/60">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400">
-              <span className="font-black text-lg tracking-tighter">◇</span>
+              <span className="font-bold text-lg tracking-tighter">◇</span>
             </div>
             <div>
-              <div className="font-black text-white text-sm tracking-widest leading-none uppercase">DIAMOND</div>
-              <div className="text-[10px] text-cyan-400 font-bold tracking-widest uppercase mt-0.5">SOLUTIONS</div>
+              <div className="font-bold text-white text-sm tracking-[0.08em] leading-none uppercase">DIAMOND</div>
+              <div className="text-[10px] text-cyan-400 font-bold tracking-[0.08em] uppercase mt-0.5">SOLUTIONS</div>
             </div>
           </div>
         </div>
@@ -224,7 +224,7 @@ export default function DiamondPortal() {
             {/* Job Banner Header */}
             <div className="bg-gradient-to-r from-cyan-500/10 via-teal-500/5 to-transparent p-4 rounded-2xl border border-cyan-200/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-xl md:text-2xl font-black text-slate-900 font-display uppercase tracking-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900 font-display uppercase tracking-tight">
                   {activeJobDetail.job_number || activeJobDetail.title}
                 </h1>
                 <div className="flex items-center gap-2">
@@ -322,7 +322,7 @@ export default function DiamondPortal() {
                           <div className="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-600 flex items-center justify-center mb-2 font-bold text-xs">
                             $
                           </div>
-                          <div className="text-xl font-black text-cyan-600 font-display">
+                          <div className="text-xl font-bold text-cyan-600 font-display">
                             ${(activeJobDetail.total_amount || 67400).toLocaleString()}
                           </div>
                           <div className="text-[11px] font-semibold text-slate-400 mt-0.5">Job Total</div>
@@ -332,7 +332,7 @@ export default function DiamondPortal() {
                           <div className="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center mb-2 font-bold text-xs">
                             ☉
                           </div>
-                          <div className="text-xl font-black text-slate-800 font-display">
+                          <div className="text-xl font-bold text-slate-800 font-display">
                             {activeJobDetail.state || 'OH'}
                           </div>
                           <div className="text-[11px] font-semibold text-slate-400 mt-0.5">State</div>
@@ -360,7 +360,7 @@ export default function DiamondPortal() {
                         <div className="bg-white rounded-lg p-6 max-h-[450px] overflow-y-auto font-serif text-slate-800 text-xs leading-relaxed border border-slate-200 shadow-md">
                           
                           <div className="flex justify-between items-center border-b pb-4 mb-4">
-                            <div className="font-sans font-black text-slate-900 text-base flex items-center gap-2">
+                            <div className="font-sans font-bold text-slate-900 text-base flex items-center gap-2">
                               <span className="text-cyan-500">◇</span> DIAMOND SOLUTIONS
                             </div>
                             <div className="text-[10px] font-mono text-slate-400">Page 2 of 7</div>
@@ -476,7 +476,7 @@ export default function DiamondPortal() {
             {/* Dashboard Header Bar */}
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <h1 className="text-xl md:text-2xl font-black text-slate-900 font-display uppercase tracking-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900 font-display uppercase tracking-tight">
                   DASHBOARD
                 </h1>
                 <button
@@ -557,13 +557,13 @@ export default function DiamondPortal() {
                     MY JOBS
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-black text-slate-900 font-display">{activeJobs.length || 7}</span>
+                    <span className="text-3xl font-bold text-slate-900 font-display">{activeJobs.length || 7}</span>
                     <span className="text-xs text-slate-500 font-semibold">Active</span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100">
-                  <div className="text-2xl font-black text-slate-900 font-display">
+                  <div className="text-2xl font-bold text-slate-900 font-display">
                     ${(totalActiveValue || 156200).toLocaleString('.2f')}
                   </div>
                   <div className="text-[11px] text-slate-400 font-semibold">Total Amount</div>
@@ -585,7 +585,7 @@ export default function DiamondPortal() {
                     </button>
                   </div>
 
-                  <div className="text-3xl font-black text-slate-900 font-display mb-3">
+                  <div className="text-3xl font-bold text-slate-900 font-display mb-3">
                     {availableJobs.length || 14}
                   </div>
 

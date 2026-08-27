@@ -136,10 +136,10 @@ export default function AdvisoryHub() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-4 py-1.5 rounded-full mb-6">
             Advisory Board · All 50 States
           </span>
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Legal &amp; Construction <span className="text-brand-amber">Reference Board</span>
           </h1>
           <p className="text-white/70 text-xl max-w-3xl mx-auto">
@@ -206,10 +206,10 @@ export default function AdvisoryHub() {
         <section className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-inner">
           <div className="flex flex-col lg:flex-row gap-12 items-start">
             <div className="lg:w-1/3">
-              <span className="inline-block bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-4">
+              <span className="inline-block bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-[0.08em] px-3 py-1 rounded-full mb-4">
                 Field Intelligence
               </span>
-              <h2 className="font-display font-black text-3xl text-brand-navy mb-4 leading-tight">
+              <h2 className="font-display font-bold text-3xl text-brand-navy mb-4 leading-tight">
                 Paving Risk <br/> <span className="text-blue-600">Weather Engine</span>
               </h2>
               <p className="text-slate-600 leading-relaxed mb-6">
@@ -235,7 +235,7 @@ export default function AdvisoryHub() {
 
         {/* Bottom CTA */}
         <section className="bg-brand-navy rounded-2xl p-8 text-center text-white">
-          <h2 className="font-display font-black text-2xl mb-3">Need Project-Specific Guidance?</h2>
+          <h2 className="font-display font-bold text-2xl mb-3">Need Project-Specific Guidance?</h2>
           <p className="text-white/70 mb-6 max-w-xl mx-auto">
             This advisory board is a starting point. For project compliance, contact J. Worden &amp;
             Sons or consult a licensed attorney in your state.

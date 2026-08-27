@@ -76,12 +76,12 @@ export default function ServiceAreaMap() {
         {/* Header */}
         <div className="mb-10 md:mb-12">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-primary font-display font-black text-lg">//</span>
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+            <span className="text-primary font-display font-bold text-lg">//</span>
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
               Service Area Map
             </p>
           </div>
-          <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
+          <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95] max-w-4xl">
             Where We <span className="text-primary">Come To You</span>
           </h2>
           <p className="font-body text-muted-foreground text-base md:text-lg mt-5 max-w-2xl leading-relaxed">
@@ -200,7 +200,7 @@ export default function ServiceAreaMap() {
 
             {/* Legend overlay */}
             <div className="absolute bottom-4 left-4 z-[400] bg-background/95 backdrop-blur-sm border border-border p-3 md:p-4 space-y-2 max-w-[220px]">
-              <p className="font-display text-primary text-[10px] tracking-[0.2em] uppercase mb-2">
+              <p className="font-display text-primary text-[10px] tracking-[0.08em] uppercase mb-2">
                 Coverage Legend
               </p>
               <div className="flex items-center gap-2">
@@ -227,19 +227,19 @@ export default function ServiceAreaMap() {
             {/* Stats */}
             <div className="grid grid-cols-2 gap-3">
               <div className="border border-border bg-card p-4">
-                <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mb-2">
+                <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mb-2">
                   Coverage
                 </p>
-                <p className="font-display font-black text-primary text-3xl">
+                <p className="font-display font-bold text-primary text-3xl">
                   {PRIMARY_ZONES.length}
                 </p>
                 <p className="font-body text-muted-foreground text-xs mt-1">VA zones</p>
               </div>
               <div className="border border-border bg-card p-4">
-                <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mb-2">
+                <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mb-2">
                   Mobile Radius
                 </p>
-                <p className="font-display font-black text-primary text-3xl">60mi</p>
+                <p className="font-display font-bold text-primary text-3xl">60mi</p>
                 <p className="font-body text-muted-foreground text-xs mt-1">From HQ</p>
               </div>
             </div>
@@ -249,10 +249,10 @@ export default function ServiceAreaMap() {
               <div className="border border-primary/40 bg-primary/5 p-5 flex-1">
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div>
-                    <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-1">
+                    <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-1">
                       Selected Zone
                     </p>
-                    <p className="font-display font-black text-foreground text-xl uppercase tracking-tight">
+                    <p className="font-display font-bold text-foreground text-xl uppercase tracking-tight">
                       {activeZone.city}, {activeZone.stateAbbr}
                     </p>
                   </div>
@@ -284,7 +284,7 @@ export default function ServiceAreaMap() {
               </div>
             ) : (
               <div className="border border-border bg-card p-5 flex-1">
-                <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+                <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
                   Primary Zones
                 </p>
                 <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">

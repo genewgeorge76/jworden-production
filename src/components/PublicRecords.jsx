@@ -24,7 +24,7 @@ export default function PublicRecords({ brand, heading, intro }) {
           <BadgeCheck className="w-3.5 h-3.5" aria-hidden="true" />
           Government Records
         </div>
-        <h2 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tight leading-[0.95] text-white mb-4">
+        <h2 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-white mb-4">
           {heading || 'Credentials You Can Check Yourself'}
         </h2>
         <p className="text-slate-400 leading-relaxed max-w-2xl mb-10">
@@ -39,7 +39,7 @@ export default function PublicRecords({ brand, heading, intro }) {
               className="border border-slate-800 bg-slate-900/60 rounded-2xl p-6 md:p-7 hover:border-orange-500/50 transition-colors"
             >
               <div className="flex items-baseline justify-between gap-4 flex-wrap">
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-orange-400">
+                <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-orange-400">
                   {r.authorityShort}
                 </p>
                 <p className="font-mono text-[11px] text-slate-500 tabular-nums">{r.year}</p>
@@ -59,7 +59,7 @@ export default function PublicRecords({ brand, heading, intro }) {
               <p className="text-sm text-slate-400 leading-relaxed mt-3">{r.whyItMatters}</p>
 
               <div className="mt-5 pt-4 border-t border-slate-800">
-                <p className="font-display text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-1.5">
+                <p className="font-display text-[10px] uppercase tracking-[0.06em] text-slate-500 font-semibold mb-1.5">
                   Verify it
                 </p>
                 {r.verifyUrl ? (

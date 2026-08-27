@@ -379,7 +379,7 @@ export default function Services() {
       {/* Page header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Our <span className="text-brand-amber">Services</span>
           </h1>
           <p className="text-white/70 text-xl max-w-2xl mx-auto">
@@ -389,13 +389,13 @@ export default function Services() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a
               href="tel:+18044461296"
-              className="inline-flex min-h-[52px] items-center gap-2 rounded-md bg-brand-amber px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-brand-navy transition-colors hover:bg-brand-amber-dark"
+              className="inline-flex min-h-[52px] items-center gap-2 rounded-md bg-brand-amber px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.06em] text-brand-navy transition-colors hover:bg-brand-amber-dark"
             >
               Call (804) 446-1296
             </a>
             <a
               href="#quote"
-              className="inline-flex min-h-[52px] items-center gap-2 rounded-md border border-white/45 px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/10"
+              className="inline-flex min-h-[52px] items-center gap-2 rounded-md border border-white/45 px-6 py-3 font-display text-sm font-bold uppercase tracking-[0.06em] text-white transition-colors hover:bg-white/10"
             >
               Request Estimate
             </a>
@@ -420,10 +420,10 @@ export default function Services() {
             {/* Content */}
             <div>
               <div className="text-5xl mb-4">{svc.icon}</div>
-              <span className="text-xs font-bold uppercase tracking-widest text-brand-amber">
+              <span className="text-xs font-bold uppercase tracking-[0.08em] text-brand-amber">
                 {svc.tagline}
               </span>
-              <h2 className="font-display font-black text-3xl md:text-4xl text-brand-navy mt-2 mb-4">
+              <h2 className="font-display font-bold text-3xl md:text-4xl text-brand-navy mt-2 mb-4">
                 {svc.title}
               </h2>
               <p className="text-brand-navy/70 leading-relaxed mb-6">{svc.description}</p>
@@ -475,10 +475,10 @@ export default function Services() {
       <section className="py-20 bg-brand-navy text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-brand-amber text-xs font-bold uppercase tracking-widest">
+            <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
               Services organized by real paving problems
             </span>
-            <h2 className="font-display font-black text-3xl md:text-4xl mt-2 mb-4">
+            <h2 className="font-display font-bold text-3xl md:text-4xl mt-2 mb-4">
               The Questions Customers Ask Before They Call
             </h2>
             <p className="text-white/60 max-w-2xl mx-auto">
@@ -515,7 +515,7 @@ export default function Services() {
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <span className="text-brand-amber text-xs font-bold uppercase tracking-widest">
+            <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
               Why choose J Worden &amp; Sons
             </span>
             <h2 className="section-heading mt-2 mb-4">
@@ -539,7 +539,7 @@ export default function Services() {
               <div className="flex items-start gap-5">
                 <span className="text-4xl flex-shrink-0">🛡️</span>
                 <div>
-                  <h3 className="font-display font-black text-2xl text-brand-navy mb-3">
+                  <h3 className="font-display font-bold text-2xl text-brand-navy mb-3">
                     Preservation-First Thinking
                   </h3>
                   <p className="text-brand-navy/70 leading-relaxed mb-4">
@@ -567,7 +567,7 @@ export default function Services() {
               <div className="flex items-start gap-5">
                 <span className="text-4xl flex-shrink-0">⚙️</span>
                 <div>
-                  <h3 className="font-display font-black text-2xl text-brand-navy mb-3">
+                  <h3 className="font-display font-bold text-2xl text-brand-navy mb-3">
                     Commercial-Grade Equipment on Every Job
                   </h3>
                   <p className="text-brand-navy/70 leading-relaxed mb-4">
@@ -594,7 +594,7 @@ export default function Services() {
               <div className="flex items-start gap-5">
                 <span className="text-4xl flex-shrink-0">📋</span>
                 <div>
-                  <h3 className="font-display font-black text-2xl text-brand-navy mb-3">
+                  <h3 className="font-display font-bold text-2xl text-brand-navy mb-3">
                     Transparent Pricing &amp; No Surprises
                   </h3>
                   <p className="text-brand-navy/70 leading-relaxed mb-4">
@@ -621,7 +621,7 @@ export default function Services() {
               <div className="flex items-start gap-5">
                 <span className="text-4xl flex-shrink-0">📍</span>
                 <div>
-                  <h3 className="font-display font-black text-2xl text-brand-navy mb-3">
+                  <h3 className="font-display font-bold text-2xl text-brand-navy mb-3">
                     Local Expertise + National Standards
                   </h3>
                   <p className="text-brand-navy/70 leading-relaxed mb-4">
@@ -672,7 +672,7 @@ export default function Services() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-brand-amber text-xs font-bold uppercase tracking-widest">
+            <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
               Project Inspiration
             </span>
             <h2 className="section-heading mt-2 mb-4">Browse Our Work by Style &amp; Category</h2>
@@ -688,7 +688,7 @@ export default function Services() {
       {/* CTA */}
       <section className="py-16 bg-brand-amber text-center">
         <div className="max-w-2xl mx-auto px-4">
-          <h2 className="font-display font-black text-brand-navy text-3xl mb-4">
+          <h2 className="font-display font-bold text-brand-navy text-3xl mb-4">
             Not sure which service you need?
           </h2>
           <p className="text-brand-navy/70 mb-6">

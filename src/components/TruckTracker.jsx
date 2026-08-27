@@ -262,7 +262,7 @@ export default function TruckTracker() {
           { label: 'Idle', count: idle, color: 'text-white/50' },
         ].map(({ label, count, color }) => (
           <div key={label} className="bg-white/5 rounded-xl p-3 text-center border border-white/10">
-            <div className={`font-black text-2xl font-display ${color}`}>{count}</div>
+            <div className={`font-bold text-2xl font-display ${color}`}>{count}</div>
             <div className="text-white/40 text-xs mt-0.5">{label}</div>
           </div>
         ))}

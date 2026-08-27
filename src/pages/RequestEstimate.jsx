@@ -15,10 +15,10 @@ export default function RequestEstimate() {
 
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="font-display text-primary text-xs tracking-[0.4em] uppercase mb-4">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-4">
             Free · No Obligation
           </p>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-4">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-4">
             Request a Free Paving Estimate
           </h1>
           <p className="text-muted-foreground text-lg mb-10">
@@ -31,15 +31,15 @@ export default function RequestEstimate() {
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div>
-              <p className="font-display font-black text-primary text-2xl uppercase">40+</p>
+              <p className="font-display font-bold text-primary text-2xl uppercase">40+</p>
               <p className="text-muted-foreground text-sm mt-1">Years in Business</p>
             </div>
             <div>
-              <p className="font-display font-black text-primary text-2xl uppercase">4.9★</p>
+              <p className="font-display font-bold text-primary text-2xl uppercase">4.9★</p>
               <p className="text-muted-foreground text-sm mt-1">Google Rating</p>
             </div>
             <div>
-              <p className="font-display font-black text-primary text-2xl uppercase">100%</p>
+              <p className="font-display font-bold text-primary text-2xl uppercase">100%</p>
               <p className="text-muted-foreground text-sm mt-1">Licensed & Insured</p>
             </div>
           </div>

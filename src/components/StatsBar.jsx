@@ -22,10 +22,10 @@ export default function StatsBar() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               className="text-center md:border-r md:border-primary-foreground/20 last:border-r-0"
             >
-              <p className="font-display font-black text-primary-foreground text-5xl md:text-6xl lg:text-7xl leading-none">
+              <p className="font-display font-bold text-primary-foreground text-5xl md:text-6xl lg:text-7xl leading-none">
                 {stat.value}
               </p>
-              <p className="font-display text-primary-foreground/70 text-xs md:text-sm tracking-[0.2em] uppercase mt-3">
+              <p className="font-display text-primary-foreground/70 text-xs md:text-sm tracking-[0.08em] uppercase mt-3">
                 {stat.label}
               </p>
             </motion.div>

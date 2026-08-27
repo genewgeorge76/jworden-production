@@ -226,7 +226,7 @@ function PremiumStackPanel({ data }) {
             risk
           </p>
         </div>
-        <span className="font-black text-3xl font-display">{data.overall_score}</span>
+        <span className="font-bold text-3xl font-display">{data.overall_score}</span>
       </div>
       <div className="grid md:grid-cols-2 gap-3">
         {data.modules?.map((module) => (

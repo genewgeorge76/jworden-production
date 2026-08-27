@@ -106,7 +106,7 @@ export default function ClientPortal() {
               {/* Mock Property Graphic (Placeholder for WebGL) */}
               <div className="absolute inset-0 flex items-center justify-center flex-col z-10 transition-transform duration-[2000ms] group-hover:scale-105 ease-out">
                 <Box className="w-40 h-40 text-amber-400/80 drop-shadow-[0_0_40px_rgba(245,158,11,0.6)] animate-pulse" strokeWidth={0.5} />
-                <div className="mt-12 px-6 py-2.5 rounded-full border border-amber-500/20 bg-amber-500/10 backdrop-blur-md text-amber-300 text-xs tracking-[0.2em] font-medium flex items-center gap-3 shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                <div className="mt-12 px-6 py-2.5 rounded-full border border-amber-500/20 bg-amber-500/10 backdrop-blur-md text-amber-300 text-xs tracking-[0.08em] font-medium flex items-center gap-3 shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                   <RefreshCcw className="w-4 h-4 animate-spin opacity-70" />
                   RENDERING {lighting.toUpperCase()} ENGINE
                 </div>
@@ -250,7 +250,7 @@ export default function ClientPortal() {
               <div>
                 <div className="flex justify-between text-sm mb-3">
                   <span className="text-zinc-300 font-medium">Spatial Validation</span>
-                  <span className="text-blue-400 font-mono tracking-widest">{scanProgress}%</span>
+                  <span className="text-blue-400 font-mono tracking-[0.08em]">{scanProgress}%</span>
                 </div>
                 <div className="h-2 w-full bg-black/50 rounded-full overflow-hidden border border-white/5">
                   <div 

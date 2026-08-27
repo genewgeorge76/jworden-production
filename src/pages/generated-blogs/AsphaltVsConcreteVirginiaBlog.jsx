@@ -30,18 +30,18 @@ export default function AsphaltVsConcreteVirginiaBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Buyer's Guide</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 7 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Asphalt vs. Concrete Driveway in Virginia: Which Is Right for You?
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function AsphaltVsConcreteVirginiaBlog() {
             Both asphalt and concrete make durable driveways. The right choice depends on your budget, your soil conditions, how long you plan to stay in the house, and how much maintenance you're willing to do. We install both — so this comparison has no agenda other than helping you make the right call.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Cost Comparison (Virginia, 2026)
           </h2>
 
@@ -88,7 +88,7 @@ export default function AsphaltVsConcreteVirginiaBlog() {
             </table>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             How Virginia's Climate Affects Each Material
           </h2>
 
@@ -113,7 +113,7 @@ export default function AsphaltVsConcreteVirginiaBlog() {
             Virginia's clay soil expands when wet and shrinks when dry. This movement is the primary cause of base failure under driveways. Both asphalt and concrete require a properly compacted aggregate base — 4–6 inches minimum — to isolate the surface from soil movement. No surface material compensates for a bad base.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Asphalt: Pros and Cons for Virginia Homeowners
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,7 +153,7 @@ export default function AsphaltVsConcreteVirginiaBlog() {
             </div>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Concrete: Pros and Cons for Virginia Homeowners
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,7 +194,7 @@ export default function AsphaltVsConcreteVirginiaBlog() {
             </div>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Our Recommendation for Most Virginia Homeowners
           </h2>
           <p>
@@ -207,7 +207,7 @@ export default function AsphaltVsConcreteVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">We Install Both. We'll Tell You Which Makes Sense for Your Property.</h4>
             <p className="mb-6 text-sm">Site walk, measurements, soil assessment, and written quote — no pressure, no obligation.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Schedule a Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

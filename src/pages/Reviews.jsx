@@ -91,7 +91,7 @@ export default function Reviews() {
         <div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-3xl" />
         <div className="absolute -bottom-20 right-0 w-72 h-72 rounded-full bg-accent/15 blur-3xl" />
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Customer <span className="text-brand-amber">Reviews</span>
           </h1>
           <p className="text-white/70 text-xl mb-6">What our clients say after the job is done.</p>
@@ -108,14 +108,14 @@ export default function Reviews() {
       {/* Platform Badges */}
       <section className="py-12 bg-gray-50 border-b border-border/60">
         <div className="max-w-4xl mx-auto px-4">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground mb-6">
             Verified On These Platforms
           </p>
           <LiveReviewBadges />
 
           {/* Houzz Awards */}
           <div className="mt-8 pt-8 border-t border-border/50">
-            <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground mb-5">Houzz Awards &amp; Recognition</p>
+            <p className="text-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground mb-5">Houzz Awards &amp; Recognition</p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <a
                 href="https://www.houzz.com/professionals/stone-pavers-and-concrete/j-worden-and-sons-paving-l-l-c-pfvwus-pf~663227484"
@@ -123,7 +123,7 @@ export default function Reviews() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-[#111] border border-[#4dbc15]/50 hover:border-[#4dbc15] px-4 py-3 transition-colors group"
               >
-                <span className="w-7 h-7 bg-[#4dbc15] flex items-center justify-center rounded font-black text-white text-sm">h</span>
+                <span className="w-7 h-7 bg-[#4dbc15] flex items-center justify-center rounded font-bold text-white text-sm">h</span>
                 <div>
                   <p className="font-bold text-white text-xs tracking-wider uppercase leading-tight group-hover:text-[#4dbc15] transition-colors">Houzz Pro Certified</p>
                   <p className="text-white/50 text-[10px]">Recommended · 500+ Saves</p>
@@ -137,7 +137,7 @@ export default function Reviews() {
                   rel="noopener noreferrer"
                   className="flex flex-col items-center bg-[#111] border border-[#4dbc15]/40 hover:border-[#4dbc15] px-3 py-2 transition-colors"
                 >
-                  <span className="text-[#4dbc15] font-black text-[9px] tracking-widest uppercase">Best of Houzz</span>
+                  <span className="text-[#4dbc15] font-bold text-[9px] tracking-[0.08em] uppercase">Best of Houzz</span>
                   <span className="text-white font-bold text-base leading-tight">{year}</span>
                 </a>
               ))}
@@ -156,7 +156,7 @@ export default function Reviews() {
           ) : (
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
               <div>
-                <div className="font-display font-black text-7xl text-foreground">
+                <div className="font-display font-bold text-7xl text-foreground">
                   {aggregate_rating}
                 </div>
                 <div className="flex gap-1 justify-center mt-1">
@@ -215,7 +215,7 @@ export default function Reviews() {
       <section className="py-16 bg-gray-50 border-t border-border/60">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="font-display font-black text-3xl text-foreground">Find Us on Google Maps</h2>
+            <h2 className="font-display font-bold text-3xl text-foreground">Find Us on Google Maps</h2>
             <p className="text-muted-foreground mt-2">See our live rating and read all reviews directly on Google</p>
           </div>
           <div className="rounded-2xl overflow-hidden shadow-xl border border-border">
@@ -250,7 +250,7 @@ export default function Reviews() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow hover:shadow-md transition text-sm font-semibold text-gray-800"
             >
-              <span className="text-[#4dbc15] font-black text-base">h</span>
+              <span className="text-[#4dbc15] font-bold text-base">h</span>
               View on Houzz
             </a>
             <a
@@ -259,7 +259,7 @@ export default function Reviews() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow hover:shadow-md transition text-sm font-semibold text-gray-800"
             >
-              <span className="text-[#FF6153] font-black text-sm">Angi</span>
+              <span className="text-[#FF6153] font-bold text-sm">Angi</span>
               View on Angi
             </a>
           </div>
@@ -269,7 +269,7 @@ export default function Reviews() {
       {/* Leave a review CTA */}
       <section className="py-16 bg-brand-navy text-white text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="font-display font-black text-3xl mb-4">Had a great experience?</h2>
+          <h2 className="font-display font-bold text-3xl mb-4">Had a great experience?</h2>
           <p className="text-white/60 mb-8">
             Your review helps other Virginia homeowners and businesses find quality asphalt contractors. Takes 60 seconds.
           </p>
@@ -296,7 +296,7 @@ export default function Reviews() {
               className="inline-flex items-center gap-2 bg-[#4dbc15] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#3da010] transition"
               onClick={() => trackEvent('review_cta_click', { platform: 'houzz', location: 'reviews_page' })}
             >
-              <span className="font-black text-lg leading-none">h</span>
+              <span className="font-bold text-lg leading-none">h</span>
               Review on Houzz
             </a>
             <a
@@ -306,7 +306,7 @@ export default function Reviews() {
               className="inline-flex items-center gap-2 bg-[#FF6153] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#e54f43] transition"
               onClick={() => trackEvent('review_cta_click', { platform: 'angi', location: 'reviews_page' })}
             >
-              <span className="font-black text-sm leading-none">Angi</span>
+              <span className="font-bold text-sm leading-none">Angi</span>
               Review on Angi
             </a>
           </div>

@@ -74,8 +74,8 @@ function Tile({ label, value, sub, tone = 'slate' }) {
   }
   return (
     <div className={`rounded-lg border p-4 ${tones[tone] || tones.slate}`}>
-      <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">{label}</div>
-      <div className="mt-1 text-2xl font-black text-slate-100 tabular-nums">{value}</div>
+      <div className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">{label}</div>
+      <div className="mt-1 text-2xl font-bold text-slate-100 tabular-nums">{value}</div>
       {sub ? <div className="mt-1 text-[11px] text-slate-500 leading-snug">{sub}</div> : null}
     </div>
   )
@@ -173,7 +173,7 @@ function ReviewPanel({ cluster, onDone }) {
 
       {cluster.sample_paths?.length ? (
         <div className="mt-4">
-          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
             <Images className="h-3 w-3" />
             Files at this place
           </div>
@@ -189,7 +189,7 @@ function ReviewPanel({ cluster, onDone }) {
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <label className="block">
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
             What is this place
           </span>
           <input
@@ -201,7 +201,7 @@ function ReviewPanel({ cluster, onDone }) {
         </label>
 
         <label className="block">
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
             What backs it up
           </span>
           <select
@@ -217,7 +217,7 @@ function ReviewPanel({ cluster, onDone }) {
 
         {!residential ? (
           <label className="block sm:col-span-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+            <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
               Street address <span className="text-slate-600">— commercial only</span>
             </span>
             <input
@@ -236,7 +236,7 @@ function ReviewPanel({ cluster, onDone }) {
         )}
 
         <label className="block">
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">City</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">City</span>
           <input
             value={city}
             onChange={(e) => setCity(e.target.value)}
@@ -245,7 +245,7 @@ function ReviewPanel({ cluster, onDone }) {
         </label>
 
         <label className="block">
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">State</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">State</span>
           <input
             value={state}
             onChange={(e) => setState(e.target.value.toUpperCase().slice(0, 2))}
@@ -255,7 +255,7 @@ function ReviewPanel({ cluster, onDone }) {
         </label>
 
         <label className="block sm:col-span-2">
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
             Note — what makes you certain, or why you are rejecting it
           </span>
           <textarea
@@ -327,11 +327,11 @@ export default function PhotoReview() {
     <div className="min-h-screen bg-slate-950 px-5 py-8 text-slate-200 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <header>
-          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-sky-400">
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-sky-400">
             <Camera className="h-3.5 w-3.5" />
             Photo archive
           </div>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-50 sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
             Which of these were jobs
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
@@ -439,7 +439,7 @@ export default function PhotoReview() {
                       </div>
                     </div>
                     <div className="shrink-0 text-right">
-                      <div className="text-lg font-black tabular-nums text-slate-300">{c.photo_count}</div>
+                      <div className="text-lg font-bold tabular-nums text-slate-300">{c.photo_count}</div>
                       <div className="text-[10px] uppercase tracking-wider text-slate-600">
                         {c.photo_count === 1 ? 'photo' : 'photos'}
                       </div>

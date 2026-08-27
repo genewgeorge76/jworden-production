@@ -35,12 +35,12 @@ export default function MarketHero({ city, state, region, headline, intro }) {
         >
           <div className="flex items-center gap-2 mb-5">
             <MapPin className="w-4 h-4 text-primary" />
-            <p className="font-display text-primary text-sm tracking-[0.3em] uppercase">
+            <p className="font-display text-primary text-sm tracking-[0.1em] uppercase">
               {region} · J. Worden & Sons
             </p>
           </div>
 
-          <h1 className="font-display font-black text-foreground uppercase leading-[0.9] tracking-tight text-4xl md:text-6xl lg:text-7xl max-w-4xl">
+          <h1 className="font-display font-bold text-foreground uppercase leading-[0.9] tracking-tight text-4xl md:text-6xl lg:text-7xl max-w-4xl">
             {headline}
           </h1>
 

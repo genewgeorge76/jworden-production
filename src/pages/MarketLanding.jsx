@@ -163,14 +163,14 @@ export default function MarketLanding() {
           <div>
             <div className="flex items-center space-x-2">
               <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse"></span>
-              <p className="font-display text-[11px] uppercase tracking-[0.2em] text-orange-400 font-semibold">USDOT 2568168 &middot; Registered Asphalt Operations</p>
+              <p className="font-display text-[11px] uppercase tracking-[0.08em] text-orange-400 font-semibold">USDOT 2568168 &middot; Registered Asphalt Operations</p>
             </div>
-            <p className="font-display text-xl uppercase font-black text-white tracking-wide mt-0.5">{market.marketName}</p>
+            <p className="font-display text-xl uppercase font-bold text-white tracking-wide mt-0.5">{market.marketName}</p>
           </div>
           <a
             href={phoneHref}
             onClick={() => trackPhoneClick('market_landing_header')}
-            className="inline-flex items-center gap-2.5 px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-xl shadow-lg shadow-orange-500/20 transition-all transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2.5 px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.06em] text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-xl shadow-lg shadow-orange-500/20 transition-all transform hover:-translate-y-0.5"
           >
             <Phone className="w-4 h-4 text-white" />
             {phoneDisplay}
@@ -196,7 +196,7 @@ export default function MarketLanding() {
               </span>
             </div>
 
-            <h1 className="font-display text-4xl md:text-6xl font-black uppercase tracking-tight leading-[0.96] text-white max-w-5xl">
+            <h1 className="font-display text-4xl md:text-6xl font-bold uppercase tracking-tight leading-[0.96] text-white max-w-5xl">
               {market.heroHeadline}
             </h1>
             <p className="mt-6 text-base md:text-lg text-slate-300 max-w-3xl leading-relaxed">
@@ -205,7 +205,7 @@ export default function MarketLanding() {
 
             {/* LIVE AWARDS & TRUST BADGES */}
             <div className="mt-8 pt-4 border-t border-slate-800/60">
-              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-slate-400 mb-3">National Awards & Verified Industry Recognition:</p>
+              <p className="text-xs uppercase tracking-[0.08em] font-semibold text-slate-400 mb-3">National Awards & Verified Industry Recognition:</p>
               <LiveReviewBadges compact={true} />
             </div>
 
@@ -213,14 +213,14 @@ export default function MarketLanding() {
               <a
                 href={phoneHref}
                 onClick={() => trackPhoneClick('market_landing_hero')}
-                className="inline-flex items-center gap-2.5 px-7 py-4 text-sm font-display font-bold uppercase tracking-[0.14em] text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-xl shadow-xl shadow-orange-500/25 transition-all transform hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2.5 px-7 py-4 text-sm font-display font-bold uppercase tracking-[0.06em] text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-xl shadow-xl shadow-orange-500/25 transition-all transform hover:-translate-y-0.5"
               >
                 <Phone className="w-4 h-4" />
                 {market.ctaLabel}
               </a>
               <a
                 href="#proof"
-                className="inline-flex items-center gap-2.5 px-7 py-4 border border-orange-500/40 text-orange-400 hover:text-white hover:border-orange-500 text-sm font-display font-bold uppercase tracking-[0.14em] bg-orange-500/5 hover:bg-orange-500/20 rounded-xl transition-all"
+                className="inline-flex items-center gap-2.5 px-7 py-4 border border-orange-500/40 text-orange-400 hover:text-white hover:border-orange-500 text-sm font-display font-bold uppercase tracking-[0.06em] bg-orange-500/5 hover:bg-orange-500/20 rounded-xl transition-all"
               >
                 See Verified Field Photos
                 <ArrowRight className="w-4 h-4" />
@@ -229,15 +229,15 @@ export default function MarketLanding() {
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="border border-slate-800/80 bg-slate-900/60 backdrop-blur rounded-xl p-5 hover:border-orange-500/40 transition-colors">
-                <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-orange-400">Primary Region</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] font-semibold text-orange-400">Primary Region</p>
                 <p className="font-display text-2xl font-bold text-white uppercase mt-1">{market.primaryRegion}</p>
               </div>
               <div className="border border-slate-800/80 bg-slate-900/60 backdrop-blur rounded-xl p-5 hover:border-orange-500/40 transition-colors">
-                <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-orange-400">Core Metro</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] font-semibold text-orange-400">Core Metro</p>
                 <p className="font-display text-2xl font-bold text-white uppercase mt-1">{market.primaryMetro}</p>
               </div>
               <div className="border border-slate-800/80 bg-slate-900/60 backdrop-blur rounded-xl p-5 hover:border-orange-500/40 transition-colors">
-                <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-orange-400">Operating Standard</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] font-semibold text-orange-400">Operating Standard</p>
                 <p className="font-display text-2xl font-bold text-white uppercase mt-1">Photo Documented</p>
               </div>
             </div>
@@ -251,7 +251,7 @@ export default function MarketLanding() {
               <div className="border border-orange-500/30 bg-slate-900/80 backdrop-blur rounded-2xl p-7 md:p-9 space-y-4 hover:border-orange-500/60 transition-all shadow-xl shadow-orange-500/5">
                 <div className="flex items-center space-x-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-orange-500 animate-ping"></span>
-                  <h3 className="font-display text-orange-400 text-xs tracking-[0.22em] uppercase font-bold">Regional Climate & Engineering Formulations ({market.primaryRegion})</h3>
+                  <h3 className="font-display text-orange-400 text-xs tracking-[0.08em] uppercase font-bold">Regional Climate & Engineering Formulations ({market.primaryRegion})</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                   {market.localSpecs.map((spec) => (
@@ -268,7 +268,7 @@ export default function MarketLanding() {
               <div className="border border-slate-800 bg-slate-900/50 backdrop-blur rounded-2xl p-7 md:p-9 space-y-4 hover:border-orange-500/30 transition-all">
                 <div className="flex items-center space-x-2">
                   <ShieldCheck className="w-5 h-5 text-orange-400" />
-                  <h3 className="font-display text-orange-400 text-xs tracking-[0.22em] uppercase font-bold">Delivery Standards</h3>
+                  <h3 className="font-display text-orange-400 text-xs tracking-[0.08em] uppercase font-bold">Delivery Standards</h3>
                 </div>
                 <div className="space-y-3 pt-2">
                   {DELIVERY_STANDARDS.map((item) => (
@@ -283,7 +283,7 @@ export default function MarketLanding() {
               <div className="border border-slate-800 bg-slate-900/50 backdrop-blur rounded-2xl p-7 md:p-9 space-y-4 hover:border-orange-500/30 transition-all">
                 <div className="flex items-center space-x-2">
                   <Snowflake className="w-5 h-5 text-orange-400" />
-                  <h3 className="font-display text-orange-400 text-xs tracking-[0.22em] uppercase font-bold">Service Mix</h3>
+                  <h3 className="font-display text-orange-400 text-xs tracking-[0.08em] uppercase font-bold">Service Mix</h3>
                 </div>
                 <div className="space-y-3 pt-2">
                   {SERVICE_MIX.map((item) => (
@@ -309,7 +309,7 @@ export default function MarketLanding() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/30 text-xs font-semibold uppercase tracking-wider">
                 Instant Price Estimate
               </div>
-              <h2 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tight text-white leading-tight">
+              <h2 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight text-white leading-tight">
                 Request A Free On-Site Estimate For {market.primaryRegion}
               </h2>
               <p className="text-slate-300 text-base leading-relaxed">
@@ -345,7 +345,7 @@ export default function MarketLanding() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-semibold uppercase tracking-wider mb-4">
                 ⭐ 5-Star Verified Customer Feedback
               </div>
-              <h2 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tight text-white leading-tight">
+              <h2 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight text-white leading-tight">
                 What Real Clients Say About Our Quality & Execution
               </h2>
             </div>
@@ -382,7 +382,7 @@ export default function MarketLanding() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/30 text-xs font-semibold uppercase tracking-wider mb-4">
               {market.proofHeadline}
             </div>
-            <h2 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tight leading-[0.95] text-white mb-10">
+            <h2 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-white mb-10">
               Verified High-Resolution Field Photos & Scope Accuracy
             </h2>
 

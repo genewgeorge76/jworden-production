@@ -5,10 +5,10 @@ export default function MarketCTA({ city, state }) {
   return (
     <section className="border-t border-border py-16 md:py-20 bg-primary">
       <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-        <p className="font-display text-primary-foreground/70 text-xs tracking-[0.3em] uppercase mb-4">
+        <p className="font-display text-primary-foreground/70 text-xs tracking-[0.1em] uppercase mb-4">
           Ready to start your {city} project?
         </p>
-        <h2 className="font-display font-black text-primary-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[1.05] mb-8">
+        <h2 className="font-display font-bold text-primary-foreground text-3xl md:text-5xl uppercase tracking-tight leading-[1.05] mb-8">
           Get a Precision Quote for Your {city}, {state} Property
         </h2>
         <div className="flex flex-wrap justify-center gap-4">

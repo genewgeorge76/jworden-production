@@ -20,7 +20,7 @@ const formatBytes = (bytes) => {
 export default function DocumentList({ title, documents, emptyMessage }) {
   return (
     <div className="border border-border bg-card p-6">
-      <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-5">{title}</p>
+      <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-5">{title}</p>
 
       {documents.length === 0 ? (
         <p className="font-body text-muted-foreground text-sm italic py-4">{emptyMessage}</p>

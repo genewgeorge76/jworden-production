@@ -30,18 +30,18 @@ export default function DrivewaySurfacingVsReplacementBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Driveway Repair</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 6 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             Driveway Resurfacing vs Full Replacement
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function DrivewaySurfacingVsReplacementBlog() {
             The most common question homeowners ask after a hard Virginia winter: <em>"Should I resurface or replace my driveway?"</em> The right answer is almost entirely a base condition question — not a surface appearance question. Contractors who recommend replacement without checking the base, or who recommend resurfacing over a failed base, are both steering you wrong. Here's how to think through it yourself before you call anyone.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What Resurfacing (Mill and Overlay) Actually Is
           </h2>
           <p>
@@ -65,7 +65,7 @@ export default function DrivewaySurfacingVsReplacementBlog() {
             An overlay without milling (paving over the existing surface without removing it first) is a cheaper alternative that works on very low-deterioration surfaces but adds height at transitions and can hide existing problems. A mill and overlay is almost always the better practice.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Cost Comparison in Virginia (2026)
           </h2>
 
@@ -75,8 +75,8 @@ export default function DrivewaySurfacingVsReplacementBlog() {
               { option: 'Full Replacement', range: '$4.00 – $8.00 / sq ft', note: 'Tear out, haul, regrade base, new asphalt. Includes base repair if needed.' },
             ].map((item) => (
               <div key={item.option} className="bg-card border border-border p-5 rounded-sm">
-                <p className="font-display font-black text-primary text-sm uppercase tracking-wide mb-1">{item.option}</p>
-                <p className="font-display font-black text-foreground text-xl mb-1">{item.range}</p>
+                <p className="font-display font-bold text-primary text-sm uppercase tracking-wide mb-1">{item.option}</p>
+                <p className="font-display font-bold text-foreground text-xl mb-1">{item.range}</p>
                 <p className="text-xs text-muted-foreground">{item.note}</p>
               </div>
             ))}
@@ -86,7 +86,7 @@ export default function DrivewaySurfacingVsReplacementBlog() {
             For a typical 1,000 sq ft residential driveway, resurfacing saves $1,500–$3,500 compared to full replacement — when the base justifies it. Resurfacing a failed base is money spent twice: you'll be back to full replacement within three to five years anyway.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Choose Resurfacing When:
           </h2>
 
@@ -107,7 +107,7 @@ export default function DrivewaySurfacingVsReplacementBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Choose Full Replacement When:
           </h2>
 
@@ -128,7 +128,7 @@ export default function DrivewaySurfacingVsReplacementBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             The Virginia Clay Factor
           </h2>
           <p>
@@ -141,7 +141,7 @@ export default function DrivewaySurfacingVsReplacementBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Get an Honest Assessment Before You Decide</h4>
             <p className="mb-6 text-sm">We'll probe the base, walk the surface, and give you a written recommendation with cost for both options — no pressure toward the higher-cost choice if resurfacing is the right answer.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Request Free Assessment <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>

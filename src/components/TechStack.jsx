@@ -62,12 +62,12 @@ export default function TechStack() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-primary font-display font-black text-lg">//</span>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+              <span className="text-primary font-display font-bold text-lg">//</span>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 Built-In Technology
               </p>
             </div>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
               Powered By Our
               <br />
               <span className="text-primary">Own Platform</span>
@@ -90,13 +90,13 @@ export default function TechStack() {
               className="group border border-border bg-card p-7 hover:border-primary/40 transition-colors duration-500"
             >
               <div className="flex items-start justify-between mb-6">
-                <span className="font-display text-primary text-sm tracking-[0.3em]">{feature.label}</span>
+                <span className="font-display text-primary text-sm tracking-[0.1em]">{feature.label}</span>
                 <div className="w-12 h-12 border border-primary/30 bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-500">
                   <feature.icon className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors duration-500" />
                 </div>
               </div>
 
-              <h3 className="font-display font-black text-foreground text-2xl uppercase tracking-tight leading-tight mb-3">
+              <h3 className="font-display font-bold text-foreground text-2xl uppercase tracking-tight leading-tight mb-3">
                 {feature.title}
               </h3>
               <p className="font-body text-muted-foreground text-sm leading-relaxed mb-6">
@@ -107,7 +107,7 @@ export default function TechStack() {
                 {feature.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2.5 py-1 border border-border text-muted-foreground font-display text-[10px] tracking-[0.15em] uppercase"
+                    className="px-2.5 py-1 border border-border text-muted-foreground font-display text-[10px] tracking-[0.06em] uppercase"
                   >
                     {tag}
                   </span>

@@ -117,10 +117,10 @@ export default function Blog() {
         <div className="absolute -top-20 right-0 w-72 h-72 rounded-full bg-primary/16 blur-3xl" />
         <div className="absolute bottom-0 -left-16 w-56 h-56 rounded-full bg-accent/12 blur-3xl" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
             // Knowledge Base
           </p>
-          <h1 className="font-display font-black text-foreground text-5xl md:text-7xl uppercase tracking-tight">
+          <h1 className="font-display font-bold text-foreground text-5xl md:text-7xl uppercase tracking-tight">
             Paving Insights
           </h1>
           <p className="font-body text-muted-foreground text-lg mt-6 max-w-2xl leading-relaxed">
@@ -159,14 +159,14 @@ export default function Blog() {
                         className="w-full h-full object-cover quality-premium transition-transform duration-700 group-hover:scale-105"
                       />
                       {post.category && (
-                        <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground font-display font-bold text-[10px] tracking-[0.2em] uppercase">
+                        <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground font-display font-bold text-[10px] tracking-[0.08em] uppercase">
                           {post.category.replace('-', ' ')}
                         </span>
                       )}
                     </div>
                   )}
                   <div className="p-6 flex flex-col flex-1">
-                    <h2 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-tight mb-3 group-hover:text-primary transition-colors">
+                    <h2 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-tight mb-3 group-hover:text-primary transition-colors">
                       {post.title}
                     </h2>
                     <p className="font-body text-muted-foreground text-sm leading-relaxed mb-4 flex-1">
@@ -204,7 +204,7 @@ export default function Blog() {
 
       <section className="border-t border-border py-12 bg-muted/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
             // Popular Service Paths
           </p>
           <div className="flex flex-wrap gap-2 mb-8">
@@ -222,13 +222,13 @@ export default function Blog() {
             </Link>
           </div>
 
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-4">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-4">
             // Blog FAQ
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {BLOG_FAQS.map((item) => (
               <article key={item.q} className="border border-border bg-card p-5">
-                <h3 className="font-display font-black text-foreground text-base uppercase tracking-tight leading-tight">
+                <h3 className="font-display font-bold text-foreground text-base uppercase tracking-tight leading-tight">
                   {item.q}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">{item.a}</p>

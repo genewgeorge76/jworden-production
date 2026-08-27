@@ -158,7 +158,7 @@ export default function Contact() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Get in <span className="text-brand-amber">Touch</span>
           </h1>
           <p className="text-white/70 text-xl">We respond within one business day.</p>
@@ -192,7 +192,7 @@ export default function Contact() {
                     {icon}
                   </div>
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-widest text-brand-navy/40">
+                    <div className="text-xs font-bold uppercase tracking-[0.08em] text-brand-navy/40">
                       {label}
                     </div>
                     {href ? (

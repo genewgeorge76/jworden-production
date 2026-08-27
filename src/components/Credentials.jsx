@@ -29,12 +29,12 @@ export default function Credentials() {
     <section className="border-t border-border py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-primary font-display font-black text-lg">//</span>
-          <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+          <span className="text-primary font-display font-bold text-lg">//</span>
+          <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
             Credentials
           </p>
         </div>
-        <h2 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight max-w-2xl mb-12">
+        <h2 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight max-w-2xl mb-12">
           Licensed. Insured. Accountable.
         </h2>
 

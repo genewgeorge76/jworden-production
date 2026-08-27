@@ -30,18 +30,18 @@ export default function DrivewayCostVirginiaBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">Pricing</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 6 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             How Much Does Driveway Paving Cost in Virginia?
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function DrivewayCostVirginiaBlog() {
             The most common question we get before a site visit: <em>"What's this going to cost me?"</em> It's the right question to ask early. Here's an honest breakdown — not a sales pitch — of what asphalt driveway paving costs in Virginia in 2026, what moves the number up or down, and how to tell whether a bid is real or just the number a contractor thinks you want to hear.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Average Asphalt Driveway Cost in Virginia
           </h2>
           <p>
@@ -69,8 +69,8 @@ export default function DrivewayCostVirginiaBlog() {
               { size: 'Large (1,400–2,500 sq ft)', range: '$5,800 – $12,000+', note: 'Wide or long rural drive' },
             ].map((tier) => (
               <div key={tier.size} className="bg-card border border-border p-5 rounded-sm">
-                <p className="font-display font-black text-primary text-sm uppercase tracking-wide mb-1">{tier.size}</p>
-                <p className="font-display font-black text-foreground text-xl mb-1">{tier.range}</p>
+                <p className="font-display font-bold text-primary text-sm uppercase tracking-wide mb-1">{tier.size}</p>
+                <p className="font-display font-bold text-foreground text-xl mb-1">{tier.range}</p>
                 <p className="text-xs text-muted-foreground">{tier.note}</p>
               </div>
             ))}
@@ -80,7 +80,7 @@ export default function DrivewayCostVirginiaBlog() {
             These ranges assume a full installation: grading, 4–6 inch compacted stone base, 2–3 inch hot-mix asphalt, and rolling. They do not include tear-out of an existing surface, which adds $1–$3 per square foot depending on depth and disposal.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What Drives the Cost Up
           </h2>
 
@@ -103,7 +103,7 @@ export default function DrivewayCostVirginiaBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             What Keeps Cost Down Without Cutting Corners
           </h2>
           <div className="space-y-3">
@@ -120,7 +120,7 @@ export default function DrivewayCostVirginiaBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Red Flags in a Low Bid
           </h2>
           <p>
@@ -137,12 +137,12 @@ export default function DrivewayCostVirginiaBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">Get a Written Scope Before You Decide</h4>
             <p className="mb-6 text-sm">We'll walk the property, measure, assess the base, and give you a written breakdown — not just a number. No obligation.</p>
-            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <a href="#quote" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Get a Free Estimate <ArrowRight className="w-4 h-4 ml-2" />
             </a>
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Cost by Virginia Region
           </h2>
           <p>
@@ -152,7 +152,7 @@ export default function DrivewayCostVirginiaBlog() {
             J. Worden & Sons operates out of Chester, VA and covers Central Virginia without a travel surcharge — including Richmond, Chesterfield, Henrico, Hanover, Midlothian, Powhatan, Goochland, and surrounding counties.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Long-Term Cost: Sealcoating and Maintenance
           </h2>
           <p>

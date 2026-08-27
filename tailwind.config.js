@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ["var(--font-display)", "Bebas Neue", "sans-serif"],
-        editorial: ["var(--font-editorial)", "Playfair Display", "serif"],
-        body: ["var(--font-body)", "Plus Jakarta Sans", "sans-serif"]
+        display: ["var(--font-display)", "Montserrat", "sans-serif"],
+        editorial: ["var(--font-editorial)", "Montserrat", "sans-serif"],
+        body: ["var(--font-body)", "Montserrat", "sans-serif"]
       },
       borderRadius: {
         luxury: "0.75rem",

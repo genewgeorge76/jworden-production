@@ -52,10 +52,10 @@ export default function ServiceAreas() {
       {/* ── Hero ── */}
       <section className="bg-brand-navy py-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <span className="text-brand-amber text-xs font-bold uppercase tracking-widest">
+          <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
             Where We Work
           </span>
-          <h1 className="font-display font-black text-4xl md:text-6xl mt-3 mb-4">Service Areas</h1>
+          <h1 className="font-display font-bold text-4xl md:text-6xl mt-3 mb-4">Service Areas</h1>
           <p className="text-white/70 text-xl max-w-2xl mx-auto mb-8">
             Based in Chester, VA — we serve Richmond, Hampton Roads, the I-95 corridor, and beyond.
             Commercial and residential asphalt work across Virginia and into the Southeast.
@@ -89,7 +89,7 @@ export default function ServiceAreas() {
             { stat: 'Free', label: 'On-site estimates' },
           ].map(({ stat, label }) => (
             <div key={label}>
-              <div className="font-display font-black text-brand-amber text-3xl">{stat}</div>
+              <div className="font-display font-bold text-brand-amber text-3xl">{stat}</div>
               <div className="text-white/50 text-sm mt-1">{label}</div>
             </div>
           ))}
@@ -101,7 +101,7 @@ export default function ServiceAreas() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {Object.entries(byState).map(([stateName, areas]) => (
             <div key={stateName} className="mb-16">
-              <h2 className="font-display font-black text-2xl text-brand-navy mb-8 border-b-2 border-brand-amber pb-3">
+              <h2 className="font-display font-bold text-2xl text-brand-navy mb-8 border-b-2 border-brand-amber pb-3">
                 📍 {stateName}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -155,7 +155,7 @@ export default function ServiceAreas() {
       {/* ── Don't see your city? ── */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="font-display font-black text-2xl text-brand-navy mb-3">
+          <h2 className="font-display font-bold text-2xl text-brand-navy mb-3">
             Don&apos;t see your city?
           </h2>
           <p className="text-brand-navy/60 mb-6">
@@ -177,7 +177,7 @@ export default function ServiceAreas() {
       {/* ── Bottom CTA ── */}
       <section className="py-16 bg-brand-amber">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="font-display font-black text-brand-navy text-3xl mb-3">
+          <h2 className="font-display font-bold text-brand-navy text-3xl mb-3">
             Ready for a Free Estimate?
           </h2>
           <p className="text-brand-navy/70 mb-6">

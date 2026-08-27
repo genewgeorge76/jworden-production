@@ -156,7 +156,7 @@ export default function LocationPage() {
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
               <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start">
                 <div className="lg:col-span-8">
-                  <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight">
+                  <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight">
                     High-Intent Paving Solutions For {loc.city} Property Owners
                   </h2>
                   <p className="text-muted-foreground mt-4 leading-relaxed">
@@ -171,7 +171,7 @@ export default function LocationPage() {
                   </p>
                 </div>
                 <div className="lg:col-span-4 premium-panel rounded-xl p-5 md:p-6">
-                  <p className="font-display text-primary text-xs tracking-[0.22em] uppercase mb-3">Popular Services</p>
+                  <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-3">Popular Services</p>
                   <ul className="space-y-2 text-sm text-foreground">
                     <li>Asphalt Paving & Reconstruction</li>
                     <li>Mill & Overlay Resurfacing</li>
@@ -180,7 +180,7 @@ export default function LocationPage() {
                   </ul>
                   <a
                     href="/quote"
-                    className="premium-cta mt-5 inline-flex px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase text-primary-foreground"
+                    className="premium-cta mt-5 inline-flex px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase text-primary-foreground"
                   >
                     Request Local Estimate
                   </a>
@@ -193,10 +193,10 @@ export default function LocationPage() {
               <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="text-left w-full border-b border-border pb-4 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
-                    <p className="font-display font-bold text-primary text-xs uppercase tracking-[0.2em] mb-1">
+                    <p className="font-display font-bold text-primary text-xs uppercase tracking-[0.08em] mb-1">
                       Our Work
                     </p>
-                    <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight">
+                    <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight">
                       {loc.city} Projects
                     </h2>
                   </div>
@@ -221,10 +221,10 @@ export default function LocationPage() {
               <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="text-left w-full border-b border-border pb-4 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
-                    <p className="font-display font-bold text-primary text-xs uppercase tracking-[0.2em] mb-1">
+                    <p className="font-display font-bold text-primary text-xs uppercase tracking-[0.08em] mb-1">
                       On-Site Video
                     </p>
-                    <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight">
+                    <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight">
                       {loc.city} Project Footage
                     </h2>
                   </div>
@@ -255,10 +255,10 @@ export default function LocationPage() {
           <section className="border-t border-border py-12 md:py-14">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
               <div className="premium-panel rounded-2xl p-6 md:p-8">
-                <p className="font-display text-primary text-xs tracking-[0.28em] uppercase mb-3">
+                <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-3">
                   Richmond Commercial Resources
                 </p>
-                <h2 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight">
+                <h2 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight">
                   Explore Detailed Commercial Scope And Proof
                 </h2>
                 <p className="text-muted-foreground text-sm md:text-base mt-3 leading-relaxed max-w-3xl">
@@ -267,13 +267,13 @@ export default function LocationPage() {
                 <div className="flex flex-wrap gap-3 mt-6">
                   <Link
                     to="/commercial/richmond-va"
-                    className="premium-cta px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase text-primary-foreground"
+                    className="premium-cta px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase text-primary-foreground"
                   >
                     Richmond Commercial Page
                   </Link>
                   <Link
                     to="/#projects"
-                    className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.14em] uppercase hover:bg-primary/10 transition-colors"
+                    className="border border-primary/40 text-primary px-5 py-3 font-display font-bold text-xs tracking-[0.06em] uppercase hover:bg-primary/10 transition-colors"
                   >
                     Richmond Project Proof
                   </Link>

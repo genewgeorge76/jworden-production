@@ -30,18 +30,18 @@ export default function HoaAsphaltPavingGuideBlog() {
 
       <article className="pt-32 pb-16 md:pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <header className="mb-12 border-b border-border pb-10">
-          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center text-sm font-display uppercase tracking-[0.08em] text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Articles
           </Link>
-          <div className="flex items-center gap-4 text-xs font-display tracking-widest text-muted-foreground uppercase mb-6">
+          <div className="flex items-center gap-4 text-xs font-display tracking-[0.08em] text-muted-foreground uppercase mb-6">
             <span className="text-primary font-bold">HOA & Property Management</span>
             <span>•</span>
             <div className="flex items-center"><Calendar className="w-3 h-3 mr-1.5" /> May 2026</div>
             <span>•</span>
             <div className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> 8 min read</div>
           </div>
-          <h1 className="font-display font-black text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
+          <h1 className="font-display font-bold text-foreground text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] mb-6">
             HOA Asphalt Paving Guide: Roads, Parking Lots & Budgeting in Virginia
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -55,7 +55,7 @@ export default function HoaAsphaltPavingGuideBlog() {
             Asphalt infrastructure is typically the largest single maintenance liability in an HOA's reserve fund. Roadways, parking areas, and shared drives in Virginia communities can represent $50,000 to $500,000+ in replacement cost depending on community size. Boards that manage this asset proactively spend 30–40% less over a 20-year horizon than those who defer until failure forces emergency replacement.
           </p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             The HOA Pavement Lifecycle Framework
           </h2>
           <p>
@@ -71,7 +71,7 @@ export default function HoaAsphaltPavingGuideBlog() {
             ].map(({ phase, action, detail }) => (
               <div key={phase} className="flex gap-4 bg-card border border-border p-5 rounded-sm">
                 <div className="shrink-0 w-20 text-right">
-                  <span className="font-display font-black text-primary text-xs uppercase tracking-wide">{phase}</span>
+                  <span className="font-display font-bold text-primary text-xs uppercase tracking-wide">{phase}</span>
                 </div>
                 <div className="border-l border-border pl-4">
                   <p className="font-display font-bold text-foreground text-sm uppercase tracking-wide mb-1">{action}</p>
@@ -81,7 +81,7 @@ export default function HoaAsphaltPavingGuideBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Reserve Fund Budgeting for Asphalt
           </h2>
           <p>
@@ -116,7 +116,7 @@ export default function HoaAsphaltPavingGuideBlog() {
           </div>
           <p className="text-xs text-muted-foreground italic">Assumes 20-year replacement cycle. Annual contribution assumes 50% current funding level. These are estimates — a reserve study provides property-specific numbers.</p>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Annual Inspection Checklist for HOA Boards
           </h2>
           <p>Walk the community with this checklist each spring (after frost season) and fall (before winter):</p>
@@ -141,7 +141,7 @@ export default function HoaAsphaltPavingGuideBlog() {
             ))}
           </div>
 
-          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-black">
+          <h2 className="font-display text-2xl text-foreground uppercase tracking-wide mt-10 mb-4 font-bold">
             Evaluating Contractor Bids for HOA Work
           </h2>
           <p>
@@ -159,7 +159,7 @@ export default function HoaAsphaltPavingGuideBlog() {
           <div className="bg-card border border-border p-8 my-10 rounded-sm">
             <h4 className="font-display text-lg text-primary uppercase font-bold mb-2">HOA Pavement Assessment — Central Virginia</h4>
             <p className="mb-6 text-sm">We provide written pavement condition assessments for HOA boards including zone-by-zone condition ratings, recommended action timelines, and budget projections. No cost, no obligation.</p>
-            <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.14em] uppercase rounded hover:bg-primary/90 transition-all">
+            <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display font-bold text-xs tracking-[0.06em] uppercase rounded hover:bg-primary/90 transition-all">
               Request HOA Assessment <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
           </div>

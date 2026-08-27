@@ -35,19 +35,19 @@ export default function MillingsAndFines() {
 
       <section className="relative pt-32 pb-20 bg-black text-white">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="font-display text-primary text-xs tracking-widest uppercase mb-4">Precision Recycling Division</p>
-          <h1 className="font-display font-black text-5xl md:text-8xl uppercase tracking-tighter leading-[0.9] mb-8">
+          <p className="font-display text-primary text-xs tracking-[0.08em] uppercase mb-4">Precision Recycling Division</p>
+          <h1 className="font-display font-bold text-5xl md:text-8xl uppercase tracking-tighter leading-[0.9] mb-8">
             Asphalt Millings <br /> & Recycled Base in Virginia
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 max-w-3xl leading-relaxed mb-10">
             For private lanes, farm roads, or large commercial staging areas—get the durability of asphalt 
-            at a fraction of the cost. Including our exclusive <span className="text-primary font-black uppercase italic">Coated Millings</span> process.
+            at a fraction of the cost. Including our exclusive <span className="text-primary font-bold uppercase italic">Coated Millings</span> process.
           </p>
           <div className="flex gap-4">
             <a 
               href="tel:+18044461296" 
               onClick={() => trackPhoneClick('millings_hero')}
-              className="premium-cta px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-primary-foreground"
+              className="premium-cta px-10 py-5 font-display font-bold text-sm tracking-[0.08em] uppercase text-primary-foreground"
             >
               Request A Load
             </a>
@@ -59,7 +59,7 @@ export default function MillingsAndFines() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="font-display font-black text-4xl uppercase mb-8">Why Choose <span className="text-primary">Recycled Pavement?</span></h2>
+              <h2 className="font-display font-bold text-4xl uppercase mb-8">Why Choose <span className="text-primary">Recycled Pavement?</span></h2>
               <div className="space-y-6">
                 {[
                   'Cost Reduction: Up to 60% savings vs standard asphalt hot-mix.',
@@ -88,12 +88,12 @@ export default function MillingsAndFines() {
 
       <section className="py-24 bg-card border-y border-border">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="font-display font-black text-3xl md:text-5xl uppercase tracking-tight mb-16 text-center">Material Applications</h2>
+          <h2 className="font-display font-bold text-3xl md:text-5xl uppercase tracking-tight mb-16 text-center">Material Applications</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {MILLING_USE_CASES.map((item, idx) => (
               <div key={idx} className="p-8 rounded-2xl bg-background border border-border hover:border-primary transition-all">
                 <div className="text-primary mb-6">{item.icon}</div>
-                <h3 className="font-display font-black text-xl mb-4 uppercase tracking-wide">{item.title}</h3>
+                <h3 className="font-display font-bold text-xl mb-4 uppercase tracking-wide">{item.title}</h3>
                 <p className="text-muted-foreground text-base leading-relaxed">{item.description}</p>
               </div>
             ))}

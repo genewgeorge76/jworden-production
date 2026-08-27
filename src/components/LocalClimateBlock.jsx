@@ -43,7 +43,7 @@ export default function LocalClimateBlock({ slug, city }) {
   return (
     <section className="py-16 bg-slate-50 border-t border-brand-navy/10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <p className="font-display text-[11px] uppercase tracking-[0.16em] text-brand-navy/50 mb-3">
+        <p className="font-display text-[11px] uppercase tracking-[0.06em] text-brand-navy/50 mb-3">
           Measured, not estimated
         </p>
         <h2 className="font-display text-3xl md:text-4xl uppercase tracking-tight text-brand-navy leading-tight mb-8">
@@ -52,10 +52,10 @@ export default function LocalClimateBlock({ slug, city }) {
 
         <div className="grid gap-8 md:grid-cols-[auto_1fr] md:gap-12 items-start">
           <div className="shrink-0">
-            <p className="font-display text-6xl md:text-7xl font-black text-brand-navy tabular-nums leading-none">
+            <p className="font-display text-6xl md:text-7xl font-bold text-brand-navy tabular-nums leading-none">
               {c.freezeThawAvg}
             </p>
-            <p className="font-display text-xs uppercase tracking-[0.12em] text-brand-navy/60 mt-2 max-w-[14rem]">
+            <p className="font-display text-xs uppercase tracking-[0.06em] text-brand-navy/60 mt-2 max-w-[14rem]">
               freeze-thaw cycles a year
             </p>
             <p className="text-sm text-brand-navy/50 mt-1 tabular-nums">

@@ -70,7 +70,7 @@ function AddressStep({ onParcelFound, onSkip }) {
       className="max-w-xl mx-auto text-center py-10"
     >
       <div className="text-5xl mb-4">🗺️</div>
-      <h2 className="font-display font-black text-brand-navy text-2xl mb-2">
+      <h2 className="font-display font-bold text-brand-navy text-2xl mb-2">
         Start with Your Property
       </h2>
       <p className="text-brand-navy/60 mb-6 text-sm leading-relaxed">
@@ -169,7 +169,7 @@ function QuoteForm({ config, onSuccess, onCancel }) {
       className="bg-white rounded-2xl shadow-xl border border-brand-navy/10 p-6"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display font-black text-brand-navy text-lg">Request This Build</h3>
+        <h3 className="font-display font-bold text-brand-navy text-lg">Request This Build</h3>
         <button
           type="button"
           onClick={onCancel}
@@ -233,14 +233,14 @@ function SuccessPanel({ result, onStartCheckout, paymentStatus, paymentMsg }) {
       className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center"
     >
       <div className="text-4xl mb-3">✅</div>
-      <h3 className="font-display font-black text-brand-navy text-xl mb-2">Design Received!</h3>
+      <h3 className="font-display font-bold text-brand-navy text-xl mb-2">Design Received!</h3>
       <p className="text-brand-navy/60 text-sm mb-4 leading-relaxed">{result.message}</p>
       {result.price_low && (
         <div className="bg-white rounded-xl border border-green-200 p-4 mb-4">
           <div className="text-brand-navy/50 text-xs uppercase tracking-wide mb-1">
             Estimated Range
           </div>
-          <div className="font-display font-black text-brand-navy text-2xl">
+          <div className="font-display font-bold text-brand-navy text-2xl">
             {result.price_low} – {result.price_high}
           </div>
         </div>
@@ -254,14 +254,14 @@ function SuccessPanel({ result, onStartCheckout, paymentStatus, paymentMsg }) {
         <div className="text-brand-navy/50 text-xs uppercase tracking-wide mb-1">
           Next Premium Step
         </div>
-        <p className="font-display font-black text-brand-navy text-lg leading-tight">
+        <p className="font-display font-bold text-brand-navy text-lg leading-tight">
           Reserve a 4D design packet so the model, scope, range, and site questions move into estimator review.
         </p>
         <button
           type="button"
           onClick={onStartCheckout}
           disabled={!result.lead_id || paymentStatus === 'starting'}
-          className="mt-3 w-full bg-brand-amber text-brand-navy rounded-lg px-4 py-3 text-sm font-black uppercase tracking-[0.12em] hover:bg-brand-amber/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-3 w-full bg-brand-amber text-brand-navy rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-[0.06em] hover:bg-brand-amber/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {paymentStatus === 'starting' ? 'Starting secure checkout...' : 'Reserve 4D Design Packet'}
         </button>
@@ -405,10 +405,10 @@ export default function Visualizer() {
         </div>
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <span className="text-brand-amber text-sm font-semibold uppercase tracking-widest mb-3 block">
+            <span className="text-brand-amber text-sm font-semibold uppercase tracking-[0.08em] mb-3 block">
               Premium 4D Design Visualizer
             </span>
-            <h1 className="font-display font-black text-4xl sm:text-5xl mb-4 leading-tight">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl mb-4 leading-tight">
               Bring The Dream Into <span className="text-brand-amber">Future Reality</span>
             </h1>
             <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
@@ -417,10 +417,10 @@ export default function Visualizer() {
               reserve a paid design packet before crews ever break ground.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Link to="/floor-plan-studio" className="rounded-lg bg-brand-amber px-5 py-3 text-xs font-black uppercase tracking-[0.14em] text-brand-navy hover:bg-brand-amber/90">
+              <Link to="/floor-plan-studio" className="rounded-lg bg-brand-amber px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] text-brand-navy hover:bg-brand-amber/90">
                 Interior Floor Plan Studio
               </Link>
-              <Link to="/general-contracting" className="rounded-lg border border-white/25 px-5 py-3 text-xs font-black uppercase tracking-[0.14em] text-white hover:border-brand-amber/60">
+              <Link to="/general-contracting" className="rounded-lg border border-white/25 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] text-white hover:border-brand-amber/60">
                 GC Design Services
               </Link>
             </div>

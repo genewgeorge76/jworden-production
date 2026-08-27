@@ -214,14 +214,14 @@ function RankedResults({ results }) {
           <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl font-black text-brand-navy/30">#{r.rank}</span>
+                <span className="text-2xl font-bold text-brand-navy/30">#{r.rank}</span>
                 <span className="font-display font-bold text-brand-navy text-lg">{r.name}</span>
                 <RankBadge label={r.rankLabel} />
               </div>
               <p className="text-sm text-brand-navy/70">{r.recommendation}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-black text-brand-navy">
+              <div className="text-2xl font-bold text-brand-navy">
                 ${Number(r.bidAmount).toLocaleString()}
               </div>
               <div className="text-xs text-brand-navy/50">bid amount</div>
@@ -353,10 +353,10 @@ export default function ContractorRanker() {
       {/* Header */}
       <div className="bg-brand-navy pt-32 pb-20 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+          <span className="inline-block bg-brand-amber/20 text-brand-amber text-xs font-bold uppercase tracking-[0.08em] px-4 py-1.5 rounded-full mb-6">
             Contractor Intelligence · All 50 States
           </span>
-          <h1 className="font-display font-black text-5xl md:text-6xl mb-4">
+          <h1 className="font-display font-bold text-5xl md:text-6xl mb-4">
             Contractor <span className="text-brand-amber">Ranker</span>
           </h1>
           <p className="text-white/70 text-xl max-w-3xl mx-auto">
@@ -658,7 +658,7 @@ export default function ContractorRanker() {
 
         {/* Bottom CTA */}
         <section className="bg-brand-navy rounded-2xl p-8 text-center text-white">
-          <h2 className="font-display font-black text-2xl mb-3">Need Legal Strategy Guidance?</h2>
+          <h2 className="font-display font-bold text-2xl mb-3">Need Legal Strategy Guidance?</h2>
           <p className="text-white/70 mb-6 max-w-xl mx-auto">
             Get negotiation strength scores and dispute-specific strategy for any state.
           </p>

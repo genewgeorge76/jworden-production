@@ -121,7 +121,7 @@ export default function PavingCalculator({ formData, setFormData }) {
         <div className="space-y-6">
           {/* Dimensions */}
           <div>
-            <p className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase mb-3">
+            <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mb-3">
               Dimensions
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -161,7 +161,7 @@ export default function PavingCalculator({ formData, setFormData }) {
 
           {/* Material selection */}
           <div>
-            <p className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase mb-3">
+            <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mb-3">
               Material Grade
             </p>
             <div className="space-y-2">
@@ -181,10 +181,10 @@ export default function PavingCalculator({ formData, setFormData }) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-display font-black text-foreground text-lg md:text-xl tracking-tight leading-none">
+                        <span className="font-display font-bold text-foreground text-lg md:text-xl tracking-tight leading-none">
                           {mat.label}
                         </span>
-                        <span className={`px-2 py-0.5 border font-display text-[10px] tracking-[0.2em] uppercase ${mat.color}`}>
+                        <span className={`px-2 py-0.5 border font-display text-[10px] tracking-[0.08em] uppercase ${mat.color}`}>
                           {mat.subtitle}
                         </span>
                       </div>
@@ -193,9 +193,9 @@ export default function PavingCalculator({ formData, setFormData }) {
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="font-display font-black text-primary text-lg leading-none">${mat.price_per_ton}</p>
-                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mt-1">per ton</p>
-                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mt-0.5">{mat.depth_in}" depth</p>
+                      <p className="font-display font-bold text-primary text-lg leading-none">${mat.price_per_ton}</p>
+                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mt-1">per ton</p>
+                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mt-0.5">{mat.depth_in}" depth</p>
                     </div>
                   </div>
                 </button>
@@ -206,7 +206,7 @@ export default function PavingCalculator({ formData, setFormData }) {
 
         {/* Right: estimate output */}
         <div>
-          <p className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase mb-3">
+          <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mb-3">
             Estimate Summary
           </p>
 
@@ -220,10 +220,10 @@ export default function PavingCalculator({ formData, setFormData }) {
             >
               {/* Cost headline */}
               <div className="border-b border-border px-6 py-6 text-center">
-                <p className="font-display text-muted-foreground text-xs tracking-[0.2em] uppercase mb-1">
+                <p className="font-display text-muted-foreground text-xs tracking-[0.08em] uppercase mb-1">
                   Estimated Total
                 </p>
-                <p className="font-display font-black text-primary text-4xl md:text-5xl">
+                <p className="font-display font-bold text-primary text-4xl md:text-5xl">
                   {fmtUSD(estimate.totalLow)}
                 </p>
                 <p className="font-display text-muted-foreground text-sm mt-1">

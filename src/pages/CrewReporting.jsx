@@ -58,7 +58,7 @@ export default function CrewReporting() {
       {/* Header */}
       <div className="border-b border-border px-6 py-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+          <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">
             Crew Performance
           </h1>
           <p className="text-muted-foreground text-sm mt-2">
@@ -82,7 +82,7 @@ export default function CrewReporting() {
                 <Icon className="w-5 h-5 text-primary" />
                 <p className="font-display text-muted-foreground text-xs tracking-wider uppercase">{label}</p>
               </div>
-              <p className="font-display font-black text-foreground text-2xl">
+              <p className="font-display font-bold text-foreground text-2xl">
                 {typeof value === 'number' && value > 100000 ? (value / 1000).toFixed(1) + 'K' : value}
               </p>
             </div>

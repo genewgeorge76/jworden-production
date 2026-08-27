@@ -16,8 +16,8 @@ export default function TrustedBy() {
     <section className="border-t border-border py-16 bg-muted/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-8">
-          <span className="text-primary font-display font-black text-lg">//</span>
-          <p className="font-display text-muted-foreground text-xs tracking-[0.3em] uppercase">
+          <span className="text-primary font-display font-bold text-lg">//</span>
+          <p className="font-display text-muted-foreground text-xs tracking-[0.1em] uppercase">
             Trusted By Leading Organizations Across Virginia
           </p>
         </div>

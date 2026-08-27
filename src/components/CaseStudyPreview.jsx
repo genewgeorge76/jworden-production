@@ -20,12 +20,12 @@ export default function CaseStudyPreview() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-primary font-display font-black text-lg">//</span>
-              <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">
+              <span className="text-primary font-display font-bold text-lg">//</span>
+              <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">
                 Case Studies
               </p>
             </div>
-            <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95]">
+            <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight leading-[0.95]">
               Real Numbers.
               <br />
               <span className="text-primary">Real Wins.</span>
@@ -56,7 +56,7 @@ export default function CaseStudyPreview() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
                   {s.project_type && (
-                    <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground font-display font-bold text-[10px] tracking-[0.2em] uppercase">
+                    <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground font-display font-bold text-[10px] tracking-[0.08em] uppercase">
                       {s.project_type}
                     </span>
                   )}
@@ -66,11 +66,11 @@ export default function CaseStudyPreview() {
               <div className="p-6 flex flex-col flex-1">
                 <div className="flex items-center gap-2 mb-3">
                   <TrendingUp className="w-3.5 h-3.5 text-primary" />
-                  <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase">
+                  <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase">
                     Case Study
                   </p>
                 </div>
-                <h3 className="font-display font-black text-foreground text-xl uppercase tracking-tight leading-[1.05] mb-4">
+                <h3 className="font-display font-bold text-foreground text-xl uppercase tracking-tight leading-[1.05] mb-4">
                   {s.headline}
                 </h3>
 
@@ -78,7 +78,7 @@ export default function CaseStudyPreview() {
                   <div className="grid grid-cols-2 gap-3 mb-5 pb-5 border-b border-border">
                     {s.results.slice(0, 2).map((r, idx) => (
                       <div key={idx}>
-                        <p className="font-display font-black text-primary text-xl leading-none">
+                        <p className="font-display font-bold text-primary text-xl leading-none">
                           {r.value}
                         </p>
                         <p className="font-display text-muted-foreground text-[10px] tracking-wider uppercase mt-1">
@@ -96,7 +96,7 @@ export default function CaseStudyPreview() {
                 )}
 
                 <div className="flex items-center justify-between mt-5 pt-5 border-t border-border">
-                  <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase">
+                  <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase">
                     {s.client_name}
                   </p>
                   <ArrowUpRight className="w-4 h-4 text-primary group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />

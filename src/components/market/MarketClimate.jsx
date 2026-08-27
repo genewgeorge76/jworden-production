@@ -11,10 +11,10 @@ export default function MarketClimate({ climate, city }) {
             <div className="w-14 h-14 bg-primary/10 border border-primary/30 flex items-center justify-center mb-5">
               <Thermometer className="w-6 h-6 text-primary" />
             </div>
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase mb-3">
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase mb-3">
               Local Climate Engineering
             </p>
-            <h2 className="font-display font-black text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[1.05]">
+            <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl uppercase tracking-tight leading-[1.05]">
               Why {city} asphalt fails — and how we build to outlast it.
             </h2>
           </div>

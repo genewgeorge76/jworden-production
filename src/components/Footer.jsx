@@ -114,7 +114,7 @@ export default function Footer() {
                 sizes="160px"
               />
               <div>
-                <p className="font-display font-bold text-white text-sm tracking-widest uppercase leading-none">
+                <p className="font-display font-bold text-white text-sm tracking-[0.08em] uppercase leading-none">
                   {brandName}
                 </p>
                 <p className="text-[#ff7a00] text-xs tracking-wider uppercase mt-0.5">
@@ -130,7 +130,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6">
-            <h4 className="font-display font-bold text-white text-xs tracking-[0.2em] uppercase mb-6">Navigation</h4>
+            <h4 className="font-display font-bold text-white text-xs tracking-[0.08em] uppercase mb-6">Navigation</h4>
             <div className="space-y-3">
               {[
                 { label: 'Services', href: '#services' },
@@ -160,7 +160,7 @@ export default function Footer() {
               </a>
               <a
                 href="/crew-mode"
-                className="block font-body text-gray-600 text-[10px] uppercase font-black tracking-widest hover:text-[#ff7a00] transition-colors pt-4"
+                className="block font-body text-gray-600 text-[10px] uppercase font-bold tracking-[0.08em] hover:text-[#ff7a00] transition-colors pt-4"
               >
                 Crew Field Portal
               </a>
@@ -169,7 +169,7 @@ export default function Footer() {
 
           {/* Services */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6">
-            <h4 className="font-display font-bold text-white text-xs tracking-[0.2em] uppercase mb-6">Services</h4>
+            <h4 className="font-display font-bold text-white text-xs tracking-[0.08em] uppercase mb-6">Services</h4>
             <div className="space-y-3">
               {['Residential Paving', 'Commercial Paving', 'Industrial Paving', 'Sealcoating', 'Crack Repair', 'Line Striping'].map((s) => (
                 <p key={s} className="font-body text-gray-400 text-sm">{s}</p>
@@ -179,7 +179,7 @@ export default function Footer() {
 
           {/* Contact — now uses region-aware phone */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6">
-            <h4 className="font-display font-bold text-white text-xs tracking-[0.2em] uppercase mb-6">Contact</h4>
+            <h4 className="font-display font-bold text-white text-xs tracking-[0.08em] uppercase mb-6">Contact</h4>
             <div className="space-y-4">
               <a
                 href={phoneTel}
@@ -200,7 +200,7 @@ export default function Footer() {
               <div className="flex items-start gap-3 text-gray-400">
                 <MapPin className="w-4 h-4 text-[#ff7a00] mt-0.5" />
                 <span className="font-body text-sm">
-                  <span className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Home Office</span>
+                  <span className="block text-[10px] uppercase tracking-[0.08em] text-gray-500 mb-1">Home Office</span>
                   1601 Ware Bottom Spring Rd<br />
                   Suite 214<br />
                   Chester, VA 23836
@@ -212,7 +212,7 @@ export default function Footer() {
 
         {/* SEO Local Flair Block — now region-aware */}
         <div className="mt-16 pt-10 border-t border-white/10">
-          <h4 className="font-display font-bold text-white text-sm tracking-[0.2em] uppercase mb-6">{regionLabel} Service Areas</h4>
+          <h4 className="font-display font-bold text-white text-sm tracking-[0.08em] uppercase mb-6">{regionLabel} Service Areas</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-3">
             {seoLocations.map((loc) => (
               <a 

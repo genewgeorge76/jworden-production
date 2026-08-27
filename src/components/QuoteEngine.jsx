@@ -124,8 +124,8 @@ export default function QuoteEngine() {
     <section id="quote" className="border-t border-border py-16 md:py-24">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-12">
-          <p className="font-display text-primary text-sm tracking-[0.3em] uppercase mb-3">Free · No Obligation</p>
-          <h2 className="font-display font-black text-foreground text-4xl md:text-6xl uppercase tracking-tight">
+          <p className="font-display text-primary text-sm tracking-[0.1em] uppercase mb-3">Free · No Obligation</p>
+          <h2 className="font-display font-bold text-foreground text-4xl md:text-6xl uppercase tracking-tight">
             Your Estimate in 60 Seconds
           </h2>
           <p className="font-body text-muted-foreground text-lg mt-4 max-w-md mx-auto leading-relaxed">
@@ -197,10 +197,10 @@ export default function QuoteEngine() {
                         }`}
                       >
                         <span className="text-3xl block mb-3 transition-transform duration-300 group-hover:scale-110 origin-left">{type.icon}</span>
-                        <span className="font-display font-black text-foreground text-lg md:text-xl tracking-tight leading-none block">
+                        <span className="font-display font-bold text-foreground text-lg md:text-xl tracking-tight leading-none block">
                           {type.label}
                         </span>
-                        <span className="font-display text-muted-foreground text-[10px] md:text-xs tracking-[0.2em] uppercase mt-2 block leading-snug">
+                        <span className="font-display text-muted-foreground text-[10px] md:text-xs tracking-[0.08em] uppercase mt-2 block leading-snug">
                           {type.sub}
                         </span>
                         {formData.surfaceType === type.id && (
@@ -258,7 +258,7 @@ export default function QuoteEngine() {
                     >
                       <div className="text-center">
                         <p className="font-body text-muted-foreground text-sm">Total Area</p>
-                        <p className="font-display font-black text-primary text-3xl mt-0.5">
+                        <p className="font-display font-bold text-primary text-3xl mt-0.5">
                           {Math.round(parseFloat(formData.width) * parseFloat(formData.length)).toLocaleString()} sq ft
                         </p>
                       </div>

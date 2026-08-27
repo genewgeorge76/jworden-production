@@ -23,11 +23,11 @@ export default function LocationPhotoPanel({ location, onClose }) {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <MapPin className="w-4 h-4 text-primary" />
-                <p className="font-display text-primary text-xs tracking-[0.2em] uppercase">
+                <p className="font-display text-primary text-xs tracking-[0.08em] uppercase">
                   {location.client} · {location.jobType}
                 </p>
               </div>
-              <h3 className="font-display font-black text-foreground text-2xl md:text-3xl uppercase tracking-tight">
+              <h3 className="font-display font-bold text-foreground text-2xl md:text-3xl uppercase tracking-tight">
                 {location.city}, {location.state}
               </h3>
               <div className="flex flex-wrap gap-4 mt-3 text-xs text-muted-foreground font-display tracking-wider uppercase">

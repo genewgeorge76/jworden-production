@@ -29,10 +29,10 @@ export default function NetworkCoverage() {
     <section className="bg-brand-navy text-white py-20 px-4 border-t border-brand-amber/20">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-brand-amber text-sm font-semibold uppercase tracking-widest mb-3 block">
+          <span className="text-brand-amber text-sm font-semibold uppercase tracking-[0.08em] mb-3 block">
             The Worden Coverage Network
           </span>
-          <h2 className="font-display font-black text-3xl sm:text-4xl mb-4">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4">
             Dominating The Mid-Atlantic
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">

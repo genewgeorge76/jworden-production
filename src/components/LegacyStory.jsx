@@ -244,7 +244,7 @@ export default function LegacyStory() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="font-display font-black text-4xl sm:text-5xl text-brand-amber mb-4">
+          <h2 className="font-display font-bold text-4xl sm:text-5xl text-brand-amber mb-4">
             Three Generations of Real Work Proof
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
@@ -265,7 +265,7 @@ export default function LegacyStory() {
                 className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12"
               >
                 <div className="w-full lg:w-1/2 space-y-6">
-                  <div className="inline-flex items-center gap-2 bg-brand-amber/10 border border-brand-amber/30 text-brand-amber font-black text-sm px-3 py-1.5 rounded-full">
+                  <div className="inline-flex items-center gap-2 bg-brand-amber/10 border border-brand-amber/30 text-brand-amber font-bold text-sm px-3 py-1.5 rounded-full">
                     <Icon className="w-4 h-4 text-brand-amber" />
                     <span>Est. {item.year}</span>
                   </div>

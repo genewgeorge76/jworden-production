@@ -88,7 +88,7 @@ export default function Navbar() {
           <a
             href="tel:+18044461296"
             onClick={() => trackPhoneClick('navbar_desktop')}
-            className="hidden lg:flex items-center gap-2 text-primary font-display font-bold text-sm tracking-[0.14em] uppercase hover:text-primary/80 transition-colors ml-auto mr-6"
+            className="hidden lg:flex items-center gap-2 text-primary font-display font-bold text-sm tracking-[0.06em] uppercase hover:text-primary/80 transition-colors ml-auto mr-6"
             aria-label="Call (804) 446-1296"
           >
             <Phone className="w-4 h-4" />
@@ -101,7 +101,7 @@ export default function Navbar() {
             <button
               key={link.label}
               onClick={() => scrollTo(link.href)}
-              className="font-display text-xs tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 xl:text-sm">
+              className="font-display text-xs tracking-[0.08em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300 xl:text-sm">
               
                 {link.label}
               </button>
@@ -114,7 +114,7 @@ export default function Navbar() {
 
             <button
               onClick={() => scrollTo('#quote')}
-              className="premium-cta flex items-center gap-2 text-primary-foreground px-5 py-3 font-display font-bold text-sm tracking-[0.16em] uppercase transition-all min-h-[48px]">
+              className="premium-cta flex items-center gap-2 text-primary-foreground px-5 py-3 font-display font-bold text-sm tracking-[0.06em] uppercase transition-all min-h-[48px]">
               
               <Phone className="w-4 h-4" />
               Free Estimate
@@ -146,7 +146,7 @@ export default function Navbar() {
             <button
               key={link.label}
               onClick={() => scrollTo(link.href)}
-              className="block w-full text-left font-display text-lg tracking-widest uppercase text-muted-foreground hover:text-primary py-3 border-b border-border/70 transition-colors min-h-[48px]">
+              className="block w-full text-left font-display text-lg tracking-[0.08em] uppercase text-muted-foreground hover:text-primary py-3 border-b border-border/70 transition-colors min-h-[48px]">
               
                   {link.label}
                 </button>

@@ -424,8 +424,8 @@ function KpiCard({ label, value, delta, tone, icon: Icon }) {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5 shadow-[0_14px_40px_rgba(0,0,0,0.22)]">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-white/55 text-xs uppercase tracking-[0.14em]">{label}</p>
-          <p className="text-white text-2xl md:text-3xl font-black mt-2 leading-none">{value}</p>
+          <p className="text-white/55 text-xs uppercase tracking-[0.06em]">{label}</p>
+          <p className="text-white text-2xl md:text-3xl font-bold mt-2 leading-none">{value}</p>
           <p className={`text-xs font-semibold mt-3 ${toneClass}`}>{delta} vs previous period</p>
         </div>
         <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
@@ -457,7 +457,7 @@ function SystemHealth() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center gap-2 mb-4">
         <ShieldCheck className="w-4 h-4 text-brand-amber" />
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">System Health</h3>
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">System Health</h3>
       </div>
       <div className="space-y-2.5">
         {checks.map((check) => (
@@ -660,7 +660,7 @@ function ApiKeysPanel() {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
           API Keys + Secrets Checklist
         </h3>
         <span className="text-xs text-white/45">
@@ -670,13 +670,13 @@ function ApiKeysPanel() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Public App Variables (VITE)</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Public App Variables (VITE)</p>
           <div className="space-y-2">
             {publicVars.map((item) => (
               <div key={item.keyName} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-white text-xs font-semibold break-all">{item.keyName}</p>
-                  <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${item.valuePresent ? 'text-emerald-300' : 'text-amber-300'}`}>
+                  <span className={`text-[10px] font-bold uppercase tracking-[0.06em] ${item.valuePresent ? 'text-emerald-300' : 'text-amber-300'}`}>
                     {item.valuePresent ? 'Set' : 'Missing'}
                   </span>
                 </div>
@@ -687,13 +687,13 @@ function ApiKeysPanel() {
         </div>
 
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Private Ops Secrets (Do Not Use VITE)</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Private Ops Secrets (Do Not Use VITE)</p>
           <div className="space-y-2">
             {privateSecrets.map((item) => (
               <div key={item.keyName} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-white text-xs font-semibold break-all">{item.keyName}</p>
-                  <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${item.required ? 'text-amber-300' : 'text-sky-300'}`}>
+                  <span className={`text-[10px] font-bold uppercase tracking-[0.06em] ${item.required ? 'text-amber-300' : 'text-sky-300'}`}>
                     {item.required ? 'Required' : 'Optional'}
                   </span>
                 </div>
@@ -706,7 +706,7 @@ function ApiKeysPanel() {
       </div>
 
       <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Model Routing Policy</p>
+        <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Model Routing Policy</p>
         <div className="space-y-2">
           {modelRouting.map((row) => (
             <div key={row.task} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 flex items-center justify-between gap-3">
@@ -714,14 +714,14 @@ function ApiKeysPanel() {
                 <p className="text-white text-xs font-semibold">{row.task}</p>
                 <p className="text-white/55 text-[11px] mt-0.5">Env: {row.envKey}</p>
               </div>
-              <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.12em]">{row.provider}</span>
+              <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.06em]">{row.provider}</span>
             </div>
           ))}
         </div>
       </div>
 
       <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Get Keys Fast</p>
+        <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Get Keys Fast</p>
         <div className="space-y-2">
           {keySources.map((row) => (
             <div key={row.envKey} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2">
@@ -736,7 +736,7 @@ function ApiKeysPanel() {
                   href={row.portalUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-lg border border-brand-amber/40 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.12em] text-brand-amber hover:bg-brand-amber/10"
+                  className="inline-flex items-center justify-center rounded-lg border border-brand-amber/40 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.06em] text-brand-amber hover:bg-brand-amber/10"
                 >
                   Open Portal
                 </a>
@@ -754,7 +754,7 @@ function ActivityFeed() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center gap-2 mb-4">
         <Activity className="w-4 h-4 text-brand-amber" />
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Operations Feed</h3>
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Operations Feed</h3>
       </div>
       <div className="space-y-2.5">
         {OPERATIONS_FEED.map((item) => (
@@ -828,7 +828,7 @@ function CrmTable() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden">
       <div className="px-4 md:px-5 py-4 border-b border-white/10 flex items-center justify-between gap-3">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Active Leads Queue</h3>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Active Leads Queue</h3>
           <p className="text-white/45 text-xs mt-0.5">Tap Call or Email and Jarvis takes the action immediately.</p>
         </div>
           <div className="ml-3 flex items-center gap-2">
@@ -845,7 +845,7 @@ function CrmTable() {
           </div>
           <table className="w-full">
           <thead>
-            <tr className="text-left text-[11px] uppercase tracking-[0.14em] text-white/45 border-b border-white/10">
+            <tr className="text-left text-[11px] uppercase tracking-[0.06em] text-white/45 border-b border-white/10">
               <th className="px-4 md:px-5 py-3">Lead</th>
               <th className="px-4 py-3">Service</th>
               <th className="px-4 py-3">Score</th>
@@ -1026,7 +1026,7 @@ function OperationsPipelinePanel() {
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div>
-            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Operations Pipeline</h3>
+            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Operations Pipeline</h3>
             <p className="text-white/55 text-sm mt-1">Turn fresh leads into estimates, jobs, and work orders from one protected flow.</p>
           </div>
           <button
@@ -1044,7 +1044,7 @@ function OperationsPipelinePanel() {
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
           <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-            <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-3">Recent Leads</p>
+            <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-3">Recent Leads</p>
             <div className="space-y-2.5">
               {loading ? <p className="text-sm text-white/50">Loading leads…</p> : recentLeads.map((lead) => (
                 <div key={lead.id} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5">
@@ -1055,7 +1055,7 @@ function OperationsPipelinePanel() {
                     type="button"
                     onClick={() => handleCreateEstimate(lead)}
                     disabled={creatingEstimateId === lead.id}
-                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-brand-amber px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-brand-navy disabled:opacity-50"
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-brand-amber px-3 py-2 text-[11px] font-bold uppercase tracking-[0.06em] text-brand-navy disabled:opacity-50"
                   >
                     {creatingEstimateId === lead.id ? 'Creating…' : 'Create Estimate'}
                   </button>
@@ -1066,7 +1066,7 @@ function OperationsPipelinePanel() {
           </div>
 
           <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-            <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-3">Estimates</p>
+            <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-3">Estimates</p>
             <div className="space-y-2.5">
               {loading ? <p className="text-sm text-white/50">Loading estimates…</p> : estimates.slice(0, 8).map((estimate) => (
                 <div key={estimate.id} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5">
@@ -1084,7 +1084,7 @@ function OperationsPipelinePanel() {
                     type="button"
                     onClick={() => handleCreateJob(estimate)}
                     disabled={creatingJobId === estimate.id || estimate.status === 'converted'}
-                    className="mt-3 inline-flex items-center gap-2 rounded-lg border border-brand-amber/40 px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-brand-amber disabled:opacity-50"
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg border border-brand-amber/40 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.06em] text-brand-amber disabled:opacity-50"
                   >
                     {creatingJobId === estimate.id ? 'Creating…' : estimate.status === 'converted' ? 'Converted' : 'Create Job'}
                   </button>
@@ -1095,7 +1095,7 @@ function OperationsPipelinePanel() {
           </div>
 
           <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-            <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-3">Jobs Ready For Dispatch</p>
+            <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-3">Jobs Ready For Dispatch</p>
             <div className="space-y-2.5">
               {loading ? <p className="text-sm text-white/50">Loading jobs…</p> : jobs.slice(0, 8).map((job) => (
                 <div key={job.id} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5">
@@ -1106,7 +1106,7 @@ function OperationsPipelinePanel() {
                     type="button"
                     onClick={() => handleCreateWorkOrder(job)}
                     disabled={creatingWorkOrderId === job.id}
-                    className="mt-3 inline-flex items-center gap-2 rounded-lg border border-sky-300/40 px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-sky-300 disabled:opacity-50"
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg border border-sky-300/40 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.06em] text-sky-300 disabled:opacity-50"
                   >
                     {creatingWorkOrderId === job.id ? 'Creating…' : 'Create Work Order'}
                   </button>
@@ -1147,7 +1147,7 @@ function AuditFeedPanel() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Audit Feed</h3>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Audit Feed</h3>
           <p className="text-white/55 text-sm mt-1">Live operational evidence from the protected backend audit stream.</p>
         </div>
         <button
@@ -1407,11 +1407,11 @@ function MrWordenAutopilotPanel() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
         <div>
-          <div className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-brand-amber mb-1">
+          <div className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.06em] text-brand-amber mb-1">
             <Bot className="w-3.5 h-3.5" />
             Mr. Worden Autopilot
           </div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
             Priority Leaderboard + CLI Sync
           </h3>
         </div>
@@ -1433,7 +1433,7 @@ function MrWordenAutopilotPanel() {
             type="button"
             onClick={applyAutopilot}
             disabled={autopiloting || loading}
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] disabled:opacity-50"
           >
             <Sparkles className="w-3.5 h-3.5" />
             {autopiloting ? 'Applying...' : 'Run Autopilot Follow-up'}
@@ -1643,8 +1643,8 @@ function OperationsNerveCenterPanel() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.16em] text-brand-amber mb-1">Operations Nerve Center</p>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Provider Health + Run Telemetry + SLA Alerts</h3>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-brand-amber mb-1">Operations Nerve Center</p>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Provider Health + Run Telemetry + SLA Alerts</h3>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -1660,7 +1660,7 @@ function OperationsNerveCenterPanel() {
           <button
             type="button"
             onClick={retryLastFailed}
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-black uppercase tracking-[0.12em]"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-bold uppercase tracking-[0.06em]"
           >
             Retry Last Failed
           </button>
@@ -1669,7 +1669,7 @@ function OperationsNerveCenterPanel() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 mb-3">
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Provider Status</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Provider Status</p>
           <div className="space-y-2">
             {providers.map((row) => (
               <div key={row.id} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 flex items-center justify-between gap-3">
@@ -1684,7 +1684,7 @@ function OperationsNerveCenterPanel() {
                     </p>
                   ) : null}
                 </div>
-                <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${row.up ? 'border-emerald-300/50 bg-emerald-300/10 text-emerald-200' : 'border-amber-300/50 bg-amber-300/10 text-amber-200'}`}>
+                <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${row.up ? 'border-emerald-300/50 bg-emerald-300/10 text-emerald-200' : 'border-amber-300/50 bg-amber-300/10 text-amber-200'}`}>
                   {row.up ? 'Up' : 'Check'}
                 </span>
               </div>
@@ -1693,7 +1693,7 @@ function OperationsNerveCenterPanel() {
         </div>
 
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Automation Run Log</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Automation Run Log</p>
           {runs.length === 0 ? (
             <p className="text-sm text-white/55">No automation runs recorded yet.</p>
           ) : (
@@ -1702,7 +1702,7 @@ function OperationsNerveCenterPanel() {
                 <div key={run.id} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-white text-xs font-semibold uppercase tracking-[0.08em]">{run.type}</p>
-                    <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${run.status === 'success' ? 'text-emerald-300' : run.status === 'failed' ? 'text-red-300' : 'text-amber-300'}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-[0.06em] ${run.status === 'success' ? 'text-emerald-300' : run.status === 'failed' ? 'text-red-300' : 'text-amber-300'}`}>
                       {run.status}
                     </span>
                   </div>
@@ -1715,7 +1715,7 @@ function OperationsNerveCenterPanel() {
         </div>
 
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Hot/Warm SLA Breaches</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Hot/Warm SLA Breaches</p>
           {leadBreaches.length === 0 ? (
             <p className="text-sm text-emerald-300">No open SLA breaches right now.</p>
           ) : (
@@ -1724,7 +1724,7 @@ function OperationsNerveCenterPanel() {
                 <div key={lead.id} className="rounded-lg border border-red-300/20 bg-red-300/10 px-3 py-2">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-red-100 text-xs font-semibold truncate">{lead.name}</p>
-                    <span className="text-[10px] text-red-200 uppercase tracking-[0.12em] font-bold">{lead.tier}</span>
+                    <span className="text-[10px] text-red-200 uppercase tracking-[0.06em] font-bold">{lead.tier}</span>
                   </div>
                   <p className="text-red-200/85 text-[11px] mt-1">{lead.phone || 'No phone on file'}</p>
                   <p className="text-red-200/75 text-[10px] mt-1">{lead.ageMin} min old · {lead.breachBy} min beyond SLA</p>
@@ -1912,7 +1912,7 @@ function ChannelPerformancePanel() {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
           Traffic + Search + Domain Intelligence (30d)
         </h3>
         <span className="text-xs text-white/45">Live from Lead records</span>
@@ -1928,18 +1928,18 @@ function ChannelPerformancePanel() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mb-4">
             {channelRows.map((row) => (
               <div key={row.source} className="rounded-xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-white/45">{label(row.source)}</p>
+                <p className="text-[11px] uppercase tracking-[0.06em] text-white/45">{label(row.source)}</p>
                 <div className="mt-2 grid grid-cols-3 gap-2 text-center">
                   <div>
-                    <p className="text-white text-lg font-black leading-none">{row.leads}</p>
+                    <p className="text-white text-lg font-bold leading-none">{row.leads}</p>
                     <p className="text-[10px] text-white/45 uppercase mt-1">Leads</p>
                   </div>
                   <div>
-                    <p className="text-emerald-300 text-lg font-black leading-none">{row.closeRate}%</p>
+                    <p className="text-emerald-300 text-lg font-bold leading-none">{row.closeRate}%</p>
                     <p className="text-[10px] text-white/45 uppercase mt-1">Close</p>
                   </div>
                   <div>
-                    <p className="text-brand-amber text-lg font-black leading-none">${Math.round(row.pipeline / 1000)}k</p>
+                    <p className="text-brand-amber text-lg font-bold leading-none">${Math.round(row.pipeline / 1000)}k</p>
                     <p className="text-[10px] text-white/45 uppercase mt-1">Pipeline</p>
                   </div>
                 </div>
@@ -1949,7 +1949,7 @@ function ChannelPerformancePanel() {
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Traffic Sources</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Traffic Sources</p>
               {topTrafficSources.length === 0 ? (
                 <p className="text-sm text-white/55">No source attribution data yet.</p>
               ) : (
@@ -1965,7 +1965,7 @@ function ChannelPerformancePanel() {
             </div>
 
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Traffic Mediums</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Traffic Mediums</p>
               {topTrafficMediums.length === 0 ? (
                 <p className="text-sm text-white/55">No medium attribution data yet.</p>
               ) : (
@@ -1983,7 +1983,7 @@ function ChannelPerformancePanel() {
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 mt-3">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Campaigns</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Campaigns</p>
               {topCampaigns.length === 0 ? (
                 <p className="text-sm text-white/55">No campaign attribution data yet.</p>
               ) : (
@@ -1999,7 +1999,7 @@ function ChannelPerformancePanel() {
             </div>
 
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Search Terms</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Search Terms</p>
               {topSearchTerms.length === 0 ? (
                 <p className="text-sm text-white/55">No search-term attribution data yet.</p>
               ) : (
@@ -2016,7 +2016,7 @@ function ChannelPerformancePanel() {
           </div>
 
           <div className="rounded-xl border border-white/10 bg-black/20 p-3 mt-3">
-            <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Domain Performance Matrix</p>
+            <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Domain Performance Matrix</p>
             {domainPerformanceRows.length === 0 ? (
               <p className="text-sm text-white/55">No domain-level attribution records yet.</p>
             ) : (
@@ -2025,7 +2025,7 @@ function ChannelPerformancePanel() {
                   <div key={item.domain} className="rounded-lg border border-white/10 bg-black/30 px-3 py-2.5">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-white text-sm font-semibold truncate">{item.domain}</p>
-                      <span className="text-[10px] text-emerald-200 uppercase tracking-[0.12em] font-bold">
+                      <span className="text-[10px] text-emerald-200 uppercase tracking-[0.06em] font-bold">
                         Close {item.closeRate}%
                       </span>
                     </div>
@@ -2039,7 +2039,7 @@ function ChannelPerformancePanel() {
           {(topBacklinkDomains.length > 0 || topGeofenceCampaigns.length > 0) ? (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 mt-3">
               <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Backlink Domains</p>
+                <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Backlink Domains</p>
                 {topBacklinkDomains.length === 0 ? (
                   <p className="text-sm text-white/55">No backlink domain data yet.</p>
                 ) : (
@@ -2055,7 +2055,7 @@ function ChannelPerformancePanel() {
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Geofence Campaigns</p>
+                <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Geofence Campaigns</p>
                 {topGeofenceCampaigns.length === 0 ? (
                   <p className="text-sm text-white/55">No geofence campaign tags yet.</p>
                 ) : (
@@ -2131,7 +2131,7 @@ function TechOpportunityQueuePanel() {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
           Technology Opportunity Queue
         </h3>
         <button
@@ -2157,22 +2157,22 @@ function TechOpportunityQueuePanel() {
         <>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 mb-3">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45">Queue Size</p>
-              <p className="text-white text-2xl font-black mt-2">{payload?.queue_count ?? queue.length}</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45">Queue Size</p>
+              <p className="text-white text-2xl font-bold mt-2">{payload?.queue_count ?? queue.length}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45">Signals Analyzed</p>
-              <p className="text-white text-2xl font-black mt-2">{payload?.signals_analyzed ?? 'n/a'}</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45">Signals Analyzed</p>
+              <p className="text-white text-2xl font-bold mt-2">{payload?.signals_analyzed ?? 'n/a'}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45">Data Staleness (hrs)</p>
-              <p className="text-white text-2xl font-black mt-2">{payload?.staleness_hours ?? 'n/a'}</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45">Data Staleness (hrs)</p>
+              <p className="text-white text-2xl font-bold mt-2">{payload?.staleness_hours ?? 'n/a'}</p>
             </div>
           </div>
 
           {domainSummary.length > 0 ? (
             <div className="rounded-xl border border-white/10 bg-black/20 p-3 mb-3">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/45 mb-2">Top Domain Pressure</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Top Domain Pressure</p>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2">
                 {domainSummary.map((item) => (
                   <div key={item.domainId || item.domainLabel} className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
@@ -2192,7 +2192,7 @@ function TechOpportunityQueuePanel() {
                 <div key={`${item.url || item.title}-${index}`} className="rounded-xl border border-white/10 bg-black/25 px-3 py-2.5">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-white text-sm font-semibold line-clamp-1">{item.title || 'Untitled signal'}</p>
-                    <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                    <span className={`text-[10px] font-bold uppercase tracking-[0.06em] ${
                       item.priority === 'critical'
                         ? 'text-red-200'
                         : item.priority === 'high'
@@ -2348,14 +2348,14 @@ function HumanChecksControlPanel() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
             Human Checks Control Tower
           </h3>
           <p className="text-xs text-white/50 mt-1">Explicit human approvals before irreversible public actions.</p>
         </div>
 
         <span
-          className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+          className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${
             readyForPublicActions
               ? 'border-emerald-300/60 bg-emerald-300/10 text-emerald-200'
               : 'border-red-300/60 bg-red-300/10 text-red-200'
@@ -2387,7 +2387,7 @@ function HumanChecksControlPanel() {
 
         <div className="lg:col-span-2 rounded-xl border border-white/10 bg-black/20 p-3 space-y-3">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.12em] text-white/45">Approver initials</p>
+            <p className="text-[11px] uppercase tracking-[0.06em] text-white/45">Approver initials</p>
             <input
               type="text"
               value={approver}
@@ -2407,7 +2407,7 @@ function HumanChecksControlPanel() {
             <button
               type="button"
               onClick={markApprovedNow}
-              className="rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-black uppercase tracking-[0.12em]"
+              className="rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-bold uppercase tracking-[0.06em]"
             >
               Stamp Human Approval
             </button>
@@ -2574,12 +2574,12 @@ function GoogleAdsBudgetControlPanel() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Google Ads Budget Control</h3>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Google Ads Budget Control</h3>
           <p className="text-xs text-white/50 mt-1">Operator controls: up, down, off, resume with human approval gate.</p>
         </div>
 
         <span
-          className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+          className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${
             status === 'active'
               ? 'border-emerald-300/60 bg-emerald-300/10 text-emerald-200'
               : 'border-red-300/60 bg-red-300/10 text-red-200'
@@ -2591,20 +2591,20 @@ function GoogleAdsBudgetControlPanel() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-white/45">Current budget index</p>
-          <p className="text-white font-black text-3xl leading-none mt-2">{budgetIndex}%</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45">Current budget index</p>
+          <p className="text-white font-bold text-3xl leading-none mt-2">{budgetIndex}%</p>
           <p className="text-[11px] text-white/55 mt-2">Baseline = 100%. Clamp range: 20% to 300%.</p>
         </div>
 
         <div className="rounded-xl border border-white/10 bg-black/20 p-3 lg:col-span-2">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-white/45 mb-2">Quick Actions</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-white/45 mb-2">Quick Actions</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {controls.map((control) => (
               <button
                 key={control.label}
                 type="button"
                 onClick={() => runBudgetAction(control)}
-                className={`rounded-lg px-3 py-2 text-xs font-black uppercase tracking-[0.12em] ${
+                className={`rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] ${
                   control.kind === 'off'
                     ? 'bg-red-300/20 border border-red-300/40 text-red-100'
                     : control.kind === 'resume'
@@ -2671,7 +2671,7 @@ function HumanApprovalPolicyPanel() {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
           Human Approval Policy
         </h3>
         <span className="text-xs text-white/45">Hard stops for irreversible actions</span>
@@ -2685,7 +2685,7 @@ function HumanApprovalPolicyPanel() {
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm text-white font-semibold">{item.rule}</p>
                 <span
-                  className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                  className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${
                     requiresHuman
                       ? 'border-amber-300/50 bg-amber-300/10 text-amber-200'
                       : 'border-emerald-300/50 bg-emerald-300/10 text-emerald-200'
@@ -2835,7 +2835,7 @@ function TempInAppOpsFallbackPanel() {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">
           Temporary In-App CLI Replacements
         </h3>
         <span className="text-xs text-white/45">Use until permanent wiring is live</span>
@@ -2863,7 +2863,7 @@ function TempInAppOpsFallbackPanel() {
           type="button"
           onClick={runProviderSetupDoctor}
           disabled={busy}
-          className="rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+          className="rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] disabled:opacity-50"
         >
           Run Provider Setup Doctor
         </button>
@@ -3019,8 +3019,8 @@ function LaunchReadinessAuditPanel({ strategyVisible, onAudit }) {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.16em] text-brand-amber mb-1">Launch Readiness</p>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">10/10 Audit Scorecard</h3>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-brand-amber mb-1">Launch Readiness</p>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">10/10 Audit Scorecard</h3>
         </div>
         <button
           type="button"
@@ -3038,26 +3038,26 @@ function LaunchReadinessAuditPanel({ strategyVisible, onAudit }) {
       ) : (
         <>
           <div className="rounded-xl border border-brand-amber/35 bg-brand-amber/10 px-3 py-3 mb-3">
-            <p className="text-xs text-brand-amber uppercase tracking-[0.12em]">Current launch rating</p>
-            <p className="text-white font-display font-black text-2xl mt-1">{report.total}/100 · {report.grade}</p>
+            <p className="text-xs text-brand-amber uppercase tracking-[0.06em]">Current launch rating</p>
+            <p className="text-white font-display font-bold text-2xl mt-1">{report.total}/100 · {report.grade}</p>
             <p className="text-[11px] text-white/65 mt-1">Generated {new Date(report.generatedAt).toLocaleString()}</p>
           </div>
 
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-2.5 mb-3">
             <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Providers</p>
+              <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Providers</p>
               <p className="text-white font-bold text-sm mt-1">{report.providerScore}/30</p>
             </div>
             <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Security</p>
+              <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Security</p>
               <p className="text-white font-bold text-sm mt-1">{report.securityScore}/25</p>
             </div>
             <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Indexing</p>
+              <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Indexing</p>
               <p className="text-white font-bold text-sm mt-1">{report.indexingScore}/25</p>
             </div>
             <div className="rounded-lg border border-white/10 bg-black/20 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Automation</p>
+              <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Automation</p>
               <p className="text-white font-bold text-sm mt-1">{report.automationScore}/20</p>
             </div>
           </div>
@@ -3072,7 +3072,7 @@ function LaunchReadinessAuditPanel({ strategyVisible, onAudit }) {
 
           {report.nextActions.length > 0 ? (
             <div className="mt-3 rounded-lg border border-amber-300/30 bg-amber-300/10 px-3 py-2.5">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-amber-100 mb-1">Fastest path to 10/10</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-amber-100 mb-1">Fastest path to 10/10</p>
               <ul className="space-y-1.5">
                 {report.nextActions.map((item) => (
                   <li key={item} className="text-xs text-amber-100/90">• {item}</li>
@@ -3141,15 +3141,15 @@ function WeekendExecutionSprintPanel({ latestAudit }) {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.16em] text-brand-amber mb-1">Weekend Build</p>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Premium Execution Sprint</h3>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-brand-amber mb-1">Weekend Build</p>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Premium Execution Sprint</h3>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-white/65">{completedCount}/{defaultTasks.length} complete</span>
           <button
             type="button"
             onClick={exportWeekendRunbook}
-            className="rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-black uppercase tracking-[0.12em]"
+            className="rounded-lg bg-brand-amber text-brand-navy px-3 py-2 text-xs font-bold uppercase tracking-[0.06em]"
           >
             Export Runbook
           </button>
@@ -3352,8 +3352,8 @@ function CivilContractorIntelligencePanel() {
       <div className="rounded-2xl border border-brand-amber/30 bg-brand-amber/10 p-4 md:p-5">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.16em] text-brand-amber mb-1">In-house prep system</p>
-            <h2 className="font-display font-black text-white text-2xl leading-tight">50-State Civil Contractor Intelligence</h2>
+            <p className="text-[10px] uppercase tracking-[0.06em] text-brand-amber mb-1">In-house prep system</p>
+            <h2 className="font-display font-bold text-white text-2xl leading-tight">50-State Civil Contractor Intelligence</h2>
             <p className="text-white/65 text-sm mt-2 max-w-3xl">
               Same operating brain for all 50 states plus DC: state law, GC risk, paving rules, utility exposure, plan-to-bid prep, and award controls.
             </p>
@@ -3365,7 +3365,7 @@ function CivilContractorIntelligencePanel() {
             <Link to="/advisory/contractor-ranker" className="rounded-lg border border-white/20 px-3 py-2 text-xs font-semibold text-white/85 hover:border-brand-amber/40">
               Ranker
             </Link>
-            <Link to={`/advisory/state/${selectedState}`} className="rounded-lg bg-brand-amber px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-brand-navy">
+            <Link to={`/advisory/state/${selectedState}`} className="rounded-lg bg-brand-amber px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] text-brand-navy">
               State File
             </Link>
           </div>
@@ -3376,7 +3376,7 @@ function CivilContractorIntelligencePanel() {
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5 xl:col-span-1">
           <div className="flex items-center gap-2 mb-4">
             <Globe className="w-4 h-4 text-brand-amber" />
-            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Market Selector</h3>
+            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Market Selector</h3>
           </div>
 
           <div className="space-y-3">
@@ -3432,7 +3432,7 @@ function CivilContractorIntelligencePanel() {
             <button
               type="button"
               onClick={runAdvisor}
-              className="w-full rounded-lg bg-brand-amber px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-brand-navy"
+              className="w-full rounded-lg bg-brand-amber px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] text-brand-navy"
             >
               Refresh Intelligence
             </button>
@@ -3448,11 +3448,11 @@ function CivilContractorIntelligencePanel() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Scale className="w-4 h-4 text-brand-amber" />
-                <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">{stateName} Strategy Snapshot</h3>
+                <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">{stateName} Strategy Snapshot</h3>
               </div>
               <p className="text-white/55 text-sm">Legal strength, licensing posture, and paving regulation prep for {market}.</p>
             </div>
-            <span className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${statusTone(activeScores.composite || 0)}`}>
+            <span className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${statusTone(activeScores.composite || 0)}`}>
               {activeScores.composite || 0}/100 · {activeScores.label || localRecommendation.strengthLabel}
             </span>
           </div>
@@ -3465,15 +3465,15 @@ function CivilContractorIntelligencePanel() {
               { label: 'Composite', value: activeScores.composite },
             ].map((scoreRow) => (
               <div key={scoreRow.label} className="rounded-xl border border-white/10 bg-black/20 px-3 py-3">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">{scoreRow.label}</p>
-                <p className="text-white font-black text-2xl mt-1">{scoreRow.value || 0}</p>
+                <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">{scoreRow.label}</p>
+                <p className="text-white font-bold text-2xl mt-1">{scoreRow.value || 0}</p>
               </div>
             ))}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber mb-2">Action checklist</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber mb-2">Action checklist</p>
               <div className="space-y-2">
                 {activeActions.slice(0, 5).map((action) => (
                   <div key={action} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/75">
@@ -3484,7 +3484,7 @@ function CivilContractorIntelligencePanel() {
             </div>
 
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber mb-2">State rule file</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber mb-2">State rule file</p>
               <div className="space-y-2 text-xs text-white/70">
                 <p>License required: {licensingEntry?.stateLicenseRequired ? 'Yes' : 'Local or category-specific'}</p>
                 <p>License classes: {(licensingEntry?.licenseClasses || []).slice(0, 3).join(', ') || 'Review state file'}</p>
@@ -3503,7 +3503,7 @@ function CivilContractorIntelligencePanel() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
               <div className="flex items-center justify-between gap-3 mb-2">
-                <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber">Legal Q&A</p>
+                <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber">Legal Q&A</p>
                 <span className="text-[10px] text-white/50">
                   {legalQaStatus === 'live' ? 'Live' : legalQaStatus === 'loading' ? 'Loading' : 'Idle'}
                 </span>
@@ -3518,7 +3518,7 @@ function CivilContractorIntelligencePanel() {
               <button
                 type="button"
                 onClick={askLegalQuestion}
-                className="mt-2 w-full rounded-lg border border-brand-amber/40 bg-brand-amber/15 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-amber"
+                className="mt-2 w-full rounded-lg border border-brand-amber/40 bg-brand-amber/15 px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] text-brand-amber"
               >
                 Ask Legal Question
               </button>
@@ -3533,7 +3533,7 @@ function CivilContractorIntelligencePanel() {
 
             <div className="rounded-xl border border-white/10 bg-black/20 p-3">
               <div className="flex items-center justify-between gap-3 mb-2">
-                <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber">Project Legal Score</p>
+                <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber">Project Legal Score</p>
                 <span className="text-[10px] text-white/50">
                   {projectScoreStatus === 'live' ? 'Live' : projectScoreStatus === 'loading' ? 'Loading' : 'Idle'}
                 </span>
@@ -3582,7 +3582,7 @@ function CivilContractorIntelligencePanel() {
               <button
                 type="button"
                 onClick={scoreProjectLegal}
-                className="mt-2 w-full rounded-lg border border-brand-amber/40 bg-brand-amber/15 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-amber"
+                className="mt-2 w-full rounded-lg border border-brand-amber/40 bg-brand-amber/15 px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] text-brand-amber"
               >
                 Score Legal Risk
               </button>
@@ -3600,14 +3600,14 @@ function CivilContractorIntelligencePanel() {
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
           <div className="flex items-center gap-2 mb-3">
             <FileText className="w-4 h-4 text-brand-amber" />
-            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Plan-to-Bid Readiness</h3>
+            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Plan-to-Bid Readiness</h3>
           </div>
           <div className="space-y-2.5">
             {planReadiness.map((row) => (
               <div key={row.label} className="rounded-xl border border-white/10 bg-black/20 px-3 py-2.5">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold text-white">{row.label}</p>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-300">Ready</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-emerald-300">Ready</span>
                 </div>
                 <p className="text-xs text-white/55 mt-1">{row.value}</p>
               </div>
@@ -3621,14 +3621,14 @@ function CivilContractorIntelligencePanel() {
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
           <div className="flex items-center gap-2 mb-3">
             <HardHat className="w-4 h-4 text-brand-amber" />
-            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Contractor Award Model</h3>
+            <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Contractor Award Model</h3>
           </div>
           <div className="space-y-2.5">
             {rankedBidDemo.map((bidRow) => (
               <div key={bidRow.name} className="rounded-xl border border-white/10 bg-black/20 px-3 py-2.5">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold text-white">#{bidRow.rank} {bidRow.name}</p>
-                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${statusTone(bidRow.scores.composite)}`}>
+                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] ${statusTone(bidRow.scores.composite)}`}>
                     {bidRow.scores.composite}
                   </span>
                 </div>
@@ -3640,10 +3640,10 @@ function CivilContractorIntelligencePanel() {
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em] mb-3">Expansion Signals</h3>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em] mb-3">Expansion Signals</h3>
           <div className="space-y-3">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber mb-2">Best base licenses</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber mb-2">Best base licenses</p>
               <div className="flex flex-wrap gap-2">
                 {activeLicenseLeaders.slice(0, 6).map((stateRow) => (
                   <span key={stateRow.abbr} className="rounded-full border border-white/10 bg-black/20 px-2.5 py-1 text-xs text-white/70">
@@ -3653,7 +3653,7 @@ function CivilContractorIntelligencePanel() {
               </div>
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber mb-2">Strong lien leverage</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber mb-2">Strong lien leverage</p>
               <div className="flex flex-wrap gap-2">
                 {lienLeaders.map((stateRow) => (
                   <span key={stateRow.abbr} className="rounded-full border border-white/10 bg-black/20 px-2.5 py-1 text-xs text-white/70">
@@ -3663,7 +3663,7 @@ function CivilContractorIntelligencePanel() {
               </div>
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber mb-2">Top dispute states</p>
+              <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber mb-2">Top dispute states</p>
               <div className="flex flex-wrap gap-2">
                 {activeTopStates.slice(0, 6).map((stateRow) => (
                   <span key={stateRow.abbr} className="rounded-full border border-white/10 bg-black/20 px-2.5 py-1 text-xs text-white/70">
@@ -4046,7 +4046,7 @@ function JarvisActivityFeed({ compact = false }) {
     <div className={['rounded-2xl border border-white/10 bg-white/[0.04]', compact ? 'p-3' : 'p-4 md:p-5'].join(' ')}>
       <div className="flex items-center justify-between gap-3 mb-3">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Jarvis Activity</h3>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Jarvis Activity</h3>
           <p className="text-white/45 text-xs mt-0.5">Live feed of every action Jarvis takes for you.</p>
         </div>
         <button type="button" onClick={clear} className="text-[11px] text-white/55 hover:text-white">Clear</button>
@@ -4061,7 +4061,7 @@ function JarvisActivityFeed({ compact = false }) {
                 {iconFor(item.kind)}
                 <p className="text-white text-xs font-semibold uppercase tracking-[0.08em]">{item.kind}</p>
                 <span className={[
-                  'ml-auto text-[10px] font-bold uppercase tracking-[0.12em]',
+                  'ml-auto text-[10px] font-bold uppercase tracking-[0.06em]',
                   item.status === 'failed' ? 'text-red-300' : item.status === 'sent' || item.status === 'queued' ? 'text-emerald-300' : 'text-amber-200',
                 ].join(' ')}>{item.status || ''}</span>
               </div>
@@ -4169,7 +4169,7 @@ function SLABreachAlarmPanel() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em] inline-flex items-center gap-2">
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em] inline-flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-red-300" /> SLA Breach Alarm
           </h3>
           <p className="text-white/45 text-xs mt-0.5">Hot lead unanswered &gt;15 min triggers a voice alert.</p>
@@ -4282,7 +4282,7 @@ function HeyJarvisWakeWord() {
   if (!supported) {
     return (
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em] inline-flex items-center gap-2">
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em] inline-flex items-center gap-2">
           <Mic className="w-4 h-4" /> Hey Jarvis Wake Word
         </h3>
         <p className="text-white/55 text-sm mt-2">Wake word requires Chrome, Edge, or Safari. Open the dashboard in one of those browsers.</p>
@@ -4294,7 +4294,7 @@ function HeyJarvisWakeWord() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
       <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
         <div>
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em] inline-flex items-center gap-2">
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em] inline-flex items-center gap-2">
             <Mic className={`w-4 h-4 ${listening ? 'text-red-300 animate-pulse' : 'text-white/60'}`} /> Hey Jarvis Wake Word
           </h3>
           <p className="text-white/45 text-xs mt-0.5">Just say <span className="text-white/80 font-semibold">"Hey Jarvis, [your command]"</span> from anywhere on the dashboard.</p>
@@ -4540,8 +4540,8 @@ function JarvisMissionControl() {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5 xl:col-span-3 2xl:col-span-4">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.14em] text-brand-amber">Premium Mission Control</p>
-          <h3 className="font-display font-black text-white text-xl leading-tight mt-1">Jarvis Executive Intelligence Cockpit</h3>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-brand-amber">Premium Mission Control</p>
+          <h3 className="font-display font-bold text-white text-xl leading-tight mt-1">Jarvis Executive Intelligence Cockpit</h3>
           <p className="text-white/55 text-sm mt-1">Live fusion of readiness, autonomy, legal posture, intelligence coverage, and tool reliability.</p>
         </div>
         <button
@@ -4555,26 +4555,26 @@ function JarvisMissionControl() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3 mt-4">
         <div className={["rounded-xl border px-3 py-3", toneClass].join(' ')}>
-          <p className="text-[10px] uppercase tracking-[0.12em] opacity-75">Mission Score</p>
-          <p className="text-2xl font-black mt-1">{payload?.missionScore ?? '—'}/100</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] opacity-75">Mission Score</p>
+          <p className="text-2xl font-bold mt-1">{payload?.missionScore ?? '—'}/100</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-white">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Jarvis Brain</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Jarvis Brain</p>
           <p className="text-sm font-bold mt-1">{payload?.readiness?.engine || 'unknown'}</p>
           <p className="text-xs text-white/55 mt-0.5">{payload?.readiness?.full_capacity ? 'Full capacity' : 'Reduced capacity'}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-white">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Autonomy Level</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Autonomy Level</p>
           <p className="text-sm font-bold mt-1">{payload?.autonomy?.autonomy_level || 'L?'}</p>
           <p className="text-xs text-white/55 mt-0.5">{payload?.autonomy?.autonomy_label || 'No protected status yet'}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-white">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Legal Readiness</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Legal Readiness</p>
           <p className="text-sm font-bold mt-1">{payload?.legalScore?.legal_score?.value ?? '—'}/100</p>
           <p className="text-xs text-white/55 mt-0.5">{payload?.legalScore?.legal_score?.risk_band || 'pending'} risk band</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-white">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Tech Queue</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Tech Queue</p>
           <p className="text-sm font-bold mt-1">{payload?.techQueue?.queue_count ?? '—'} high priority</p>
           <p className="text-xs text-white/55 mt-0.5">{payload?.techQueue?.staleness_hours != null ? `${payload.techQueue.staleness_hours}h stale` : 'staleness unknown'}</p>
         </div>
@@ -4582,7 +4582,7 @@ function JarvisMissionControl() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 mt-3">
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber">Coverage Map</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber">Coverage Map</p>
           <p className="text-xs text-white/65 mt-1">
             {payload?.capabilityCoverage
               ? `L1 ${payload.capabilityCoverage.l1} · L2 ${payload.capabilityCoverage.l2} · L3 ${payload.capabilityCoverage.l3} · L4 ${payload.capabilityCoverage.l4} (${payload.capabilityCoverage.total} total capabilities)`
@@ -4590,7 +4590,7 @@ function JarvisMissionControl() {
           </p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber">Reliability</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber">Reliability</p>
           <p className="text-xs text-white/65 mt-1">
             {payload?.metrics?.jarvis?.latency?.p95_ms != null
               ? `p95 latency ${payload.metrics.jarvis.latency.p95_ms}ms · tool failure ${(payload.metrics.jarvis.tool_calls?.failure_rate_pct ?? 0).toFixed(1)}%`
@@ -4598,7 +4598,7 @@ function JarvisMissionControl() {
           </p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-brand-amber">Blockers</p>
+          <p className="text-[11px] uppercase tracking-[0.06em] text-brand-amber">Blockers</p>
           {Array.isArray(payload?.blockers) && payload.blockers.length > 0 ? (
             <div className="mt-1 space-y-1">
               {payload.blockers.slice(0, 3).map((b) => (
@@ -4714,7 +4714,7 @@ function PremiumIntelRibbon({ activeTab }) {
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5 mb-4">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.14em] text-brand-amber">Premium Intelligence Layer</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-brand-amber">Premium Intelligence Layer</p>
           <h3 className="font-display font-bold text-white text-base mt-1">Elite Ops Ribbon</h3>
           <p className="text-white/55 text-xs mt-1">Every tab now runs with live strategic scoring plus an instant Jarvis action bridge.</p>
         </div>
@@ -4738,32 +4738,32 @@ function PremiumIntelRibbon({ activeTab }) {
 
       <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2 mt-3">
         <div className={["rounded-lg border px-2.5 py-2", scoreTone].join(' ')}>
-          <p className="text-[10px] uppercase tracking-[0.12em] opacity-80">Ops Score</p>
-          <p className="text-base font-black mt-0.5">{intel?.score ?? '—'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] opacity-80">Ops Score</p>
+          <p className="text-base font-bold mt-0.5">{intel?.score ?? '—'}</p>
         </div>
         <div className="rounded-lg border border-white/10 bg-black/20 px-2.5 py-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Leads</p>
-          <p className="text-base font-black text-white mt-0.5">{intel?.leadsCount ?? '—'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Leads</p>
+          <p className="text-base font-bold text-white mt-0.5">{intel?.leadsCount ?? '—'}</p>
         </div>
         <div className="rounded-lg border border-white/10 bg-black/20 px-2.5 py-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Jobs</p>
-          <p className="text-base font-black text-white mt-0.5">{intel?.jobsCount ?? '—'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Jobs</p>
+          <p className="text-base font-bold text-white mt-0.5">{intel?.jobsCount ?? '—'}</p>
         </div>
         <div className="rounded-lg border border-white/10 bg-black/20 px-2.5 py-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Estimates</p>
-          <p className="text-base font-black text-white mt-0.5">{intel?.estimatesCount ?? '—'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Estimates</p>
+          <p className="text-base font-bold text-white mt-0.5">{intel?.estimatesCount ?? '—'}</p>
         </div>
         <div className="rounded-lg border border-white/10 bg-black/20 px-2.5 py-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Tech Queue</p>
-          <p className="text-base font-black text-white mt-0.5">{intel?.techCount ?? '—'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Tech Queue</p>
+          <p className="text-base font-bold text-white mt-0.5">{intel?.techCount ?? '—'}</p>
         </div>
         <div className="rounded-lg border border-white/10 bg-black/20 px-2.5 py-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Ads Alerts</p>
-          <p className="text-base font-black text-white mt-0.5">{intel?.anomaliesCount ?? '—'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Ads Alerts</p>
+          <p className="text-base font-bold text-white mt-0.5">{intel?.anomaliesCount ?? '—'}</p>
         </div>
         <div className="rounded-lg border border-white/10 bg-black/20 px-2.5 py-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-white/45">Jarvis</p>
-          <p className="text-sm font-black text-white mt-1">{intel?.readiness?.full_capacity ? 'Full' : 'Reduced'}</p>
+          <p className="text-[10px] uppercase tracking-[0.06em] text-white/45">Jarvis</p>
+          <p className="text-sm font-bold text-white mt-1">{intel?.readiness?.full_capacity ? 'Full' : 'Reduced'}</p>
         </div>
       </div>
     </div>
@@ -5971,7 +5971,7 @@ function PulseTile({ label, value, tone, icon: Icon, onClick }) {
     >
       <div className="flex items-center gap-2">
         <Icon className={['w-3.5 h-3.5', toneText].join(' ')} />
-        <span className="text-[10px] uppercase tracking-[0.14em] text-white/50">{label}</span>
+        <span className="text-[10px] uppercase tracking-[0.06em] text-white/50">{label}</span>
       </div>
       <div className={['text-sm font-bold mt-0.5', toneText].join(' ')}>{value}</div>
     </button>
@@ -6356,7 +6356,7 @@ function StrategicOpsPilotPanel() {
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-5">
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em]">Predictive Capital</h3>
+          <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em]">Predictive Capital</h3>
           <button type="button" onClick={loadPredictive} className="text-xs text-brand-amber hover:text-brand-amber/80" disabled={predictiveLoading}>
             {predictiveLoading ? 'Loading…' : 'Refresh'}
           </button>
@@ -6372,7 +6372,7 @@ function StrategicOpsPilotPanel() {
       </div>
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em] mb-3">Ambient Voice Review</h3>
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em] mb-3">Ambient Voice Review</h3>
         <div className="space-y-2 mb-3">
           <input value={voiceProjectId} onChange={(e) => setVoiceProjectId(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/20 px-3 py-2 text-xs text-white" placeholder="Project ID" />
           <input value={voiceSiteId} onChange={(e) => setVoiceSiteId(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/20 px-3 py-2 text-xs text-white" placeholder="Site ID" />
@@ -6398,7 +6398,7 @@ function StrategicOpsPilotPanel() {
       </div>
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
-        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.12em] mb-3">Driveway CV + Mail</h3>
+        <h3 className="font-display font-bold text-white text-sm uppercase tracking-[0.06em] mb-3">Driveway CV + Mail</h3>
         <div className="flex gap-2 mb-3">
           <button type="button" onClick={runMaskEstimate} disabled={maskSubmitting} className="rounded-lg border border-white/20 text-white/80 text-xs font-semibold px-3 py-1.5">{maskSubmitting ? 'Estimating…' : 'Run CV Estimate'}</button>
           <button type="button" onClick={draftCampaign} disabled={campaignSubmitting} className="rounded-lg bg-brand-amber text-brand-navy text-xs font-bold px-3 py-1.5">{campaignSubmitting ? 'Drafting…' : 'Draft Mail Batch'}</button>
@@ -6512,7 +6512,7 @@ export default function CommandCenter() {
       <div className="border-b border-white/10 bg-brand-navy/95 sticky top-0 z-30">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="font-display font-black text-xl sm:text-2xl text-white leading-tight">
+            <h1 className="font-display font-bold text-xl sm:text-2xl text-white leading-tight">
               Tony Stark's Dashboard
             </h1>
             <p className="text-white/40 text-xs mt-0.5">JWordenAI Command Center — internal operations</p>

@@ -65,7 +65,7 @@ export default function CustomerProofGallery() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mb-12 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <div>
-            <p className="font-display text-sm uppercase tracking-[0.24em] text-primary">Project photos</p>
+            <p className="font-display text-sm uppercase tracking-[0.08em] text-primary">Project photos</p>
             <h2 className="mt-4 font-display text-4xl uppercase leading-none text-foreground sm:text-5xl md:text-7xl">
               Before and after proof that earns trust.
             </h2>
@@ -111,7 +111,7 @@ export default function CustomerProofGallery() {
               <Quote className="mb-5 h-6 w-6 text-primary" />
               <p className="text-base leading-relaxed text-foreground">{item.quote}</p>
               <footer className="mt-6 border-t border-border pt-4">
-                <p className="font-display text-sm uppercase tracking-[0.16em] text-foreground">{item.name}</p>
+                <p className="font-display text-sm uppercase tracking-[0.06em] text-foreground">{item.name}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{item.detail}</p>
               </footer>
             </blockquote>

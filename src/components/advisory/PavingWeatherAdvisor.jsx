@@ -53,7 +53,7 @@ export default function PavingWeatherAdvisor() {
                 <button
                   key={v}
                   onClick={() => setView(v)}
-                  className={`px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest transition-all ${
+                  className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-[0.08em] transition-all ${
                     view === v ? 'bg-brand-amber text-brand-navy shadow-lg' : 'text-white/60 hover:text-white'
                   }`}
                 >
@@ -107,7 +107,7 @@ export default function PavingWeatherAdvisor() {
                     <div className="absolute top-0 right-0 p-3 opacity-10">
                       <Cloud className="w-16 h-16" />
                     </div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-navy/60 mb-2">Tactical 24H Report</h4>
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.08em] text-brand-navy/60 mb-2">Tactical 24H Report</h4>
                     <p className="text-brand-navy font-display text-lg font-bold leading-snug">
                       {forecast.daily_suitability_report}
                     </p>
@@ -130,7 +130,7 @@ export default function PavingWeatherAdvisor() {
                       )}
                     </div>
                     <div className="text-center md:text-left">
-                      <h4 className="text-2xl font-display font-black uppercase tracking-tight leading-none">
+                      <h4 className="text-2xl font-display font-bold uppercase tracking-tight leading-none">
                         {currentWindow?.is_suitable ? 'Operational: GO' : 'Tactical Alert: HOLD'}
                       </h4>
                       <p className="text-base font-body mt-2 font-bold opacity-80 uppercase tracking-wide">
@@ -150,7 +150,7 @@ export default function PavingWeatherAdvisor() {
 
               {(view === '5day' || view === 'extended') && (
                 <div className="space-y-3">
-                  <h5 className="text-brand-navy font-display font-black text-sm uppercase tracking-[0.2em] mb-4">
+                  <h5 className="text-brand-navy font-display font-bold text-sm uppercase tracking-[0.08em] mb-4">
                      {view === '5day' ? '5-Day Site Sequence' : '8-Day Extended Infrastructure Horizon'}
                   </h5>
                   {(view === '5day' ? forecast.five_day_summary : forecast.extended_look).map((day, idx) => (
@@ -163,12 +163,12 @@ export default function PavingWeatherAdvisor() {
                     >
                       <div className="flex items-center gap-5">
                         <div className="w-12 text-center">
-                          <span className="block text-[10px] uppercase font-black text-slate-400">{new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</span>
-                          <span className="block text-sm font-black text-brand-navy leading-none mt-0.5">{new Date(day.date).getDate()}</span>
+                          <span className="block text-[10px] uppercase font-bold text-slate-400">{new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                          <span className="block text-sm font-bold text-brand-navy leading-none mt-0.5">{new Date(day.date).getDate()}</span>
                         </div>
                         <div className={`h-8 w-1 rounded-full ${day.is_suitable ? 'bg-green-500' : 'bg-amber-400'}`} />
                         <div>
-                          <p className={`text-sm font-black uppercase tracking-tight ${day.is_suitable ? 'text-green-700' : 'text-amber-700'}`}>
+                          <p className={`text-sm font-bold uppercase tracking-tight ${day.is_suitable ? 'text-green-700' : 'text-amber-700'}`}>
                             {day.is_suitable ? 'Optimal' : 'Caution'}
                           </p>
                           <p className="text-[10px] text-slate-500 font-bold uppercase truncate max-w-[140px] md:max-w-none">
@@ -178,12 +178,12 @@ export default function PavingWeatherAdvisor() {
                       </div>
                       <div className="flex items-center gap-8 text-right shrink-0">
                         <div className="hidden md:block">
-                           <span className="block text-[8px] uppercase font-black text-slate-400">Rain Prob</span>
-                           <span className="text-xs font-black text-slate-700">{day.precip_prob}%</span>
+                           <span className="block text-[8px] uppercase font-bold text-slate-400">Rain Prob</span>
+                           <span className="text-xs font-bold text-slate-700">{day.precip_prob}%</span>
                         </div>
                         <div>
-                           <span className="block text-[8px] uppercase font-black text-slate-400">High Temp</span>
-                           <span className="text-sm font-black text-brand-navy">{day.high_temp_f}°F</span>
+                           <span className="block text-[8px] uppercase font-bold text-slate-400">High Temp</span>
+                           <span className="text-sm font-bold text-brand-navy">{day.high_temp_f}°F</span>
                         </div>
                       </div>
                     </motion.div>
@@ -193,7 +193,7 @@ export default function PavingWeatherAdvisor() {
               
               <div className="flex items-center justify-center gap-2 p-4 bg-brand-amber/10 rounded-xl">
                  <CheckCircle2 className="w-4 h-4 text-brand-amber" />
-                 <span className="text-[10px] font-black uppercase text-brand-navy tracking-widest text-center">
+                 <span className="text-[10px] font-bold uppercase text-brand-navy tracking-[0.08em] text-center">
                    {forecast.recommendation}
                  </span>
               </div>
@@ -201,14 +201,14 @@ export default function PavingWeatherAdvisor() {
           ) : (
             <div className="py-24 flex flex-col items-center justify-center text-slate-300 border-2 border-dashed border-slate-100 rounded-3xl group">
               <CloudRain className="w-16 h-16 opacity-10 mb-6 group-hover:scale-110 transition-transform" />
-              <p className="text-sm font-bold opacity-40 uppercase tracking-widest">Awaiting Site Telemetry Target...</p>
+              <p className="text-sm font-bold opacity-40 uppercase tracking-[0.08em]">Awaiting Site Telemetry Target...</p>
             </div>
           )}
         </AnimatePresence>
       </div>
 
       {/* Footer Info */}
-      <div className="px-6 py-4 bg-slate-50 border-t border-border flex items-center justify-between text-slate-400 text-[8px] font-black uppercase tracking-widest md:text-[10px]">
+      <div className="px-6 py-4 bg-slate-50 border-t border-border flex items-center justify-between text-slate-400 text-[8px] font-bold uppercase tracking-[0.08em] md:text-[10px]">
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping" />
           Live Satellite Feed Active

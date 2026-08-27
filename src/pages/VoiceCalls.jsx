@@ -71,9 +71,9 @@ export default function VoiceCalls() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 mb-1">
             <Phone className="w-4 h-4 text-primary" />
-            <p className="font-display text-primary text-xs tracking-[0.3em] uppercase">AI Voice Agent</p>
+            <p className="font-display text-primary text-xs tracking-[0.1em] uppercase">AI Voice Agent</p>
           </div>
-          <h1 className="font-display font-black text-foreground text-3xl uppercase tracking-tight">
+          <h1 className="font-display font-bold text-foreground text-3xl uppercase tracking-tight">
             Call Log
           </h1>
           <p className="text-muted-foreground text-sm mt-2">
@@ -120,10 +120,10 @@ export default function VoiceCalls() {
             { label: 'Avg Duration', value: fmtDuration(stats.avgDuration), color: 'text-foreground' },
           ].map((s) => (
             <div key={s.label} className="border border-border bg-card p-4">
-              <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase">
+              <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase">
                 {s.label}
               </p>
-              <p className={`font-display font-black text-2xl mt-2 ${s.color}`}>{s.value}</p>
+              <p className={`font-display font-bold text-2xl mt-2 ${s.color}`}>{s.value}</p>
             </div>
           ))}
         </div>
@@ -168,14 +168,14 @@ export default function VoiceCalls() {
                           <span className="text-muted-foreground text-xs">{fmtTime(call.started_at)}</span>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap mb-2">
-                          <span className={`px-2 py-0.5 border font-display text-[10px] tracking-[0.2em] uppercase ${intent.color}`}>
+                          <span className={`px-2 py-0.5 border font-display text-[10px] tracking-[0.08em] uppercase ${intent.color}`}>
                             {intent.label}
                           </span>
                           <span className="text-muted-foreground text-xs flex items-center gap-1">
                             <Clock className="w-3 h-3" /> {fmtDuration(call.duration_seconds)}
                           </span>
                           {call.booked_site_visit && (
-                            <span className="flex items-center gap-1 px-2 py-0.5 bg-primary/15 text-primary border border-primary/30 font-display text-[10px] tracking-[0.2em] uppercase">
+                            <span className="flex items-center gap-1 px-2 py-0.5 bg-primary/15 text-primary border border-primary/30 font-display text-[10px] tracking-[0.08em] uppercase">
                               <CheckCircle2 className="w-3 h-3" /> Booked
                             </span>
                           )}
@@ -195,7 +195,7 @@ export default function VoiceCalls() {
               {selected ? (
                 <>
                   <div className="flex items-center justify-between mb-4">
-                    <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase">Call Detail</p>
+                    <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase">Call Detail</p>
                     <button
                       onClick={() => setSelected(null)}
                       className="text-muted-foreground hover:text-foreground text-xs font-display tracking-wider uppercase"
@@ -203,7 +203,7 @@ export default function VoiceCalls() {
                       Close
                     </button>
                   </div>
-                  <p className="font-display font-black text-foreground text-xl mb-1">
+                  <p className="font-display font-bold text-foreground text-xl mb-1">
                     {selected.from_number}
                   </p>
                   <p className="text-muted-foreground text-xs mb-4">
@@ -223,7 +223,7 @@ export default function VoiceCalls() {
 
                   {selected.summary && (
                     <div className="mb-4">
-                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mb-2">
+                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mb-2">
                         AI Summary
                       </p>
                       <p className="font-body text-foreground text-sm leading-relaxed">
@@ -234,7 +234,7 @@ export default function VoiceCalls() {
 
                   {selected.transcript && (
                     <div>
-                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.2em] uppercase mb-2">
+                      <p className="font-display text-muted-foreground text-[10px] tracking-[0.08em] uppercase mb-2">
                         Transcript
                       </p>
                       <div className="max-h-96 overflow-y-auto border border-border bg-muted p-3 text-xs font-body text-foreground whitespace-pre-wrap leading-relaxed">
@@ -257,10 +257,10 @@ export default function VoiceCalls() {
 
         {/* Setup guide */}
         <div className="mt-10 border border-border bg-card p-6">
-          <p className="font-display text-primary text-[10px] tracking-[0.3em] uppercase mb-3">
+          <p className="font-display text-primary text-[10px] tracking-[0.1em] uppercase mb-3">
             Voice Agent Setup
           </p>
-          <h2 className="font-display font-black text-foreground text-xl uppercase tracking-tight mb-4">
+          <h2 className="font-display font-bold text-foreground text-xl uppercase tracking-tight mb-4">
             Activate Your 24/7 AI Receptionist
           </h2>
           <ol className="space-y-3 font-body text-foreground text-sm list-decimal list-inside">
