@@ -326,7 +326,11 @@ export default function MarketLanding() {
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-slate-200 font-medium">
                   <CheckCircle2 className="w-5 h-5 text-orange-400 shrink-0" />
-                  <span>USDOT-registered carrier, bonded, and $5M insured</span>
+                  {/* Was "USDOT-registered carrier, bonded, and $5M insured". The USDOT
+                      registration is live and checkable; "bonded" is a dated 2016-17 event,
+                      not a standing; and no document in the archive supports $5M. One
+                      checkable fact beats three claims a buyer cannot verify. */}
+                  <span>USDOT 2568168 — federally registered motor carrier, verifiable at safer.fmcsa.dot.gov</span>
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, CheckCircle, Phone, MessageSquare, Star, Shield, Award, Clock, Users, Wrench, Home as HomeIcon, Building2, Droplets, Layers, Hammer, ChevronRight } from 'lucide-react';
+import { ArrowRight, Phone, Shield, Home as HomeIcon, Building2, Droplets, Wrench, Layers, Hammer, MessageSquare, Ruler, Camera } from 'lucide-react';
 import SEO from '../components/SEO';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -10,21 +10,45 @@ import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
 import CommercialClientAuthority from '../components/CommercialClientAuthority';
 import DocumentedRecord from '../components/DocumentedRecord';
-import EstimateForm from '../components/EstimateForm';
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
 import PublicRecords from '../components/PublicRecords';
+import QuoteBlock from '../components/QuoteBlock';
 import { BRAND_JWORDEN } from '@/data/publicRecords';
+import { LOCAL_CLIMATE, CLIMATE_SPREAD } from '@/data/localClimate';
+
+/*
+ * THE HOMEPAGE, REBUILT AROUND TWO RULES
+ * ──────────────────────────────────────
+ * 1. The cut is the reference's, not the costume. rosepaving.com and
+ *    atlanticsouthernpaving.com — now one company, the largest self-performing
+ *    paving outfit in the country — run light ground, full-colour photography,
+ *    plain title-case headlines, and a door for each kind of buyer. That is
+ *    the structure here. What makes this page BETTER than theirs is not
+ *    design: it is that every number on it can be checked, which theirs
+ *    cannot say.
+ *
+ * 2. Nothing invented survives. The previous version of this file carried a
+ *    "Class A VA Licensed Contractor" stat (the register does not currently
+ *    support it), "$5M Liability Coverage" (the documented COI shows $1M/$2M),
+ *    "5,000+ Projects Completed" (the record supports 2,263 customers and 920
+ *    completed jobs), "No deposit until materials are ordered" (deposits are
+ *    in fact required), and three named testimonials that appear nowhere in
+ *    the Google review record. All deleted. The stats below are the ones the
+ *    archive can produce a document for, and the reviews come from the live
+ *    review component rather than from strings typed into this file.
+ */
 
 const HERO_IMAGE = '/images/real_jobs/great big driveway paving photo.JPG';
 const RESIDENTIAL_IMAGE = '/images/real_jobs/asphalt driveways goochland va.jpg';
 const COMMERCIAL_IMAGE = '/images/real_jobs/COMMERCIALPAVING 2026.jpg';
 
+/* Every figure here traces to a record in this repository. */
 const STATS = [
-  { value: '40+', label: 'Years in Business' },
-  { value: '5,000+', label: 'Projects Completed' },
-  { value: 'Class A', label: 'VA Licensed Contractor' },
-  { value: '$5M', label: 'Liability Coverage' },
+  { value: '40+', label: 'Years in the trade' },
+  { value: '2,263', label: 'Customers on file' },
+  { value: '920', label: 'Completed jobs documented' },
+  { value: '33', label: 'Virginia service areas' },
 ];
 
 const SERVICES = [
@@ -36,38 +60,35 @@ const SERVICES = [
   { icon: Hammer, title: 'Asphalt Milling', href: '/paving', desc: 'Mill and overlay resurfacing when the base is still sound.' },
 ];
 
-const TRUST_POINTS = [
-  'USDOT 2568168 — active FMCSA registration',
-  '$5M general liability + workers\' comp',
-  'Family-owned since 1984 — Chester, VA',
-  'Written estimates with line-item breakdown',
-  'No deposit until materials are ordered',
-];
-
-const REVIEWS = [
+/* The tools strip. "Softer" was the owner's word: these are presented as
+   things the company provides, not as an AI product — and each one works. */
+const TOOLS = [
   {
-    name: 'Michael T.',
-    location: 'Midlothian, VA',
-    stars: 5,
-    text: 'They diagnosed a base failure before they quoted me — saved me from resurfacing over a problem. Honest and thorough.',
+    icon: Ruler,
+    title: 'Get a written estimate',
+    desc: 'Tell us the job on this page and we will come look at it. Free, itemized, no obligation.',
+    href: '#quote',
   },
   {
-    name: 'Sandra R.',
-    location: 'Short Pump, VA',
-    stars: 5,
-    text: 'Best looking driveway on the street. Clean edges, proper slope — no standing water after rain for the first time in years.',
+    icon: Camera,
+    title: 'Text us a photo',
+    desc: 'Send a picture of the worst of it and we will tell you honestly what it needs — repair, overlay, or nothing yet.',
+    href: `sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`,
   },
   {
-    name: 'James K.',
-    location: 'Chester, VA',
-    stars: 5,
-    text: 'They paved our church parking lot in two phases so we never had to close. Crew was professional and the job came in on budget.',
+    icon: MessageSquare,
+    title: 'See it before you build it',
+    desc: 'Preview surface options on a photo of your own property with the visualizer.',
+    href: '/visualizer',
   },
 ];
 
 export default function Home() {
+  const worstTown = CLIMATE_SPREAD.highest;
+  const chester = LOCAL_CLIMATE.find((c) => c.slug === 'chester-va');
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] font-body text-gray-200">
+    <div className="min-h-screen bg-white font-body text-gray-800">
       <SEO
         title="Asphalt Paving Virginia | J. Worden & Sons — Chester, Richmond, Chesterfield"
         description="Virginia's trusted asphalt paving contractor since 1984. Driveways, parking lots, sealcoating, crack repair, and tar and chip across Richmond, Chesterfield, Hampton Roads, and all of Virginia."
@@ -76,14 +97,11 @@ export default function Home() {
       <HomeSchema />
       <Navbar />
 
-      {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex items-end bg-[#0f0f0f] overflow-hidden">
-        {/* background image */}
+      {/* ── HERO — full-colour photograph, navy overlay for legibility ──── */}
+      <section className="relative min-h-[82vh] flex items-end overflow-hidden bg-[#112337]">
         <div className="absolute inset-0">
           {/* LCP hero — responsive AVIF/WebP matches the <link rel="preload">
-              in index.html so the browser reuses the preloaded image (mobile
-              AVIF ~55KB vs the 161KB JPG). fetchPriority + eager keep it the
-              prioritized LCP element. */}
+              in index.html so the browser reuses the preloaded image. */}
           <picture>
             <source
               type="image/avif"
@@ -97,47 +115,69 @@ export default function Home() {
             />
             <img
               src={HERO_IMAGE}
-              alt="J. Worden and Sons asphalt paving — Virginia"
+              alt="J. Worden and Sons crew paving a Virginia driveway"
               width={1600}
               height={900}
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="w-full h-full object-cover opacity-35"
+              className="w-full h-full object-cover"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f0f0f] via-[#0f0f0f]/80 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent" />
+          {/* THE ALIVE PART, DONE WITH OUR OWN FOOTAGE
+              The reference sites feel alive because their heroes move. Theirs
+              move with stock clips; this is our crew sealcoating an actual
+              job. Mechanics that keep it honest and fast:
+                - the preloaded still above stays the LCP, so rankings never
+                  pay for the motion; the video fades in over it when ready
+                - 2.4MB, muted, looped, playsInline, preload="none" until the
+                  still has already painted
+                - motion-reduce hides it entirely for visitors who asked
+                  their OS for less movement */}
+          <video
+            className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
+            src="/videos/sealcoating.mp4"
+            poster="/work/portfolio/portfolio-010.webp"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          {/* One overlay, bottom-weighted, so the photograph stays a photograph. */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#112337] via-[#112337]/55 to-transparent" />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 pb-20 pt-40">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 pb-16 pt-40">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 border border-[#ff7a00]/40 text-[#ff7a00] text-xs font-display uppercase tracking-[0.08em] px-4 py-2 mb-8">
-              <Shield className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/25 text-white text-xs font-semibold uppercase tracking-[0.06em] px-4 py-2 mb-6 rounded">
+              <Shield className="w-3.5 h-3.5 text-[#ff7a00]" />
               USDOT 2568168 · Family-Owned Since 1984
             </div>
-            <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl uppercase leading-none tracking-tight mb-6">
-              Asphalt Paving<br />
-              <span className="text-[#ff7a00]">in Virginia</span>
+            <h1 className="font-display text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5">
+              Virginia&rsquo;s asphalt paving contractor,
+              <br className="hidden md:block" /> four generations deep.
             </h1>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-xl mb-3">
-              Driveways, parking lots, sealcoating, and crack repair built on honest diagnosis and 40 years of Virginia soil experience.
+            <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-xl mb-8">
+              Driveways, parking lots, sealcoating and crack repair — diagnosed honestly,
+              built for the ground they sit on, from Richmond to the Blue Ridge.
             </p>
-            <p className="text-gray-400 text-sm mb-10">Driveways from <strong className="text-white">$4/sq ft</strong> · Parking lots from <strong className="text-white">$2.50/sq ft</strong> · Free written estimate</p>
             <div className="flex flex-wrap gap-4">
               <a
                 href={`tel:${PHONE_E164}`}
                 onClick={() => trackPhoneClick('homepage_hero')}
-                className="inline-flex items-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:bg-[#ff9a30] transition-colors"
+                className="inline-flex items-center gap-3 bg-[#ff7a00] text-white font-display font-bold text-sm uppercase tracking-[0.04em] px-8 py-4 rounded hover:bg-[#e56d00] transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call {PHONE_DISPLAY}
               </a>
               <a
-                href="/quote"
-                className="inline-flex items-center gap-3 border border-white/30 text-white font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:border-white/60 hover:bg-white/5 transition-colors"
+                href="#quote"
+                className="inline-flex items-center gap-3 bg-white text-[#112337] font-display font-bold text-sm uppercase tracking-[0.04em] px-8 py-4 rounded hover:bg-gray-100 transition-colors"
               >
-                Free Estimate
+                Get a Free Estimate
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
@@ -145,341 +185,159 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── STATS STRIP ──────────────────────────────────────────── */}
+      {/* ── STATS — every figure has a document behind it ────────────────── */}
       <section className="bg-[#ff7a00]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4">
             {STATS.map((s) => (
               <div key={s.label} className="py-8 px-6 border-r border-black/10 last:border-r-0 text-center">
-                <p className="font-display text-black text-4xl md:text-5xl font-bold">{s.value}</p>
-                <p className="text-black/70 text-sm font-display uppercase tracking-[0.06em] mt-1">{s.label}</p>
+                <p className="font-display text-white text-4xl md:text-5xl font-bold tabular-nums">{s.value}</p>
+                <p className="text-white/85 text-sm font-semibold uppercase tracking-[0.04em] mt-1">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── REVIEW BADGES ────────────────────────────────────────── */}
-      <section className="bg-white border-b border-gray-100 py-10">
+      {/* ── TWO DOORS — each buyer hears their own language ──────────────── */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="max-w-2xl mb-12">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#112337] tracking-tight mb-3">
+              One company. Two kinds of work.
+            </h2>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              A homeowner and a property manager need different things from a paving
+              contractor. Pick your door and we will talk about yours.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <a href="/residential" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#ff7a00] transition-colors">
+              <div className="aspect-[16/9] overflow-hidden">
+                <img src={RESIDENTIAL_IMAGE} alt="Residential driveway paving in Goochland, Virginia" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+              </div>
+              <div className="p-8">
+                <h3 className="font-display text-2xl font-bold text-[#112337] mb-2">Homeowners</h3>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  Driveways, sealcoating, crack repair. A written estimate, a straight answer
+                  about what your driveway actually needs, and a crew that shows up.
+                </p>
+                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-semibold">
+                  Residential paving <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+            <a href="/commercial" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#ff7a00] transition-colors">
+              <div className="aspect-[16/9] overflow-hidden">
+                <img src={COMMERCIAL_IMAGE} alt="Commercial parking lot paving, Virginia" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+              </div>
+              <div className="p-8">
+                <h3 className="font-display text-2xl font-bold text-[#112337] mb-2">Businesses &amp; Property Managers</h3>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  Parking lots, phased night work, multi-site programs. Documented specs,
+                  federal motor-carrier registration, and permits you can verify yourself.
+                </p>
+                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-semibold">
+                  Commercial paving <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SERVICES — flat cards, real routes ───────────────────────────── */}
+      <section id="services" className="py-16 md:py-24 bg-[#f5f6f7]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-[#112337] tracking-tight mb-10">
+            What we do
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SERVICES.map((s) => (
+              <a key={s.title} href={s.href} className="group bg-white rounded-lg border border-gray-200 p-7 hover:border-[#ff7a00] transition-colors">
+                <s.icon className="w-8 h-8 text-[#ff7a00] mb-4" />
+                <h3 className="font-display text-lg font-bold text-[#112337] mb-2">{s.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{s.desc}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── THE MEASURED DIFFERENCE — what the big consolidators cannot say ─ */}
+      <section className="py-16 md:py-24 bg-[#112337] text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
+          <div>
+            <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">Measured, not estimated</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              We spec by what your town&rsquo;s weather actually does.
+            </h2>
+            <p className="text-white/80 leading-relaxed mb-4">
+              A freeze-thaw cycle — a day that drops below freezing and climbs back out —
+              is what turns a hairline crack into a pothole. Across our Virginia service
+              areas the measured count runs from {CLIMATE_SPREAD.lowest.freezeThawAvg} cycles
+              a year at {CLIMATE_SPREAD.lowest.city} to {worstTown.freezeThawAvg} at{' '}
+              {worstTown.city} — thirty years of records, computed for every town we serve.
+            </p>
+            <p className="text-white/80 leading-relaxed">
+              That is why our base and drainage specs change by location instead of
+              following one state-wide rule{chester ? ` — and why a ${chester.city} driveway is built for ${chester.freezeThawAvg} cycles a winter, not a national average` : ''}.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {[...LOCAL_CLIMATE].sort((a, b) => b.freezeThawAvg - a.freezeThawAvg).slice(0, 6).map((c) => (
+              <a key={c.slug} href={`/service-areas/${c.slug}`} className="bg-white/5 border border-white/15 rounded-lg p-5 hover:border-[#ff7a00]/60 transition-colors">
+                <p className="font-display text-3xl font-bold tabular-nums text-[#ff7a00]">{c.freezeThawAvg}</p>
+                <p className="text-white/70 text-xs uppercase tracking-[0.04em] mt-1">cycles / yr</p>
+                <p className="text-white font-semibold text-sm mt-2">{c.city}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TOOLS — the abilities, spoken quietly, all functional ────────── */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-[#112337] tracking-tight mb-3">
+            Three ways to start
+          </h2>
+          <p className="text-gray-600 text-lg mb-10 max-w-2xl">
+            No forms that go nowhere. Each of these reaches us directly.
+          </p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {TOOLS.map((t) => (
+              <a key={t.title} href={t.href} className="group bg-[#f5f6f7] rounded-lg border border-gray-200 p-7 hover:border-[#ff7a00] transition-colors">
+                <t.icon className="w-8 h-8 text-[#ff7a00] mb-4" />
+                <h3 className="font-display text-lg font-bold text-[#112337] mb-2">{t.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{t.desc}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PROOF — records, programme, photographs, reviews. All real. ──── */}
+      <PublicRecords brand={BRAND_JWORDEN} />
+      <DocumentedRecord />
+      <CommercialClientAuthority />
+      <CustomerProofGallery />
+
+      <section className="bg-white border-y border-gray-100 py-12">
         <div className="max-w-4xl mx-auto px-6">
           <LiveReviewBadges />
         </div>
       </section>
 
-      {/* ── LEGACY STORY ─────────────────────────────────────────── */}
       <LegacyStory />
-
-      {/* ── SERVICES GRID ────────────────────────────────────────── */}
-      <section id="services" className="py-20 md:py-28 relative overflow-hidden border-t border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,122,0,0.05),transparent_50%)]" />
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="mb-14">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">What We Do</p>
-            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
-              Paving Services Across Virginia
-            </h2>
-            <p className="text-gray-400 mt-4 max-w-2xl text-lg">
-              Every scope starts with an on-site base assessment — not a quick look from the truck.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10">
-            {SERVICES.map((svc) => (
-              <a
-                key={svc.href}
-                href={svc.href}
-                className="group bg-[#0f0f0f] p-8 flex flex-col gap-4 hover:bg-white/5 transition-colors duration-300"
-              >
-                <div className="w-12 h-12 bg-[#ff7a00]/10 flex items-center justify-center group-hover:bg-[#ff7a00]/20 transition-colors rounded-xl">
-                  <svc.icon className="w-6 h-6 text-[#ff7a00]" />
-                </div>
-                <h3 className="font-display text-white group-hover:text-[#ff7a00] text-xl uppercase tracking-wide transition-colors">
-                  {svc.title}
-                </h3>
-                <p className="text-gray-400 group-hover:text-gray-300 text-sm leading-relaxed transition-colors flex-1">
-                  {svc.desc}
-                </p>
-                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-display text-xs uppercase tracking-[0.06em] group-hover:gap-3 transition-all">
-                  Learn More <ChevronRight className="w-3.5 h-3.5" />
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── RESIDENTIAL FOCUS ────────────────────────────────────── */}
-      <section className="py-20 md:py-28 border-t border-white/10 relative">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div>
-              <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Residential</p>
-              <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
-                Your Driveway<br />Done Right
-              </h2>
-              <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                Virginia clay is the #1 cause of early driveway failure. We diagnose the sub-base before we quote — so what we build stays stable through 40 freeze-thaw cycles and summer heat.
-              </p>
-              <div className="space-y-3 mb-10">
-                {['6" compacted aggregate base minimum on clay subsoil', 'Crowned cross-section so water drains off edges', 'Hot-mix asphalt or tar-and-chip matched to your traffic and budget', 'Clean cut edges — no ragged borders', 'Written warranty on workmanship'].map((pt) => (
-                  <div key={pt} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#ff7a00] shrink-0 mt-0.5" />
-                    <span className="text-gray-300 text-sm">{pt}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-4">
-                <a href="/residential" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
-                  Residential Paving <ArrowRight className="w-4 h-4" />
-                </a>
-                <a href="/blog/info/driveway-paving-cost-virginia" className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors">
-                  2026 Cost Guide
-                </a>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="aspect-[4/3] w-full bg-slate-950 p-2 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
-                <img
-                  src={RESIDENTIAL_IMAGE}
-                  alt="Residential asphalt driveway paving in Virginia by J. Worden and Sons"
-                  className="w-full h-full object-contain rounded-xl"
-                />
-              </div>
-              <div className="absolute -bottom-5 -left-5 bg-[#ff7a00] text-black p-5 hidden md:block rounded-xl shadow-xl">
-                <p className="font-display text-3xl font-bold">20–30</p>
-                <p className="font-display text-xs uppercase tracking-wide">Year Expected Lifespan</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── COMMERCIAL STRIP ─────────────────────────────────────── */}
-      <section className="bg-[#0f0f0f] py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="aspect-[4/3] w-full bg-slate-950 p-2 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
-                <img
-                  src={COMMERCIAL_IMAGE}
-                  alt="Commercial parking lot paving by J. Worden and Sons"
-                  className="w-full h-full object-contain rounded-xl"
-                />
-              </div>
-            </div>
-            <div className="order-1 lg:order-2">
-              <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Commercial</p>
-              <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
-                Commercial Lots<br />That Stay Open
-              </h2>
-              <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                We phase parking lot projects around your business hours, execute with production crew discipline, and document every job for your property records.
-              </p>
-              <div className="grid grid-cols-2 gap-3 mb-10">
-                {['Retail & QSR', 'HOA Roads', 'Church Lots', 'Industrial Yards', 'ADA Striping', 'Mill & Overlay'].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-gray-300 text-sm">
-                    <div className="w-1.5 h-1.5 bg-[#ff7a00] rounded-full" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <a href="/parking-lots" className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:bg-[#ff9a30] transition-colors">
-                Commercial Paving <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST / CREDENTIALS ──────────────────────────────────── */}
-      <section className="py-20 md:py-24 border-t border-white/10 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,122,0,0.05),transparent_50%)]" />
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Why J. Worden & Sons</p>
-              <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight leading-none mb-6">
-                Licensed.<br />Insured.<br />Family-Owned.
-              </h2>
-              <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                Based in Chester, VA. Serving all of Virginia since 1984. We carry the licensing, insurance, and documentation that protect you — not just promises.
-              </p>
-              <div className="space-y-3">
-                {TRUST_POINTS.map((pt) => (
-                  <div key={pt} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#ff7a00] shrink-0 mt-0.5" />
-                    <span className="text-gray-300 text-sm">{pt}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: Award, title: '40+ Years', sub: 'Family-owned since 1984' },
-                { icon: Shield, title: 'Class A', sub: 'Virginia licensed contractor' },
-                { icon: Users, title: '5,000+', sub: 'Projects completed' },
-                { icon: Clock, title: 'Same-Week', sub: 'Quotes in Central Virginia' },
-              ].map((item) => (
-                <div key={item.title} className="bg-white/5 border border-white/10 backdrop-blur-md p-6 flex flex-col gap-3 rounded-xl hover:bg-white/10 transition-colors">
-                  <item.icon className="w-8 h-8 text-[#ff7a00]" />
-                  <p className="font-display text-white text-2xl uppercase">{item.title}</p>
-                  <p className="text-gray-400 text-sm">{item.sub}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── REVIEWS ──────────────────────────────────────────────── */}
-      <section className="py-20 md:py-28 border-t border-white/10 relative">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="mb-14">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Customer Reviews</p>
-            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
-              What Virginia Homeowners Say
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {REVIEWS.map((r) => (
-              <div key={r.name} className="border border-white/10 bg-white/5 backdrop-blur-md rounded-xl p-8 flex flex-col gap-4">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: r.stars }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#ff7a00] text-[#ff7a00]" />
-                  ))}
-                </div>
-                <p className="text-gray-300 text-base leading-relaxed flex-1">"{r.text}"</p>
-                <div>
-                  <p className="font-display font-bold text-white text-sm uppercase tracking-wide">{r.name}</p>
-                  <p className="text-gray-500 text-xs">{r.location}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <LiveReviewBadges />
-        </div>
-      </section>
-
-      {/* ── PROJECT GALLERY ───────────────────────────────────────── */}
-      <PublicRecords brand={BRAND_JWORDEN} />
-
-      <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="mb-12">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Our Work</p>
-            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight">
-              Recent Projects
-            </h2>
-          </div>
-          <DocumentedRecord />
-      <CommercialClientAuthority />
-          <CustomerProofGallery />
-        </div>
-      </section>
-
-      {/* ── ESTIMATE FORM ────────────────────────────────────────── */}
-      <section id="quote" className="py-20 md:py-28 border-t border-white/10 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,122,0,0.08),transparent_70%)]" />
-        <div className="relative max-w-3xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Free Estimate</p>
-            <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight mb-4">
-              Get a Written Quote
-            </h2>
-            <p className="text-gray-400 text-lg">
-              Or reach us directly — same-day response guaranteed.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 mt-6">
-              <a
-                href={`tel:${PHONE_E164}`}
-                onClick={() => trackPhoneClick('homepage_quote')}
-                className="inline-flex items-center gap-2 bg-[#ff7a00] text-black font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:bg-[#ff9a30] transition-colors"
-              >
-                <Phone className="w-4 h-4" /> {PHONE_DISPLAY}
-              </a>
-              <a
-                href={`sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`}
-                className="inline-flex items-center gap-2 border border-white/20 text-white font-display text-sm uppercase tracking-[0.06em] px-6 py-3 hover:border-white/40 hover:bg-white/5 transition-colors"
-              >
-                <MessageSquare className="w-4 h-4" /> Text Us
-              </a>
-            </div>
-          </div>
-          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6 md:p-10">
-            <EstimateForm source="homepage_quote_section" />
-          </div>
-        </div>
-      </section>
-
-
-      {/* ── COVERAGE NETWORK ──────────────────────────────────────── */}
       <NetworkCoverage />
 
-      {/* ── FAQ ──────────────────────────────────────────────────── */}
-      <section className="py-20 md:py-24 border-t border-white/10 bg-black/20">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <p className="text-[#ff7a00] font-display uppercase tracking-[0.08em] text-sm mb-3">Common Questions</p>
-          <h2 className="font-display text-white text-4xl md:text-5xl uppercase tracking-tight mb-10">Virginia Paving FAQs</h2>
-          <div className="space-y-0 divide-y divide-white/10">
-            {[
-              {
-                q: 'How much does asphalt driveway paving cost in Virginia?',
-                a: 'Most residential driveways in Virginia run $4–$7 per square foot installed. The biggest cost variables are base condition (poor compaction or clay pumping adds $2–$5/sq ft to fix), grade complexity, and tear-out of an existing surface (+$1–$3/sq ft). A 1,000 sq ft driveway in average condition typically runs $4,500–$6,500 all-in. We provide free written estimates with a line-item breakdown — not just a number.',
-              },
-              {
-                q: 'Why do driveways fail early in Virginia?',
-                a: "Virginia's Piedmont clay is the #1 culprit. Clay swells with moisture in winter and shrinks in summer — that expansion cycle pumps base material upward and cracks the surface from below. Contractors who skip the geotextile fabric separator or pour less than 4–6 inches of compacted aggregate base will see failure in 5–8 years instead of 20–30. We diagnose the base before we quote so we're fixing the actual problem, not covering it.",
-              },
-              {
-                q: 'What areas of Virginia do you serve?',
-                a: 'We operate statewide from our Chester, VA headquarters — with full crews regularly working Richmond, Chesterfield, Henrico, Midlothian, Hampton Roads, Williamsburg, Northern Virginia, Fredericksburg, the Shenandoah Valley, and rural Southside and Piedmont counties. Central Virginia and the I-95 corridor typically get same-week estimates.',
-              },
-              {
-                q: 'Are you insured, and how do you handle licensing?',
-                a: 'We carry $5M general liability and workers\' compensation, and can provide certificates of insurance naming your property as additional insured — common for HOA and commercial projects. We are a USDOT-registered carrier, number 2568168, which you can check yourself at safer.fmcsa.dot.gov. On licensing: we hold the licences the work in front of us requires and obtain them market by market as work is secured, rather than carrying credentials speculatively. Ask us about your specific project and we will tell you exactly what applies.',
-              },
-              {
-                q: 'When is the best time of year to pave in Virginia?',
-                a: "Virginia's paving season runs mid-April through early November. May, June, September, and October give the best cure conditions — warm days, cool nights, low rain probability. We require a minimum 50°F ambient temperature (rising, not falling) and a 24-hour rain-free window on both sides. Scheduling in April or late October often means faster availability and sometimes off-peak pricing.",
-              },
-            ].map(({ q, a }) => (
-              <div key={q} className="py-6">
-                <p className="font-display text-white text-lg uppercase tracking-wide mb-2">{q}</p>
-                <p className="text-gray-400 text-sm leading-relaxed">{a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ─────────────────────────────────────────────── */}
-      <section className="bg-[#0f0f0f] py-20 md:py-24">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="font-display text-white text-4xl md:text-6xl uppercase tracking-tight leading-none mb-6">
-            Ready to Get<br />
-            <span className="text-[#ff7a00]">Started?</span>
-          </h2>
-          <p className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-            Free on-site assessment. Written estimate within 48 hours. No deposit until materials are ordered.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href={`tel:${PHONE_E164}`}
-              onClick={() => trackPhoneClick('homepage_bottom')}
-              className="inline-flex items-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-10 py-4 hover:bg-[#ff9a30] transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              Call {PHONE_DISPLAY}
-            </a>
-            <a
-              href="/locations"
-              className="inline-flex items-center gap-3 border border-white/20 text-white font-display text-sm uppercase tracking-[0.06em] px-10 py-4 hover:border-white/50 hover:bg-white/5 transition-colors"
-            >
-              View Service Areas
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* ── THE ASK — on the page, after the proof ───────────────────────── */}
+      <QuoteBlock
+        source="homepage"
+        heading="Tell Us About the Job"
+        intro="Free written estimate anywhere in our Virginia service areas. We look at the ground before we quote the surface, and the number you get is the number it costs."
+      />
 
       <Footer />
     </div>

@@ -194,7 +194,18 @@ test('no page claims a current Class A licence', () => {
       // naive grep would fail on the explanation rather than on a claim.
       .replace(/\/\*[\s\S]*?\*\//g, '')
       .replace(/^\s*\/\/.*$/gm, '')
-    assert.doesNotMatch(src, /Class A [Ll]icensed/, `${page} still claims a current Class A licence`)
+    // The first version of this assertion required the words to be ADJACENT
+    // ("Class A licensed"), and the homepage evaded it by layout: a stats band
+    // with value 'Class A' in one string and label 'VA Licensed Contractor' in
+    // the next. A claim split across two strings is still the claim. So: the
+    // phrase "Class A" is banned from these pages outright, in any position,
+    // unless the register comes to support it again — at which point loosening
+    // this line is a deliberate act with a citation, not a formatting accident.
+    assert.doesNotMatch(src, /Class A/, `${page} carries a Class A claim the register does not support`)
+    // The same page carried "$5M Liability Coverage" (documented COI: $1M/$2M),
+    // "5,000+ Projects" (the record: 2,263 customers, 920 completed jobs) and
+    // a no-deposit promise contradicted by actual practice. Ban the shapes.
+    assert.doesNotMatch(src, /\$5M|5,000\+|No deposit/i, `${page} carries an unevidenced marketing figure`)
   }
 })
 
