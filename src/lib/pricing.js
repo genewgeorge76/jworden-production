@@ -63,7 +63,7 @@ const RATES = {
     commercial: { low: 8.0, high: 25.0 },
     default: { low: 5.0, high: 20.0 },
   },
-  // Cobblestone & brick_paver_patios — installed sq ft
+  // Cobblestone & brick paver patios — installed sq ft
   cobblestone_pavers: {
     residential: { low: 15.0, high: 55.0 },
     commercial: { low: 18.0, high: 60.0 },

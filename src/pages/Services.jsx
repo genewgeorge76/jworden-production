@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SchemaMarkup, { serviceSchema, faqSchema, howToSchema } from '../components/SchemaMarkup'
 import FAQAccordion from '../components/FAQAccordion'
-import InspirationGallery from '../components/InspirationGallery'
 import QuoteBlock from '@/components/QuoteBlock'
 import JobPhotoStrip from '@/components/JobPhotoStrip'
 
@@ -134,30 +133,9 @@ const SERVICES = [
       'New commercial builds, QSR franchise construction, large residential additions, full renovations',
   },
   {
-    id: 'interior-design',
-    icon: '🎨',
-    title: 'Interior Design & Decorating',
-    tagline: 'Award-winning design — Best of Houzz recognized',
-    priceRange: 'Design consultations from $150/hr; full-room packages from $2,500',
-    description:
-      'Our interior design team brings the precision and eye for detail that earned us Best of Houzz recognition. From mood-board concept to final installation, we create spaces that are beautiful, functional, and uniquely yours. We source premium materials, manage vendor coordination, and handle all procurement so your only job is to enjoy the reveal.',
-    features: [
-      'In-home design consultation & space planning',
-      'Digital mood boards & 3D visualization renders',
-      'Custom color palette & materials selection',
-      'Furniture, fixture & finish (FF&E) procurement',
-      'Flooring, cabinetry, countertop selection & install coordination',
-      'Lighting design & smart-home integration planning',
-      'Outdoor living room & covered patio design',
-      'Full project management from concept to completion',
-    ],
-    ideal:
-      'Full home renovations, new construction interiors, commercial office & hospitality spaces, outdoor living areas',
-  },
-  {
     id: 'cobblestone-pavers',
     icon: '🪨',
-    title: 'Cobblestone & brick_paver_patios',
+    title: 'Cobblestone & Brick Paver Patios',
     tagline: 'Timeless hardscapes that elevate outdoor living',
     priceRange: 'Brick pavers from $15–$30 per sq ft installed; cobblestone from $25–$55 per sq ft',
     description:
@@ -314,12 +292,7 @@ const SERVICE_FAQS = [
       'As your GC, we handle everything: pulling all permits, hiring and scheduling licensed subcontractors, inspecting quality at every phase, managing the project budget, processing change orders, and delivering a complete punch-list sign-off. You deal with one point of contact — us — and we handle the rest.',
   },
   {
-    question: 'How does your interior design process work?',
-    answer:
-      'We start with a consultation to understand your style, budget, and functional needs. From there our designers produce digital mood boards and material palettes for your approval. Once the design is locked, we manage all vendor sourcing, procurement, and installation coordination through to the final reveal.',
-  },
-  {
-    question: 'How long do brick_paver_patios last compared to poured concrete?',
+    question: 'How long do brick paver patios last compared to poured concrete?',
     answer:
       'A properly installed brick or cobblestone paver patio outlasts poured concrete by decades. Individual units can be lifted and replaced if they settle or crack — unlike concrete which requires full demolition. With a quality compacted base and polymeric sand joints, paver patios routinely last 25–50 years.',
   },
@@ -356,6 +329,19 @@ const SEALCOATING_HOW_TO = howToSchema(
     },
   ]
 )
+
+
+// Real photographs for each service card, from the verified registry pool.
+const SERVICE_PHOTOS = {
+  paving: { src: '/images/real_jobs/leeboy-8515-being-fed.webp', alt: 'LeeBoy 8515 paver taking mix from the dump truck' },
+  crackfill: { src: '/images/real_jobs/IMG_0022.webp', alt: 'Crack seal going down after close at a shopping center' },
+  parking: { src: '/images/real_jobs/IMG_0026.webp', alt: 'Grocery-anchor lot freshly sealcoated and striped' },
+  driveways: { src: '/images/real_jobs/IMG_6981.webp', alt: 'Crew and paver laying hot mix on an estate driveway' },
+  maintenance: { src: '/images/real_jobs/office-lot-fresh-sealcoat.webp', alt: 'Office lot freshly sealed, measuring wheel still out' },
+  'general-contracting': { src: '/images/real_jobs/commercial-newbuild-first-lift-2025.webp', alt: 'Crew laying first lift at a new commercial building' },
+  'cobblestone-pavers': { src: '/images/real_jobs/driveway-cobblestone-ribbon.webp', alt: 'Driveway with a cobblestone center ribbon' },
+  'stone-masonry': { src: '/images/real_jobs/flagstone-walkway-stacked-steps-2013.webp', alt: 'Flagstone walkway with dry-stacked stone steps' },
+}
 
 export default function Services() {
   return (
@@ -420,7 +406,6 @@ export default function Services() {
           >
             {/* Content */}
             <div>
-              <div className="text-5xl mb-4">{svc.icon}</div>
               <span className="text-xs font-bold uppercase tracking-[0.08em] text-brand-amber">
                 {svc.tagline}
               </span>
@@ -460,14 +445,17 @@ export default function Services() {
                   Your browser does not support embedded video.
                 </video>
               </div>
-            ) : (
-              <div className="bg-brand-navy/5 rounded-2xl aspect-video flex items-center justify-center border-2 border-dashed border-brand-navy/20">
-                <div className="text-center text-brand-navy/30">
-                  <div className="text-6xl mb-2">{svc.icon}</div>
-                  <p className="text-sm">Photo coming soon</p>
-                </div>
+            ) : SERVICE_PHOTOS[svc.id] ? (
+              <div className="rounded-2xl overflow-hidden aspect-video border border-brand-navy/10 shadow-lg">
+                <img
+                  src={SERVICE_PHOTOS[svc.id].src}
+                  alt={SERVICE_PHOTOS[svc.id].alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
+                />
               </div>
-            )}
+            ) : null}
           </motion.section>
         ))}
       </div>
@@ -669,23 +657,6 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Project Inspiration Gallery */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span className="text-brand-amber text-xs font-bold uppercase tracking-[0.08em]">
-              Project Inspiration
-            </span>
-            <h2 className="section-heading mt-2 mb-4">Browse Our Work by Style &amp; Category</h2>
-            <p className="text-brand-navy/60 max-w-xl mx-auto">
-              Filter by interior design, outdoor living, stone masonry, or construction projects to
-              find inspiration for your next build.
-            </p>
-          </div>
-          <InspirationGallery />
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="py-16 bg-brand-amber text-center">
         <div className="max-w-2xl mx-auto px-4">
@@ -694,8 +665,7 @@ export default function Services() {
           </h2>
           <p className="text-brand-navy/70 mb-6">
             Tell us about your project and we will recommend the right approach — whether
-            that&rsquo;s paving, masonry, a full GC engagement, or an interior design consultation.
-            No pressure.
+            that&rsquo;s paving, sealcoating, masonry, or a full GC engagement. No pressure.
           </p>
           <a
             href="#quote"
