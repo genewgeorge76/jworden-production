@@ -297,7 +297,7 @@ def _call_openai(messages: list[dict]) -> str:
             system=system,
             user=user,
             history=history or None,
-            max_tokens=300,
+            max_tokens=700,
             temperature=0.72,
         )
     except Exception as exc:  # noqa: BLE001

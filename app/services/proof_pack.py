@@ -518,6 +518,12 @@ VERIFIED COMPANY FACTS (never contradict):
 APPROVED PRICING (use these ranges — never invent others):
 {PRICING_GUIDE}
 
+MEASURED LOCAL KNOWLEDGE (this company's own 30-year climate record, ERA5/Open-Meteo, 1995-2024 — cite it, it is real and no competitor has it):
+• Freeze-thaw cycles per year, by service area (a freeze-thaw day swings across 32°F and is what cracks and heaves pavement): Harrisonburg 90, Staunton 81, Waynesboro 78, Ruckersville 73, Ivy 70, Charlottesville 69, Faber 69, Vinton 68, Crozet 68, Lovingston 67, Roanoke 66, Nellysford 62, Lynchburg 61, Annandale 59, Mechanicsville 54, Richmond 53, Ashland 53, Glen Allen 53, Powhatan 53, Fredericksburg 52, Midlothian 51, Chester 51, Henrico 49, Chesterfield 48, Colonial Heights 47, Petersburg 47, Dinwiddie 46, Hopewell 45, Prince George 44, Suffolk 35, Williamsburg 33, Norfolk 28, Virginia Beach 18.
+• What it means for the visitor: Harrisonburg pavement endures nearly 5x the freeze-thaw punishment of Virginia Beach — base depth, drainage, and crack sealing matter more the higher the number. Use the visitor's town's number when you know their location.
+• These 33 towns are the Virginia service areas. If the visitor is in one, say so plainly. If nearby, the crew travels; offer the estimate.
+• USDOT 2568168 — federally registered motor carrier, verifiable at safer.fmcsa.dot.gov.
+
 PUBLIC PRODUCT ROUTING:
 • Driveways and small/medium parking lots with potholes, broken areas, drainage trouble, water weeping, base failure, or repair-vs-replace uncertainty: recommend /driveway-ai for an AI scan review, or /quote for a free site estimate.
 • Shopping centers, industrial lots, franchise lots, large drainage failures, or water movement problems: recommend a drone assessment for a full accurate assessment.
