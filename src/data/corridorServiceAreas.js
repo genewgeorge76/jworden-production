@@ -66,6 +66,57 @@
  */
 
 export const CORRIDOR_SERVICE_AREAS = [
+  {
+    slug: 'roanoke-va',
+    city: 'Roanoke',
+    state: 'Virginia',
+    stateCode: 'VA',
+    county: 'City of Roanoke',
+    lat: 37.271,
+    lng: -79.9414,
+    headline: 'Asphalt Paving Contractor in Roanoke, VA',
+    tagline: 'Roanoke Valley commercial paving — institutional campuses, rail-era industrial, and 66 freeze-thaw cycles a year.',
+    description:
+      "Roanoke is an independent city, which is the first thing that matters to anyone paving here. It is not part of Roanoke County and never has been, so the street department, the right-of-way permit process and the inspection regime are the city's own. A contractor who assumes a county process because the address says Roanoke starts the job behind. The pavement itself divides along the lines the railroad drew. Norfolk and Western built this city, and the industrial spine it left behind — yards, shops, loading approaches off Shenandoah and Norfolk Avenue — carries the hardest loading asphalt ever sees: heavy, concentrated and slow, which is worse than heavy and moving. Those approaches need thickness and a base built for point loads, not a surface fix. The institutional side is the other half of the market and it runs on a different clock. Carilion's medical campuses, the hospitals and the clinics around them do not close, so their lots are phased night work with ambulance routes and emergency access kept open the entire time — a scheduling problem as much as a paving one. Downtown adds its own constraint: a compact grid of older pavement, alley access and on-street parking where a lane closure is negotiated rather than assumed, and where the City Market district cannot simply be shut for a shift. Underneath all of it is the valley floor at roughly nine hundred feet, ringed by mountains that put water on the ground faster than flat country does. Roanoke measures 66.4 freeze-thaw cycles in an average year over the last thirty — nearly four times Virginia Beach and well above Richmond — and that number is why base depth and drainage are not upsells in this valley. Water that reaches the subgrade here freezes and thaws sixty-six times a winter, and every one of those cycles opens the crack a little further.",
+    services: [
+      'Commercial Paving',
+      'Parking Lots',
+      'Sealcoating',
+      'Crack Filling',
+      'Concrete and Curbing',
+      'ADA Striping',
+    ],
+    nearbyLandmarks: [
+      'Downtown Roanoke',
+      'City Market district',
+      'Mill Mountain',
+      'Roanoke Valley',
+      'Blue Ridge Parkway access',
+    ],
+    faqs: [
+      {
+        question: 'Is paving in the City of Roanoke different from Roanoke County?',
+        answer:
+          "Administratively, yes, and it catches people out. Roanoke is an independent city, so it runs its own street department and its own right-of-way permitting rather than deferring to Roanoke County. Work in Vinton or the county surrounding the city goes through a different office entirely. We confirm which authority a site sits under before quoting, because the permit path affects the schedule and occasionally the detail.",
+      },
+      {
+        question: 'How many freeze-thaw cycles does Roanoke actually get?',
+        answer:
+          "66.4 in an average year, measured from thirty years of daily temperature records for this location, with a range of 51 to 85 depending on the winter. A cycle is a day that drops below freezing and climbs back above it, and it is the mechanism that turns a hairline crack into a pothole. For comparison, Virginia Beach averages 18.4 and Richmond 53.4. That is the engineering reason a Roanoke lot needs more base and better drainage than a coastal one, and it is measured rather than asserted.",
+      },
+      {
+        question: 'Can you work overnight on a hospital or campus lot?',
+        answer:
+          "That is normally the only way it can be done. Medical campuses do not close, so the work is phased section by section overnight with emergency access and ambulance routes kept open throughout, and each section striped and reopened before the next begins. It takes longer than closing a lot outright and it is the difference between a job that can happen and one that cannot.",
+      },
+      {
+        question: 'What about the old industrial and rail-side approaches?',
+        answer:
+          "They are the hardest thing in the valley to build for. Loaded trucks that are heavy, concentrated and slow-moving punish asphalt far more than the same weight at speed, and a surface-only repair on a failing loading approach is money spent twice. Those areas need the base assessed before anyone quotes a surface, and sometimes the honest answer is concrete rather than asphalt.",
+      },
+    ],
+  },
+
   // ── Where the 2026 work has been ────────────────────────────────────────
   {
     slug: 'ruckersville-va',

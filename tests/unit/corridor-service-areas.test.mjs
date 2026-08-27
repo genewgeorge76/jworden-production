@@ -170,9 +170,37 @@ test('elevation claims match the county facts they came from', () => {
   }
 })
 
+/**
+ * VIRGINIA HAS 38 LOCALITIES THAT BELONG TO NO COUNTY
+ * ───────────────────────────────────────────────────
+ * This test used to require every locality's `county` to end in "County", which
+ * is false in Virginia and false in a way that matters to this business.
+ * Virginia's independent cities are not part of any county: they run their own
+ * street department, their own right-of-way permitting and their own
+ * inspections. A contractor who assumes a county process because the address
+ * says Roanoke starts the job behind, which is the first thing the Roanoke page
+ * tells a reader.
+ *
+ * Roanoke was the first independent city to reach the corridor file and the
+ * assertion failed on it — correctly flagging something unusual, then drawing
+ * the wrong conclusion. The list is named rather than pattern-matched on
+ * "City of ", so a typo still fails.
+ */
+const VA_INDEPENDENT_CITIES = new Set([
+  'City of Roanoke', 'City of Richmond', 'City of Norfolk', 'City of Virginia Beach',
+  'City of Suffolk', 'City of Petersburg', 'City of Hopewell', 'City of Colonial Heights',
+  'City of Fredericksburg', 'City of Charlottesville', 'City of Williamsburg',
+  'City of Chesapeake', 'City of Portsmouth', 'City of Newport News', 'City of Hampton',
+  'City of Lynchburg', 'City of Salem', 'City of Staunton', 'City of Waynesboro',
+  'City of Harrisonburg', 'City of Winchester', 'City of Alexandria', 'City of Danville',
+])
+
 test('each page names its own county and none names the wrong one', () => {
   for (const area of AREAS) {
-    assert.ok(area.county.endsWith('County'), `${area.slug} has no county`)
+    assert.ok(
+      area.county.endsWith('County') || VA_INDEPENDENT_CITIES.has(area.county),
+      `${area.slug}: "${area.county}" is neither a county nor a recognised Virginia independent city`,
+    )
     assert.equal(area.stateCode, 'VA')
     assert.ok(area.lat > 36.5 && area.lat < 39.5, `${area.slug} latitude is not in Virginia`)
     assert.ok(area.lng < -75 && area.lng > -84, `${area.slug} longitude is not in Virginia`)

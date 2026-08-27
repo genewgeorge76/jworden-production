@@ -80,6 +80,7 @@ export const LOCAL_CLIMATE = [
   { slug: 'vinton-va', city: 'Vinton', county: 'Roanoke County', stateCode: 'VA', freezeThawAvg: 68.0, freezeThawMin: 51, freezeThawMax: 88, workableDaysAvg: 290, years: 30 },
   { slug: 'crozet-va', city: 'Crozet', county: 'Albemarle County', stateCode: 'VA', freezeThawAvg: 68.0, freezeThawMin: 48, freezeThawMax: 91, workableDaysAvg: 288, years: 30 },
   { slug: 'lovingston-va', city: 'Lovingston', county: 'Nelson County', stateCode: 'VA', freezeThawAvg: 67.3, freezeThawMin: 49, freezeThawMax: 85, workableDaysAvg: 288, years: 30 },
+  { slug: 'roanoke-va', city: 'Roanoke', county: 'City of Roanoke', stateCode: 'VA', freezeThawAvg: 66.4, freezeThawMin: 51, freezeThawMax: 85, workableDaysAvg: 293, years: 30 },
   { slug: 'nellysford-va', city: 'Nellysford', county: 'Nelson County', stateCode: 'VA', freezeThawAvg: 62.4, freezeThawMin: 42, freezeThawMax: 81, workableDaysAvg: 291, years: 30 },
   { slug: 'annandale-va', city: 'Annandale', county: 'Fairfax County', stateCode: 'VA', freezeThawAvg: 59.3, freezeThawMin: 38, freezeThawMax: 73, workableDaysAvg: 277, years: 30 },
   { slug: 'mechanicsville-va', city: 'Mechanicsville', county: 'Hanover County', stateCode: 'VA', freezeThawAvg: 54.0, freezeThawMin: 31, freezeThawMax: 77, workableDaysAvg: 301, years: 30 },
