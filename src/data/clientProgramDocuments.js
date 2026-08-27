@@ -507,6 +507,29 @@ export const TYSON_PLANT_PARKING_LOT = {
   engagedThrough: 'Coastal Maintenance LLC',
 }
 
+/**
+ * RICHMOND COMMERCIAL JOB, SPRING 2026 (owner-stated, 2026-08-27)
+ * Owner's words: "I PAVED PLAN PARENTHOOD THIS SPRING ON 201 N HAMLITON
+ * STREET RICHMOND 23221". The address matches the Planned Parenthood health
+ * center at 201 N Hamilton St, Richmond. Recent, local, commercial — exactly
+ * the proof the Richmond brand wants.
+ *
+ * PUBLICATION HELD PENDING OWNER DECISION: naming this client on a marketing
+ * page is a business decision, not an evidence question — the organization is
+ * politically charged in both directions. If the owner wants it published,
+ * an invoice or Kickserv entry should also be located first so it publishes
+ * at document grade like the other named clients.
+ */
+export const RICHMOND_HAMILTON_ST_2026 = {
+  id: 'richmond-hamilton-st-2026',
+  assertedBy: 'owner',
+  assertedOn: '2026-08-27',
+  claim: 'Paved the lot at 201 N Hamilton St, Richmond, VA 23221 in spring 2026',
+  evidence: 'owner-confirmed',
+  publishable: false,
+  publicationNote: 'held for owner decision on naming the client; seek invoice/Kickserv corroboration',
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
   LEESVILLE_CM_INVOICE,

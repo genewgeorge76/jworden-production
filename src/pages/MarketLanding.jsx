@@ -49,22 +49,40 @@ const SERVICE_MIX = [
 
 const PROOF_IMAGES = [
   {
-    id: 'kfc-9509',
-    src: '/work/imported/KFC/IMG_9509.JPG',
-    title: 'High-traffic commercial lot delivery',
-    body: 'Documented paving execution for high-use customer traffic with controlled sequencing and closeout verification.',
+    id: 'harris-teeter-lot',
+    src: '/images/real_jobs/IMG_0026.webp',
+    title: 'Grocery-anchor lot, sealcoated and striped',
+    body: 'The whole lot fresh black with new lines, and the crew still sweeping the entrance when this was taken.',
   },
   {
-    id: 'va-8724',
-    src: '/work/imported/va_cars_photos_and_videos_for_website/IMG_8724.JPG',
-    title: 'Residential driveway finish and edge control',
-    body: 'Clean residential finish work with stable transitions, water-shedding slope, and detail-focused completion.',
+    id: 'estate-driveway-crew',
+    src: '/images/real_jobs/IMG_6981.webp',
+    title: 'Estate driveway with cobblestone borders',
+    body: 'Paver and crew laying hot mix on a large residential drive, dump truck feeding the machine.',
   },
   {
-    id: 'va-8733',
-    src: '/work/imported/va_cars_photos_and_videos_for_website/IMG_8733.JPG',
-    title: 'Surface renewal with preservation planning',
-    body: 'Asphalt renewal strategy designed to protect service life, support traffic demand, and reduce avoidable capital rework.',
+    id: 'dealership-pano',
+    src: '/images/real_jobs/IMG_8715-PANO.webp',
+    title: 'Dealership lot mid-pave',
+    body: 'Paver and rollers working a full commercial lot while the business stayed open behind the cones.',
+  },
+  {
+    id: 'estate-gate',
+    src: '/images/real_jobs/estate-gate-2012.webp',
+    title: 'Fresh asphalt through a stone-pillar gate',
+    body: 'A gated entrance drive, paved edge to edge and rolled tight against the cobble aprons.',
+  },
+  {
+    id: 'winter-repave',
+    src: '/images/real_jobs/winter-driveway-repave-2014.webp',
+    title: 'Winter repave, rolled and finished',
+    body: 'Roller finishing a wooded residential drive in January — paving season is longer than most people think.',
+  },
+  {
+    id: 'newbuild-first-lift',
+    src: '/images/real_jobs/commercial-newbuild-first-lift-2025.webp',
+    title: 'First lift at a new commercial building',
+    body: 'Crew in hi-vis laying base course against compacted stone at a ground-up commercial site.',
   },
 ]
 
@@ -387,7 +405,7 @@ export default function MarketLanding() {
               {market.proofHeadline}
             </div>
             <h2 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-white mb-10">
-              Verified High-Resolution Field Photos & Scope Accuracy
+              Our Work, Photographed on the Job
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
