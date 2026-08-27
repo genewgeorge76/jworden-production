@@ -289,8 +289,8 @@ export default function About() {
             </p>
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-12 max-h-[360px]">
               <img 
-                src="/images/hero_paving_commercial.png" 
-                alt="J. Worden & Sons Asphalt Paving Heavy Operations" 
+                src="/images/real_jobs/kfc-dusk-crew-roller.webp" 
+                alt="J. Worden and Sons crew and roller working a franchise lot at dusk" 
                 className="w-full h-full object-cover brightness-95 hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
