@@ -949,3 +949,30 @@ export const CUSTOMER_CHECKS_2014 = {
   facts: 'three residential customers, 23235 zip, two adjacent neighbors; one check to J. Worden for $2,000+',
   custody: "owner's Dropbox",
 }
+
+/**
+ * CURRENT GENERAL LIABILITY POLICY (documented 2026-08-27)
+ *
+ * From the ACORD 25 certificate the owner supplied for the spring 2026
+ * Richmond job: Commercial General Liability policy TSGL5487856XB,
+ * Accredited Surety and Casualty Company (via Simply Business), $1,000,000
+ * each occurrence / $2,000,000 general aggregate, effective 2026-04-04
+ * through 2027-04-04. This is the document behind the sites' "insured"
+ * claim for the current year.
+ *
+ * CAVEAT WORTH FIXING: the insured on the certificate is the owner's name
+ * spelled "gene goerge", personally, at the Chester business address — not
+ * the LLC. Certificates issued for commercial clients should carry the LLC;
+ * worth a call to Simply Business to correct both the entity and the
+ * spelling before the next COI request.
+ */
+export const CURRENT_GL_POLICY_2026 = {
+  id: 'current-gl-policy-2026',
+  status: 'held',
+  policy: 'TSGL5487856XB',
+  insurer: 'Accredited Surety and Casualty Company',
+  limits: { eachOccurrence: 1000000, generalAggregate: 2000000 },
+  term: { from: '2026-04-04', to: '2027-04-04' },
+  insuredNameCaveat: 'issued to the owner personally, name misspelled; should be the LLC',
+  custody: "owner's files",
+}
