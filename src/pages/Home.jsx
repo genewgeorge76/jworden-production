@@ -263,6 +263,8 @@ export default function Home() {
               { src: '/work/portfolio/portfolio-002.webp', alt: 'New asphalt driveway winding through trees' },
               { src: '/work/portfolio/portfolio-017.webp', alt: 'Crew and paver working a driveway at a white colonial home' },
               { src: '/work/portfolio/portfolio-003.webp', alt: 'Long ribbon driveway, freshly paved' },
+              { src: '/images/real_jobs/sealcoated-curved-driveway.webp', alt: 'Freshly sealcoated curved driveway between manicured lawns' },
+              { src: '/images/real_jobs/brick-ranch-driveway-planters.webp', alt: 'Fresh asphalt drive along brick planter walls at a ranch home' },
               { src: '/work/portfolio/portfolio-011.webp', alt: 'Hand crew screeding hot mix behind the paver' },
               { src: '/images/real_jobs/new-road-build.webp', alt: 'New road build on compacted stone base through pines' },
             ].map((g) => (
@@ -366,12 +368,23 @@ export default function Home() {
             restaurant builds delivered as general contractor. These frames are from
             our own crews on those lots.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {/* Live tile: our crew spray-sealing a franchise lot, 5 seconds, muted. */}
+            <div className="overflow-hidden rounded-lg border border-white/15">
+              <video
+                className="w-full h-44 md:h-52 object-cover motion-reduce:hidden"
+                src="/videos/kfc-sealcoat-crew.mp4"
+                poster="/videos/kfc-sealcoat-crew-poster.webp"
+                autoPlay muted loop playsInline preload="none"
+                aria-label="Crew member spray-sealing a KFC lot from the rig"
+              />
+            </div>
             {[
+              { src: '/images/real_jobs/kfc-crew-luting-behind-paver.webp', alt: 'Crew luting fresh mat behind the paver at a KFC' },
+              { src: '/images/real_jobs/kfc-dusk-crew-roller.webp', alt: 'Four-man crew and roller working a KFC drive-thru at dusk' },
+              { src: '/images/real_jobs/kfc-drive-thru-demo-cat.webp', alt: 'Excavator and skid steer cutting out a KFC drive-thru' },
               { src: '/work/kfc/kfc-job-026.webp', alt: 'KFC monument sign beside a freshly serviced lot' },
               { src: '/work/kfc/kfc-job-035.webp', alt: 'KFC storefront with rebuilt curb island and fresh asphalt' },
-              { src: '/work/kfc/kfc-job-014.webp', alt: 'Paver laying hot mix on a franchise lot' },
-              { src: '/work/kfc/kfc-job-023.webp', alt: 'Fresh black mat rolled at a franchise site' },
             ].map((g) => (
               <div key={g.src} className="overflow-hidden rounded-lg border border-white/15">
                 <img src={g.src} alt={g.alt} loading="lazy"
