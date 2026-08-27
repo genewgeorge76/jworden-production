@@ -16,7 +16,7 @@ const FAQS = [
   },
   {
     q: 'Why does asphalt performance vary so much across Virginia?',
-    a: 'Virginia spans four distinct paving environments: Piedmont clay (Richmond, Midlothian), coastal sandy subgrade with salt aerosol (Virginia Beach, Chesapeake), Blue Ridge freeze-thaw with 40+ cycles per winter (Roanoke, Harrisonburg), and Northern Valley commuter-load corridors (Winchester, Fredericksburg). Each demands different binders, base depths, and drainage specs. Contractors using one-size-fits-all mixes see failure in 5–7 years across most of Virginia.',
+    a: 'Virginia spans four distinct paving environments: Piedmont clay (Richmond, Midlothian), coastal sandy subgrade with salt aerosol (Virginia Beach, Chesapeake), Blue Ridge and western Piedmont freeze-thaw, measured at 73.4 cycles a year at Ruckersville and 69.0 at Charlottesville over a 30-year record (Ruckersville, Charlottesville, Crozet), and Northern Valley commuter-load corridors (Winchester, Fredericksburg). Each demands different binders, base depths, and drainage specs. Contractors using one-size-fits-all mixes see failure in 5–7 years across most of Virginia.',
   },
   {
     q: 'Do you work across Virginia, and how does licensing work?',

@@ -81,3 +81,60 @@ test('the superseded claims are kept with their verdicts', () => {
   assert.ok(season, 'the asphaltMonths claim is not recorded')
   assert.match(season.verdict, /not directly comparable/i)
 })
+
+/**
+ * NUMBERS ON A PAGE MUST TRACK THE DATASET THEY CAME FROM
+ * ──────────────────────────────────────────────────────
+ * The whole failure this dataset corrects was a figure typed into a page by
+ * hand, with no link back to anything that could re-derive it. Copying measured
+ * numbers into JSX by hand reproduces exactly that, one refresh later: the
+ * baseline moves, the dataset updates, and the page keeps quoting 2024.
+ *
+ * The FAQ is the one place a figure is written as prose rather than read from
+ * the data, because the sentence needs to read naturally. So it is pinned here.
+ */
+test('the location FAQ quotes figures that match the dataset', () => {
+  const faq = readFileSync('src/components/locations/LocationsFAQ.jsx', 'utf8')
+  const claim = faq.match(/measured at ([\d.]+) cycles a year at (\w+) and ([\d.]+) at (\w+)/)
+  assert.ok(claim, 'the measured freeze-thaw sentence is missing from the FAQ')
+  const [, aVal, aCity, bVal, bCity] = claim
+  for (const [val, city] of [[aVal, aCity], [bVal, bCity]]) {
+    const row = LOCAL_CLIMATE.find((c) => c.city === city)
+    assert.ok(row, `${city} is quoted in the FAQ but is not a measured service area`)
+    assert.equal(
+      Number(val), row.freezeThawAvg,
+      `FAQ says ${city} is ${val}; the dataset measures ${row.freezeThawAvg}`,
+    )
+  }
+  // The superseded wording must not creep back.
+  assert.equal(/40\+ cycles per winter/.test(faq), false, 'the unsourced claim returned')
+})
+
+/**
+ * The old FAQ named Roanoke and Harrisonburg as the Blue Ridge examples. Both
+ * are real freeze-thaw country — 66.3 and 89.9 when measured — but neither is a
+ * service area in serviceAreas.js, so the page was illustrating its coverage
+ * with two towns it does not list. The replacement cites measured service areas.
+ */
+test('the FAQ illustrates coverage with places we actually serve', () => {
+  const faq = readFileSync('src/components/locations/LocationsFAQ.jsx', 'utf8')
+  const claim = faq.match(/measured at [\d.]+ cycles a year at (\w+) and [\d.]+ at (\w+)/)
+  for (const city of [claim[1], claim[2]]) {
+    assert.ok(
+      SERVICE_AREAS.some((a) => a.city === city),
+      `${city} is cited on the locations page but is not a service area`,
+    )
+  }
+})
+
+/** The block renders the cycle count and never the workable-day count. */
+test('the location climate block cannot leak the workable-day figure', () => {
+  const block = readFileSync('src/components/LocalClimateBlock.jsx', 'utf8')
+  assert.match(block, /freezeThawAvg/)
+  assert.equal(
+    /workableDays/.test(block), false,
+    'the workable-day count reached a public component; it is a ceiling, not a season',
+  )
+  // A location with no measured row renders nothing rather than a default.
+  assert.match(block, /if \(!c\) return null/)
+})

@@ -8,6 +8,7 @@ import { AGGREGATE_RATING } from '../lib/reviews'
 import { trackEvent } from '../api/client'
 import NotFound from './NotFound'
 import CityQuoteBlock from '../components/CityQuoteBlock'
+import LocalClimateBlock from '../components/LocalClimateBlock'
 import ErrorBoundary from '../components/ErrorBoundary'
 
 // Build LocalBusiness schema with city-specific areaServed
@@ -200,6 +201,10 @@ export default function CityPage() {
       </section>
 
       {/* ── Quote capture, on the page rather than a link away ── */}
+      <ErrorBoundary silent label="LocalClimateBlock">
+        <LocalClimateBlock slug={area.slug} city={area.city} />
+      </ErrorBoundary>
+
       <ErrorBoundary
         silent
         label="CityQuoteBlock"
