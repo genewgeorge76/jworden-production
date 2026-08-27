@@ -409,6 +409,93 @@ export const VIRGINIA_KFC_BREACLAW = {
   corroboration: 'none yet — search the email archive for the company name once indexed',
 }
 
+/**
+ * MASTER CONSTRUCTION AGREEMENT — PLAZA STREET PARTNERS, FEBRUARY 2018
+ *
+ * Source: DOCX supplied by the owner from his Dropbox, 2026-08-27, filename
+ * carrying document id 62201347-v1. The Jefferson City KFC relationship,
+ * previously owner-confirmed only, now has its contractual backbone.
+ *
+ * WHAT THE DOCUMENT IS: a Master Construction Agreement dated 2 February
+ * 2018 between Plaza Street Partners, LLC of Kansas City, Missouri as OWNER
+ * and J. Worden and Sons Paving, LLC (Chester, VA) as CONTRACTOR —
+ * non-exclusive, with a separate "Project Amendment" per project defining
+ * scope, contract sum, and schedule. The copy includes an embedded Project
+ * Amendment schedule: commencement 5 Feb 2018, substantial completion
+ * 5 Mar 2018, final completion 16 May 2018, liquidated damages $250/day.
+ * Insurance terms required a $3,000,000 umbrella per occurrence per project,
+ * maintained three years past final completion.
+ *
+ * GRADE CAVEAT: this copy's signature blocks are BLANK — it is the v1 draft
+ * as circulated, not evidence of execution. Execution is separately supported
+ * by the fact the work happened (Jefferson City build, owner-confirmed; Bret
+ * Elliot / Plaza Street Partners correspondence in the family mailbox). The
+ * agreement upgrades the relationship from remembered to contractual-form
+ * documented; a signed copy or the countersigned email would complete it.
+ */
+export const MASTER_CONSTRUCTION_AGREEMENT_2018 = {
+  id: 'master-construction-agreement-2018',
+  date: '2018-02-02',
+  owner: 'Plaza Street Partners, LLC (Kansas City, MO)',
+  contractor: 'J. Worden and Sons Paving, LLC',
+  structure: 'master agreement + per-project Project Amendments',
+  embeddedSchedule: { commence: '2018-02-05', substantial: '2018-03-05', final: '2018-05-16', liquidatedDamagesPerDay: 250 },
+  umbrellaRequirement: 3000000,
+  evidence: 'unsigned v1 draft in owner custody',
+  publishable: false,
+  custody: "owner's Dropbox",
+}
+
+/**
+ * NEW-BUILD SITE DUE-DILIGENCE ARCHIVE (Dropbox folder, indexed 2026-08-27)
+ *
+ * A 769-file archive supplied by the owner: per-site folders of geotechnical
+ * reports, environmental site assessments (ESA/Phase 1), ALTA surveys, title
+ * work, and permit drawings — the development due-diligence set a builder
+ * holds, consistent with the general-contractor role the Leesville CM
+ * invoice and the 2018 Plaza Street Partners master agreement document.
+ * Zip timestamps run through Feb 2019.
+ *
+ * TEN SITES: Jefferson City (MO), Sulphur Springs (TX), Ennis (TX),
+ * Killeen (TX), Crowley (LA), DeRidder (LA), Jennings (LA), Leesville (LA),
+ * Toledo, and Gate City Blvd, Greensboro (NC).
+ *
+ * Jefferson City, Sulphur Springs, and Leesville were already in the record;
+ * the other seven EXTEND the documented programme. Greensboro NC is the
+ * first North Carolina new-build site in any document — relevant to the
+ * Carolina brand's state evidence once a work-performed document surfaces
+ * (due diligence proves the programme reached the site, not that our crews
+ * built it; grade accordingly).
+ *
+ * CUSTODY: owner's Dropbox. The files are not in this repository.
+ */
+export const SITE_ARCHIVE_2019 = {
+  id: 'site-archive-2019',
+  fileCount: 769,
+  sites: ['Jefferson City MO', 'Sulphur Springs TX', 'Ennis TX', 'Killeen TX', 'Crowley LA', 'DeRidder LA', 'Jennings LA', 'Leesville LA', 'Toledo', 'Greensboro NC (Gate City Blvd)'],
+  contents: 'geotech, ESA/Phase 1, ALTA surveys, title, permit drawings per site',
+  evidence: 'document archive in owner custody',
+  publishable: false,
+  custody: "owner's Dropbox",
+}
+
+/**
+ * TYSON CHICKEN PLANT, VIRGINIA — PARKING LOT (owner-stated, 2026-08-27)
+ * Owner's words: "tysons chick plant in virgnia contract should be in there
+ * too we did the parking lot". The contract is NOT in the site archive
+ * indexed above (searched all 864 zip entries). Stays owner-confirmed and
+ * unpublished until the contract or an invoice surfaces.
+ */
+export const TYSON_PLANT_PARKING_LOT = {
+  id: 'tyson-plant-parking-lot',
+  assertedBy: 'owner',
+  assertedOn: '2026-08-27',
+  claim: 'Parking lot work at a Tyson chicken plant in Virginia; contract exists but not yet located',
+  evidence: 'owner-confirmed',
+  publishable: false,
+  corroboration: 'none yet — owner to locate the contract',
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
   LEESVILLE_CM_INVOICE,
