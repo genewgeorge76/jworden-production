@@ -354,7 +354,7 @@ export function premiumBlogPostingSchema({
     dateModified: dateModified || datePublished,
     author: {
       '@type': 'Person',
-      name: 'Gene Worden George',
+      name: 'Gene W. George',
       jobTitle: 'Fourth-Generation Paving Contractor & Owner',
       url: `${SITE_URL}/about`,
       // hasCredential DELIBERATELY ABSENT — see businessInfo.canonical.js,

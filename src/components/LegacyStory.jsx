@@ -211,10 +211,10 @@ export default function LegacyStory() {
       speed: 36
     },
     {
-      year: '2016',
+      year: '2015',
       title: 'A New Era of Leadership — Commercial Growth',
       icon: Building2,
-      description: 'Gene Worden takes the helm after working alongside his grandfather since the age of 14. We expanded our commercial footprint, bringing national-level quality to the Richmond area while keeping our family-first values intact.',
+      description: 'GW George takes the helm after working alongside his grandfather since the age of 14. We expanded our commercial footprint, bringing national-level quality to the Richmond area while keeping our family-first values intact.',
       items: commercialPhotos,
       reverse: true,
       speed: 42
