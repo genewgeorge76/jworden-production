@@ -530,6 +530,40 @@ export const RICHMOND_HAMILTON_ST_2026 = {
   publicationNote: 'held for owner decision on naming the client; seek invoice/Kickserv corroboration',
 }
 
+/**
+ * SUMMER 2026 DIAMOND SOLUTIONS JOBS — FOUND IN THE MAILBOX 2026-08-27
+ *
+ * Located while searching for other documents; neither was in the record.
+ * Both are the owner's own invoice emails to accounting@thediamondsolutions
+ * .com with the accountant's written receipt confirmation, followed by four
+ * remittance advices from Diamond Solutions (PT009520, PT009669, PT010007,
+ * PT010014; 31 Jul - 13 Aug 2026) — remittance means money moved. Which
+ * invoices each remittance covers sits in PDF attachments not yet read, so
+ * the per-job grade stops at invoiced-and-acknowledged with payments
+ * evidenced at the account level.
+ */
+export const HOBBY_LOBBY_DANVILLE_2026 = {
+  id: 'hobby-lobby-danville-2026',
+  client: 'Diamond Solutions (GC)',
+  site: 'Hobby Lobby, Danville, VA',
+  completed: '2026-07-01',
+  invoiced: '2026-07-27',
+  evidence: 'owner invoice email + accounting receipt confirmation',
+  paymentEvidence: 'account-level remittance advices, details unread',
+  publishable: false,
+}
+
+export const TRACTOR_SUPPLY_RUCKERSVILLE_2026 = {
+  id: 'tractor-supply-ruckersville-2026',
+  client: 'Diamond Solutions (GC)',
+  site: 'Tractor Supply, Ruckersville, VA',
+  completed: '2026-06-15',
+  invoiced: '2026-07-27',
+  evidence: 'owner invoice email + accounting receipt confirmation',
+  paymentEvidence: 'account-level remittance advices, details unread',
+  publishable: false,
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
   LEESVILLE_CM_INVOICE,
