@@ -67,6 +67,207 @@
 
 export const CORRIDOR_SERVICE_AREAS = [
   {
+    slug: 'lynchburg-va',
+    city: 'Lynchburg',
+    state: 'Virginia',
+    stateCode: 'VA',
+    county: 'City of Lynchburg',
+    lat: 37.4138,
+    lng: -79.1422,
+    headline: 'Asphalt Paving Contractor in Lynchburg, VA',
+    tagline: 'Hill City paving — steep grades, institutional campuses and 61 freeze-thaw cycles a year.',
+    description:
+      "Lynchburg is built on seven hills above the James, and the grade is the first thing that governs paving here. A lot that drains cleanly in flat country becomes a water-management problem on a Lynchburg hillside: run-off arrives fast and concentrated, it finds the low edge of a mat and works underneath it, and the failure shows at the bottom of the slope rather than where the water landed. Mat laid on a steep approach also wants to move under the roller and again under traffic, so mix selection and rolling pattern both change, and the transition where a drive turns uphill into a garage or a dock needs detailing or it cracks straight across the break in slope. The city is an independent city, not part of Campbell or Bedford County, so right-of-way permitting and inspection run through Lynchburg's own offices. The commercial base is institutional and industrial in roughly equal measure. Centra's hospital campuses run around the clock, which makes their lots phased night work with emergency access held open rather than jobs that can close a lot for a week. The university population adds a second rhythm: campus and student-housing work lives in the summer window and has to be finished before students return, not merely started. The old tobacco warehouse district along the river left heavy floors and loading approaches built for a trade that no longer exists, and converting those to modern parking usually means assessing what is underneath before anyone quotes a surface. Lynchburg measures 61.1 freeze-thaw cycles in an average year across thirty years of daily records, with a range of 36 to 76 depending on the winter — above Richmond's 53.4, below the Shenandoah Valley cities across the ridge.",
+    services: [
+      'Commercial Paving',
+      'Parking Lots',
+      'Driveways',
+      'Sealcoating',
+      'Crack Filling',
+      'Grading and Drainage',
+    ],
+    nearbyLandmarks: [
+      'Downtown Lynchburg',
+      'James River',
+      'Blackwater Creek',
+      'Liberty University area',
+      'Centra hospital campuses',
+    ],
+    faqs: [
+      {
+        question: "Why does a hillside lot cost more to pave properly in Lynchburg?",
+        answer:
+          "Because the water has to be dealt with before the asphalt does. On a grade, run-off arrives fast and concentrated, and if it can reach the edge of the mat it will travel underneath and undermine the base from below. That means intercepting water uphill of the pavement, not just draining it off the surface. The asphalt itself also behaves differently on a slope — the mat moves under the roller and under traffic — so the mix and the rolling pattern change. A hillside lot paved as if it were flat fails at the bottom of the hill, usually within a few winters.",
+      },
+      {
+        question: "Is Lynchburg part of Campbell County for permits?",
+        answer:
+          "No. Lynchburg is an independent city and runs its own right-of-way permitting and inspections. Work just outside the city line in Campbell or Bedford County goes through a different office entirely, and the two are not interchangeable. We confirm which authority a site sits under before we quote it.",
+      },
+      {
+        question: "Can you work around a hospital that never closes?",
+        answer:
+          "That is the normal way those jobs run. The lot gets divided into sections and worked overnight, with ambulance routes and emergency entrances kept open the whole time, and each section striped and reopened before the next one starts. It takes longer than closing a lot outright, and it is the difference between a job that can be done and one that cannot.",
+      },
+      {
+        question: "How much freeze-thaw does Lynchburg actually get?",
+        answer:
+          "61.1 cycles in an average year, measured from thirty years of daily temperature records for the city, ranging from 36 in a mild winter to 76 in a hard one. A cycle is a day that drops below freezing and climbs back above it — the mechanism that widens a crack until it becomes a pothole. Richmond averages 53.4 and Harrisonburg 90.0, so Lynchburg sits between the Piedmont and the Valley, and the base spec should reflect that rather than a state-wide rule.",
+      },
+    ],
+  },
+  {
+    slug: 'waynesboro-va',
+    city: 'Waynesboro',
+    state: 'Virginia',
+    stateCode: 'VA',
+    county: 'City of Waynesboro',
+    lat: 38.0685,
+    lng: -78.8895,
+    headline: 'Asphalt Paving Contractor in Waynesboro, VA',
+    tagline: 'Shenandoah Valley paving — I-64 and I-81 freight, South River flood ground, 78 freeze-thaw cycles a year.',
+    description:
+      "Waynesboro sits where Interstate 64 crosses the Shenandoah Valley toward Rockfish Gap, which makes it a freight town and a gateway town at once, and both show up in the pavement. The distribution and manufacturing side brings loaded trucks that are heavy, concentrated and slow — the hardest loading asphalt ever takes, and far more punishing than the same weight moving at speed. Dock approaches and truck courts here need thickness and a base built for point loads, not a surface repair over a base that was never designed for it. The tourist side brings a different pattern entirely: Blue Ridge Parkway and Skyline Drive traffic loads hotel and retail lots hard in season and barely at all out of it, which is a maintenance-timing question more than a construction one. The South River runs through the middle of town and the flood history is not theoretical — anything near the low ground gets designed on the assumption that water will arrive, which changes base depth, drainage detail and sometimes the decision between asphalt and concrete. Waynesboro is an independent city, so permitting runs through the city rather than Augusta County that surrounds it. Underneath much of the Valley is limestone karst, where water does not simply drain away but finds voids and channels below the subgrade, and a lot built without accounting for it can lose support from underneath with nothing visible on the surface until it drops. Waynesboro measures 78.4 freeze-thaw cycles in an average year over thirty years, ranging from 62 to 101 — roughly half again what Richmond takes and more than four times Virginia Beach.",
+    services: [
+      'Commercial Paving',
+      'Parking Lots',
+      'Driveways',
+      'Sealcoating',
+      'Crack Filling',
+      'Grading and Drainage',
+    ],
+    nearbyLandmarks: [
+      'Downtown Waynesboro',
+      'South River',
+      'Interstate 64 corridor',
+      'Rockfish Gap',
+      'Blue Ridge Parkway access',
+    ],
+    faqs: [
+      {
+        question: "What is karst and why does it matter for a parking lot?",
+        answer:
+          "Much of the Shenandoah Valley sits on limestone, and water moving through limestone dissolves it over time into voids and channels underground. The practical consequence for paving is that water reaching the subgrade does not necessarily drain away and disperse — it can travel, and it can carry fines with it, taking support out from under a lot with nothing showing on the surface until a section drops. It is why we look at how a Valley site handles water before quoting a surface, and why a lot here can fail in a way that looks sudden but was years in the making.",
+      },
+      {
+        question: "Does the South River flood history affect how you build?",
+        answer:
+          "On low ground, yes. Where a site can take water we design on the assumption that it eventually will: more base, drainage sized for the real event rather than the average one, and sometimes an honest recommendation of concrete over asphalt for the areas most exposed. Building as though the flood will not come is the cheaper quote and the more expensive decade.",
+      },
+      {
+        question: "Why are truck courts harder on asphalt than a busy car park?",
+        answer:
+          "Because of how the load is applied rather than how much of it there is. A loaded truck manoeuvring slowly at a dock puts enormous weight through a small contact area and holds it there — and slow, concentrated loading is far more damaging than the same weight rolling past at speed. Truck courts and dock approaches need thickness and a base designed for point loading, and where the loading is severe enough the right answer is concrete.",
+      },
+      {
+        question: "How many freeze-thaw cycles does Waynesboro get?",
+        answer:
+          "78.4 in an average year, measured from thirty years of daily records, ranging from 62 to 101. Richmond averages 53.4 and Virginia Beach 18.4, so the Valley takes substantially more frost cycling than most of Virginia. Every cycle opens an existing crack slightly further, which is why crack sealing is worth more here than almost anywhere else in the state.",
+      },
+    ],
+  },
+  {
+    slug: 'staunton-va',
+    city: 'Staunton',
+    state: 'Virginia',
+    stateCode: 'VA',
+    county: 'City of Staunton',
+    lat: 38.1496,
+    lng: -79.0717,
+    headline: 'Asphalt Paving Contractor in Staunton, VA',
+    tagline: 'Historic Staunton paving — limestone karst, Victorian-era street grid, 81 freeze-thaw cycles a year.',
+    description:
+      "Staunton is an old city on hills, and both facts constrain the work. The downtown is a largely intact Victorian commercial district on a street grid laid out long before delivery vehicles existed, with narrow access, alley loading and on-street parking where a lane closure has to be negotiated rather than assumed. Historic-district review can apply to what is visible from the street, which occasionally reaches surfacing and almost always reaches how a job is staged. The topography adds grades throughout, so drainage design is site-specific rather than templated, and the same rules that govern any hillside apply — intercept water above the pavement rather than chase it once it is underneath. Staunton is an independent city and is not part of Augusta County, which surrounds it and contains its own separate permitting process, so confirming which authority a site falls under is the first step rather than an afterthought. The ground itself is the distinguishing feature: this is limestone karst country, where water moving underground dissolves the rock into voids and channels over time. Support can be removed from beneath a lot with nothing visible on the surface until a section fails, so how a site handles water matters more here than the surface specification does. Staunton measures 81.3 freeze-thaw cycles in an average year across thirty years of daily records, with a range of 66 to 103 — more than half again what Richmond takes, and among the highest figures anywhere we work.",
+    services: [
+      'Commercial Paving',
+      'Parking Lots',
+      'Driveways',
+      'Sealcoating',
+      'Crack Filling',
+      'Grading and Drainage',
+    ],
+    nearbyLandmarks: [
+      'Downtown Staunton',
+      'Historic district',
+      'Mary Baldwin University area',
+      'Shenandoah Valley',
+      'Interstate 81 corridor',
+    ],
+    faqs: [
+      {
+        question: "Does working in the historic district change what you can do?",
+        answer:
+          "It changes the staging more than the surfacing. A downtown block with alley loading, on-street parking and narrow access cannot simply be closed for a shift, so the work gets phased and often runs outside business hours. Where review applies to what is visible from the street it can also reach materials and edge detail. We establish that before quoting, because it affects schedule and cost in ways that are expensive to discover halfway through.",
+      },
+      {
+        question: "What does limestone karst mean for a paving job in Staunton?",
+        answer:
+          "It means water underground behaves differently than most people expect. Limestone dissolves over time into voids and channels, so water reaching the subgrade can travel and carry fines with it rather than draining away evenly. Support disappears from beneath the pavement with nothing visible on top until a section drops. The practical answer is to control water before it gets under the pavement and to look properly at a site's drainage before quoting a surface.",
+      },
+      {
+        question: "Is Staunton part of Augusta County?",
+        answer:
+          "No, and it matters for permits. Staunton is an independent city surrounded by Augusta County, and the two run separate permitting and inspection processes. A site a few hundred yards apart can fall under different authorities. We confirm which one applies before pricing the work.",
+      },
+      {
+        question: "How much frost damage should a Staunton lot expect?",
+        answer:
+          "81.3 freeze-thaw cycles in an average year, measured over thirty years of daily records, ranging from 66 to 103 depending on the winter. That is well above Richmond's 53.4 and more than four times Virginia Beach's 18.4. Each cycle opens an existing crack slightly further, so sealed cracks and a base that keeps water out of the subgrade are worth more here than in most of the state.",
+      },
+    ],
+  },
+  {
+    slug: 'harrisonburg-va',
+    city: 'Harrisonburg',
+    state: 'Virginia',
+    stateCode: 'VA',
+    county: 'City of Harrisonburg',
+    lat: 38.4496,
+    lng: -78.8689,
+    headline: 'Asphalt Paving Contractor in Harrisonburg, VA',
+    tagline: 'Harrisonburg paving — 90 freeze-thaw cycles a year, the highest we measure anywhere in Virginia.',
+    description:
+      "Harrisonburg takes more frost cycling than anywhere else we work. Thirty years of daily records put it at 90.0 freeze-thaw cycles in an average year, ranging from 67 in a mild winter to 110 in a hard one — nearly five times Virginia Beach and well above Richmond. That single number governs everything about how a lot here should be built, because each cycle widens whatever crack already exists, and ninety of them a winter will find any weakness in a base within a few seasons. The commercial pattern is unusually distinct. The university population of roughly twenty thousand means campus, student-housing and retail work is compressed into the summer, and finishing before students return is a hard constraint rather than a preference. The poultry industry brings the opposite problem: processing and distribution sites run heavy truck traffic year-round, with wash-down water and organic loading that attack asphalt binder in ways ordinary parking does not, so surface selection and drainage both change. Interstate 81 runs through, which puts freight and distribution yards on the same ground — slow, concentrated, heavily loaded traffic that punishes pavement far more than the same weight at speed. Harrisonburg is an independent city separate from Rockingham County around it, so permitting runs through the city's own offices. And like the rest of the Valley it sits on limestone karst, where water underground travels through dissolved voids and can remove support from beneath a lot with nothing visible on the surface until it drops.",
+    services: [
+      'Commercial Paving',
+      'Parking Lots',
+      'Driveways',
+      'Sealcoating',
+      'Crack Filling',
+      'Grading and Drainage',
+    ],
+    nearbyLandmarks: [
+      'Downtown Harrisonburg',
+      'James Madison University area',
+      'Interstate 81 corridor',
+      'Shenandoah Valley',
+      'Rockingham County line',
+    ],
+    faqs: [
+      {
+        question: "Is Harrisonburg really the worst freeze-thaw in Virginia?",
+        answer:
+          "It is the highest figure we measure across our entire service area. 90.0 cycles in an average year, from thirty years of daily temperature records, with a range of 67 to 110. For comparison: Richmond 53.4, Roanoke 66.4, Virginia Beach 18.4. A freeze-thaw cycle is a day that drops below freezing and climbs back above it, and it is the mechanism that turns a hairline crack into a pothole. Ninety a winter is why base depth, drainage and crack sealing are not optional here.",
+      },
+      {
+        question: "Why does poultry-industry traffic need different paving?",
+        answer:
+          "Two reasons that compound. The truck traffic is heavy, constant and slow-moving around docks and yards, which is the most punishing loading asphalt takes. And wash-down water combined with organic loading attacks asphalt binder directly in a way that ordinary car-park use does not. Both point the same direction: more base, drainage that actually removes water rather than holding it, and in the worst-loaded areas an honest conversation about concrete.",
+      },
+      {
+        question: "Can campus work be finished before students return?",
+        answer:
+          "It has to be, which is why we schedule it as a fixed deadline rather than a target. The summer window is short and it does not move, so the sequencing gets planned backwards from the return date with the weather risk built in. A campus lot half finished in August is not a partial success, it is a failure.",
+      },
+      {
+        question: "Is Harrisonburg part of Rockingham County?",
+        answer:
+          "No. Harrisonburg is an independent city with its own right-of-way permitting and inspection process, separate from Rockingham County surrounding it. Sites a short distance apart can fall under different authorities, so we confirm which applies before quoting.",
+      },
+    ],
+  },
+
+  {
     slug: 'roanoke-va',
     city: 'Roanoke',
     state: 'Virginia',

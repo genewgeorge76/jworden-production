@@ -73,6 +73,9 @@ export const CLIMATE_SOURCE = {
 
 /** One row per service area, ordered by freeze-thaw exposure. */
 export const LOCAL_CLIMATE = [
+  { slug: 'harrisonburg-va', city: 'Harrisonburg', county: 'City of Harrisonburg', stateCode: 'VA', freezeThawAvg: 90.0, freezeThawMin: 67, freezeThawMax: 110, workableDaysAvg: 269, years: 30 },
+  { slug: 'staunton-va', city: 'Staunton', county: 'City of Staunton', stateCode: 'VA', freezeThawAvg: 81.3, freezeThawMin: 66, freezeThawMax: 103, workableDaysAvg: 275, years: 30 },
+  { slug: 'waynesboro-va', city: 'Waynesboro', county: 'City of Waynesboro', stateCode: 'VA', freezeThawAvg: 78.4, freezeThawMin: 62, freezeThawMax: 101, workableDaysAvg: 276, years: 30 },
   { slug: 'ruckersville-va', city: 'Ruckersville', county: 'Greene County', stateCode: 'VA', freezeThawAvg: 73.4, freezeThawMin: 55, freezeThawMax: 95, workableDaysAvg: 285, years: 30 },
   { slug: 'ivy-va', city: 'Ivy', county: 'Albemarle County', stateCode: 'VA', freezeThawAvg: 69.6, freezeThawMin: 50, freezeThawMax: 90, workableDaysAvg: 289, years: 30 },
   { slug: 'charlottesville-va', city: 'Charlottesville', county: 'Albemarle County', stateCode: 'VA', freezeThawAvg: 69.0, freezeThawMin: 51, freezeThawMax: 87, workableDaysAvg: 291, years: 30 },
@@ -82,6 +85,7 @@ export const LOCAL_CLIMATE = [
   { slug: 'lovingston-va', city: 'Lovingston', county: 'Nelson County', stateCode: 'VA', freezeThawAvg: 67.3, freezeThawMin: 49, freezeThawMax: 85, workableDaysAvg: 288, years: 30 },
   { slug: 'roanoke-va', city: 'Roanoke', county: 'City of Roanoke', stateCode: 'VA', freezeThawAvg: 66.4, freezeThawMin: 51, freezeThawMax: 85, workableDaysAvg: 293, years: 30 },
   { slug: 'nellysford-va', city: 'Nellysford', county: 'Nelson County', stateCode: 'VA', freezeThawAvg: 62.4, freezeThawMin: 42, freezeThawMax: 81, workableDaysAvg: 291, years: 30 },
+  { slug: 'lynchburg-va', city: 'Lynchburg', county: 'City of Lynchburg', stateCode: 'VA', freezeThawAvg: 61.1, freezeThawMin: 36, freezeThawMax: 76, workableDaysAvg: 294, years: 30 },
   { slug: 'annandale-va', city: 'Annandale', county: 'Fairfax County', stateCode: 'VA', freezeThawAvg: 59.3, freezeThawMin: 38, freezeThawMax: 73, workableDaysAvg: 277, years: 30 },
   { slug: 'mechanicsville-va', city: 'Mechanicsville', county: 'Hanover County', stateCode: 'VA', freezeThawAvg: 54.0, freezeThawMin: 31, freezeThawMax: 77, workableDaysAvg: 301, years: 30 },
   { slug: 'richmond-va', city: 'Richmond', county: 'City of Richmond', stateCode: 'VA', freezeThawAvg: 53.4, freezeThawMin: 32, freezeThawMax: 77, workableDaysAvg: 302, years: 30 },
@@ -116,11 +120,11 @@ export function climateFor(slug) {
  * exposure of the other hears an engineering reason.
  */
 export const CLIMATE_SPREAD = {
-  highest: { city: 'Ruckersville', freezeThawAvg: 73.4 },
+  highest: { city: 'Harrisonburg', freezeThawAvg: 90.0 },
   lowest: { city: 'Virginia Beach', freezeThawAvg: 18.4 },
-  ratio: 4.0,
+  ratio: 4.9,
   note:
-    'Measured across this company’s own service areas, 30 years, same method for every location.',
+    'Measured across this company\u2019s own service areas, 30 years, same method for every location.',
 }
 
 /**
