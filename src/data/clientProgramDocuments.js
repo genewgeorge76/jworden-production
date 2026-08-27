@@ -491,9 +491,20 @@ export const TYSON_PLANT_PARKING_LOT = {
   assertedBy: 'owner',
   assertedOn: '2026-08-27',
   claim: 'Parking lot work at a Tyson chicken plant in Virginia; contract exists but not yet located',
-  evidence: 'owner-confirmed',
+  evidence: 'email-corroborated (onboarding level)',
   publishable: false,
-  corroboration: 'none yet — owner to locate the contract',
+  // Mailbox corroboration located 2026-08-27: thread "Tyson Plant / Coastal
+  // Maintenance" (2016-03-01) — the office sends the company W9 to Coastal
+  // Maintenance LLC ("Tammy") for the Tyson job, COIs to follow. That is
+  // onboarding-level proof of the engagement. The owner also describes DOT
+  // scale tickets picked up near the job that were later dismissed. Per the
+  // owner: a LOCAL attorney close to the chicken plant handled them, and
+  // Sarah Solomon was his office manager at the time — which matches her
+  // "Office Manager" signature across the 2016-2017 mailbox. The ticket
+  // paperwork lives in scanned email attachments; the local attorney is not
+  // named in any readable email body. Dismissal stays owner-confirmed.
+  corroboration: 'W9 onboarding email to Coastal Maintenance LLC, 2016-03-01; ticket dismissal owner-confirmed',
+  engagedThrough: 'Coastal Maintenance LLC',
 }
 
 export const CLIENT_DOCUMENTS = [
