@@ -4,6 +4,7 @@ import SchemaMarkup, { serviceSchema, faqSchema, howToSchema } from '../componen
 import FAQAccordion from '../components/FAQAccordion'
 import InspirationGallery from '../components/InspirationGallery'
 import QuoteBlock from '@/components/QuoteBlock'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 
 const SERVICES = [
   {
@@ -704,6 +705,8 @@ export default function Services() {
           </a>
         </div>
       </section>
+      <JobPhotoStrip category="commercial" heading="The work behind every service" intro="Photographs from our own jobs — lots, lanes, and drives our crews built." />
+      <JobPhotoStrip category="residential" heading="And the driveways" limit={3} linkToGallery={false} />
       <QuoteBlock
         source="services_index"
         heading="Tell Us Which One and Where"
