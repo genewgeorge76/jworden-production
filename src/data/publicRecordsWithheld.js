@@ -920,3 +920,32 @@ export const PAYROLL_EMPLOYMENT_2014 = {
   custody: "owner's Dropbox",
   corroborates: 'employed in the company from 2012, before the 2015-03-15 takeover',
 }
+
+/**
+ * CUSTOMER PAYMENT PHOTOGRAPHS, JANUARY 2014 — RESIDENTIAL BASE EVIDENCE
+ *
+ * Source: two photographs of customer checks supplied by the owner from his
+ * Dropbox on 2026-08-27, both dated by filename 2014-01-09. The photographs
+ * are NOT in this repository and must never be — they show customer names,
+ * home addresses, and bank instruments.
+ *
+ * What they document: three paying residential customers in the 23235 zip
+ * (Bon Air / Richmond) in January 2014 — two of them next-door neighbors on
+ * the same street, the classic sign of referral work spreading down a block —
+ * one instrument reading "Pay to the order of J. Wor..." for an amount
+ * beginning "Two Thousand". Corroborates an active paying residential
+ * customer base in Richmond in early 2014, during the pre-takeover years the
+ * 2014 payroll record also covers.
+ *
+ * CROSS-CHECK AVAILABLE: these customers may appear in the 2,263-customer
+ * Kickserv import; matching them there would upgrade this from photograph to
+ * ledger-corroborated without publishing anything.
+ */
+export const CUSTOMER_CHECKS_2014 = {
+  id: 'customer-checks-2014',
+  status: 'held',
+  reason: 'photographs show customer PII and bank instruments; facts only',
+  date: '2014-01',
+  facts: 'three residential customers, 23235 zip, two adjacent neighbors; one check to J. Worden for $2,000+',
+  custody: "owner's Dropbox",
+}
