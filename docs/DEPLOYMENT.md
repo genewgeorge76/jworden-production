@@ -262,3 +262,53 @@ Redeploy the API service after saving.
 ### Rate limit errors (`429 Too Many Requests`)
 
 The global default is 200 requests/minute per IP. Individual endpoints have tighter limits (30–60/minute). If a legitimate client is being rate-limited, contact the ops team to review the `slowapi` configuration in `app/core/limiter.py`.
+
+---
+
+## Vercel scope — read this before saying "I can't reach it"
+
+**Verified 2026-08-27.**
+
+The recurring question "why do the money sites keep breaking after we fix them"
+has one root cause, and it is not the code.
+
+`.vercel/project.json` in this repository reads:
+
+```
+projectId: prj_8AAAvb5RgUmakfMAZAxkku8BoAD3
+orgId:     Usz9QggfFSq0e8XpFBpCrvnG
+```
+
+An `orgId` beginning `Usz…` rather than `team_…` is a **personal account**. The
+Vercel connector is authorised for the **`jwordenai` team**, which contains
+exactly three projects: `jwordenasphaltantigravity`, `dashboard`,
+`blueridgeasphaltpaving`. This project is in neither of those places from the
+key's point of view:
+
+| call | result |
+| --- | --- |
+| `get_project(prj_8AAA…, team_7JRl2mp5…)` | `404 Not Found` — not in that team |
+| `get_project(prj_8AAA…, Usz9Qggf…)` | `403 Forbidden` — key not authorised there |
+| `list_teams` | one scope only: `jwordenai` |
+
+So the eight live brand domains — richmondasphaltpaving, savannahasphaltpaving,
+thewordenstandard, jwordenuniversity, asphaltpavingkansascity,
+atlantaasphaltpavingpros, carolinablacktop, texaspavementgroup — are served by a
+project nothing with the team key can read, deploy or even list.
+
+**That is why fixes stop at the repository.** Code lands, tests pass, and
+production keeps serving an older build with no way to observe the gap from
+either side. An audit on 2026-08-26 found five of those domains canonicalising
+their subpages to a parked domain while the repository's own canonical logic was
+correct — the fix existed and had never shipped.
+
+**The remedy is one dashboard action:** Project → Settings → General → Transfer
+Project → `jwordenai`. It preserves domains, environment variables and
+deployment history.
+
+Creating a second project inside the team is **not** equivalent: it moves no
+domains and leaves two projects to drift apart.
+
+Until the transfer happens, `scripts/verify-live-sites.mjs` is the only thing
+that can tell whether production matches this repository. Run it, or arm the
+`monitor:live-sites` schedule in GitLab CI.
