@@ -39,9 +39,9 @@ import { LOCAL_CLIMATE, CLIMATE_SPREAD } from '@/data/localClimate';
  *    review component rather than from strings typed into this file.
  */
 
-const HERO_IMAGE = '/images/real_jobs/great big driveway paving photo.JPG';
-const RESIDENTIAL_IMAGE = '/images/real_jobs/asphalt driveways goochland va.jpg';
-const COMMERCIAL_IMAGE = '/images/real_jobs/COMMERCIALPAVING 2026.jpg';
+const HERO_IMAGE = '/images/real_jobs/IMG_0026.JPG';
+const RESIDENTIAL_IMAGE = '/images/real_jobs/IMG_6981.webp';
+const COMMERCIAL_IMAGE = '/images/real_jobs/IMG_0029.webp';
 
 /* Every figure here traces to a record in this repository. */
 const STATS = [
@@ -105,17 +105,17 @@ export default function Home() {
           <picture>
             <source
               type="image/avif"
-              srcSet="/work/portfolio/portfolio-010-mobile.avif 800w, /work/portfolio/portfolio-010.avif 1600w"
+              srcSet="/images/real_jobs/IMG_0026-mobile.avif 800w, /images/real_jobs/IMG_0026.avif 1920w"
               sizes="(max-width: 768px) 100vw, 1600px"
             />
             <source
               type="image/webp"
-              srcSet="/work/portfolio/portfolio-010-mobile.webp 800w, /work/portfolio/portfolio-010.webp 1600w"
+              srcSet="/images/real_jobs/IMG_0026-mobile.webp 800w, /images/real_jobs/IMG_0026.webp 1920w"
               sizes="(max-width: 768px) 100vw, 1600px"
             />
             <img
               src={HERO_IMAGE}
-              alt="J. Worden and Sons crew paving a Virginia driveway"
+              alt="Harris Teeter parking lot freshly sealcoated and striped by J. Worden and Sons, crew sweeping the entrance"
               width={1600}
               height={900}
               loading="eager"
@@ -137,7 +137,7 @@ export default function Home() {
           <video
             className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
             src="/videos/sealcoating.mp4"
-            poster="/work/portfolio/portfolio-010.webp"
+            poster="/images/real_jobs/IMG_0026.webp"
             autoPlay
             muted
             loop
@@ -214,7 +214,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-8">
             <a href="/residential" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#ff7a00] transition-colors">
               <div className="aspect-[16/9] overflow-hidden">
-                <img src={RESIDENTIAL_IMAGE} alt="Residential driveway paving in Goochland, Virginia" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+                <img src={RESIDENTIAL_IMAGE} alt="J. Worden and Sons crew laying hot asphalt on a residential driveway with cobblestone borders" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
               </div>
               <div className="p-8">
                 <h3 className="font-display text-2xl font-bold text-[#112337] mb-2">Homeowners</h3>
@@ -229,7 +229,7 @@ export default function Home() {
             </a>
             <a href="/commercial" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#ff7a00] transition-colors">
               <div className="aspect-[16/9] overflow-hidden">
-                <img src={COMMERCIAL_IMAGE} alt="Commercial parking lot paving, Virginia" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+                <img src={COMMERCIAL_IMAGE} alt="Freshly sealcoated and restriped Harris Teeter grocery store parking lot" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
               </div>
               <div className="p-8">
                 <h3 className="font-display text-2xl font-bold text-[#112337] mb-2">Businesses &amp; Property Managers</h3>
