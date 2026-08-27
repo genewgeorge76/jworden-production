@@ -526,7 +526,11 @@ export const RICHMOND_HAMILTON_ST_2026 = {
   assertedOn: '2026-08-27',
   claim: 'Paved the lot at the N Hamilton St site, Richmond, VA 23221 in spring 2026',
   evidence: 'document-corroborated (COI onboarding)',
-  publishable: false,
+  // 2026-08-27, morning: the owner answered the publication question with
+  // "Planned parenthood" — publish the name. Now on the commercial client
+  // authority card, first position.
+  publishedAt: 'CommercialClientAuthority card',
+  publishable: true,
   // UPGRADED 2026-08-27, same night: the owner produced an ACORD 25 COI
   // dated 2026-04-03 naming "planned parenthood, 210 north hamelton ave,
   // richmond, VA 23221" as certificate holder — vendor onboarding for the

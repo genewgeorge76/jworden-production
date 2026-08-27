@@ -5,6 +5,17 @@ import SmartImage from '@/components/SmartImage';
 export default function CommercialClientAuthority() {
   const brands = [
     {
+      name: "Planned Parenthood — Richmond Health Center",
+      locations: "N Hamilton St, Richmond, VA",
+      services: "Full Parking Lot Repave, Spring 2026",
+      badge: "Healthcare Facility",
+      logoText: "Planned Parenthood",
+      image: "/images/real_jobs/brick-alley-repave-taped.webp",
+      // The card image is one of our own Richmond lot photographs; if the
+      // owner surfaces a frame from the Hamilton St job itself, swap it in.
+      imageAlt: "Repaved lane between brick buildings, taped off to cure",
+    },
+    {
       name: "Kentucky Fried Chicken (KFC)",
       locations: "10 Franchise Stores (VA, GA, LA)",
       services: "Dumpster Pad Builds, Night Milling, Heavy Sealcoating & ADA Striping",
@@ -105,7 +116,7 @@ export default function CommercialClientAuthority() {
               <div className="relative aspect-[16/10] w-full bg-slate-950 p-2 flex items-center justify-center overflow-hidden border-b border-slate-800/60">
                 <SmartImage
                   src={b.image}
-                  alt={`${b.name} paving project`}
+                  alt={b.imageAlt || `${b.name} paving project`}
                   label={b.name}
                   className="w-full h-full object-contain rounded-xl transition-transform duration-500 group-hover:scale-[1.02]"
                 />
