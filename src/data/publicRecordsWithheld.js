@@ -892,3 +892,31 @@ export const RECORD_CUSTODY = {
   addressesWithheldReason:
     'Personal mailbox addresses are not written into this repository. The roles are what make the gaps actionable.',
 }
+
+/**
+ * PAYROLL EMPLOYMENT RECORD, 2014 — SUCCESSION CORROBORATION
+ *
+ * Source: employer earnings record produced by the LLC's payroll system for
+ * calendar 2014, supplied by the owner from his Dropbox on 2026-08-27. The
+ * document itself is NOT in this repository and must never be — it carries a
+ * partial SSN, a home address, and personal deductions. Only the facts below
+ * are recorded, and none of them publish.
+ *
+ * What it corroborates: GW George was a salaried employee of
+ * J. Worden & Sons Paving LLC with a payroll HIRE DATE OF 2012-09-28 —
+ * documentary support, from a payroll processor's output, that he was inside
+ * the company years before the 2015-03-15 takeover (that date separately
+ * confirmed in writing by the prior principal). Together the two documents
+ * carry the succession narrative: employed 2012, at the helm 2015.
+ */
+export const PAYROLL_EMPLOYMENT_2014 = {
+  id: 'payroll-employment-2014',
+  status: 'held',
+  reason: 'source document contains personal identifiers; facts recorded here only',
+  employer: 'J Worden & Sons Paving LLC',
+  employee: 'Gene W George',
+  hireDate: '2012-09-28',
+  recordYear: 2014,
+  custody: "owner's Dropbox",
+  corroborates: 'employed in the company from 2012, before the 2015-03-15 takeover',
+}

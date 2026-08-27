@@ -246,6 +246,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── DRIVEWAYS, IN PHOTOGRAPHS — every frame is our own job ───────── */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-8">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#112337] tracking-tight">
+              Driveways we&rsquo;ve laid
+            </h2>
+            <a href="/gallery" className="text-[#ff7a00] font-bold text-sm uppercase tracking-[0.05em] hover:underline shrink-0">
+              Full gallery →
+            </a>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {[
+              { src: '/images/real_jobs/estate-gate-2012.webp', alt: 'Fresh asphalt drive through a gated stone-pillar entrance', tall: true },
+              { src: '/work/portfolio/portfolio-002.webp', alt: 'New asphalt driveway winding through trees' },
+              { src: '/work/portfolio/portfolio-017.webp', alt: 'Crew and paver working a driveway at a white colonial home' },
+              { src: '/work/portfolio/portfolio-003.webp', alt: 'Long ribbon driveway, freshly paved' },
+              { src: '/work/portfolio/portfolio-011.webp', alt: 'Hand crew screeding hot mix behind the paver' },
+              { src: '/images/real_jobs/new-road-build.webp', alt: 'New road build on compacted stone base through pines' },
+            ].map((g) => (
+              <div key={g.src} className={`overflow-hidden rounded-lg ${g.tall ? 'row-span-2' : ''}`}>
+                <img src={g.src} alt={g.alt} loading="lazy"
+                  className="w-full h-full object-cover min-h-[180px] hover:scale-[1.03] transition-transform duration-500" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── SERVICES — flat cards, real routes ───────────────────────────── */}
       <section id="services" className="py-16 md:py-24 bg-[#f5f6f7]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -265,8 +294,12 @@ export default function Home() {
       </section>
 
       {/* ── THE MEASURED DIFFERENCE — what the big consolidators cannot say ─ */}
-      <section className="py-16 md:py-24 bg-[#112337] text-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
+      <section className="relative py-16 md:py-24 text-white overflow-hidden">
+        {/* Backfall: our own paver laying mat at a Virginia dealership, PANO crop. */}
+        <img src="/images/real_jobs/IMG_8715-PANO.webp" alt="" aria-hidden="true" loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-[#112337]/[0.88]" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
           <div>
             <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">Measured, not estimated</p>
             <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4">
@@ -314,6 +347,63 @@ export default function Home() {
               </a>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── THE NATIONAL PROGRAMME — sunset backfall is our own dump truck ─ */}
+      <section className="relative py-20 md:py-28 text-white overflow-hidden">
+        <img src="/work/kfc/kfc-job-031.webp" alt="" aria-hidden="true" loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#112337]/95 via-[#112337]/80 to-[#112337]/40" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">Franchise programme work</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4 max-w-2xl">
+            A national KFC portfolio, photographed as it happened.
+          </h2>
+          <p className="text-white/85 leading-relaxed max-w-2xl mb-10">
+            Paving, sealcoating, concrete and site work across a documented eleven-state
+            franchise programme — Michigan to Texas to New Jersey — with ground-up
+            restaurant builds delivered as general contractor. These frames are from
+            our own crews on those lots.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { src: '/work/kfc/kfc-job-026.webp', alt: 'KFC monument sign beside a freshly serviced lot' },
+              { src: '/work/kfc/kfc-job-035.webp', alt: 'KFC storefront with rebuilt curb island and fresh asphalt' },
+              { src: '/work/kfc/kfc-job-014.webp', alt: 'Paver laying hot mix on a franchise lot' },
+              { src: '/work/kfc/kfc-job-023.webp', alt: 'Fresh black mat rolled at a franchise site' },
+            ].map((g) => (
+              <div key={g.src} className="overflow-hidden rounded-lg border border-white/15">
+                <img src={g.src} alt={g.alt} loading="lazy"
+                  className="w-full h-44 md:h-52 object-cover hover:scale-[1.03] transition-transform duration-500" />
+              </div>
+            ))}
+          </div>
+          <a href="/projects" className="inline-block mt-8 bg-[#ff7a00] text-white font-bold px-7 py-3.5 rounded-md tracking-[0.04em] hover:bg-[#e66e00] transition-colors">
+            See the documented record
+          </a>
+        </div>
+      </section>
+
+      {/* ── NIGHT WORK — the crack-seal frame is ours, shot on shift ─────── */}
+      <section className="relative py-20 md:py-28 text-white overflow-hidden">
+        <img src="/images/real_jobs/IMG_0022.webp" alt="" aria-hidden="true" loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-[#0b1626]/[0.78]" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 max-w-3xl">
+          <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">For centers that cannot close</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4">
+            We work nights, one section at a time.
+          </h2>
+          <p className="text-white/85 leading-relaxed mb-8 max-w-2xl">
+            Busy retail lots get phased night work: crack seal and sealcoat overnight,
+            striping behind it, and the section open for business in the morning. The
+            photograph behind this text is our crew&rsquo;s crack seal going down after
+            close at a Virginia shopping center.
+          </p>
+          <a href="#quote" className="inline-block bg-[#ff7a00] text-white font-bold px-7 py-3.5 rounded-md tracking-[0.04em] hover:bg-[#e66e00] transition-colors">
+            Plan a phased job
+          </a>
         </div>
       </section>
 

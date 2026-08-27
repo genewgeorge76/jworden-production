@@ -381,6 +381,34 @@ export const ARCHIVE_COVERAGE = {
     'A family member’s personal email account. The owner knows it; the record does not need it.',
 }
 
+/**
+ * VIRGINIA KFC WORK — BREACLAW CONSTRUCTION (owner-stated, 2026-08-27)
+ *
+ * The owner, in his own words the night the imagery rebuild ran: "alot of
+ * virginia kfcs were done too remember for breaclaw contruction". Two facts
+ * are asserted: KFC work was performed in Virginia, and the engaging party
+ * was a construction company the owner names phonetically as "Breaclaw"
+ * (spelling unverified — could be Braeclaw / Breclaw / similar).
+ *
+ * GRADE: OWNER-CONFIRMED. No invoice, PO, or email in the indexed archive
+ * mentions this name yet (grepped 2026-08-27: zero hits under any spelling
+ * tried). The documented KFC programme spans eleven states via KBP Foods —
+ * Virginia sites under a different GC would EXTEND the programme's footprint,
+ * which is why this stays out of published copy until the email archive
+ * (task: index the archive) or a document surfaces the company's real name.
+ * When it does: correct the spelling here, attach the document reference,
+ * and only then consider it for the national-programme pages.
+ */
+export const VIRGINIA_KFC_BREACLAW = {
+  id: 'virginia-kfc-breaclaw',
+  assertedBy: 'owner',
+  assertedOn: '2026-08-27',
+  claim: 'Multiple Virginia KFC locations serviced; engaged by a GC the owner names as "Breaclaw Construction" (spelling unverified)',
+  evidence: 'owner-confirmed',
+  publishable: false,
+  corroboration: 'none yet — search the email archive for the company name once indexed',
+}
+
 export const CLIENT_DOCUMENTS = [
   KFC_RESPONSIBILITY_MATRIX,
   LEESVILLE_CM_INVOICE,
