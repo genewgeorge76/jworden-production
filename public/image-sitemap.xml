@@ -1,148 +1,576 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-
-  <url>
-    <loc>https://www.jwordenasphaltpaving.com/</loc>
-    <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/hero-paving.jpg</image:loc>
-      <image:title>J. Worden &amp; Sons asphalt paver laying hot-mix asphalt in Virginia</image:title>
-      <image:caption>Heavy asphalt paving machine laying fresh hot-mix asphalt at golden hour with steam rising from the surface</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/og-default.jpg</image:loc>
-      <image:title>J. Worden &amp; Sons Asphalt Paving — Virginia</image:title>
-      <image:caption>J. Worden &amp; Sons Asphalt Paving — Virginia family-owned asphalt paving contractor</image:caption>
-    </image:image>
-  </url>
-
   <url>
     <loc>https://www.jwordenasphaltpaving.com/gallery</loc>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9499.JPG</image:loc>
-      <image:title>Commercial asphalt paving photo from J. Worden &amp; Sons</image:title>
-      <image:caption>Commercial paving project photo from the J. Worden &amp; Sons work gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0026.webp</image:loc>
+      <image:title>Grocery-anchor lot freshly sealcoated and striped, crew sweeping the entrance</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9500.JPG</image:loc>
-      <image:title>Commercial asphalt surface preparation photo</image:title>
-      <image:caption>Commercial asphalt paving and surface preparation work by J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0029.webp</image:loc>
+      <image:title>Crisp new stripes on jet-black sealcoat at a grocery-anchor lot</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9507.JPG</image:loc>
-      <image:title>Commercial paving crew project photo</image:title>
-      <image:caption>Commercial paving crew project documentation from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_8715-PANO.webp</image:loc>
+      <image:title>Paver and rollers working a dealership lot, business open behind the cones</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9509.JPG</image:loc>
-      <image:title>Richmond commercial asphalt paving photo</image:title>
-      <image:caption>Commercial asphalt paving project image from Richmond-area work</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/PARKING%20LOT%20PAVE%20RICHMOND%20VA.JPG</image:loc>
+      <image:title>Fresh black mat across a Richmond parking lot</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9510.JPG</image:loc>
-      <image:title>Commercial parking area asphalt work photo</image:title>
-      <image:caption>Parking area asphalt paving and repair project photo</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/petsmart-ashley-center-patch.webp</image:loc>
+      <image:title>Repaired lane at a PetSmart and Ashley retail center</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9512.JPG</image:loc>
-      <image:title>Commercial pavement project progress photo</image:title>
-      <image:caption>Commercial pavement project progress image from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/burlington-market-center-paving.webp</image:loc>
+      <image:title>Paver and dump truck working a shopping-center lot</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9514.JPG</image:loc>
-      <image:title>Commercial asphalt paving completion photo</image:title>
-      <image:caption>Commercial asphalt paving completion photo from the work gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/retail-lot-repave-fresh-mat.webp</image:loc>
+      <image:title>Fresh mat across a retail lot, dump truck staged</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9518.JPG</image:loc>
-      <image:title>Commercial paving job site photo</image:title>
-      <image:caption>Commercial paving job site image from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/office-lot-fresh-sealcoat.webp</image:loc>
+      <image:title>Office lot freshly sealed, measuring wheel still out</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9519.JPG</image:loc>
-      <image:title>Commercial asphalt project detail photo</image:title>
-      <image:caption>Commercial asphalt project detail photo from the imported work gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/sealcoat-lane-f750-rig.webp</image:loc>
+      <image:title>Freshly sealed lane with the dump truck and spray rig on site</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9496.JPG</image:loc>
-      <image:title>Commercial paving proof photo</image:title>
-      <image:caption>Commercial paving proof image from J. Worden &amp; Sons project documentation</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/brick-alley-repave-taped.webp</image:loc>
+      <image:title>Repaved lane between brick buildings, still taped off</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/KFC/IMG_9499-COLLAGE.jpg</image:loc>
-      <image:title>Commercial paving project collage</image:title>
-      <image:caption>Commercial paving project collage from J. Worden &amp; Sons work photos</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/bobcat-road-patch-richmond.webp</image:loc>
+      <image:title>Tracked loader and cones set for a road patch</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8711.JPG</image:loc>
-      <image:title>Residential and commercial driveway paving photo</image:title>
-      <image:caption>Driveway and pavement work photo from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/roadway-crew-paving.webp</image:loc>
+      <image:title>Full crew paving a roadway, curb and gutter in</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8713.JPG</image:loc>
-      <image:title>Asphalt driveway project photo</image:title>
-      <image:caption>Asphalt driveway project image from the J. Worden &amp; Sons work gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/subdivision-street-overlay.webp</image:loc>
+      <image:title>Crew overlaying a subdivision street</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8717.JPG</image:loc>
-      <image:title>Virginia asphalt paving project photo</image:title>
-      <image:caption>Virginia asphalt paving project photo from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/industrial-newbuild-lane.webp</image:loc>
+      <image:title>New paving lane along curb at an industrial site</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8718.JPG</image:loc>
-      <image:title>Pavement project detail photo</image:title>
-      <image:caption>Pavement project detail image from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/commercial-newbuild-first-lift-2025.webp</image:loc>
+      <image:title>Crew in hi-vis laying first lift against compacted stone at a new commercial building</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8721.JPG</image:loc>
-      <image:title>Driveway paving and asphalt work photo</image:title>
-      <image:caption>Driveway paving and asphalt work image used across the J. Worden &amp; Sons site</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/HANDICAP%20UPGRADE%20WALGREENS.JPG</image:loc>
+      <image:title>Accessible-parking upgrade with fresh striping at a Walgreens</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8724.JPG</image:loc>
-      <image:title>Asphalt paving project gallery photo</image:title>
-      <image:caption>Asphalt paving project photo from the J. Worden &amp; Sons gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_6981.webp</image:loc>
+      <image:title>Crew and paver laying hot mix on an estate driveway with cobblestone borders</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8728.JPG</image:loc>
-      <image:title>Paving work gallery image</image:title>
-      <image:caption>Paving work image from J. Worden &amp; Sons imported project photos</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/estate-gate-2012.webp</image:loc>
+      <image:title>Fresh asphalt drive through a stone-pillar gated entrance</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8729.JPG</image:loc>
-      <image:title>Asphalt surface project photo</image:title>
-      <image:caption>Asphalt surface project documentation photo from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/winter-driveway-repave-2014.webp</image:loc>
+      <image:title>Roller finishing a wooded residential drive in winter</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8730.JPG</image:loc>
-      <image:title>Finished asphalt work photo</image:title>
-      <image:caption>Finished asphalt work photo from the J. Worden &amp; Sons project gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/roller-driveway-brick-colonial-2014.jpg</image:loc>
+      <image:title>Crew member rolling a long driveway at a brick colonial</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8732.JPG</image:loc>
-      <image:title>Driveway and pavement project photo</image:title>
-      <image:caption>Driveway and pavement project photo from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/sealcoated-curved-driveway.webp</image:loc>
+      <image:title>Freshly sealcoated curved driveway between manicured lawns</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8733.JPG</image:loc>
-      <image:title>Virginia paving contractor project photo</image:title>
-      <image:caption>Virginia paving contractor project image from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/brick-ranch-driveway-planters.webp</image:loc>
+      <image:title>Fresh asphalt drive along brick planter walls at a ranch home</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8735.JPG</image:loc>
-      <image:title>Asphalt and driveway project photo</image:title>
-      <image:caption>Asphalt and driveway project photo from the imported work gallery</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/curved-driveway-cobble-edge.jpg</image:loc>
+      <image:title>Curved driveway with cobblestone edging along a picket fence</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8838.JPG</image:loc>
-      <image:title>Paving project completion photo</image:title>
-      <image:caption>Paving project completion image from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/driveway-cobblestone-ribbon.jpg</image:loc>
+      <image:title>Driveway with a cobblestone center ribbon between two homes</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.jwordenasphaltpaving.com/work/imported/va%20cars%20photos%20and%20videos%20for%20website/IMG_8839.JPG</image:loc>
-      <image:title>Asphalt paving project proof photo</image:title>
-      <image:caption>Asphalt paving project proof image from J. Worden &amp; Sons</image:caption>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/garage-driveway-extension.webp</image:loc>
+      <image:title>New driveway extension to a detached two-bay garage</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/new-road-build.webp</image:loc>
+      <image:title>New road build on compacted stone base through pines</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/2012-10-05%2015.28.39.jpg</image:loc>
+      <image:title>Estate entrance with stone pillars and fresh asphalt</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/hero-driveway%20minestoa.jpg</image:loc>
+      <image:title>Long driveway freshly paved beside a tree line</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/minnesota-farm-driveway-paving.jpg</image:loc>
+      <image:title>Farm driveway paved to the barn</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/minnesota-lake-cabin-sealcoating-after.jpg</image:loc>
+      <image:title>Lake-cabin drive after sealcoating</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/minnesota-lake-driveway-sealcoating.jpg</image:loc>
+      <image:title>Lakeside driveway during sealcoating</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/minnesota-crack-filling-repair.jpg</image:loc>
+      <image:title>Crack filling in progress on a Minnesota drive</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/minnesota-paving-project-1.jpg</image:loc>
+      <image:title>Residential paving project in progress</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/minnesota-paving-project-2.jpg</image:loc>
+      <image:title>Fresh mat rolled on a residential project</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/leeboy-8515-being-fed.webp</image:loc>
+      <image:title>LeeBoy 8515 paver taking mix from the dump truck</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/skid-steer-feeding-hand-crew.webp</image:loc>
+      <image:title>Skid steer feeding hot mix to the hand crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0022.webp</image:loc>
+      <image:title>Crack seal going down after close at a shopping center</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/flagstone-walkway-stacked-steps-2013.webp</image:loc>
+      <image:title>Flagstone walkway with dry-stacked stone steps</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-crew-luting-behind-paver.webp</image:loc>
+      <image:title>Crew luting fresh mat behind the paver at a KFC</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-dusk-crew-roller.webp</image:loc>
+      <image:title>Four-man crew and roller working a KFC drive-thru at dusk</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-drive-thru-demo-cat.webp</image:loc>
+      <image:title>Excavator and skid steer cutting out a KFC drive-thru</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-sealed-striped-company-truck.webp</image:loc>
+      <image:title>Sealed and restriped KFC lot with the company truck on site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-lot-sealed-striped-open.webp</image:loc>
+      <image:title>KFC lot sealed, striped, and back open to traffic</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-001.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-002.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-004.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-005.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-006.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-007.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-008.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-011.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-013.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-014.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-015.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-017.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-018.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-019.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-020.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-021.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-022.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-023.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-024.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-025.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-026.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-027.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-028.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-029.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-030.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-032.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-033.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-034.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-035.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-036.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/kfc/kfc-job-038.webp</image:loc>
+      <image:title>Franchise lot during programme service, shot by our crew</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-001.webp</image:loc>
+      <image:title>New driveway at a cul-de-sac home</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-002.webp</image:loc>
+      <image:title>New asphalt driveway winding through trees</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-003.webp</image:loc>
+      <image:title>Long ribbon driveway, freshly paved</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-004.webp</image:loc>
+      <image:title>Driveway paved and edged, taped off to cure</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-005.webp</image:loc>
+      <image:title>Fresh driveway with clean lawn edges</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-006.webp</image:loc>
+      <image:title>Finished drive at a white-columned home</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-007.webp</image:loc>
+      <image:title>Skid steer grading a driveway base</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-008.webp</image:loc>
+      <image:title>Crew member raking fresh mix on a long drive</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-009.webp</image:loc>
+      <image:title>New driveway at a farmhouse</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-010.webp</image:loc>
+      <image:title>Roller compacting a driveway beside black fabric edging</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-011.webp</image:loc>
+      <image:title>Hand crew screeding hot mix behind the paver</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-012.webp</image:loc>
+      <image:title>Fresh gray mat rolled tight</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-013.webp</image:loc>
+      <image:title>Paver working a residential drive from the truck</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-014.webp</image:loc>
+      <image:title>Steam rising off fresh asphalt</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-015.webp</image:loc>
+      <image:title>Retail drive lane repaved and open</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-016.webp</image:loc>
+      <image:title>Wide fresh mat across a commercial lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-017.webp</image:loc>
+      <image:title>Crew and paver at a white colonial home</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-018.webp</image:loc>
+      <image:title>Road shoulder paving in open country</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-019.webp</image:loc>
+      <image:title>Accessible parking freshly striped at a retail lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/work/portfolio/portfolio-020.webp</image:loc>
+      <image:title>Country lane paved through a fence line</image:title>
     </image:image>
   </url>
-
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0026.webp</image:loc>
+      <image:title>Grocery-anchor lot freshly sealcoated and striped, crew sweeping the entrance</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0029.webp</image:loc>
+      <image:title>Crisp new stripes on jet-black sealcoat at a grocery-anchor lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_8715-PANO.webp</image:loc>
+      <image:title>Paver and rollers working a dealership lot, business open behind the cones</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/PARKING%20LOT%20PAVE%20RICHMOND%20VA.JPG</image:loc>
+      <image:title>Fresh black mat across a Richmond parking lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-crew-luting-behind-paver.webp</image:loc>
+      <image:title>Crew luting fresh mat behind the paver at a KFC</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-dusk-crew-roller.webp</image:loc>
+      <image:title>Four-man crew and roller working a KFC drive-thru at dusk</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-drive-thru-demo-cat.webp</image:loc>
+      <image:title>Excavator and skid steer cutting out a KFC drive-thru</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/kfc-sealed-striped-company-truck.webp</image:loc>
+      <image:title>Sealed and restriped KFC lot with the company truck on site</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/residential</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_6981.webp</image:loc>
+      <image:title>Crew and paver laying hot mix on an estate driveway with cobblestone borders</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/estate-gate-2012.webp</image:loc>
+      <image:title>Fresh asphalt drive through a stone-pillar gated entrance</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/winter-driveway-repave-2014.webp</image:loc>
+      <image:title>Roller finishing a wooded residential drive in winter</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/roller-driveway-brick-colonial-2014.jpg</image:loc>
+      <image:title>Crew member rolling a long driveway at a brick colonial</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/brick-ranch-driveway-planters.webp</image:loc>
+      <image:title>Fresh asphalt drive along brick planter walls at a ranch home</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/curved-driveway-cobble-edge.jpg</image:loc>
+      <image:title>Curved driveway with cobblestone edging along a picket fence</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/driveway-cobblestone-ribbon.jpg</image:loc>
+      <image:title>Driveway with a cobblestone center ribbon between two homes</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/garage-driveway-extension.webp</image:loc>
+      <image:title>New driveway extension to a detached two-bay garage</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/parking-lots</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0026.webp</image:loc>
+      <image:title>Grocery-anchor lot freshly sealcoated and striped, crew sweeping the entrance</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0029.webp</image:loc>
+      <image:title>Crisp new stripes on jet-black sealcoat at a grocery-anchor lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_8715-PANO.webp</image:loc>
+      <image:title>Paver and rollers working a dealership lot, business open behind the cones</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/PARKING%20LOT%20PAVE%20RICHMOND%20VA.JPG</image:loc>
+      <image:title>Fresh black mat across a Richmond parking lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/petsmart-ashley-center-patch.webp</image:loc>
+      <image:title>Repaired lane at a PetSmart and Ashley retail center</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/burlington-market-center-paving.webp</image:loc>
+      <image:title>Paver and dump truck working a shopping-center lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/retail-lot-repave-fresh-mat.webp</image:loc>
+      <image:title>Fresh mat across a retail lot, dump truck staged</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/brick-alley-repave-taped.webp</image:loc>
+      <image:title>Repaved lane between brick buildings, still taped off</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/virginia-sealcoating</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/office-lot-fresh-sealcoat.webp</image:loc>
+      <image:title>Office lot freshly sealed, measuring wheel still out</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/sealcoat-lane-f750-rig.webp</image:loc>
+      <image:title>Freshly sealed lane with the dump truck and spray rig on site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/sealcoated-curved-driveway.webp</image:loc>
+      <image:title>Freshly sealcoated curved driveway between manicured lawns</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0022.webp</image:loc>
+      <image:title>Crack seal going down after close at a shopping center</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/asphalt-paving</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0026.webp</image:loc>
+      <image:title>Grocery-anchor lot freshly sealcoated and striped, crew sweeping the entrance</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0029.webp</image:loc>
+      <image:title>Crisp new stripes on jet-black sealcoat at a grocery-anchor lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_8715-PANO.webp</image:loc>
+      <image:title>Paver and rollers working a dealership lot, business open behind the cones</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/PARKING%20LOT%20PAVE%20RICHMOND%20VA.JPG</image:loc>
+      <image:title>Fresh black mat across a Richmond parking lot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/petsmart-ashley-center-patch.webp</image:loc>
+      <image:title>Repaired lane at a PetSmart and Ashley retail center</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/burlington-market-center-paving.webp</image:loc>
+      <image:title>Paver and dump truck working a shopping-center lot</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/crack-repair</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/office-lot-fresh-sealcoat.webp</image:loc>
+      <image:title>Office lot freshly sealed, measuring wheel still out</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/sealcoat-lane-f750-rig.webp</image:loc>
+      <image:title>Freshly sealed lane with the dump truck and spray rig on site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/sealcoated-curved-driveway.webp</image:loc>
+      <image:title>Freshly sealcoated curved driveway between manicured lawns</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/IMG_0022.webp</image:loc>
+      <image:title>Crack seal going down after close at a shopping center</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.jwordenasphaltpaving.com/general-contracting</loc>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/roadway-crew-paving.webp</image:loc>
+      <image:title>Full crew paving a roadway, curb and gutter in</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/subdivision-street-overlay.webp</image:loc>
+      <image:title>Crew overlaying a subdivision street</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/industrial-newbuild-lane.webp</image:loc>
+      <image:title>New paving lane along curb at an industrial site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/commercial-newbuild-first-lift-2025.webp</image:loc>
+      <image:title>Crew in hi-vis laying first lift against compacted stone at a new commercial building</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.jwordenasphaltpaving.com/images/real_jobs/new-road-build.webp</image:loc>
+      <image:title>New road build on compacted stone base through pines</image:title>
+    </image:image>
+  </url>
 </urlset>

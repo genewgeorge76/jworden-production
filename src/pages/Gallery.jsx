@@ -5,7 +5,7 @@ import { SITE_URL } from '../lib/businessInfo'
 import { useGalleryImages } from '../hooks/useGalleryImages'
 import { api } from '@/api/client'
 import { useAuth } from '@/lib/AuthContext'
-import { portfolioPhotos, featuredPortfolioPhotos } from '../data/legacyPortfolio'
+import { portfolioPhotos, featuredPortfolioPhotos, fieldRegistryPhotos } from '../data/legacyPortfolio'
 
 // ── Location display order ────────────────────────────────────────────────────
 const LOCATION_ORDER = [
@@ -232,7 +232,7 @@ export default function Gallery() {
   })), [])
 
   // Non-KFC display photos (live DB + portfolio)
-  const displayPhotos = useMemo(() => [...liveMapped, ...portfolioMapped], [liveMapped, portfolioMapped])
+  const displayPhotos = useMemo(() => [...liveMapped, ...portfolioMapped, ...fieldRegistryPhotos], [liveMapped, portfolioMapped])
 
   // After primary type filter
   const typeFiltered = useMemo(() => {

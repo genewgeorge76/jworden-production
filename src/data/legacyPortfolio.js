@@ -41,9 +41,35 @@ export const portfolioPhotos = importedData.map((item, i) => {
 // ── 8 hero shots for main pages ───────────────────────────────────────────────
 export const featuredPortfolioPhotos = portfolioPhotos.filter(p => p.featured);
 
+// ── The verified field registry (src/data/jobPhotos.js) merged in ─────────────
+// 90+ crew-shot photographs, curated with stock and AI images banned. Mapped
+// into the gallery's shape so every filter and lightbox works over them too.
+import { JOB_PHOTOS } from './jobPhotos'
+
+const CATEGORY_MAP = {
+  residential: 'Residential', commercial: 'Commercial', kfc: 'Commercial',
+  sealcoat: 'Maintenance', equipment: 'Commercial', construction: 'Commercial',
+  hardscape: 'Hardscapes',
+}
+const existingUrls = new Set(portfolioPhotos.map((p) => p.url))
+export const fieldRegistryPhotos = JOB_PHOTOS
+  .filter((p) => !existingUrls.has(p.src))
+  .map((p, i) => ({
+    id: `field-${i}`,
+    url: p.src,
+    title: p.alt,
+    category: CATEGORY_MAP[p.category] || 'Commercial',
+    locationGroup: p.market === 'MN' ? 'Minnesota' : 'Virginia',
+    location: p.market === 'MN' ? 'Minnesota' : 'Virginia',
+    phase: 'completed',
+    featured: false,
+    description: p.alt,
+  }))
+
 // ── Combined export (Gallery.jsx + other pages import this) ──────────────────
 export const legacyPortfolioImages = [
   ...portfolioPhotos,
+  ...fieldRegistryPhotos,
 ];
 
 export const portfolioCategories = [

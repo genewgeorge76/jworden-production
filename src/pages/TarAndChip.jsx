@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, Layers, Phone, ShieldCheck } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 
@@ -389,6 +390,7 @@ export default function TarAndChip() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="residential" heading="Surfaces we have built" intro="Real drives and lanes from the portfolio." />
 
       <Footer />
     </div>

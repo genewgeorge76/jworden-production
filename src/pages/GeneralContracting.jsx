@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { BadgeDollarSign, Building2, CalendarClock, Camera, CheckCircle2, ClipboardCheck, Hammer, Home, Layers3, Palette, Phone, ScanLine, ShieldAlert, ShieldCheck, Sparkles } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
@@ -490,6 +491,7 @@ export default function GeneralContracting() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="construction" heading="Ground-up construction work" intro="First lifts, new lanes, and full-site builds from our crews." />
 
       <QuoteBlock
         source="service_general_contracting"

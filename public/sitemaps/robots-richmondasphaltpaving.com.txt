@@ -11,4 +11,3 @@ Disallow: /add_remaining_pages.js
 Disallow: /pull_request_23_status.txt
 
 Sitemap: https://richmondasphaltpaving.com/sitemap.xml
-Sitemap: https://richmondasphaltpaving.com/image-sitemap.xml

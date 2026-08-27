@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ShieldCheck, Zap, Droplets, Target, Award, Construction, Star, Trophy } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 
@@ -446,6 +447,7 @@ export default function VirginiaSealcoating() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="sealcoat" heading="Sealcoating, before it dries" intro="Fresh seal and new lines from our own rigs." />
 
       <Footer />
     </div>

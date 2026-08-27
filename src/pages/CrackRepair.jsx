@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Wrench, MapPin, AlertTriangle, Phone } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -293,6 +294,7 @@ export default function CrackRepair() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="sealcoat" heading="Crack seal and surface work" intro="Including the night shifts after centers close." />
 
       <QuoteBlock
         source="service_crack_repair"

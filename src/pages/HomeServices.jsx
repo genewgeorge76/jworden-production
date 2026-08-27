@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, House, Phone, Wrench } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
 import { getRichmondRadiusLocations, RICHMOND_RADIUS_MILES } from '@/lib/locations'
@@ -354,6 +355,7 @@ export default function HomeServices() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="residential" heading="Recent residential work" intro="Driveways, extensions, and edges from real jobs." />
 
       <Footer />
     </div>

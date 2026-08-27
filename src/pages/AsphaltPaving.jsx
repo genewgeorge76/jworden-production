@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { ShieldCheck, Construction, HardHat, Award } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import LiveReviewBadges from '@/components/LiveReviewBadges'
@@ -228,6 +229,7 @@ export default function AsphaltPaving() {
           </a>
         </div>
       </section>
+      <JobPhotoStrip category="commercial" heading="Paving days, photographed" intro="The paver, the crew, and the mat going down." />
 
       <QuoteBlock
         source="service_asphalt_paving"

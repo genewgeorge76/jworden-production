@@ -5,22 +5,19 @@ const NETWORK_HUBS = [
     name: 'OBX Paving',
     url: 'https://obxpaving.com',
     region: 'Outer Banks, NC',
-    desc: 'Specialized coastal paving and resilient sealcoating for the Outer Banks region.',
-    icon: '🌊',
+    desc: 'Coastal paving and sealcoating built for salt air and storm drainage on the Outer Banks.',
   },
   {
     name: 'Blue Ridge Asphalt',
     url: 'https://blueridgeasphaltpaving.com',
     region: 'Mountain & Valley Region',
-    desc: 'Heavy-duty commercial paving and grading for extreme elevations and slopes.',
-    icon: '⛰️',
+    desc: 'Commercial paving and grading for mountain grades and valley freeze-thaw.',
   },
   {
     name: 'J. Worden Asphalt',
     url: 'https://jwordenasphaltpaving.com',
     region: 'Mid-Atlantic Central',
-    desc: 'The original regional leader in commercial and residential asphalt solutions.',
-    icon: '🏢',
+    desc: 'The home operation: commercial and residential asphalt across central Virginia since 1984.',
   },
 ]
 
@@ -33,10 +30,10 @@ export default function NetworkCoverage() {
             The Worden Coverage Network
           </span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4">
-            Dominating The Mid-Atlantic
+            One Family, Three Regional Brands
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
-            As the central authority in American paving, we deploy specialized regional divisions tailored to local climates, materials, and compliance standards. Find our premium regional partners below.
+            The same crews and the same standards, organized by region so the spec fits the ground it sits on — coastal, mountain, and central Virginia.
           </p>
         </div>
 
@@ -55,7 +52,6 @@ export default function NetworkCoverage() {
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-amber/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
               
-              <div className="text-4xl mb-4">{hub.icon}</div>
               <h3 className="font-display font-bold text-xl mb-1 text-brand-amber">
                 {hub.name}
               </h3>
@@ -67,7 +63,7 @@ export default function NetworkCoverage() {
               </p>
               
               <div className="flex items-center text-brand-amber text-sm font-semibold group-hover:translate-x-2 transition-transform">
-                Visit Regional Hub <span className="ml-2">→</span>
+                Visit the regional site <span className="ml-2">→</span>
               </div>
             </motion.a>
           ))}

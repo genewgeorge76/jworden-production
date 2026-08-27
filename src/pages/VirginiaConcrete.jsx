@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, Factory, Building2, Truck, Ruler, ShieldCheck, Phone } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
@@ -326,6 +327,7 @@ export default function VirginiaConcrete() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="hardscape" heading="Stone and flatwork" intro="Walkways, steps, and edge work from our own projects." />
 
       <QuoteBlock
         source="service_concrete"

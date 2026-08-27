@@ -623,7 +623,7 @@ Disallow: /add_new_pages.js
 Disallow: /add_remaining_pages.js
 Disallow: /pull_request_23_status.txt
 
-Sitemap: ${SITE}/sitemap.xml${domain === PRIMARY_DOMAIN ? `\nSitemap: ${SITE}/image-sitemap.xml` : ''}
+Sitemap: ${SITE}/sitemap.xml${domain === 'www.jwordenasphaltpaving.com' ? `\nSitemap: ${SITE}/image-sitemap.xml` : ''}
 `;
   writeFileSync(resolve(ROOT, `public/sitemaps/robots-${domain}.txt`), robots, 'utf8');
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, Home, Phone, ShieldCheck } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import SEO from '@/components/SEO'
 import SmartImage from '@/components/SmartImage'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -411,6 +412,7 @@ export default function ResidentialAsphalt() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="residential" heading="Driveways we have laid" intro="Every frame is our own job, photographed by the crew that built it." />
 
       <Footer />
     </div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ParkingSquare, ShieldCheck, Zap, Ruler, CheckCircle2, Car, Building2, Truck } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import JobPhotoStrip from '@/components/JobPhotoStrip'
 import QuoteBlock from '@/components/QuoteBlock'
 import SEO from '@/components/SEO'
 import { trackPhoneClick } from '@/lib/analytics'
@@ -353,6 +354,7 @@ export default function ParkingLots() {
           </div>
         </div>
       </section>
+      <JobPhotoStrip category="commercial" heading="Commercial lots, on the job" intro="Dealerships, grocery anchors, retail centers — photographed as the work happened." />
 
       <QuoteBlock
         source="service_parking_lots"
