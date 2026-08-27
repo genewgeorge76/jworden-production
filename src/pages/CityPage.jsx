@@ -10,6 +10,7 @@ import NotFound from './NotFound'
 import CityQuoteBlock from '../components/CityQuoteBlock'
 import LocalClimateBlock from '../components/LocalClimateBlock'
 import ErrorBoundary from '../components/ErrorBoundary'
+import JobPhotoStrip from '../components/JobPhotoStrip'
 
 // Build LocalBusiness schema with city-specific areaServed
 function cityLocalBusinessSchema(area) {
@@ -203,6 +204,14 @@ export default function CityPage() {
       {/* ── Quote capture, on the page rather than a link away ── */}
       <ErrorBoundary silent label="LocalClimateBlock">
         <LocalClimateBlock slug={area.slug} city={area.city} />
+      </ErrorBoundary>
+
+      <ErrorBoundary silent label="JobPhotoStrip">
+        <JobPhotoStrip
+          category="residential"
+          heading="Recent work from our crews"
+          intro="Photographs from our own Virginia jobs — the same crews that would work yours."
+        />
       </ErrorBoundary>
 
       <ErrorBoundary

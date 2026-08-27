@@ -99,7 +99,7 @@ export default function AsphaltPaving() {
               <img 
                 src="/hero-paving.jpg" 
                 className="w-full h-full object-cover opacity-60 scale-105"
-                alt="J. Worden & Sons crew paving an asphalt surface in Central Virginia"
+                alt="Skid steer feeding hot mix to the J. Worden and Sons hand crew"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
