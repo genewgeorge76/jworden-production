@@ -5,6 +5,7 @@ import { GA, QUADS } from '@/data/kfcProgrammeTracker'
 import { KBP_INVOICE_EVIDENCE } from '@/data/georgiaStores'
 import { KBP_STORES, tally } from '@/data/kbpStoreMap'
 import { MASTER_ROSTER } from '@/data/kbpTrackerApril2017'
+import { KFC_SPAN, KICKSERV_KFC } from '@/data/kfcProgrammeSpan'
 
 /**
  * DocumentedRecord — the numbers, instead of the adjectives.
@@ -60,7 +61,7 @@ export default function DocumentedRecord() {
       icon: Receipt,
       value: usd2(KBP_INVOICE_EVIDENCE.totalUsd),
       label: 'Invoiced to one QSR franchisee',
-      detail: `${KBP_INVOICE_EVIDENCE.invoices} invoices, 2015–2018, including new builds and change orders.`,
+      detail: `${KBP_INVOICE_EVIDENCE.invoices} invoices inside a KFC program documented June 2013 to late 2018 — ${KICKSERV_KFC.jobsCompleted} completed jobs in our own records, ${KICKSERV_KFC.completedByYear[2018]} in 2018 alone.`,
     },
     {
       icon: MapPin,
