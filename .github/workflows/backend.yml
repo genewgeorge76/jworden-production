@@ -1,0 +1,66 @@
+# Backend CI — ported from .gitlab-ci.yml (2026-08-28) as part of the move off
+# GitLab (free-tier compute credits). Same gates: test on backend changes,
+# deploy to Fly only from main when something the API ships has changed.
+#
+# REQUIRED SECRET (owner, one time): repo Settings -> Secrets and variables ->
+# Actions -> New repository secret: FLY_API_TOKEN (from `flyctl tokens create
+# deploy -a jworden-api`, or the value currently stored in GitLab CI/CD
+# variables). Until it exists, the deploy job fails fast with a clear message.
+name: backend
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'alembic/**'
+      - 'scripts/**/*.py'
+      - 'tests/**'
+      - 'requirements*.txt'
+      - 'Dockerfile'
+      - 'fly.toml'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'alembic/**'
+      - 'scripts/**/*.py'
+      - 'tests/**'
+      - 'requirements*.txt'
+      - 'Dockerfile'
+      - 'fly.toml'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install --quiet --disable-pip-version-check -r requirements.backend.txt
+      - name: App imports cleanly
+        run: python3 -c "import app.main; print('app imports OK')"
+      - name: Test suite
+        run: python3 -m pytest tests/ -q
+      - name: Tenant isolation audit
+        run: python3 scripts/audit_tenant_isolation.py --max 22
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://jworden-api.fly.dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require FLY_API_TOKEN
+        run: |
+          if [ -z "${{ secrets.FLY_API_TOKEN }}" ]; then
+            echo "::error::FLY_API_TOKEN secret is not set — add it in repo Settings -> Secrets -> Actions"; exit 1; fi
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
