@@ -29,9 +29,9 @@ test:api:
   # changing a test or this file must run the suite, and need not deploy.
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes: [app/**/*, alembic/**/*, scripts/**/*, tests/**/*, requirements*.txt, Dockerfile, fly.toml, .gitlab-ci.yml]
+      changes: [app/**/*, alembic/**/*, scripts/**/*.py, tests/**/*, requirements*.txt, Dockerfile, fly.toml, .gitlab-ci.yml]
     - if: '$CI_COMMIT_BRANCH == "main"'
-      changes: [app/**/*, alembic/**/*, scripts/**/*, tests/**/*, requirements*.txt, Dockerfile, fly.toml, .gitlab-ci.yml]
+      changes: [app/**/*, alembic/**/*, scripts/**/*.py, tests/**/*, requirements*.txt, Dockerfile, fly.toml, .gitlab-ci.yml]
   before_script:
     - pip install --quiet --disable-pip-version-check -r requirements.backend.txt
   script:
@@ -139,7 +139,7 @@ deploy:api:
   rules:
     # only main, and only when something the API actually ships has changed
     - if: '$CI_COMMIT_BRANCH == "main"'
-      changes: [app/**/*, alembic/**/*, scripts/**/*, requirements*.txt, Dockerfile, fly.toml]
+      changes: [app/**/*, alembic/**/*, scripts/**/*.py, requirements*.txt, Dockerfile, fly.toml]
   environment:
     name: production
     url: https://jworden-api.fly.dev
