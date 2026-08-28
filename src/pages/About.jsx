@@ -151,9 +151,9 @@ const AWARDS = [
   },
   {
     icon: '⭐',
-    title: 'Best of Houzz',
+    title: 'Best of Houzz — Service',
     detail:
-      'Multiple years. Awarded by the Houzz community based on client reviews, service quality, and project documentation.',
+      'Four years: 2014, 2015, 2016, and 2023. Awarded on client reviews and service quality — the profile also carries a 4.8-star rating and the Stone, Pavers & Concrete trade listing.',
   },
   {
     icon: '🎖',

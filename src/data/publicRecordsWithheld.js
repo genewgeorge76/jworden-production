@@ -1003,3 +1003,29 @@ export const CVILLE_PROPOSAL_2026 = {
   evidence: 'unsigned proposal in owner custody',
   custody: "owner's files",
 }
+
+/**
+ * HOUZZ PROFILE VERIFICATION — 2026-08-28
+ *
+ * Fetched live from houzz.com (profile pf~663227484, category "Stone,
+ * Pavers & Concrete", Chester VA): Best of Houzz SERVICE 2014, 2015, 2016,
+ * 2023; 4.8 stars over 12 reviews; Recommended on Houzz; 500 Ideabook
+ * saves; 2018 Top Contractor Award (Pavement & Maintenance Magazine) and
+ * a 2020 Best Asphalt Paving Company award listed on the profile. The
+ * category listing and walkway/driveway portfolios independently support
+ * the hardscape trade (patios, cobblestone, walkways) as a real offering.
+ *
+ * STATUS FLAG: the profile is currently SUSPENDED on Houzz - the owner can
+ * reactivate through his Houzz Pro account. Until reactivated, the award
+ * badges are not publicly visible at the source, so site claims should not
+ * deep-link the profile.
+ */
+export const HOUZZ_PROFILE_2026 = {
+  id: 'houzz-profile-2026',
+  status: 'held',
+  verified: '2026-08-28',
+  category: 'Stone, Pavers & Concrete',
+  awards: ['Best of Houzz Service 2014', 'Best of Houzz Service 2015', 'Best of Houzz Service 2016', 'Best of Houzz Service 2023'],
+  rating: { stars: 4.8, reviews: 12 },
+  profileState: 'suspended - owner to reactivate via Houzz Pro',
+}

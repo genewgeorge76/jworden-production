@@ -40,13 +40,14 @@ export const JOB_PHOTOS = [
 
   // ── Residential ───────────────────────────────────────────────────────────
   P('/images/real_jobs/IMG_6981.webp', 'Crew and paver laying hot mix on an estate driveway with cobblestone borders', 'residential'),
+  P('/images/real_jobs/estate-gate-2012.webp', 'Stone-pillar gate with cobble aprons at a paved entrance', 'hardscape'),
   P('/images/real_jobs/estate-gate-2012.webp', 'Fresh asphalt drive through a stone-pillar gated entrance', 'residential'),
   P('/images/real_jobs/winter-driveway-repave-2014.webp', 'Roller finishing a wooded residential drive in winter', 'residential'),
   P('/images/real_jobs/roller-driveway-brick-colonial-2014.jpg', 'Crew member rolling a long driveway at a brick colonial', 'residential'),
   P('/images/real_jobs/sealcoated-curved-driveway.webp', 'Freshly sealcoated curved driveway between manicured lawns', 'sealcoat'),
   P('/images/real_jobs/brick-ranch-driveway-planters.webp', 'Fresh asphalt drive along brick planter walls at a ranch home', 'residential'),
   P('/images/real_jobs/curved-driveway-cobble-edge.webp', 'Curved driveway with cobblestone edging along a picket fence', 'residential'),
-  P('/images/real_jobs/driveway-cobblestone-ribbon.webp', 'Driveway with a cobblestone center ribbon between two homes', 'residential'),
+  P('/images/real_jobs/driveway-cobblestone-ribbon.webp', 'Driveway with a cobblestone center ribbon between two homes', 'hardscape'),
   P('/images/real_jobs/garage-driveway-extension.webp', 'New driveway extension to a detached two-bay garage', 'residential'),
   P('/images/real_jobs/new-road-build.webp', 'New road build on compacted stone base through pines', 'construction'),
   P('/images/real_jobs/hero-driveway-minnesota.webp', 'Long driveway freshly paved beside a tree line', 'residential', { market: 'MN' }),
