@@ -629,10 +629,14 @@ export const DOLLAR_TREE_CHARLESTON_2026 = {
   invoiced: '2026-08-27',
   amount: 1500,
   evidence: 'invoice with GC purchase order; PO number confirmed by the GC in writing',
-  // FIRST WEST VIRGINIA JOB IN THE RECORD. West Virginia has no published
-  // pages and gets none from one store visit — but the state evidence is
-  // now documented at invoice grade.
-  publishable: true,
+  // CORRECTED 2026-08-28 by the Lead Sentinel: the GC's reconciliation of
+  // 8/18 states the PROJECT WAS NOT COMPLETED — the crew mobilized to
+  // Charleston and the job fell through; the $1,500 invoice covers wasted
+  // mobilization ($4,400 original contract, $2,200 deposit). A mobilization
+  // is documented West Virginia OPERATING PRESENCE, not completed work, so
+  // the client card was REMOVED the same day it had gone live. Do not
+  // publish Dollar Tree as a client unless a completed job surfaces.
+  publishable: false,
 }
 
 export const CLIENT_DOCUMENTS = [

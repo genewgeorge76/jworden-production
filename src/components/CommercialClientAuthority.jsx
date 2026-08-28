@@ -25,15 +25,6 @@ export default function CommercialClientAuthority() {
       imageAlt: "Fresh mat across a commercial lot, dump truck staged",
     },
     {
-      name: "Dollar Tree — Charleston, WV",
-      locations: "Store #07604, West Virginia",
-      services: "Parking Lot Repairs, Summer 2026",
-      badge: "Multi-State Retail",
-      logoText: "Dollar Tree",
-      image: "/images/real_jobs/kfc-lot-sealed-striped-open.webp",
-      imageAlt: "Sealed and striped retail lot back open to traffic",
-    },
-    {
       name: "Kentucky Fried Chicken (KFC)",
       locations: "10 Franchise Stores (VA, GA, LA)",
       services: "Dumpster Pad Builds, Night Milling, Heavy Sealcoating & ADA Striping",
