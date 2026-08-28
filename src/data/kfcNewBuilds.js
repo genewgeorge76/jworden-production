@@ -39,13 +39,27 @@
  * Dollar amounts stay off public cards, as everywhere in this record.
  */
 
+/**
+ * Grades:
+ *   completed  Completed, revenue-carrying rows in the company's own book —
+ *              or, for Leesville, the construction manager's own final-payment
+ *              invoice, which only flows at the end of a finished build.
+ *   book       New-build entries in the book whose status column was never
+ *              maintained (a block of rows bulk-dated 2018-11-27), attested
+ *              built by the owner (2026-08-28: "we built more in LA —
+ *              Jennings and others"). Recorded, named cautiously.
+ */
 export const NEW_BUILD_SITES = [
-  { city: 'Jefferson City', state: 'MO', address: '706 Virginia St', completed: '2018-08', jobs: 2 },
-  { city: 'Sulphur Springs', state: 'TX', address: '900 Gilmer St', completed: '2018-08', jobs: 1 },
-  { city: 'Ennis', state: 'TX', address: '100 North Kaufman Street', completed: '2018-08', jobs: 1 },
-  { city: 'Burton', state: 'MI', address: '1145 North Belsay Road', completed: '2018-08', jobs: 2, note: 'One job row billed under the customer "Plaza Street Partners" directly.' },
-  { city: 'Crowley', state: 'LA', address: '2203 North Parkerson Avenue', completed: '2018-08', jobs: 1 },
-  { city: 'Jennings', state: 'LA', address: '1498 Elton Road', completed: '2018-08', jobs: 4 },
+  { city: 'Jefferson City', state: 'MO', address: '706 Virginia St', completed: '2018-08', jobs: 2, grade: 'completed' },
+  { city: 'Sulphur Springs', state: 'TX', address: '900 Gilmer St', completed: '2018-08', jobs: 1, grade: 'completed' },
+  { city: 'Ennis', state: 'TX', address: '100 North Kaufman Street', completed: '2018-08', jobs: 1, grade: 'completed' },
+  { city: 'Burton', state: 'MI', address: '1145 North Belsay Road', completed: '2018-08', jobs: 2, grade: 'completed', note: 'One job row billed under the customer "Plaza Street Partners" directly.' },
+  { city: 'Jennings', state: 'LA', address: '1498 Elton Road', completed: '2018-08', jobs: 5, grade: 'completed', note: 'Includes a completed change order — a build, not site work.' },
+  { city: 'Leesville', state: 'LA', address: '1102 5th Street', completed: '2018-10', jobs: 1, grade: 'completed', note: 'Corroborated by the construction manager’s final-payment invoice for KFC-618, WO-7170336, Oct 2018 (clientProgramDocuments.js).' },
+  { city: 'Crowley', state: 'LA', address: '2203 North Parkerson Avenue', completed: '2018', jobs: 2, grade: 'book' },
+  { city: 'Lake Charles (Ryan St)', state: 'LA', address: '2412 Ryan Street', completed: '2018', jobs: 1, grade: 'book' },
+  { city: 'Lake Charles (MLK Pkwy)', state: 'LA', address: 'N MLK Pkwy', completed: '2018', jobs: 1, grade: 'book' },
+  { city: 'DeRidder', state: 'LA', address: '812 Pine St', completed: '2018', jobs: 1, grade: 'book' },
 ]
 
 export const PROGRAMME = {
