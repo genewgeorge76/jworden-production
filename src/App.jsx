@@ -125,6 +125,8 @@ const HamptonRoadsPaving = lazy(() => import('./pages/HamptonRoadsPaving'));
 const FredericksburgPaving = lazy(() => import('./pages/FredericksburgPaving'));
 const NorthernVirginiaPaving = lazy(() => import('./pages/NorthernVirginiaPaving'));
 const ShenandoahValleyPaving = lazy(() => import('./pages/ShenandoahValleyPaving'));
+const CharlottesvillePaving = lazy(() => import('./pages/CharlottesvillePaving'));
+const RoanokePaving = lazy(() => import('./pages/RoanokePaving'));
 const AdvisoryHub = lazy(() => import('./pages/advisory/AdvisoryHub'));
 const AdvisoryCategoryHub = lazy(() => import('./pages/advisory/CategoryHub'));
 const AdvisoryStateDetail = lazy(() => import('./pages/advisory/StateDetail'));
@@ -689,6 +691,8 @@ const AuthenticatedApp = () => {
         <Route path="/fredericksburg-paving" element={<FredericksburgPaving />} />
         <Route path="/northern-virginia-paving" element={<NorthernVirginiaPaving />} />
         <Route path="/shenandoah-valley-paving" element={<ShenandoahValleyPaving />} />
+        <Route path="/charlottesville-paving" element={<CharlottesvillePaving />} />
+        <Route path="/roanoke-paving" element={<RoanokePaving />} />
         <Route path="/millings-fines" element={<MillingsAndFines />} />
         <Route path="/tar-and-chip" element={<TarAndChip />} />
         {/* /driveway-ai previously redirected to /quote here. It was dead code:

@@ -237,6 +237,8 @@ const STATIC_ROUTES = [
   { path: '/fredericksburg-paving',         priority: '0.9',  changefreq: 'monthly' },
   { path: '/northern-virginia-paving',      priority: '0.9',  changefreq: 'monthly' },
   { path: '/shenandoah-valley-paving',      priority: '0.9',  changefreq: 'monthly' },
+  { path: '/charlottesville-paving',        priority: '0.95', changefreq: 'monthly' },
+  { path: '/roanoke-paving',                priority: '0.9',  changefreq: 'monthly' },
   { path: '/commercial/richmond-va',        priority: '0.9',  changefreq: 'monthly' },
 ];
 
