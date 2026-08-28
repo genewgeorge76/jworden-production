@@ -41,9 +41,9 @@ export default function CommercialClientAuthority() {
       image: "/images/commercial_brands/wendys-real.jpg"
     },
     {
-      name: "Hobby Lobby Retail Plaza",
-      locations: "Regional Retail Outlets in Central VA",
-      services: "Retail Parking Lot Sealcoating & Heavy Traffic Line Marking",
+      name: "Hobby Lobby",
+      locations: "Danville, VA",
+      services: "Parking Lot Work Completed July 2026 — invoiced and paid through the GC",
       badge: "Retail Center Partner",
       logoText: "Hobby Lobby",
       image: "/images/commercial_brands/hobby-lobby-real.jpg"
@@ -58,8 +58,8 @@ export default function CommercialClientAuthority() {
     },
     {
       name: "Tractor Supply Co.",
-      locations: "Mid-Atlantic Retail Outlets",
-      services: "Heavy Loading Dock Asphalt Paving & Equipment Aprons",
+      locations: "Ruckersville, VA",
+      services: "Parking Lot Work Completed June 2026 — invoiced and paid through the GC",
       badge: "Commercial Partner",
       logoText: "Tractor Supply",
       image: "/images/commercial_brands/tractor-supply-real.jpg"
