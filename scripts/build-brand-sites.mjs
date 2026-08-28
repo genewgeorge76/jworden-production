@@ -264,7 +264,7 @@ function schema(p, route, canonical) {
 // which the county and city pages link. That file was referenced by every
 // county page and never actually written, so all 95 of them have been
 // shipping unstyled.
-const BRAND_CSS = `:root{--bg:#0f1114;--surface:#191c21;--surface2:#22262d;--line:#333941;--ink:#f4f6f8;--soft:#aeb5bf;--faint:#7e8691;--amber:#f2a71b;--amber2:#cf8a0c;--ink-on-amber:#17110250}
+const BRAND_CSS = `:root{--bg:#0f1114;--surface:#191c21;--surface2:#22262d;--line:#333941;--ink:#f4f6f8;--soft:#aeb5bf;--faint:#7e8691;--amber:#facc15;--amber2:#eab308;--ink-on-amber:#17110250}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:16px/1.65 'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}

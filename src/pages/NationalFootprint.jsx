@@ -197,7 +197,7 @@ export default function NationalFootprint() {
               learns that hiring us does not put their address on the internet. */}
           <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#f97316]" />
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#facc15]" />
               Commercial — street address shown
             </span>
             <span className="inline-flex items-center gap-1.5">
@@ -262,7 +262,7 @@ export default function NationalFootprint() {
                         width: Math.min(34, 12 + (s.photo_count || 1)),
                         height: Math.min(34, 12 + (s.photo_count || 1)),
                         borderRadius: '9999px',
-                        background: s.kind === 'commercial' ? '#f97316' : '#38bdf8',
+                        background: s.kind === 'commercial' ? '#facc15' : '#38bdf8',
                         border: '2px solid #fff',
                         boxShadow:
                           s.kind === 'commercial'

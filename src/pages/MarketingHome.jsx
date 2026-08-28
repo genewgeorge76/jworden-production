@@ -63,7 +63,7 @@ const FEATURES = [
 const TONE = {
   amber:   { ring: 'hover:border-amber-500/50',   bg: 'bg-amber-500/10',   fg: 'text-amber-500' },
   blue:    { ring: 'hover:border-blue-500/50',    bg: 'bg-blue-500/10',    fg: 'text-blue-500' },
-  emerald: { ring: 'hover:border-emerald-500/50', bg: 'bg-emerald-500/10', fg: 'text-emerald-500' },
+  emerald: { ring: 'hover:border-amber-400/50', bg: 'bg-amber-400/10', fg: 'text-amber-400' },
 };
 
 // Straight from businessInfo.js. No rounding up, no "trusted by thousands".
@@ -367,7 +367,7 @@ export default function MarketingHome() {
                     <span className="font-display uppercase tracking-[0.18em] text-xs text-slate-400">
                       Job book — verified
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded border border-amber-400/30 bg-amber-400/10 text-amber-300">
                       Completed
                     </span>
                   </div>

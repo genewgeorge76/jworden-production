@@ -117,7 +117,7 @@ export default function Footer() {
                 <p className="font-display font-bold text-white text-sm tracking-[0.08em] uppercase leading-none">
                   {brandName}
                 </p>
-                <p className="text-[#ff7a00] text-xs tracking-wider uppercase mt-0.5">
+                <p className="text-[#facc15] text-xs tracking-wider uppercase mt-0.5">
                   {brandTagline}
                 </p>
               </div>
@@ -141,26 +141,26 @@ export default function Footer() {
                 <button
                   key={link.label}
                   onClick={() => scrollTo(link.href)}
-                  className="block font-body text-gray-400 text-sm hover:text-[#ff7a00] transition-colors"
+                  className="block font-body text-gray-400 text-sm hover:text-[#facc15] transition-colors"
                 >
                   {link.label}
                 </button>
               ))}
               <a
                 href="/blog"
-                className="block font-body text-gray-400 text-sm hover:text-[#ff7a00] transition-colors"
+                className="block font-body text-gray-400 text-sm hover:text-[#facc15] transition-colors"
               >
                 Paving Blog
               </a>
               <a
                 href="/locations"
-                className="block font-body text-gray-400 text-sm hover:text-[#ff7a00] transition-colors"
+                className="block font-body text-gray-400 text-sm hover:text-[#facc15] transition-colors"
               >
                 Service Areas
               </a>
               <a
                 href="/crew-mode"
-                className="block font-body text-gray-600 text-[10px] uppercase font-bold tracking-[0.08em] hover:text-[#ff7a00] transition-colors pt-4"
+                className="block font-body text-gray-600 text-[10px] uppercase font-bold tracking-[0.08em] hover:text-[#facc15] transition-colors pt-4"
               >
                 Crew Field Portal
               </a>
@@ -184,13 +184,13 @@ export default function Footer() {
               <a
                 href={phoneTel}
                 onClick={() => trackPhoneClick('footer')}
-                className="flex items-center gap-3 text-gray-400 hover:text-[#ff7a00] transition-colors"
+                className="flex items-center gap-3 text-gray-400 hover:text-[#facc15] transition-colors"
               >
-                <Phone className="w-4 h-4 text-[#ff7a00]" />
+                <Phone className="w-4 h-4 text-[#facc15]" />
                 <span className="font-body text-sm">{phoneDisplay}</span>
               </a>
-              <a href="mailto:j.wordenandsonspaving@gmail.com" className="flex items-center gap-3 text-gray-400 hover:text-[#ff7a00] transition-colors">
-                <Mail className="w-4 h-4 text-[#ff7a00]" />
+              <a href="mailto:j.wordenandsonspaving@gmail.com" className="flex items-center gap-3 text-gray-400 hover:text-[#facc15] transition-colors">
+                <Mail className="w-4 h-4 text-[#facc15]" />
                 <span className="font-body text-sm">j.wordenandsonspaving@gmail.com</span>
               </a>
               {/* Home office. Deliberately the same on every regional brand:
@@ -198,7 +198,7 @@ export default function Footer() {
                   inventing a local street address would be both untrue and a
                   Google Business Profile violation. */}
               <div className="flex items-start gap-3 text-gray-400">
-                <MapPin className="w-4 h-4 text-[#ff7a00] mt-0.5" />
+                <MapPin className="w-4 h-4 text-[#facc15] mt-0.5" />
                 <span className="font-body text-sm">
                   <span className="block text-[10px] uppercase tracking-[0.08em] text-gray-500 mb-1">Home Office</span>
                   1601 Ware Bottom Spring Rd<br />
@@ -218,7 +218,7 @@ export default function Footer() {
               <a 
                 key={loc.slug} 
                 href={`/locations/${loc.slug}`}
-                className="text-xs text-gray-500 hover:text-[#ff7a00] transition-colors truncate"
+                className="text-xs text-gray-500 hover:text-[#facc15] transition-colors truncate"
                 title={`Asphalt Paving in ${loc.city}${loc.stateAbbr ? `, ${loc.stateAbbr}` : ''}`}
               >
                 {loc.city}{loc.stateAbbr ? `, ${loc.stateAbbr}` : ''}
@@ -226,7 +226,7 @@ export default function Footer() {
             ))}
           </div>
           <div className="mt-4">
-             <a href="/locations" className="text-xs text-[#ff7a00] hover:text-white transition-colors">View All {seoLocations.length}+ {regionLabel} Service Areas &rarr;</a>
+             <a href="/locations" className="text-xs text-[#facc15] hover:text-white transition-colors">View All {seoLocations.length}+ {regionLabel} Service Areas &rarr;</a>
           </div>
         </div>
 

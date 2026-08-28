@@ -98,17 +98,17 @@ export default function QuickQuoteBar({
   if (done) {
     return (
       <div
-        className={`rounded-lg border-2 border-emerald-500/60 bg-emerald-50 p-5 ${className}`}
+        className={`rounded-lg border-2 border-amber-500/60 bg-amber-100 p-5 ${className}`}
         role="status"
         aria-live="polite"
       >
         <div className="flex items-start gap-3">
-          <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-emerald-600" />
+          <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-amber-600" />
           <div>
-            <p className="font-display text-base font-extrabold uppercase tracking-wide text-emerald-900">
+            <p className="font-display text-base font-extrabold uppercase tracking-wide text-amber-dark">
               Got it — we&apos;ll text you within 1 hour.
             </p>
-            <p className="mt-1 text-sm text-emerald-800">
+            <p className="mt-1 text-sm text-amber-700">
               Need it now? Tap to call{' '}
               <a
                 href={`tel:${PHONE_E164}`}
@@ -167,7 +167,7 @@ export default function QuickQuoteBar({
         <a
           href={`sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`}
           onClick={() => trackEvent('sms_click', { location: `quick_quote:${source}` })}
-          className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-md border-2 border-emerald-600 px-5 font-display text-base font-extrabold uppercase tracking-wide text-emerald-700 transition-colors hover:bg-emerald-600 hover:text-white"
+          className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-md border-2 border-amber-500 px-5 font-display text-base font-extrabold uppercase tracking-wide text-amber-600 transition-colors hover:bg-amber-400 hover:text-black"
         >
           <MessageSquare className="h-5 w-5" />
           Text Us

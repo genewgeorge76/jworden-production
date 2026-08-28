@@ -263,7 +263,7 @@ export default function ShenandoahValleyPaving() {
                 <h3 className="text-white font-bold text-lg mb-6">Valley Paving Calendar.</h3>
                 <div className="space-y-4">
                   {[
-                    { season: 'April – May', status: 'Prime season opens', note: 'Ground temps rise, overnight frosts end. Book early — Valley crews fill fast.', color: 'text-green-400 bg-green-400/10' },
+                    { season: 'April – May', status: 'Prime season opens', note: 'Ground temps rise, overnight frosts end. Book early — Valley crews fill fast.', color: 'text-amber-300 bg-amber-400/10' },
                     { season: 'June – August', status: 'Peak season', note: 'Full paving window. Long days, hot mix stays workable longer at elevation.', color: 'text-brand-amber bg-brand-amber/10' },
                     { season: 'September – October', status: 'Second window', note: 'Best time to seal and repair before first frost. Ideal for resort closeout work.', color: 'text-blue-400 bg-blue-400/10' },
                     { season: 'November – March', status: 'High-elevation restricted', note: 'Above 1,500 ft: no paving. Valley floor work possible on warm days only. Emergency only.', color: 'text-red-400 bg-red-400/10' },

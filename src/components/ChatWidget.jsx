@@ -22,7 +22,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Phone, Volume2, VolumeX, X, Camera, Ruler, ClipboardList, CalendarCheck, MessageSquare } from 'lucide-react'
+import { Phone, Volume2, VolumeX, X, Camera, Ruler, ClipboardList, CalendarCheck, MessageSquare, Send } from 'lucide-react'
 import { api } from '../api/client'
 import { voiceService } from '../lib/ElevenLabsService'
 
@@ -319,8 +319,8 @@ function Message({ msg }) {
       <div
         className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
           isBot
-            ? 'bg-brand-navy/5 text-brand-navy rounded-tl-none'
-            : 'bg-brand-amber text-brand-navy rounded-tr-none font-medium'
+            ? 'bg-white text-brand-navy rounded-tl-none shadow-sm ring-1 ring-black/5'
+            : 'bg-brand-amber text-black rounded-tr-none font-medium'
         }`}
       >
         {msg.text}
@@ -333,7 +333,7 @@ function TypingIndicator() {
   return (
     <div className="flex gap-2 items-start">
       <span className="text-base leading-none mt-0.5 select-none">👷</span>
-      <div className="bg-brand-navy/5 rounded-2xl rounded-tl-none px-4 py-3 flex gap-1.5 items-center">
+      <div className="bg-white shadow-sm ring-1 ring-black/5 rounded-2xl rounded-tl-none px-4 py-3 flex gap-1.5 items-center">
         {[0, 1, 2].map((i) => (
           <span
             key={i}
@@ -368,15 +368,15 @@ function HandoffBanner({ handoff, onShowForm }) {
   if (!handoff) return null
   if (handoff === 'call') {
     return (
-      <div className="mx-3 my-1.5 bg-green-50 border border-green-200 rounded-xl px-3 py-2.5 flex items-center gap-2">
+      <div className="mx-3 my-1.5 bg-amber-100 border border-amber-300 rounded-xl px-3 py-2.5 flex items-center gap-2">
         <span className="text-lg">📞</span>
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-bold text-green-800">Ready to talk?</div>
-          <div className="text-xs text-green-700">Call us now \u2014 we pick up fast.</div>
+          <div className="text-xs font-bold text-amber-700">Ready to talk?</div>
+          <div className="text-xs text-amber-600">Call us now — we pick up fast.</div>
         </div>
         <a
           href={`tel:${BUSINESS_PHONE_TEL}`}
-          className="flex-shrink-0 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors"
+          className="flex-shrink-0 bg-amber-400 text-black text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-amber-500 transition-colors"
         >
           Call
         </a>
@@ -437,7 +437,9 @@ export default function ChatWidget() {
   const { pathname } = useLocation()
 
   const [open, setOpen] = useState(() => ssGet('mrw_open', false))
-  const [activeTab, setActiveTab] = useState(() => ssGet('mrw_tab', 'actions'))
+  // Conversation-first (the GoDaddy pattern): the widget opens straight into
+  // the assistant with suggestion chips; Command/Proof/Intake are one tap away.
+  const [activeTab, setActiveTab] = useState(() => ssGet('mrw_tab', 'chat'))
   const [messages, setMessages] = useState(() => {
     const saved = ssGet(MESSAGES_SS_KEY, null)
     if (Array.isArray(saved) && saved.length > 0) return saved
@@ -781,25 +783,25 @@ export default function ChatWidget() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="mb-3 w-[calc(100vw-1.5rem)] sm:w-[400px] bg-white rounded-2xl shadow-xl border border-brand-navy/10 flex flex-col overflow-hidden"
-            style={{ maxHeight: 'min(80vh, 560px)' }}
+            className="mb-3 w-[calc(100vw-1.5rem)] sm:w-[420px] bg-white rounded-3xl shadow-2xl ring-1 ring-black/5 flex flex-col overflow-hidden"
+            style={{ maxHeight: 'min(85vh, 640px)' }}
           >
-            {/* Header */}
-            <div className="bg-brand-navy text-white px-4 py-3 flex items-center justify-between flex-shrink-0 border-b-2 border-brand-amber">
+            {/* Header — light and airy, like a modern SaaS assistant */}
+            <div className="bg-white text-brand-navy px-4 pt-4 pb-3 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-3">
                 <HeaderAvatar />
                 <div>
-                  <div className="font-display font-bold text-sm leading-tight">Mr. Worden</div>
-                  <div className="text-white/70 text-xs flex items-center gap-1.5 mt-0.5">
-                    <span className={`inline-block w-1.5 h-1.5 rounded-full ${loading ? 'bg-brand-amber animate-pulse' : 'bg-emerald-400'}`} aria-hidden="true" />
-                    {loading ? 'Thinking…' : 'Online · Reply in seconds'}
+                  <div className="font-display font-bold text-[15px] leading-tight">Mr. Worden</div>
+                  <div className="text-brand-navy/50 text-xs flex items-center gap-1.5 mt-0.5">
+                    <span className={`inline-block w-1.5 h-1.5 rounded-full bg-amber-500 ${loading ? 'animate-pulse' : ''}`} aria-hidden="true" />
+                    {loading ? 'Thinking…' : 'Online · Replies in seconds'}
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <a
                   href={`tel:${BUSINESS_PHONE_TEL}`}
-                  className="bg-brand-amber hover:bg-brand-amber/90 text-brand-navy text-xs font-semibold px-3 py-1.5 rounded-md transition-colors flex items-center gap-1.5"
+                  className="bg-brand-amber hover:bg-amber-500 text-black text-xs font-bold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5"
                   aria-label={`Call ${BUSINESS_PHONE}`}
                 >
                   <Phone className="w-3.5 h-3.5" aria-hidden="true" />
@@ -808,7 +810,7 @@ export default function ChatWidget() {
                 <button
                   type="button"
                   onClick={() => setVoiceOn((v) => !v)}
-                  className="text-white/60 hover:text-white transition-colors p-1.5 rounded-md hover:bg-white/10"
+                  className="text-brand-navy/40 hover:text-brand-navy transition-colors p-1.5 rounded-full hover:bg-brand-navy/5"
                   aria-label={voiceOn ? 'Mute Mr. Worden' : 'Unmute Mr. Worden'}
                   aria-pressed={voiceOn}
                 >
@@ -817,7 +819,7 @@ export default function ChatWidget() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="text-white/60 hover:text-white transition-colors p-1.5 rounded-md hover:bg-white/10"
+                  className="text-brand-navy/40 hover:text-brand-navy transition-colors p-1.5 rounded-full hover:bg-brand-navy/5"
                   aria-label="Close Mr. Worden concierge"
                 >
                   <X className="w-4 h-4" />
@@ -825,29 +827,31 @@ export default function ChatWidget() {
               </div>
             </div>
 
-            {/* Tabs */}
-            <div className="flex border-b border-brand-navy/10 flex-shrink-0 bg-white" role="tablist">
-              {[
-                { id: 'actions', label: 'Command' },
-                { id: 'chat', label: 'Advisor' },
-                { id: 'help', label: 'Proof' },
-                { id: 'lead', label: 'Intake' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTab === tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 text-xs font-semibold py-2.5 transition-colors ${
-                    activeTab === tab.id
-                      ? 'text-brand-navy border-b-2 border-brand-amber bg-brand-amber/5'
-                      : 'text-brand-navy/40 hover:text-brand-navy/70'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            {/* Tabs — segmented pill control */}
+            <div className="px-4 pb-3 flex-shrink-0 bg-white">
+              <div className="flex bg-brand-navy/[0.06] rounded-full p-1" role="tablist">
+                {[
+                  { id: 'chat', label: 'Chat' },
+                  { id: 'actions', label: 'Quick Help' },
+                  { id: 'help', label: 'FAQ' },
+                  { id: 'lead', label: 'Estimate' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 text-xs font-semibold py-1.5 rounded-full transition-all ${
+                      activeTab === tab.id
+                        ? 'bg-white text-brand-navy shadow-sm'
+                        : 'text-brand-navy/45 hover:text-brand-navy/75'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Tab bodies */}
@@ -901,7 +905,7 @@ export default function ChatWidget() {
 
               {/* CHAT */}
               {activeTab === 'chat' && (
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full bg-[#f7f8fa]">
                   <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 min-h-0">
                     {messages.map((msg) => (
                       <Message key={msg.id} msg={msg} />
@@ -927,7 +931,7 @@ export default function ChatWidget() {
                           key={s}
                           type="button"
                           onClick={() => sendMessage(s)}
-                          className="text-xs bg-brand-amber/10 text-brand-navy border border-brand-amber/30 rounded-full px-3 py-1 hover:bg-brand-amber/20 transition-colors text-left"
+                          className="text-xs bg-white text-brand-navy border border-brand-navy/15 rounded-full px-3.5 py-1.5 hover:border-brand-amber hover:bg-brand-amber/10 transition-colors text-left shadow-sm"
                         >
                           {s}
                         </button>
@@ -945,26 +949,26 @@ export default function ChatWidget() {
                     </Link>
                   </div>
 
-                  <div className="border-t border-brand-navy/10 px-3 py-3 flex gap-2 flex-shrink-0">
+                  <div className="border-t border-brand-navy/10 bg-white px-3 py-3 flex items-center gap-2 flex-shrink-0">
                     <input
                       ref={inputRef}
                       type="text"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder="Ask about price, scans, 4D design, plans, drainage, or schedule..."
+                      placeholder="Ask anything — price, schedule, drainage…"
                       maxLength={800}
-                      className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-amber/50 focus:border-brand-amber transition-colors"
+                      className="flex-1 border border-gray-200 bg-[#f7f8fa] rounded-full px-4 py-2.5 text-sm text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-amber/50 focus:border-brand-amber focus:bg-white transition-colors"
                       aria-label="Message Mr. Worden"
                     />
                     <button
                       type="button"
                       onClick={() => sendMessage(input)}
                       disabled={!input.trim() || loading}
-                      className="bg-brand-amber text-brand-navy rounded-lg px-3 py-2 text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-brand-amber/80 transition-colors"
+                      className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-brand-amber text-black rounded-full disabled:opacity-40 disabled:cursor-not-allowed hover:bg-amber-500 transition-colors"
                       aria-label="Send message"
                     >
-                      ➤
+                      <Send className="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -1015,7 +1019,7 @@ export default function ChatWidget() {
                       <div className="mt-4 space-y-2">
                         <a
                           href={`tel:${BUSINESS_PHONE_TEL}`}
-                          className="block w-full text-center bg-green-600 text-white text-sm font-bold rounded-lg py-2.5 hover:bg-green-700 transition-colors"
+                          className="block w-full text-center bg-amber-400 text-black text-sm font-bold rounded-lg py-2.5 hover:bg-amber-500 transition-colors"
                         >
                           📞 Or call us now: {BUSINESS_PHONE}
                         </a>
@@ -1186,7 +1190,7 @@ export default function ChatWidget() {
 
                       <div className="flex items-center gap-3 justify-center pt-1">
                         <a href={`tel:${BUSINESS_PHONE_TEL}`}
-                          className="text-xs text-green-700 font-semibold hover:underline flex items-center gap-1">
+                          className="text-xs text-amber-600 font-semibold hover:underline flex items-center gap-1">
                           <span aria-hidden="true">📞</span> {BUSINESS_PHONE}
                         </a>
                         <span className="text-brand-navy/20 text-xs">|</span>
@@ -1206,13 +1210,21 @@ export default function ChatWidget() {
       </AnimatePresence>
       <motion.button
         onClick={() => setOpen((o) => !o)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className={`relative flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-colors duration-300 ${
-          open ? 'bg-red-500 text-white' : 'bg-brand-amber text-brand-navy'
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        aria-label={open ? 'Close chat' : 'Chat with us'}
+        className={`relative flex items-center justify-center gap-2 shadow-2xl transition-colors duration-300 ${
+          open
+            ? 'w-14 h-14 rounded-full bg-brand-navy text-white'
+            : 'h-14 pl-5 pr-6 rounded-full bg-brand-amber text-black font-display font-bold text-sm'
         }`}
       >
-        {open ? <X size={28} /> : <MessageSquare size={28} />}
+        {open ? <X size={24} /> : (
+          <>
+            <MessageSquare size={20} aria-hidden="true" />
+            <span>Chat with us</span>
+          </>
+        )}
         {unread > 0 && !open && (
           <span className="absolute -top-1 -right-1 flex items-center justify-center w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full border-2 border-white">
             {unread}

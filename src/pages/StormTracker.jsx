@@ -40,7 +40,7 @@ const REFRESH_MS = 5 * 60 * 1000 // pull new frames/alerts every 5 minutes
 
 const SEVERITY_STYLE = {
   Extreme: { stroke: '#ef4444', fill: '#ef4444', chip: 'bg-red-500/15 text-red-300 border-red-500/30' },
-  Severe: { stroke: '#f97316', fill: '#f97316', chip: 'bg-orange-500/15 text-orange-300 border-orange-500/30' },
+  Severe: { stroke: '#facc15', fill: '#facc15', chip: 'bg-orange-500/15 text-orange-300 border-orange-500/30' },
   Moderate: { stroke: '#eab308', fill: '#eab308', chip: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30' },
   Minor: { stroke: '#38bdf8', fill: '#38bdf8', chip: 'bg-sky-500/15 text-sky-300 border-sky-500/30' },
   Unknown: { stroke: '#94a3b8', fill: '#94a3b8', chip: 'bg-slate-500/15 text-slate-300 border-slate-500/30' },
@@ -87,7 +87,7 @@ function ClickHandler({ onPick }) {
 
 const pinIcon = L.divIcon({
   className: '',
-  html: `<div style="width:14px;height:14px;border-radius:9999px;background:#f97316;box-shadow:0 0 0 4px rgba(249,115,22,.28),0 0 12px rgba(249,115,22,.9)"></div>`,
+  html: `<div style="width:14px;height:14px;border-radius:9999px;background:#facc15;box-shadow:0 0 0 4px rgba(249,115,22,.28),0 0 12px rgba(249,115,22,.9)"></div>`,
   iconSize: [14, 14],
   iconAnchor: [7, 7],
 })

@@ -810,7 +810,7 @@ export default function CockpitHome() {
             <KpiTile label="Revenue MTD" value={dataLoaded ? fmt$(revenueMtd) : '…'} icon={DollarSign} color="#f59e0b" />
             <KpiTile label="Jobs Active" value={dataLoaded ? fmtNum(activeJobs) : '…'} icon={ClipboardList} color="#3b82f6" />
             <KpiTile label="Win Rate" value={winRate != null ? `${winRate}%` : '--'} icon={TrendingUp} color="#a78bfa" />
-            <KpiTile label="Estimates" value={dataLoaded ? fmtNum(estCount) : '…'} icon={BarChart3} color="#f97316" />
+            <KpiTile label="Estimates" value={dataLoaded ? fmtNum(estCount) : '…'} icon={BarChart3} color="#facc15" />
             <KpiTile label="Total Leads" value={dataLoaded ? fmtNum(leads.length) : '…'} icon={Users} color="#06b6d4" />
           </div>
 
@@ -907,7 +907,7 @@ export default function CockpitHome() {
                 icon={Activity}
                 label="Full CC"
                 sublabel="13-tab operations center"
-                accent="#f97316"
+                accent="#facc15"
               />
             </div>
           </div>

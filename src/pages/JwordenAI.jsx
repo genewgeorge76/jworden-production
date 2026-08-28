@@ -153,7 +153,7 @@ export default function JwordenAI() {
             sizes="100vw"
             className="h-full w-full grayscale contrast-110"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.94)_50%,rgba(255,122,0,0.20)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.94)_50%,rgba(250,204,21,0.20)_100%)]" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-12 lg:px-8">

@@ -20,12 +20,34 @@ export default {
       },
       colors: {
         "brand-navy": "#181818",
-        "brand-amber": "#ff7a00",
+        /* Blacktop & Stripe Yellow (owner-picked 2026-08-28): the accent is
+           fresh line-paint yellow, not orange. brand-amber keeps its name
+           because it is written into hundreds of components — the value is
+           the palette, the name is the API. */
+        "brand-amber": "#facc15",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         amber: {
-          DEFAULT: "hsl(29, 100%, 50%)",
-          dark: "hsl(25, 100%, 42%)"
+          DEFAULT: "#facc15",
+          dark: "#ca8a04",
+          100: "#fef9c3",
+          200: "#fef08a",
+          300: "#fde047",
+          400: "#facc15",
+          500: "#eab308",
+          600: "#ca8a04",
+          700: "#a16207"
+        },
+        /* No orange anywhere: legacy orange-* utility classes resolve to the
+           stripe-yellow scale so stray usages can never reintroduce it. */
+        orange: {
+          100: "#fef9c3",
+          200: "#fef08a",
+          300: "#fde047",
+          400: "#facc15",
+          500: "#eab308",
+          600: "#ca8a04",
+          700: "#a16207"
         },
         obsidian: "hsl(0, 0%, 4%)",
         steel: "hsl(210, 4%, 31%)",

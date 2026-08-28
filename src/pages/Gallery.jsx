@@ -32,7 +32,7 @@ function PhaseBadge({ phase, className = '' }) {
     <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
       phase === 'during'
         ? 'bg-yellow-400/90 text-black'
-        : 'bg-emerald-600/90 text-white'
+        : 'bg-amber-400/90 text-black'
     } ${className}`}>
       {phase === 'during' ? 'During Job' : 'Completed'}
     </span>
@@ -438,7 +438,7 @@ export default function Gallery() {
                     ? val === 'during'
                       ? 'bg-yellow-500/25 text-yellow-300 border border-yellow-500/40'
                       : val === 'completed'
-                      ? 'bg-emerald-600/25 text-emerald-400 border border-emerald-600/40'
+                      ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40'
                       : 'bg-white/20 text-white border border-white/30'
                     : 'bg-white/5 text-white/40 hover:text-white/70 border border-transparent'
                 }`}

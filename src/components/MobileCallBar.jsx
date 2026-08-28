@@ -91,7 +91,7 @@ export default function MobileCallBar() {
         </a>
         <a
           href={`sms:${SMS_E164}?&body=${encodeURIComponent(SMS_PREFILL)}`}
-          className="flex items-center justify-center gap-2 min-h-[56px] px-4 bg-emerald-600 text-white font-extrabold text-base hover:bg-emerald-700 active:brightness-95 transition-colors"
+          className="flex items-center justify-center gap-2 min-h-[56px] px-4 bg-amber-400 text-black font-extrabold text-base hover:bg-amber-500 active:brightness-95 transition-colors"
           onClick={() => trackEvent('sms_click', { location: 'mobile_call_bar' })}
           aria-label="Text us for a free quote"
         >

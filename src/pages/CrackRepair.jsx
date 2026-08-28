@@ -43,7 +43,7 @@ const CRACK_TYPES = [
     cause: 'Thermal shock from Richmond\'s freeze-thaw cycles. Asphalt contracts in cold and surface tension fails perpendicular to the paving direction.',
     fix: 'Hot-pour rubberized sealant applied in autumn before ground freeze to prevent water intrusion over winter.',
     severity: 'Low-Moderate',
-    color: 'text-green-400 bg-green-400/10',
+    color: 'text-amber-300 bg-amber-400/10',
   },
   {
     name: 'Pothole Formation',
@@ -157,7 +157,7 @@ export default function CrackRepair() {
                 <h3 className="text-white font-bold text-xl">The Virginia Cost Reality</h3>
                 <div className="space-y-4">
                   {[
-                    { label: 'Hot-pour crack sealing (now)', cost: '$300–$800', color: 'text-green-400 bg-green-400/10' },
+                    { label: 'Hot-pour crack sealing (now)', cost: '$300–$800', color: 'text-amber-300 bg-amber-400/10' },
                     { label: 'Sealcoating after sealing', cost: '$0.15–$0.25/sqft', color: 'text-brand-amber bg-brand-amber/10' },
                     { label: 'Pothole repair (if you wait)', cost: '$800–$2,500', color: 'text-orange-400 bg-orange-400/10' },
                     { label: 'Full resurfacing (if base fails)', cost: '$3–$6/sqft', color: 'text-red-400 bg-red-400/10' },

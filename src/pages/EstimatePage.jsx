@@ -37,7 +37,7 @@ const CONDITION_DESC = {
 const CONDITION_COLORS = {
   Good: '#22c55e',
   Fair: '#f59e0b',
-  Poor: '#f97316',
+  Poor: '#facc15',
   Failed: '#ef4444',
 }
 

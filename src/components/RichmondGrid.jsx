@@ -297,7 +297,7 @@ export default function RichmondGrid({ sites = [], permitLeads = [], onPolygonSa
 
           {saveMsg && (
             <p
-              className={`text-xs ${saveMsg.type === 'success' ? 'text-green-400' : 'text-red-400'}`}
+              className={`text-xs ${saveMsg.type === 'success' ? 'text-amber-300' : 'text-red-400'}`}
             >
               {saveMsg.text}
             </p>

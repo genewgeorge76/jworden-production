@@ -74,7 +74,7 @@ export default function EstimateForm({ source = 'homepage' }) {
   if (done) {
     return (
       <div className="rounded-none border border-gray-200 bg-white p-8 md:p-12 text-center">
-        <CheckCircle className="w-12 h-12 text-[#ff7a00] mx-auto mb-4" />
+        <CheckCircle className="w-12 h-12 text-[#facc15] mx-auto mb-4" />
         <h3 className="font-display text-gray-900 text-2xl uppercase tracking-wide mb-2">
           Request Received
         </h3>
@@ -105,7 +105,7 @@ export default function EstimateForm({ source = 'homepage' }) {
         <div className="grid sm:grid-cols-2 gap-5">
           <div>
             <label htmlFor="ef-name" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
-              Name <span className="text-[#ff7a00]">*</span>
+              Name <span className="text-[#facc15]">*</span>
             </label>
             <input
               id="ef-name"
@@ -115,12 +115,12 @@ export default function EstimateForm({ source = 'homepage' }) {
               placeholder="John Smith"
               value={fields.name}
               onChange={update('name')}
-              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#ff7a00] focus:outline-none transition-colors"
+              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#facc15] focus:outline-none transition-colors"
             />
           </div>
           <div>
             <label htmlFor="ef-phone" className="block font-display text-xs uppercase tracking-[0.06em] text-gray-600 mb-1.5">
-              Phone <span className="text-[#ff7a00]">*</span>
+              Phone <span className="text-[#facc15]">*</span>
             </label>
             <input
               id="ef-phone"
@@ -131,7 +131,7 @@ export default function EstimateForm({ source = 'homepage' }) {
               placeholder="(804) 555-1234"
               value={fields.phone}
               onChange={update('phone')}
-              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#ff7a00] focus:outline-none transition-colors"
+              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#facc15] focus:outline-none transition-colors"
             />
           </div>
         </div>
@@ -149,7 +149,7 @@ export default function EstimateForm({ source = 'homepage' }) {
               placeholder="you@example.com"
               value={fields.email}
               onChange={update('email')}
-              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#ff7a00] focus:outline-none transition-colors"
+              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#facc15] focus:outline-none transition-colors"
             />
           </div>
           <div>
@@ -160,7 +160,7 @@ export default function EstimateForm({ source = 'homepage' }) {
               id="ef-service"
               value={fields.service}
               onChange={update('service')}
-              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#ff7a00] focus:outline-none transition-colors appearance-none"
+              className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#facc15] focus:outline-none transition-colors appearance-none"
             >
               {SERVICE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -180,7 +180,7 @@ export default function EstimateForm({ source = 'homepage' }) {
             placeholder="Square footage estimate, current surface condition, address, anything helpful…"
             value={fields.message}
             onChange={update('message')}
-            className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#ff7a00] focus:outline-none transition-colors resize-none"
+            className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 text-sm focus:border-[#facc15] focus:outline-none transition-colors resize-none"
           />
         </div>
 
@@ -196,7 +196,7 @@ export default function EstimateForm({ source = 'homepage' }) {
         <button
           type="submit"
           disabled={busy}
-          className="w-full inline-flex items-center justify-center gap-3 bg-[#ff7a00] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:bg-[#ff9a30] disabled:opacity-60 transition-colors"
+          className="w-full inline-flex items-center justify-center gap-3 bg-[#facc15] text-black font-display font-bold text-sm uppercase tracking-[0.06em] px-8 py-4 hover:bg-[#ff9a30] disabled:opacity-60 transition-colors"
         >
           {busy ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>

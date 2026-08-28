@@ -291,7 +291,7 @@ export default function CityPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Estimates</span>
-                  <span className="text-green-400 font-medium">Always Free</span>
+                  <span className="text-brand-amber font-medium">Always Free</span>
                 </div>
               </div>
               <a

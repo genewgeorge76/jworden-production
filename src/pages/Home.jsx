@@ -153,7 +153,7 @@ export default function Home() {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 pb-16 pt-40">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/25 text-white text-xs font-semibold uppercase tracking-[0.06em] px-4 py-2 mb-6 rounded">
-              <Shield className="w-3.5 h-3.5 text-[#ff7a00]" />
+              <Shield className="w-3.5 h-3.5 text-[#facc15]" />
               USDOT 2568168 · Family-Owned Since 1984
             </div>
             <h1 className="font-display text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5">
@@ -168,7 +168,7 @@ export default function Home() {
               <a
                 href={`tel:${PHONE_E164}`}
                 onClick={() => trackPhoneClick('homepage_hero')}
-                className="inline-flex items-center gap-3 bg-[#ff7a00] text-white font-display font-bold text-sm uppercase tracking-[0.04em] px-8 py-4 rounded hover:bg-[#e56d00] transition-colors"
+                className="inline-flex items-center gap-3 bg-[#facc15] text-white font-display font-bold text-sm uppercase tracking-[0.04em] px-8 py-4 rounded hover:bg-[#e56d00] transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call {PHONE_DISPLAY}
@@ -186,7 +186,7 @@ export default function Home() {
       </section>
 
       {/* ── STATS — every figure has a document behind it ────────────────── */}
-      <section className="bg-[#ff7a00]">
+      <section className="bg-[#facc15]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4">
             {STATS.map((s) => (
@@ -212,7 +212,7 @@ export default function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <a href="/residential" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#ff7a00] transition-colors">
+            <a href="/residential" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#facc15] transition-colors">
               <div className="aspect-[16/9] overflow-hidden">
                 <img src={RESIDENTIAL_IMAGE} alt="J. Worden and Sons crew laying hot asphalt on a residential driveway with cobblestone borders" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
               </div>
@@ -222,12 +222,12 @@ export default function Home() {
                   Driveways, sealcoating, crack repair. A written estimate, a straight answer
                   about what your driveway actually needs, and a crew that shows up.
                 </p>
-                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-semibold">
+                <span className="inline-flex items-center gap-2 text-[#facc15] font-semibold">
                   Residential paving <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
             </a>
-            <a href="/commercial" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#ff7a00] transition-colors">
+            <a href="/commercial" className="group relative overflow-hidden rounded-lg border border-gray-200 hover:border-[#facc15] transition-colors">
               <div className="aspect-[16/9] overflow-hidden">
                 <img src={COMMERCIAL_IMAGE} alt="Freshly sealcoated and restriped Harris Teeter grocery store parking lot" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
               </div>
@@ -237,7 +237,7 @@ export default function Home() {
                   Parking lots, phased night work, multi-site programs. Documented specs,
                   federal motor-carrier registration, and permits you can verify yourself.
                 </p>
-                <span className="inline-flex items-center gap-2 text-[#ff7a00] font-semibold">
+                <span className="inline-flex items-center gap-2 text-[#facc15] font-semibold">
                   Commercial paving <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
@@ -253,7 +253,7 @@ export default function Home() {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-[#112337] tracking-tight">
               Driveways we&rsquo;ve laid
             </h2>
-            <a href="/gallery" className="text-[#ff7a00] font-bold text-sm uppercase tracking-[0.05em] hover:underline shrink-0">
+            <a href="/gallery" className="text-[#facc15] font-bold text-sm uppercase tracking-[0.05em] hover:underline shrink-0">
               Full gallery →
             </a>
           </div>
@@ -285,8 +285,8 @@ export default function Home() {
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {SERVICES.map((s) => (
-              <a key={s.title} href={s.href} className="group bg-white rounded-lg border border-gray-200 p-7 hover:border-[#ff7a00] transition-colors">
-                <s.icon className="w-8 h-8 text-[#ff7a00] mb-4" />
+              <a key={s.title} href={s.href} className="group bg-white rounded-lg border border-gray-200 p-7 hover:border-[#facc15] transition-colors">
+                <s.icon className="w-8 h-8 text-[#facc15] mb-4" />
                 <h3 className="font-display text-lg font-bold text-[#112337] mb-2">{s.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{s.desc}</p>
               </a>
@@ -303,7 +303,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[#112337]/[0.88]" />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
           <div>
-            <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">Measured, not estimated</p>
+            <p className="text-[#facc15] text-sm font-bold uppercase tracking-[0.06em] mb-3">Measured, not estimated</p>
             <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4">
               We spec by what your town&rsquo;s weather actually does.
             </h2>
@@ -321,8 +321,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[...LOCAL_CLIMATE].sort((a, b) => b.freezeThawAvg - a.freezeThawAvg).slice(0, 6).map((c) => (
-              <a key={c.slug} href={`/service-areas/${c.slug}`} className="bg-white/5 border border-white/15 rounded-lg p-5 hover:border-[#ff7a00]/60 transition-colors">
-                <p className="font-display text-3xl font-bold tabular-nums text-[#ff7a00]">{c.freezeThawAvg}</p>
+              <a key={c.slug} href={`/service-areas/${c.slug}`} className="bg-white/5 border border-white/15 rounded-lg p-5 hover:border-[#facc15]/60 transition-colors">
+                <p className="font-display text-3xl font-bold tabular-nums text-[#facc15]">{c.freezeThawAvg}</p>
                 <p className="text-white/70 text-xs uppercase tracking-[0.04em] mt-1">cycles / yr</p>
                 <p className="text-white font-semibold text-sm mt-2">{c.city}</p>
               </a>
@@ -342,8 +342,8 @@ export default function Home() {
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {TOOLS.map((t) => (
-              <a key={t.title} href={t.href} className="group bg-[#f5f6f7] rounded-lg border border-gray-200 p-7 hover:border-[#ff7a00] transition-colors">
-                <t.icon className="w-8 h-8 text-[#ff7a00] mb-4" />
+              <a key={t.title} href={t.href} className="group bg-[#f5f6f7] rounded-lg border border-gray-200 p-7 hover:border-[#facc15] transition-colors">
+                <t.icon className="w-8 h-8 text-[#facc15] mb-4" />
                 <h3 className="font-display text-lg font-bold text-[#112337] mb-2">{t.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{t.desc}</p>
               </a>
@@ -358,7 +358,7 @@ export default function Home() {
           className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#112337]/95 via-[#112337]/80 to-[#112337]/40" />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-          <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">Franchise programme work</p>
+          <p className="text-[#facc15] text-sm font-bold uppercase tracking-[0.06em] mb-3">Franchise programme work</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4 max-w-2xl">
             A national KFC portfolio, photographed as it happened.
           </h2>
@@ -392,7 +392,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <a href="/projects" className="inline-block mt-8 bg-[#ff7a00] text-white font-bold px-7 py-3.5 rounded-md tracking-[0.04em] hover:bg-[#e66e00] transition-colors">
+          <a href="/projects" className="inline-block mt-8 bg-[#facc15] text-white font-bold px-7 py-3.5 rounded-md tracking-[0.04em] hover:bg-[#e66e00] transition-colors">
             See the documented record
           </a>
         </div>
@@ -404,7 +404,7 @@ export default function Home() {
           className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-[#0b1626]/[0.78]" />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8 max-w-3xl">
-          <p className="text-[#ff7a00] text-sm font-bold uppercase tracking-[0.06em] mb-3">For centers that cannot close</p>
+          <p className="text-[#facc15] text-sm font-bold uppercase tracking-[0.06em] mb-3">For centers that cannot close</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4">
             We work nights, one section at a time.
           </h2>
@@ -414,7 +414,7 @@ export default function Home() {
             photograph behind this text is our crew&rsquo;s crack seal going down after
             close at a Virginia shopping center.
           </p>
-          <a href="#quote" className="inline-block bg-[#ff7a00] text-white font-bold px-7 py-3.5 rounded-md tracking-[0.04em] hover:bg-[#e66e00] transition-colors">
+          <a href="#quote" className="inline-block bg-[#facc15] text-white font-bold px-7 py-3.5 rounded-md tracking-[0.04em] hover:bg-[#e66e00] transition-colors">
             Plan a phased job
           </a>
         </div>

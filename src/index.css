@@ -21,21 +21,24 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 24.6 95% 53.1%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 24 45% 18%;
-    --secondary-foreground: 24 100% 92%;
+    /* Accent: fresh-stripe yellow (the paint we lay on the black mat).
+       Owner call 2026-08-28: no orange, no green — blacktop and stripe yellow.
+       Yellow is light, so anything sitting ON the accent uses near-black text. */
+    --primary: 48 96% 53%;
+    --primary-foreground: 0 0% 8%;
+    --secondary: 45 45% 15%;
+    --secondary-foreground: 48 100% 92%;
     --muted: 0 0% 18%;
     /* secondary/caption text: bright enough to read, calmer than pure white */
     --muted-foreground: 0 0% 74%;
-    --accent: 24.6 95% 53.1%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 93% 47%;
+    --accent-foreground: 0 0% 8%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     /* borders you can actually see -> defined sections read as professional */
     --border: 0 0% 24%;
     --input: 0 0% 26%;
-    --ring: 24.6 95% 53.1%;
+    --ring: 48 96% 53%;
     --radius: 0.75rem;
   }
 }
@@ -46,7 +49,7 @@
   }
 
   ::selection {
-    background-color: #f97316;
+    background-color: #facc15;
     color: #0a0a0a;
   }
 
@@ -101,7 +104,7 @@
   /* Was a three-stop animated gradient with a text shadow. It is now simply
      the accent colour, because headline text that shimmers is decoration
      doing a credibility job it cannot do. */
-  color: hsl(24.6 95% 53.1%);
+  color: hsl(48 96% 53%);
 }
 
 .luxury-text-shadow {

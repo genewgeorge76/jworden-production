@@ -3753,6 +3753,17 @@ function JarvisChat({ compact = false }) {
     }
   }, [listening])
 
+  // TALK is the one-press path: pressing it means the operator wants a spoken
+  // conversation, so switch reply audio on for them instead of requiring a
+  // second toggle they may never discover.
+  const startTalk = useCallback(() => {
+    if (!speakReplies) {
+      setSpeakReplies(true)
+      try { window.localStorage?.setItem('cc:jarvis:speak', '1') } catch { /* noop */ }
+    }
+    toggleListen()
+  }, [speakReplies, toggleListen])
+
   const speak = useCallback((text) => {
     if (!text) return
     try { voiceService.play(text.slice(0, 600)) } catch { /* fallback in service */ }
@@ -3967,19 +3978,20 @@ function JarvisChat({ compact = false }) {
           {voiceSupported ? (
             <button
               type="button"
-              onClick={toggleListen}
+              onClick={startTalk}
               disabled={sending}
-              title={listening ? 'Stop listening' : 'Hold to talk — click then speak'}
+              title={listening ? 'Stop listening' : 'Talk to Jarvis — press, speak, and he answers out loud'}
               aria-pressed={listening}
               className={[
-                'inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors',
+                'inline-flex h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-bold tracking-wide transition-colors',
                 listening
                   ? 'border-red-300/60 bg-red-300/15 text-red-200 animate-pulse'
-                  : 'border-white/15 bg-white/[0.05] text-white/70 hover:text-white hover:border-white/30',
+                  : 'border-brand-amber/60 bg-brand-amber/15 text-brand-amber hover:bg-brand-amber/25',
                 sending ? 'opacity-40 cursor-not-allowed' : '',
               ].join(' ')}
             >
               {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              {listening ? 'LISTENING…' : 'TALK'}
             </button>
           ) : null}
           <button

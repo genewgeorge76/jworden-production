@@ -26,7 +26,7 @@ export default function JobPhotoStrip({
             {intro ? <p className="text-gray-600 mt-2 max-w-2xl">{intro}</p> : null}
           </div>
           {linkToGallery ? (
-            <a href="/gallery" className="text-[#ff7a00] font-bold text-sm uppercase tracking-[0.05em] hover:underline shrink-0">
+            <a href="/gallery" className="text-[#facc15] font-bold text-sm uppercase tracking-[0.05em] hover:underline shrink-0">
               Full gallery →
             </a>
           ) : null}
