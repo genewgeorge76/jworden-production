@@ -1026,6 +1026,9 @@ export const HOUZZ_PROFILE_2026 = {
   verified: '2026-08-28',
   category: 'Stone, Pavers & Concrete',
   awards: ['Best of Houzz Service 2014', 'Best of Houzz Service 2015', 'Best of Houzz Service 2016', 'Best of Houzz Service 2023'],
+  // Owner's profile screenshots, 2026-08-28: two badges beyond the awards —
+  // the Recommended thumb and 500 Saves. Displayed by HouzzAwards.jsx.
+  badges: ['Recommended', '500 Saves'],
   rating: { stars: 4.8, reviews: 12 },
   profileState: 'suspended - owner to reactivate via Houzz Pro',
 }

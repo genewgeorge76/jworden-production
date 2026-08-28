@@ -62,15 +62,29 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex h-[72px] items-center justify-between md:h-20">
           {/* Logo — top left corner */}
-          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center min-w-0 shrink-0" aria-label="J. Worden & Sons Paving LLC — Home">
+          {/* Brand lockup. The logo file is a SQUARE 512x512 badge on a black
+              ground — sizing it into a wide slot shrank it to a thumbnail
+              floating in white space (the owner caught it on his phone,
+              2026-08-28). The badge now sits at its true square shape with the
+              name typeset beside it, so the lockup is crisp at every width and
+              the name is readable before the image even loads. */}
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0" aria-label="J. Worden & Sons Paving LLC — Home">
             <img
               src={PRIMARY_LOGO_URL}
-              alt="J. Worden & Sons Paving LLC — Quality Work. Built To Last."
-              width={560}
-              height={120}
-              sizes="(max-width: 640px) 190px, (max-width: 768px) 240px, 300px"
-              className="h-12 sm:h-14 md:h-16 w-[190px] sm:w-[240px] md:w-[300px] object-contain quality-premium"
+              alt="J. Worden & Sons Paving badge — dump truck, paver and roller over the company name"
+              width={512}
+              height={512}
+              sizes="(max-width: 640px) 44px, 56px"
+              className="h-11 w-11 sm:h-14 sm:w-14 rounded-lg object-cover shrink-0"
             />
+            <span className="flex flex-col items-start leading-none min-w-0">
+              <span className="font-display font-extrabold text-brand-navy text-[15px] sm:text-lg md:text-xl tracking-tight whitespace-nowrap">
+                J. WORDEN <span className="text-amber-600">&amp;</span> SONS
+              </span>
+              <span className="font-display font-bold text-amber-600 text-[10px] sm:text-xs tracking-[0.28em] uppercase mt-1">
+                Paving · Since 1984
+              </span>
+            </span>
           </button>
 
           {/* Mobile phone CTA */}

@@ -10,6 +10,7 @@ import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
 import CommercialClientAuthority from '../components/CommercialClientAuthority';
 import DocumentedRecord from '../components/DocumentedRecord';
+import HouzzAwards from '../components/HouzzAwards';
 // Lazy: the map pulls leaflet, which stays out of the main bundle.
 const DocumentedWorkMap = lazy(() => import('../components/DocumentedWorkMap'));
 import NetworkCoverage from '../components/NetworkCoverage';
@@ -428,6 +429,7 @@ export default function Home() {
       <Suspense fallback={null}>
         <DocumentedWorkMap />
       </Suspense>
+      <HouzzAwards />
       <CommercialClientAuthority />
       <CustomerProofGallery />
 

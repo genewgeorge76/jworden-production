@@ -108,10 +108,10 @@ export default function Footer() {
               <img
                 src={PRIMARY_LOGO_URL}
                 alt={`${brandName} logo`}
-                width={560}
-                height={120}
-                className="w-40 h-12 object-contain rounded-md border border-white/20 bg-white p-1"
-                sizes="160px"
+                width={512}
+                height={512}
+                className="w-12 h-12 rounded-lg object-cover shrink-0"
+                sizes="48px"
               />
               <div>
                 <p className="font-display font-bold text-white text-sm tracking-[0.08em] uppercase leading-none">
