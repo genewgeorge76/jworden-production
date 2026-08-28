@@ -48,7 +48,11 @@ const usd2 = (n) =>
 export default function DocumentedRecord() {
   const counts = tally()
   const states = new Set(KBP_STORES.map((s) => s.state)).size
-  const worked = counts.paid + counts.invoiced
+  // Documented work is all three evidence grades kbpStoreMap.js allows to be
+  // shown as work: the client's paid rows, the client's invoiced rows, AND the
+  // stores completed with revenue in our own Kickserv record. Counting only
+  // paid+invoiced under-stated the programme (the owner caught it, 2026-08-28).
+  const worked = counts.paid + counts.invoiced + counts.completed
 
   const figures = [
     {
@@ -58,18 +62,18 @@ export default function DocumentedRecord() {
       detail: `${KBP_INVOICE_EVIDENCE.invoices} invoices, 2015–2018, including new builds and change orders.`,
     },
     {
-      icon: FileCheck,
-      value: `${GA.storesPaid} stores`,
-      label: `Invoiced and paid — ${usd0(GA.paidUsd)}`,
-      detail:
-        'Georgia. Reconciles against the client’s own outstanding balance to the cent.',
-    },
-    {
       icon: MapPin,
       value: `${worked} restaurants`,
-      label: `Across ${states} states`,
+      label: `Documented across ${states} states`,
       detail:
-        'Each one a store number and a street address in the client’s tracker, not a claim.',
+        'Each one a store number and street address in the client’s tracker or a completed job in our own records — not a claim.',
+    },
+    {
+      icon: FileCheck,
+      value: `${GA.storesPaid} stores`,
+      label: `Paid in Georgia alone — ${usd0(GA.paidUsd)}`,
+      detail:
+        'One state’s settled subset. Reconciles against the client’s own outstanding balance to the cent.',
     },
     {
       icon: ShieldCheck,

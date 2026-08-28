@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { ArrowRight, Phone, Shield, Home as HomeIcon, Building2, Droplets, Wrench, Layers, Hammer, MessageSquare, Ruler, Camera } from 'lucide-react';
 import SEO from '../components/SEO';
 import Navbar from '../components/Navbar';
@@ -10,6 +10,8 @@ import LiveReviewBadges from '../components/LiveReviewBadges';
 import CustomerProofGallery from '../components/CustomerProofGallery';
 import CommercialClientAuthority from '../components/CommercialClientAuthority';
 import DocumentedRecord from '../components/DocumentedRecord';
+// Lazy: the map pulls leaflet, which stays out of the main bundle.
+const DocumentedWorkMap = lazy(() => import('../components/DocumentedWorkMap'));
 import NetworkCoverage from '../components/NetworkCoverage';
 import LegacyStory from '../components/LegacyStory';
 import PublicRecords from '../components/PublicRecords';
@@ -423,6 +425,9 @@ export default function Home() {
       {/* ── PROOF — records, programme, photographs, reviews. All real. ──── */}
       <PublicRecords brand={BRAND_JWORDEN} />
       <DocumentedRecord />
+      <Suspense fallback={null}>
+        <DocumentedWorkMap />
+      </Suspense>
       <CommercialClientAuthority />
       <CustomerProofGallery />
 
