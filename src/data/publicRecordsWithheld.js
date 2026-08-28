@@ -1029,3 +1029,28 @@ export const HOUZZ_PROFILE_2026 = {
   rating: { stars: 4.8, reviews: 12 },
   profileState: 'suspended - owner to reactivate via Houzz Pro',
 }
+
+/**
+ * HOUZZ PROFILE — OWNER'S LOGGED-IN VIEW, 2026-08-28 (screenshots)
+ *
+ * Adds to the public-fetch verification: the profile displays VIRGINIA
+ * CONTRACTOR LICENSE #2705 105644 — now shown in the site footer as the
+ * owner's own published claim. DPOR's lookup blocks automation; the owner
+ * confirms current status and class before any "Class A/B" wording ships.
+ *
+ * THIRD-PARTY REVIEWS (public, quotable with "via Houzz" attribution):
+ *  - Greg Orlick, Jun 23 2016, 5 stars: "They paved our driveway 18 months
+ *    ago with paver entries. Did a fabulous job..." — independent proof of
+ *    the paver/hardscape trade.
+ *  - Client HU-84358664, Apr 19 2022, 5 stars: "After waiting 10 years to
+ *    get my driveway done I finally decided to go with Mr George..."
+ *  - jaclynforrester, Apr 24 2015, 5 stars: "We recently finished building
+ *    a house so we've been through the ringer with contract[ors]..."
+ */
+export const HOUZZ_REVIEWS_2026 = {
+  id: 'houzz-reviews-2026',
+  status: 'held',
+  license: '2705 105644',
+  licenseSource: "company Houzz profile (owner's own display)",
+  quotableReviews: 3,
+}
