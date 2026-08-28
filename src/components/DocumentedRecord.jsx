@@ -4,6 +4,7 @@ import { FileCheck, MapPin, Receipt, ShieldCheck } from 'lucide-react'
 import { GA, QUADS } from '@/data/kfcProgrammeTracker'
 import { KBP_INVOICE_EVIDENCE } from '@/data/georgiaStores'
 import { KBP_STORES, tally } from '@/data/kbpStoreMap'
+import { MASTER_ROSTER } from '@/data/kbpTrackerApril2017'
 
 /**
  * DocumentedRecord — the numbers, instead of the adjectives.
@@ -118,9 +119,11 @@ export default function DocumentedRecord() {
         </dl>
 
         <p className="mt-6 text-sm text-slate-500 leading-relaxed max-w-3xl">
-          A further {counts.listed} restaurants appear on the client’s programme roster and
-          are not counted above. They were assigned; that is not the same as finished, and
-          the difference is why the rest of this holds up.
+          The client’s own master roster — the {MASTER_ROSTER.contactSheetTitle.toLowerCase()} —
+          spans {MASTER_ROSTER.states} states, Florida and Kansas City to Norfolk and
+          Syracuse. A further {counts.listed} rostered restaurants are not counted above:
+          they were assigned, that is not the same as finished, and the difference is why
+          the rest of this holds up.
           {QUADS.iowa > 0 && (
             <> The Iowa work — {QUADS.iowa} stores — carries the client’s own scheduling notes.</>
           )}

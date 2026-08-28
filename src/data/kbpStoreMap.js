@@ -142,34 +142,34 @@ export const KBP_STORES = [
   S('G135094', '12 Cobb Pkwy N', 'Marietta', 'GA', LISTED),
 
   // Texas — deposit invoiced
-  S('G135211', '201 S 77 Sunshine Strip', 'Harlingen', 'TX', INVOICED, 48672),
-  S('G135213', '421 W Highway 83', 'Weslaco', 'TX', INVOICED, 28800),
-  S('G135220', '901 E 9th St', 'Mission', 'TX', INVOICED, 22712),
-  S('G135229', '2411 S US Highway 281', 'Edinburg', 'TX', INVOICED, 37440),
-  S('G135230', '707 West Nolana Ave', 'McAllen', 'TX', INVOICED, 32480),
-  S('G135232', '2701 Boca Chica', 'Brownsville', 'TX', INVOICED, 27768),
-  S('G135235', '1120 W Hwy 77', 'San Benito', 'TX', INVOICED, 31020),
-  S('G135238', '904 E Highway 83', 'Pharr', 'TX', INVOICED, 38000),
-  S('G135239', '3565 W Alton Gloor', 'Brownsville', 'TX', INVOICED, 36500),
+  S('G135211', '201 S 77 Sunshine Strip', 'Harlingen', 'TX', PAID, 48672),
+  S('G135213', '421 W Highway 83', 'Weslaco', 'TX', PAID, 28800),
+  S('G135220', '901 E 9th St', 'Mission', 'TX', PAID, 22712),
+  S('G135229', '2411 S US Highway 281', 'Edinburg', 'TX', PAID, 37440),
+  S('G135230', '707 West Nolana Ave', 'McAllen', 'TX', PAID, 32480),
+  S('G135232', '2701 Boca Chica', 'Brownsville', 'TX', PAID, 27768),
+  S('G135235', '1120 W Hwy 77', 'San Benito', 'TX', PAID, 31020),
+  S('G135238', '904 E Highway 83', 'Pharr', 'TX', PAID, 38000),
+  S('G135239', '3565 W Alton Gloor', 'Brownsville', 'TX', PAID, 36500),
   // Texas — listed
-  S('G135209', '6010 Wesley Street', 'Greenville', 'TX', LISTED),
-  S('G135210', '1711 W Palestine Ave', 'Palestine', 'TX', LISTED),
-  S('G135212', '2319 Guadalupe', 'Laredo', 'TX', LISTED),
-  S('G135215', '1912 E Vet Memorial Blvd', 'Killeen', 'TX', LISTED),
-  S('G135216', '1030 N Valley Mills Dr', 'Waco', 'TX', LISTED),
-  S('G135217', '3201 Padre Blvd', 'South Padre Island', 'TX', LISTED),
+  S('G135209', '6010 Wesley Street', 'Greenville', 'TX', INVOICED),
+  S('G135210', '1711 W Palestine Ave', 'Palestine', 'TX', INVOICED),
+  S('G135212', '2319 Guadalupe', 'Laredo', 'TX', PAID),
+  S('G135215', '1912 E Vet Memorial Blvd', 'Killeen', 'TX', PAID),
+  S('G135216', '1030 N Valley Mills Dr', 'Waco', 'TX', INVOICED),
+  S('G135217', '3201 Padre Blvd', 'South Padre Island', 'TX', INVOICED),
   S('G135221', '2303 Business 190', 'Copperas Cove', 'TX', LISTED),
   S('G135222', '411 S Jackson St', 'Jacksonville', 'TX', LISTED),
-  S('G135224', '3630 Troup Hwy 110', 'Tyler', 'TX', LISTED),
+  S('G135224', '3630 Troup Hwy 110', 'Tyler', 'TX', INVOICED),
   S('G135225', '1424 N Loop 336 W', 'Conroe', 'TX', LISTED),
   S('G135226', '700 E End Blvd S', 'Marshall', 'TX', LISTED),
-  S('G135227', '10 S 31st St', 'Temple', 'TX', LISTED),
-  S('G135231', "1410 Veteran's Blvd", 'Del Rio', 'TX', LISTED),
-  S('G135233', '1993 Garrison St', 'Eagle Pass', 'TX', LISTED),
-  S('G135234', '1133 N Loop 340', 'Waco', 'TX', LISTED),
-  S('G135236', '6901 S Broadway Ave', 'Tyler', 'TX', LISTED),
-  S('G135237', '7605 McPherson Rd', 'Laredo', 'TX', LISTED),
-  S('G135240', '4580 E US Highway 83', 'Rio Grande City', 'TX', LISTED),
+  S('G135227', '10 S 31st St', 'Temple', 'TX', PAID),
+  S('G135231', "1410 Veteran's Blvd", 'Del Rio', 'TX', INVOICED),
+  S('G135233', '1993 Garrison St', 'Eagle Pass', 'TX', PAID),
+  S('G135234', '1133 N Loop 340', 'Waco', 'TX', INVOICED),
+  S('G135236', '6901 S Broadway Ave', 'Tyler', 'TX', PAID),
+  S('G135237', '7605 McPherson Rd', 'Laredo', 'TX', PAID),
+  S('G135240', '4580 E US Highway 83', 'Rio Grande City', 'TX', INVOICED),
   S('G135242', '516 East FM 2410', 'Harker Heights', 'TX', LISTED),
 
   // Michigan — invoiced
@@ -209,21 +209,21 @@ export const KBP_STORES = [
   S('G135001', '2943 18th Avenue', 'Rock Island', 'IL', INVOICED, 37439),
   S('G135004', '895 W 4th Street', 'Milan', 'IL', INVOICED, 28900),
   S('G135006', '1170 42nd Avenue', 'East Moline', 'IL', INVOICED, 44454),
-  S('G135277', '14559 S Pulaski Road', 'Midlothian', 'IL', INVOICED, 44230),
-  S('G135271', '3029 S Chicago Road', 'South Chicago Heights', 'IL', INVOICED, 37500),
+  S('G135277', '14559 S Pulaski Road', 'Midlothian', 'IL', PAID, 44230),
+  S('G135271', '3029 S Chicago Road', 'South Chicago Heights', 'IL', PAID, 37500),
   S('G1355272', '4349 E 211th Street', 'Matteson', 'IL', INVOICED, 64595),
-  S('G135270', '5301 W 159th Street', 'Oak Forest', 'IL', INVOICED, 32000),
+  S('G135270', '5301 W 159th Street', 'Oak Forest', 'IL', PAID, 32000),
   S('G135036', '4430 16th St', 'Moline', 'IL', LISTED),
 
   // Iowa — four stores, exactly as the owner said
-  S('G135002', '3843 Elmore Avenue', 'Davenport', 'IA', INVOICED, 28835),
+  S('G135002', '3843 Elmore Avenue', 'Davenport', 'IA', PAID, 28835),
   S('G135003', '208 W Locust St', 'Davenport', 'IA', INVOICED, 26450),
-  S('G135005', '1012 W Kimberly', 'Davenport', 'IA', INVOICED, 39257),
-  S('G135206', '924 N 2nd St', 'Clinton', 'IA', INVOICED, 17800),
+  S('G135005', '1012 W Kimberly', 'Davenport', 'IA', PAID, 39257),
+  S('G135206', '924 N 2nd St', 'Clinton', 'IA', PAID, 17800),
 
   // New Jersey
-  S('G135303', '1110 Route 46', 'Ledgewood', 'NJ', INVOICED, 92456),
-  S('G135304', '230 East Mountain Avenue', 'Hackettstown', 'NJ', INVOICED, 69458),
+  S('G135303', '1110 Route 46', 'Ledgewood', 'NJ', PAID, 92456),
+  S('G135304', '230 East Mountain Avenue', 'Hackettstown', 'NJ', PAID, 69458),
   S('G135301', 'Route 36 Airport Plaza', 'Hazlet', 'NJ', LISTED),
   S('G135302', '190 Route 46', 'Rockaway', 'NJ', LISTED),
   S('G135305', '185 Ridgedale Avenue', 'Florham Park', 'NJ', LISTED),
@@ -248,6 +248,16 @@ export const KBP_STORES = [
   S('G135337', '2471 Hylan Blvd', 'Staten Island', 'NY', LISTED),
   S('G135338', '375 East 149th Street', 'Bronx', 'NY', LISTED),
   S('G135339', '1731 Webster Avenue', 'Bronx', 'NY', LISTED),
+
+  // NORTH CAROLINA — the three stores carolinaProgram.js documents with
+  // jobsite photo emails the crew sent to KBP at the time (before/during/after
+  // pictures, store number and address in the subject line). Graded completed:
+  // the photographs prove the work was done; they do not prove the client's
+  // ledger, which is what paid/invoiced prove. G-numbers joined from
+  // "KFC MASTER LIST ALL STORES'.xls" (read 2026-08-28).
+  S('G135195', '2722 S Main Street', 'High Point', 'NC', COMPLETED, null, 'jobsite photo email to KBP (After Pictures)'),
+  S('G135184', '2304 Maple Ave', 'Burlington', 'NC', COMPLETED, null, 'jobsite photo email to KBP (During-After Pics)'),
+  S('G135186', '1820 N Church Street', 'Burlington', 'NC', COMPLETED, null, 'jobsite photo email to KBP (During-After Pictures)'),
 ]
 
 /** Counts by grade, derived rather than asserted. */

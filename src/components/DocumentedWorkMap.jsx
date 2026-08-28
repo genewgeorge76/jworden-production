@@ -21,12 +21,14 @@ import 'leaflet/dist/leaflet.css'
 import { KBP_STORES, SHOWABLE_AS_WORK } from '@/data/kbpStoreMap'
 import storeCounties from '@/data/kbpStoreCounties.json'
 import { DOCUMENTED_JOB_SITES } from '@/data/documentedJobSites'
+import { RESIDENTIAL_FOOTPRINT } from '@/data/residentialJobFootprint'
 
 const GRADE_STYLE = {
   paid: { color: '#facc15', label: 'Invoiced & paid (client tracker)' },
   invoiced: { color: '#e2e8f0', label: 'Invoiced (client tracker)' },
   completed: { color: '#60a5fa', label: 'Completed job in our Kickserv record' },
   named: { color: '#fb7185', label: 'Named commercial client (documented)' },
+  city: { color: '#94a3b8', label: 'Completed jobs by city (our records; count in circle)' },
 }
 
 function joinKbpPins() {
@@ -67,8 +69,21 @@ export default function DocumentedWorkMap() {
         ? `${j.evidence}. Pin shown at city level.`
         : j.evidence,
   }))
-  const pins = [...kbpPins, ...namedPins]
+  // Residential and small-commercial footprint: city-level counts only.
+  // Individual homes are never mapped — the count IS the disclosure.
+  const cityPins = RESIDENTIAL_FOOTPRINT.map((c) => ({
+    id: `city-${c.city}-${c.state}`,
+    lat: c.lat,
+    lng: c.lng,
+    grade: 'city',
+    jobs: c.jobs,
+    title: `${c.city}, ${c.state}`,
+    sub: `${c.jobs} completed job${c.jobs === 1 ? '' : 's'} in our records`,
+    note: 'City-level count from our own completed-job records. No addresses shown.',
+  }))
+  const pins = [...cityPins, ...kbpPins, ...namedPins]
   const counts = pins.reduce((t, p) => ((t[p.grade] = (t[p.grade] || 0) + 1), t), {})
+  const cityJobsTotal = cityPins.reduce((t, p) => t + p.jobs, 0)
 
   return (
     <section className="bg-slate-950 border-b border-slate-800/80 py-16 px-4">
@@ -78,12 +93,14 @@ export default function DocumentedWorkMap() {
             The map is the record, drawn
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-50">
-            {pins.length} documented job sites, pinned.
+            {kbpPins.length + namedPins.length} documented sites. {cityJobsTotal} completed
+            jobs across {cityPins.length} cities.
           </h2>
           <p className="mt-4 text-slate-400 leading-relaxed">
-            Every pin comes from a document — the client&apos;s own invoice tracker, our
-            completed-job records, or a purchase order acknowledged in writing. Roster
-            assignments that never became work are not drawn. Residential customers are
+            Every mark comes from a document — the client&apos;s own invoice trackers, our
+            completed-job records, jobsite photo emails, or a purchase order acknowledged
+            in writing. Roster assignments that never became work are not drawn.
+            Residential work appears as city-level counts only; customers&apos; homes are
             never mapped.
           </p>
         </div>
@@ -103,12 +120,18 @@ export default function DocumentedWorkMap() {
               <CircleMarker
                 key={p.id}
                 center={[p.lat, p.lng]}
-                radius={p.grade === 'named' ? 9 : 6}
+                radius={
+                  p.grade === 'city'
+                    ? Math.min(4 + Math.sqrt(p.jobs) * 2, 18)
+                    : p.grade === 'named'
+                      ? 9
+                      : 6
+                }
                 pathOptions={{
                   color: '#0f172a',
                   weight: 1.5,
                   fillColor: GRADE_STYLE[p.grade].color,
-                  fillOpacity: 0.9,
+                  fillOpacity: p.grade === 'city' ? 0.55 : 0.9,
                 }}
               >
                 <Popup>
