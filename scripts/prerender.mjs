@@ -82,7 +82,18 @@ async function renderPage(browser, baseUrl, route) {
       'railway.app', 'sentry.io', 'google-analytics', 'googletagmanager',
       'analytics', 'hotjar', 'intercom', 'facebook.net', 'twitter.com', 'segment.com',
     ]
-    if (blocked.some(b => url.includes(b))) { req.abort() } else { req.continue() }
+    if (blocked.some(b => url.includes(b))) { req.abort(); return }
+    // The app asks the backend which site it is by hostname, and the backend
+    // answers `localhost` with route_mode "operations" — so every prerendered
+    // "/" captured the Worden Standard OS marketing page instead of the paving
+    // homepage (found live on the flagship, 2026-08-28; this is the mechanism
+    // task #45 described). The prerenderer renders the FLAGSHIP, so it must
+    // ask the question as the flagship.
+    if (url.includes('/api/v1/factory/resolve') && url.includes('hostname=localhost')) {
+      req.continue({ url: url.replace('hostname=localhost', 'hostname=www.jwordenasphaltpaving.com') })
+      return
+    }
+    req.continue()
   })
 
   try {
