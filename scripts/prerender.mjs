@@ -130,11 +130,24 @@ function forceNonBlockingFonts(html) {
   )
 }
 
+// The snapshot is taken from a local server, and any absolute URL the app
+// builds from window.location.origin — canonicals above all — captures
+// http://localhost:<port>. A localhost canonical in production forfeits the
+// canonical signal entirely (found live on /richmond-paving and
+// /shenandoah-valley-paving, 2026-08-28). Rewrite the origin at save time;
+// the runtime SEO component still sets the correct per-host value after
+// hydration for the satellite domains.
+const CANONICAL_ORIGIN = 'https://www.jwordenasphaltpaving.com'
+
+function fixLocalOrigins(html) {
+  return html.replace(/http:\/\/localhost:\d+/g, CANONICAL_ORIGIN)
+}
+
 function savePage(route, html) {
   const routePath = route === '/' ? '/index.html' : `${route}/index.html`
   const outPath   = path.join(DIST_DIR, routePath)
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
-  fs.writeFileSync(outPath, forceNonBlockingFonts(html), 'utf-8')
+  fs.writeFileSync(outPath, fixLocalOrigins(forceNonBlockingFonts(html)), 'utf-8')
 }
 
 async function renderWithRetry(browser, baseUrl, route) {
