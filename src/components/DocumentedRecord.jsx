@@ -122,9 +122,12 @@ export default function DocumentedRecord() {
         <p className="mt-6 text-sm text-slate-500 leading-relaxed max-w-3xl">
           The client’s own master roster — the {MASTER_ROSTER.contactSheetTitle.toLowerCase()} —
           spans {MASTER_ROSTER.states} states, Florida and Kansas City to Norfolk and
-          Syracuse. A further {counts.listed} rostered restaurants are not counted above:
-          they were assigned, that is not the same as finished, and the difference is why
-          the rest of this holds up.
+          Syracuse. When the remodel program completed, the work went ground-up: the 2018
+          KFC new-build program with Plaza Street Partners as developer — Jefferson City MO,
+          Sulphur Springs TX, Ennis TX, Burton MI — completed jobs in our own records, with
+          Worden named in the program’s own responsibility matrix. A further {counts.listed}{' '}
+          rostered restaurants are not counted above: they were assigned, that is not the
+          same as finished, and the difference is why the rest of this holds up.
           {QUADS.iowa > 0 && (
             <> The Iowa work — {QUADS.iowa} stores — carries the client’s own scheduling notes.</>
           )}

@@ -262,6 +262,14 @@ export const NEW_BUILD_PROGRAMME_CROSSCHECK = {
   corroborates: 'That the drawing set belongs to the 2018 new-build programme already recorded, engineered by the firm already named.',
   doesNotCorroborate:
     'Any role for this company at Jefferson City. The set names no contractor and the invoice archive has no Jefferson City entry.',
+  // ADDENDUM 2026-08-28: a source this finding did not cover — the company's
+  // own Kickserv book — holds two completed, revenue-carrying jobs at 706
+  // Virginia St, Jefferson City MO (August 2018), alongside completed
+  // new-build rows at Sulphur Springs TX, Ennis TX, Burton MI and Louisiana
+  // site work, one billed to the customer "Plaza Street Partners" directly.
+  // See kfcNewBuilds.js. The sentence above stays as written about the
+  // drawing set; the company's role is now evidenced from its own records.
+  addendum: 'kfcNewBuilds.js (2026-08-28)',
 }
 
 /**
