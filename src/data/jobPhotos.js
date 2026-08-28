@@ -21,6 +21,11 @@ const P = (src, alt, category, opts = {}) => ({ src, alt, category, market: 'VA'
 
 export const JOB_PHOTOS = [
   // ── Commercial ────────────────────────────────────────────────────────────
+  // Owner-supplied 2026-08-28. City confirmations pending from the owner —
+  // alts stay content-true and location-free until he confirms.
+  P('/images/real_jobs/tractor-supply-striped-lot-2026.webp', 'Freshly striped Tractor Supply parking lot with new ADA symbol and crosshatch', 'commercial'),
+  P('/images/real_jobs/night-patch-fresh-mat-sealed-lot.webp', 'Fresh asphalt patch laid overnight in a sealed and striped commercial lot', 'commercial'),
+  P('/images/real_jobs/full-depth-section-tape-measure.webp', 'Tape measure showing the full asphalt section over stone base at a demo edge', 'construction'),
   P('/images/real_jobs/IMG_0026.webp', 'Grocery-anchor lot freshly sealcoated and striped, crew sweeping the entrance', 'commercial'),
   P('/images/real_jobs/IMG_0029.webp', 'Crisp new stripes on jet-black sealcoat at a grocery-anchor lot', 'commercial'),
   P('/images/real_jobs/IMG_8715-PANO.webp', 'Paver and rollers working a dealership lot, business open behind the cones', 'commercial'),
