@@ -148,7 +148,7 @@ export const CREDENTIALS = {
     'Best of Houzz Service 2015',
     'Best of Houzz Service 2016',
     'Best of Houzz Service 2023',
-    'Virginia Contractor License #2705 105644 (as displayed on the company Houzz profile; owner to confirm current DPOR status and class)',
+    'Virginia Class A Contractor License #2705 105644 (class confirmed by the owner, 2026-08-28; number as displayed on the company Houzz profile)',
   ],
   qsrClients: ['KFC', 'Taco Bell', 'Arby\u2019s', 'Winn-Dixie'],
 };

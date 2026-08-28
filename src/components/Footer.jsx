@@ -236,7 +236,7 @@ export default function Footer() {
             {servingLine}
           </p>
           <p className="font-body text-gray-500 text-xs">
-            Licensed · Bonded · Insured · VA Contractor Lic. #2705 105644
+            Licensed · Bonded · Insured · Virginia Class A Contractor #2705 105644
           </p>
         </div>
         <p className="font-body text-gray-600 text-[11px] mt-4 text-center sm:text-left">
