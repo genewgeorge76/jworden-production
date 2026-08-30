@@ -13,7 +13,7 @@ level (it dynamically imports and runs modules by id).
 
 WHAT THE REGISTRY ACTUALLY CONTAINS — measured, not assumed:
 
-  109 registered   23 real implementations   86 gated
+  109 registered   26 real implementations   83 gated
 
 Measured by loading the registry, not counted by hand — the line above used to
 read "109 real implementations, 0 unimplemented" while MultiTenantSaaS.
@@ -25,11 +25,24 @@ one for as long as it existed. The two are:
                                            not resolve; it made no request and
                                            returned {"status": "success"} with
                                            invented receipt ids until 2026-08-22
-  84 further modules                       manufacture their answer with the
+  81 further modules                       manufacture their answer with the
                                            random module — see
                                            _is_random_simulator below
 
-The 84 are the reason this count moved from 107 to 23. They are not
+Three of the original 84 became real on 2026-08-30 rather than staying gated.
+permit_engine, permit_scraper and asphalt_thermal each had a service twin under
+app/services/ that answers the same question properly, so the ability module is
+now a thin adapter onto it and the registry description was rewritten to match
+what the service actually does. The other six name-twins were checked and NOT
+repointed: their service shares only a name and answers a different question —
+contractor_ranker scores bids rather than scraping OSHA records, ai_brain is a
+compliance engine rather than a blueprint estimator, lidar_ingest and
+drone_capture are storage layers rather than analysis engines,
+market_intelligence returns market data rather than win probabilities, and
+roller_telemetry stores sessions rather than computing density. Wiring those
+would make a false catalogue entry executable, which is worse than a refusal.
+
+The 81 are the reason this count moved from 107 to 26. They are not
 implementations with a random element; the draw IS the result, and it happens
 per call, so the same question returns a different answer every time in exactly
 the shape a real one takes. Among them: a DOT pay factor that rolls a density
