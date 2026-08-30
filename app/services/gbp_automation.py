@@ -106,8 +106,18 @@ async def fetch_gbp_reviews(location_id: str) -> dict:
     token = _cfg.get("GBP_OAUTH_TOKEN")
     if not token:
         return {"ok": False, "reason": "GBP_OAUTH_TOKEN missing"}
-        
-    url = f"https://mybusiness.googleapis.com/v4/accounts/ACCOUNT_ID/locations/{location_id}/reviews"
+
+    # Same literal "ACCOUNT_ID" placeholder that push_gbp_post carried: the URL
+    # resolves to a path no account owns, so the fetch can only 404 and the
+    # homepage carousel silently keeps whatever it cached last.
+    account_id = _cfg.get("GBP_ACCOUNT_ID")
+    if not account_id:
+        return {"ok": False, "reason": "GBP_ACCOUNT_ID missing"}
+
+    url = (
+        "https://mybusiness.googleapis.com/v4/accounts/"
+        f"{account_id}/locations/{location_id}/reviews"
+    )
     try:
         async with httpx.AsyncClient() as client:
             resp = await client.get(
