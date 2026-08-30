@@ -78,9 +78,69 @@ def test_the_named_offenders_are_gated():
         "SalesAndEstimation.contractor_ranker",
         "VisionAndIntelligence.compaction_density_profiler",
         "FinanceAndAccounting.union_prevailing_wage",
-        "LegalAndCompliance.permit_engine",
     ):
         assert module_id in gated, f"{module_id} is still callable"
+
+
+def test_the_repointed_abilities_delegate_instead_of_rolling():
+    """
+    permit_engine, permit_scraper and asphalt_thermal left the gated set on
+    2026-08-30 by being rewritten as adapters onto their service twin under
+    app/services/. They must be implemented AND free of random draws — passing
+    only the first half would mean a dice-roller had been un-gated.
+    """
+    from app.services.os_ability_service import _source_path, _is_random_simulator
+
+    registry = {e["module_id"]: e for e in _registry()}
+    for module_id in (
+        "LegalAndCompliance.permit_engine",
+        "LegalAndCompliance.permit_scraper",
+        "OperationalAndDispatch.asphalt_thermal",
+    ):
+        entry = registry[module_id]
+        assert entry.get("implemented"), f"{module_id} should be callable"
+        src = _source_path(entry).read_text(encoding="utf-8")
+        assert not _is_random_simulator(src), f"{module_id} still rolls dice"
+        assert "app.services" in src, (
+            f"{module_id} is marked implemented but does not delegate to a service"
+        )
+
+
+def test_a_repointed_ability_refuses_rather_than_defaulting():
+    """
+    The old modules invented an address, a roller id, a contractor id. The
+    adapters must ask instead — a permit answer for the wrong jurisdiction is
+    worse than no answer.
+    """
+    from app.services.os_ability_service import execute_os_ability
+
+    result = execute_os_ability("LegalAndCompliance.permit_engine", {})
+    assert result["ok"] is True, "the ability itself should run"
+    assert result["result"]["ok"] is False
+    assert "state_code" in result["result"]["error"]
+
+
+def test_the_six_unrepointed_name_twins_stay_gated():
+    """
+    Each of these shares a module name with a real service that answers a
+    DIFFERENT question — contractor_ranker scores bids rather than scraping
+    OSHA records, ai_brain is a compliance engine rather than a blueprint
+    estimator. Wiring them on the strength of the shared name would make a
+    false catalogue entry executable.
+    """
+    gated = {e["module_id"] for e in _registry() if not e.get("implemented")}
+    for module_id in (
+        "SalesAndEstimation.contractor_ranker",
+        "SalesAndEstimation.ai_brain",
+        "SalesAndEstimation.market_intelligence",
+        "VisionAndIntelligence.lidar_ingest",
+        "VisionAndIntelligence.drone_capture",
+        "OperationalAndDispatch.roller_telemetry",
+    ):
+        assert module_id in gated, (
+            f"{module_id} was un-gated, but its service twin answers a "
+            f"different question — check the pairing before wiring it"
+        )
 
 
 def test_executing_a_gated_ability_is_refused_with_a_reason():

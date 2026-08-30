@@ -646,26 +646,18 @@
     "category": "LegalAndCompliance",
     "file": "jarvis_os/abilities/LegalAndCompliance/permit_engine.py",
     "class_name": "PermitEngine",
-    "description": "Autonomous Permitting Engine. Simulates scraping municipal endpoints for right-of-way, excavation,  and environmental permits based on property bounds.",
+    "description": "Permit trigger and county fee lookup for a state / county / project.",
     "params": [
       "params"
     ],
     "tags": [
-      "simulates",
-      "municipal",
-      "property",
-      "excavation",
-      "permit",
-      "permits",
-      "permitting",
-      "scraping",
-      "endpoints",
-      "bounds",
-      "based",
+      "trigger",
       "engine",
-      "autonomous",
-      "right-of-way",
-      "environmental"
+      "county",
+      "project",
+      "lookup",
+      "state",
+      "permit"
     ]
   },
   {
@@ -673,27 +665,17 @@
     "category": "LegalAndCompliance",
     "file": "jarvis_os/abilities/LegalAndCompliance/permit_scraper.py",
     "class_name": "PermitScraperEngine",
-    "description": "Headless Browser Simulation Engine. Scrapes municipal government endpoints to locate open excavation and  right-of-way permits in the target region.",
+    "description": "Open permit leads from Virginia VPT, DEQ PEEP, and DPOR.",
     "params": [
       "params"
     ],
     "tags": [
-      "municipal",
-      "excavation",
-      "permit",
-      "permits",
-      "browser",
-      "locate",
-      "region",
-      "government",
-      "scrapes",
-      "headless",
-      "endpoints",
-      "simulation",
-      "target",
-      "engine",
-      "right-of-way",
-      "scraper"
+      "dpor",
+      "scraper",
+      "leads",
+      "virginia",
+      "peep",
+      "permit"
     ]
   },
   {
@@ -1062,27 +1044,18 @@
     "category": "OperationalAndDispatch",
     "file": "jarvis_os/abilities/OperationalAndDispatch/asphalt_thermal.py",
     "class_name": "AsphaltThermalEngine",
-    "description": "Advanced Thermodynamics Engine. Calculates Newtonian cooling and heat loss (\u0394T) of Hot Mix Asphalt (HMA)  during transport based on ambient temperature, wind chill, and delay times.",
+    "description": "Lay-down window for hot mix asphalt at a site, from live forecast data.",
     "params": [
       "params"
     ],
     "tags": [
-      "newtonian",
-      "ambient",
-      "during",
-      "cooling",
-      "temperature",
-      "delay",
-      "hma",
-      "calculates",
+      "site",
+      "window",
+      "lay-down",
+      "data",
       "asphalt",
-      "thermodynamics",
-      "transport",
-      "chill",
-      "advanced",
       "thermal",
-      "based",
-      "engine"
+      "forecast"
     ]
   },
   {

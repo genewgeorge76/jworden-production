@@ -29,7 +29,11 @@ def extract_class_info(py_file: pathlib.Path) -> dict | None:
             # Look for an execute() or calculate*() method to determine params
             params = []
             for item in node.body:
-                if isinstance(item, ast.FunctionDef) and item.name in ("execute", "calculate_decay", "run", "analyze", "process"):
+                # AsyncFunctionDef included: an ability whose entry point is
+                # `async def execute` is invoked exactly like a sync one by
+                # os_ability_service, but was previously read as having no
+                # parameters at all, so the catalogue advertised none.
+                if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)) and item.name in ("execute", "calculate_decay", "run", "analyze", "process"):
                     for arg in item.args.args:
                         if arg.arg not in ("self",):
                             params.append(arg.arg)

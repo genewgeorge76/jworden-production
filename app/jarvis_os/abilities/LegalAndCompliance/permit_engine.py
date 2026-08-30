@@ -1,51 +1,68 @@
+"""
+Permit triggers and county fees, delegated to the real permit engine.
+
+This module used to manufacture its answer with `random`, and its description
+claimed it scraped municipal endpoints for right-of-way and excavation permits
+based on property bounds. It scraped nothing. The registry gated it, so it
+refused rather than answered.
+
+`app/services/permit_engine.py` answers a narrower question than the old
+description promised, and answers it for real: which permits a project triggers
+under state building code (VA, NC, SC, GA, MD), with county rules overriding
+state where local authorities differ, plus the fee schedule. It is a codified
+rules engine, not a scraper — there is no live municipal polling here, and the
+description has been rewritten to stop implying otherwise.
+"""
+
+from __future__ import annotations
+
 import logging
-import random
-import time
+from typing import Any
+
+from app.services.permit_engine import engine as _permit_engine
 
 logger = logging.getLogger(__name__)
 
+
 class PermitEngine:
-    """
-    Autonomous Permitting Engine.
-    Simulates scraping municipal endpoints for right-of-way, excavation, 
-    and environmental permits based on property bounds.
-    """
-    def __init__(self):
+    """Permit trigger and county fee lookup for a state / county / project."""
+
+    #: States the underlying rules engine actually covers.
+    SUPPORTED_STATES = ("VA", "NC", "SC", "GA", "MD")
+
+    def __init__(self) -> None:
         self.module_id = "permit_engine"
-        
-    def execute(self, params: dict = None) -> dict:
-        address = params.get("address", "7011 Wood Rd, Richmond, VA") if params else "7011 Wood Rd, Richmond, VA"
-        sq_ft = params.get("sq_ft", random.randint(15000, 50000)) if params else random.randint(15000, 50000)
-        
-        # Determine permits based on scope
-        required_permits = ["Right-Of-Way (Traffic Control)"]
-        if sq_ft > 20000:
-            required_permits.append("Stormwater/Environmental Erosion (DEQ)")
-            
-        fee_total = len(required_permits) * 150.00
-        
-        assessment = (
-            f"/// AUTONOMOUS MUNICIPAL PERMITTING ///\\n"
-            f"-> Target Property: {address}\\n"
-            f"-> Scope: {sq_ft:,} sq ft\\n"
-            f"-> Cross-referencing municipal code database... SUCCESS\\n\\n"
-            f"REQUIRED PERMITS DISCOVERED:\\n"
-        )
-        
-        for p in required_permits:
-            assessment += f"  - [PENDING FILING] {p}\\n"
-            
-        assessment += (
-            f"\\n-> Est. Municipal Fees: ${fee_total:.2f}\\n"
-            f"DIRECTIVE: Auto-fill PDFs generated. Pending human architect stamp."
-        )
-        
-        return {
-            "status": "AWAITING_APPROVAL",
-            "engine": "PermitEngine",
-            "assessment": assessment,
-            "metrics": {
-                "permits_required": len(required_permits),
-                "fees": fee_total
+
+    def execute(self, params: dict | None = None) -> dict[str, Any]:
+        params = params or {}
+
+        state_code = (params.get("state_code") or params.get("state") or "").strip().upper()
+        if not state_code:
+            return {
+                "ok": False,
+                "error": (
+                    "permit_engine requires 'state_code' (one of "
+                    f"{', '.join(self.SUPPORTED_STATES)}). Permit triggers are "
+                    "jurisdictional; there is no national default."
+                ),
             }
-        }
+        if state_code not in self.SUPPORTED_STATES:
+            # Say what is missing rather than returning state-level guesses for
+            # a state whose code was never loaded.
+            return {
+                "ok": False,
+                "error": (
+                    f"permit_engine has no rules for '{state_code}'. Covered: "
+                    f"{', '.join(self.SUPPORTED_STATES)}."
+                ),
+            }
+
+        try:
+            return _permit_engine.get_permit_info(
+                state_code,
+                county_name=params.get("county_name") or params.get("county"),
+                project_cost=float(params.get("project_cost", 0.0) or 0.0),
+                structure_size=float(params.get("structure_size", 0.0) or 0.0),
+            )
+        except (TypeError, ValueError) as exc:
+            return {"ok": False, "error": f"permit_engine: bad parameter — {exc}"}

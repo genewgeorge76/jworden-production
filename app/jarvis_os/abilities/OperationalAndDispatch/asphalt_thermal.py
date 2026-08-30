@@ -1,57 +1,57 @@
+"""
+Asphalt cooling and lay-down window, delegated to the real thermal service.
+
+This module used to manufacture its answer with `random`: it drew an ambient
+temperature and a wind speed, ran them through a cooling curve, and returned a
+haul-time verdict shaped exactly like a computed one. The registry gated it for
+that reason, so it refused rather than answered — but the capability stayed
+unreachable through JARVIS while a real implementation sat one directory away.
+
+`app/services/asphalt_thermal.py` answers the same question properly: it pulls
+the NOAA hourly forecast for the site, applies Newtonian cooling per hour
+against the mix temperature and lift thickness, and returns the usable
+lay-down window. This module is now a thin adapter onto it.
+"""
+
+from __future__ import annotations
+
 import logging
-from datetime import datetime
-import random
-import math
+from typing import Any
+
+from app.services import asphalt_thermal as _thermal
 
 logger = logging.getLogger(__name__)
 
-class AsphaltThermalEngine:
-    """
-    Advanced Thermodynamics Engine.
-    Calculates Newtonian cooling and heat loss (ΔT) of Hot Mix Asphalt (HMA) 
-    during transport based on ambient temperature, wind chill, and delay times.
-    """
-    def __init__(self):
-        self.module_id = "asphalt_thermal"
-        self.load_temp_f = 310.0  # Plant discharge temp
-        self.min_laydown_temp = 250.0 # Absolute minimum for compaction
-        
-    def _calculate_heat_loss(self, transit_time_mins, ambient_temp_f, wind_speed_mph):
-        # Simulated cooling coefficient based on Newton's Law of Cooling
-        k = 0.002 + (wind_speed_mph * 0.0001)
-        temp_loss = (self.load_temp_f - ambient_temp_f) * (1 - math.exp(-k * transit_time_mins))
-        return self.load_temp_f - temp_loss
 
-    def execute(self, params: dict = None) -> dict:
-        transit_time = params.get("transit_time_mins", random.randint(25, 90)) if params else random.randint(25, 90)
-        ambient_temp = 68.0
-        wind_speed = 12.0
-        
-        arrival_temp = self._calculate_heat_loss(transit_time, ambient_temp, wind_speed)
-        
-        status = "NOMINAL"
-        alert = "Asphalt will arrive within optimal compaction temperature threshold."
-        
-        if arrival_temp < self.min_laydown_temp:
-            status = "CRITICAL_FAILURE"
-            alert = f"DANGER: Transit time ({transit_time} min) will result in COLD JOINT. Arrival temp {arrival_temp:.1f}F is below {self.min_laydown_temp}F."
-            
-        assessment = (
-            f"/// THERMODYNAMICS: ASPHALT TRANSIT MATRIX ///\\n"
-            f"-> Plant Load Temp: {self.load_temp_f}F\\n"
-            f"-> Ambient Weather: {ambient_temp}F, Wind {wind_speed}mph\\n"
-            f"-> Est. Transit Time: {transit_time} mins\\n"
-            f"-> Proj. Arrival Temp: {arrival_temp:.1f}F\\n\\n"
-            f"STATUS: {status}\\n"
-            f"DIRECTIVE: {alert}"
-        )
-        
-        return {
-            "status": status,
-            "engine": "AsphaltThermalEngine",
-            "assessment": assessment,
-            "metrics": {
-                "arrival_temp": round(arrival_temp, 2),
-                "transit_time": transit_time
+class AsphaltThermalEngine:
+    """Lay-down window for hot mix asphalt at a site, from live forecast data."""
+
+    def __init__(self) -> None:
+        self.module_id = "asphalt_thermal"
+
+    async def execute(self, params: dict | None = None) -> dict[str, Any]:
+        params = params or {}
+
+        lat, lng = params.get("lat"), params.get("lng")
+        if lat is None or lng is None:
+            # Refuse rather than pick a site. A cooling window computed for
+            # somewhere the crew is not is worse than no answer.
+            return {
+                "ok": False,
+                "error": (
+                    "asphalt_thermal requires 'lat' and 'lng' — the forecast is "
+                    "site-specific and there is no sensible default."
+                ),
             }
-        }
+
+        try:
+            return await _thermal.lay_down_window(
+                float(lat),
+                float(lng),
+                mix_temp_f=float(params.get("mix_temp_f", 290.0)),
+                lift_in=float(params.get("lift_in", 2.0)),
+                target_breakdown_f=float(params.get("target_breakdown_f", 240.0)),
+                target_finish_f=float(params.get("target_finish_f", 175.0)),
+            )
+        except (TypeError, ValueError) as exc:
+            return {"ok": False, "error": f"asphalt_thermal: bad parameter — {exc}"}
